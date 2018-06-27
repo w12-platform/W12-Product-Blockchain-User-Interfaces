@@ -1,0 +1,541 @@
+*{color:#000;}
+.error{font-weight:bold;text-transform:uppercase;}
+.titlecol{color:#C5D2ED;font-family:Arial, Tahoma, Verdana;font-size:170%;}
+.titlecol2 {color:#4E6592;font-family:Arial, Tahoma, Verdana;font-size:170%;}
+.titlecol2 a {color:#4E6592;}
+:focus{outline:none;}
+a img, img{border:none;}
+a img, img,a{outline:none!important;}
+body{background:#fff;font-family:Tahoma, Arial, Verdana;font-size:70%;font-style:normal;text-align:left;}
+form,body,html{border:none;margin:0;padding:0;}
+html{background:#fff;font-size:100.1%;}
+li{margin-left:0;margin-right:0;padding-left:0;padding-right:0;}
+ol{margin-left:0;margin-right:0;padding-left:24px;padding-right:0;}
+p{font-family:Tahoma, Arial, Verdana;}
+select,input,div,span,font,textarea{font-family:Tahoma, Arial, Verdana;font-size:100%;}
+table.adn{border:none;border-collapse:collapse;width:100%; border-spacing: 0px;}
+table.adw,table.orion{border:none;border-collapse:collapse;}
+table.br{border:1px solid #80A2D9;border-top:0;}
+td,select,table.houp tr td{padding:0;}
+td.head{background:url('/images/admin/fonbot.gif');height:21px;text-align:left;vertical-align:middle;}
+td.toph{padding-bottom:2px;white-space:nowrap;}
+td.toph2{padding-right:8px;}
+td.last a,td.last a:hover{text-decoration:none;} 
+ul{margin-left:0;margin-right:0;padding-left:18px;padding-right:0;}
+
+/* TOP MENU */
+.top_menu a {
+  text-decoration: none;
+}
+.top_menu ul {
+  list-style: none;
+  padding: 0px;
+  margin: 0px;
+}
+.top_menu p  {
+  margin: 15px 0;
+}
+td.top_menu {
+  padding: 0px;
+  height: 23px;
+}
+td.ahover a {
+  padding: 4px 8px;
+  font-weight: bold;
+}
+td:hover.ahover {
+  background: #DFDFDF;
+}
+/*	LEVEL ONE */
+ul.dropdown {
+  position: relative;
+}
+ul.dropdown li {
+  font-weight: bold;
+  float: left;
+  zoom: 1;
+  background-color: none;
+  height: 23px;
+}
+ul.dropdown a:hover {
+  color: #000;
+}
+ul.dropdown a:active {
+  color: #0000FF;
+}
+ul.dropdown li a {
+  display: block;
+  padding: 4px 8px;
+  /*border-right: 1px solid #333;*/
+  color: #222;
+}
+ul.dropdown li:last-child a {
+  border-right: none;
+}
+ul.dropdown li.hover, ul.dropdown li:hover {
+  background: #DFDFDF;
+  color: black;
+  position: relative;
+}
+ul.dropdown li.hover a {
+  color: black;
+}
+/*	LEVEL TWO */
+ul.dropdown ul 	{
+  /*width: 220px;*/
+  visibility: hidden;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
+}
+ul.dropdown ul li {
+  font-weight: normal;
+  background: #f6f6f6;
+  color: #000;
+  border-bottom: 1px solid #ccc;
+  border-right: 1px solid #ccc;
+  border-left: 1px solid #ccc;
+  float: none;
+  height: auto;
+}
+ul.dropdown ul li a {
+  border-right: none;
+  width: 100%;
+  display: inline-block;
+}
+/*	LEVEL THREE */
+ul.dropdown ul ul {
+  left: 100%;
+  top: 0;
+}
+ul.dropdown li:hover > ul {
+  visibility: visible;
+}
+.alert {
+  font-weight: bold;
+}
+div.errors_block div {
+  color: #FF0000;
+}
+div.errors_block {
+  background-color: #FFECEC;
+  padding: 5px;
+}
+div.success_block div {
+  color: #006600;
+}
+div.success_block {
+  background-color: #99FF99;
+  padding: 5px;
+}
+div.notice_block div {
+  color: #993300;
+}
+div.notice_block {
+  background-color: #FFFFCC;
+  padding: 5px;
+}
+legend {
+  font-weight: bold;
+  padding: 5px;
+}
+fieldset {
+  border: 1px solid #80a2d9;
+  padding: 10px;
+}
+input.in-green {
+  background-color: #99ff99;
+}
+input.in-red {
+  background-color: #FFCCFF;
+}
+label {
+  cursor: pointer;
+}
+
+a.sbutton, a.sbutton:hover, a.sbutton:visited, a.sbutton:active {
+  color: #FFF;
+}
+.sbutton {
+	display: inline-block;
+	zoom: 1; /* zoom and *display = ie7 hack for display:inline-block */
+	*display: inline;
+	vertical-align: baseline;
+	margin: 0 2px;
+	outline: none;
+	cursor: pointer;
+	text-align: center;
+	text-decoration: none;
+	font: 11px Arial, Helvetica, sans-serif;
+	padding: .2em 1em .25em;
+	/*text-shadow: 0 1px 1px rgba(0,0,0,.3);*/
+	-webkit-border-radius: .3em;
+	-moz-border-radius: .3em;
+	border-radius: .3em;
+	-webkit-box-shadow: 0 1px 2px rgba(0,0,0,.2);
+	-moz-box-shadow: 0 1px 2px rgba(0,0,0,.2);
+	box-shadow: 0 1px 2px rgba(0,0,0,.2);
+}
+.sbutton:hover {
+	text-decoration: none;
+}
+.sbutton:active {
+	position: relative;
+	top: 1px;
+}
+.sbutton i {
+  color: #FFF;
+}
+
+/* color styles
+---------------------------------------------- */
+
+
+/* red */
+.red, a.red, a.red:visited {
+	color: #faddde;
+	border: solid 1px #980c10;
+	background: #d81b21;
+	background: -webkit-gradient(linear, left top, left bottom, from(#ed1c24), to(#aa1317));
+	background: -moz-linear-gradient(top,  #ed1c24,  #aa1317);
+    background: -o-linear-gradient(top, #ed1c24, #aa1317);
+	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#ed1c24', endColorstr='#aa1317');
+}
+.red:hover, a.red:hover {
+	background: #b61318;
+	background: -webkit-gradient(linear, left top, left bottom, from(#c9151b), to(#a11115));
+	background: -moz-linear-gradient(top,  #c9151b,  #a11115);
+    background: -o-linear-gradient(top, #c9151b, #a11115);
+	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#c9151b', endColorstr='#a11115');
+}
+.red:active, a.red:active {
+	color: #de898c;
+	background: -webkit-gradient(linear, left top, left bottom, from(#aa1317), to(#ed1c24));
+	background: -moz-linear-gradient(top,  #aa1317,  #ed1c24);
+    background: -o-linear-gradient(top, #aa1317, #ed1c24);
+	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#aa1317', endColorstr='#ed1c24');
+}
+
+/* green */
+.green, a.green, a.green:visited {
+	color: #e8f0de;
+	border: solid 1px #538312;
+	background: #64991e;
+	background: -webkit-gradient(linear, left top, left bottom, from(#7db72f), to(#4e7d0e));
+	background: -moz-linear-gradient(top,  #7db72f,  #4e7d0e);
+    background: -o-linear-gradient(top, #7db72f, #4e7d0e);
+	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#7db72f', endColorstr='#4e7d0e');
+}
+.green:hover, a.green:hover {
+	background: #538018;
+	background: -webkit-gradient(linear, left top, left bottom, from(#6b9d28), to(#436b0c));
+	background: -moz-linear-gradient(top,  #6b9d28,  #436b0c);
+    background: -o-linear-gradient(top, #6b9d28, #436b0c);
+	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#6b9d28', endColorstr='#436b0c');
+}
+.green:active, a.green:active {
+	color: #a9c08c;
+	background: -webkit-gradient(linear, left top, left bottom, from(#4e7d0e), to(#7db72f));
+	background: -moz-linear-gradient(top,  #4e7d0e,  #7db72f);
+    background: -o-linear-gradient(top, #4e7d0e, #7db72f);
+	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#4e7d0e', endColorstr='#7db72f');
+}
+
+/* grey */
+.grey, a.grey, a.grey:visited {
+	color: #000;
+	border: solid 1px #7F7F7F;
+	background: #FFFFFF;
+	background: -webkit-gradient(linear, left top, left bottom, from(#FFFFFF), to(#CCCCCC));
+	background: -moz-linear-gradient(top,  #FFFFFF,  #CCCCCC);
+    background: -o-linear-gradient(top, #FFFFFF, #CCCCCC);
+	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFFFF', endColorstr='#CCCCCC');
+}
+.grey:hover, a.grey:hover {
+    background: #BFBFBF;
+    color: #000;
+    border: solid 1px #7F7F7F;
+	/*background: -webkit-gradient(linear, left top, left bottom, from(#CCCCCC), to(#FFFFFF));
+	background: -moz-linear-gradient(top,  #CCCCCC,  #FFFFFF);
+    background: -o-linear-gradient(top, #CCCCCC, #FFFFFF);
+	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#CCCCCC', endColorstr='#FFFFFF');*/
+}
+.grey:active, a.grey:active {
+    background: #BFBFBF;
+    color: #000;
+    border: solid 1px #7F7F7F;
+	/*background: -webkit-gradient(linear, left top, left bottom, from(#CCCCCC), to(#FFFFFF));
+	background: -moz-linear-gradient(top,  #CCCCCC,  #FFFFFF);
+    background: -o-linear-gradient(top, #CCCCCC, #FFFFFF);
+	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#CCCCCC', endColorstr='#FFFFFF');*/
+}
+
+/* grey-orange */
+.grey-orange, a.grey-orange, a.grey-orange:visited {
+	color: #000;
+	border: solid 1px #7F7F7F;
+	background: #FFFFFF;
+	background: -webkit-gradient(linear, left top, left bottom, from(#FFFFFF), to(#CCCCCC));
+	background: -moz-linear-gradient(top,  #FFFFFF,  #CCCCCC);
+    background: -o-linear-gradient(top, #FFFFFF, #CCCCCC);
+	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFFFF', endColorstr='#CCCCCC');
+}
+.grey-orange:hover, a.grey-orange:hover {
+	background: #ffc266;
+    border: solid 1px #ee8f00;
+	background: -webkit-gradient(linear, left top, left bottom, from(#ffc266), to(#f90));
+	background: -moz-linear-gradient(top,  #ffc266,  #f90);
+    background: -o-linear-gradient(top, #ffc266, #f90);
+	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffc266', endColorstr='#f90');
+}
+.grey-orange:active, a.grey-orange:active {
+    background: #ffc266;
+    border: solid 1px #ee8f00;
+	color: #000;
+	background: -webkit-gradient(linear, left top, left bottom, from(#ffc266), to(#f90));
+	background: -moz-linear-gradient(top,  #ffc266,  #f90);
+    background: -o-linear-gradient(top, #ffc266, #f90);
+	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffc266', endColorstr='#f90');
+}
+
+/* orange-grey */
+.orange-grey, a.orange-grey, a.orange-grey:visited {
+	color: #000;
+	border: solid 1px #ee8f00;
+	background: #ffc266;
+	background: -webkit-gradient(linear, left top, left bottom, from(#ffc266), to(#f90));
+	background: -moz-linear-gradient(top,  #ffc266,  #f90);
+    background: -o-linear-gradient(top, #ffc266, #f90);
+	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffc266', endColorstr='#f90');
+}
+.orange-grey:hover, a.orange-grey:hover {
+	background: #FFFFFF;
+    border: solid 1px #7F7F7F;
+	background: -webkit-gradient(linear, left top, left bottom, from(#FFFFFF), to(#CCCCCC));
+	background: -moz-linear-gradient(top,  #FFFFFF,  #CCCCCC);
+    background: -o-linear-gradient(top, #FFFFFF, #CCCCCC);
+	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFFFF', endColorstr='#CCCCCC');
+}
+.orange-grey:active, a.orange-grey:active {
+    background: #FFFFFF;
+    border: solid 1px #7F7F7F;
+	color: #000;
+	background: -webkit-gradient(linear, left top, left bottom, from(#FFFFFF), to(#CCCCCC));
+	background: -moz-linear-gradient(top,  #FFFFFF,  #CCCCCC);
+    background: -o-linear-gradient(top, #FFFFFF, #CCCCCC);
+	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFFFF', endColorstr='#CCCCCC');
+}
+.sbutton.gray {
+	color: #333;
+	border: solid 1px #999;
+	background: #EEE;
+}
+.sbutton.gray:hover {
+	background: #DDD;
+}
+.sbutton.gray:active {
+	color: #333;
+}
+.empty-list {
+  margin: 10px 0px;
+  color: #CCC;
+}
+a {
+  text-decoration: underline;
+}
+.center {
+  text-align: center;
+}
+.left, table.list th.left {
+  text-align: left;
+}
+.right {
+  text-align: right;
+}
+table {
+  border-collapse: collapse;
+  border: none;
+}
+table td, table th {
+  padding: 3px;
+  border: none;
+}
+table.list td, table.list th {
+  border: 1px solid #80A2D9;
+}
+table.adw td, table.adw th, table.adn td, table.adn th {
+  padding: 0px;
+}
+table.list th {
+  text-align: center;
+}
+table.form td {
+  vertical-align: top;
+}
+a.icon {
+  text-decoration: none;
+}
+a.arrow {
+  padding: 1px 1px;
+  font-size: 15px;
+  font-weight: bold;
+}
+a.arrow:hover {
+  background: #DDD;
+}
+.pagination__posts {
+  margin: 10px;
+}
+.pagination ul > li {
+  display: inline;
+}
+.pagination ul > li a {
+  padding: 3px;
+  font-size: 120%;
+}
+p {
+  padding: 0px;
+  margin: 8px 0px;
+}
+p.form-input {
+  float: left;
+  margin-right: 20px;
+}
+.poshytip {
+	z-index:1000;
+	text-align:left;
+	padding:8px 10px;
+	min-width:50px;
+	max-width:300px;
+	color:#37356c;
+	background-color:#b9f3f8;
+	background-image:url(/images/admin/poshytip.png); /* bgImageFrameSize == 9 works fine */
+	/**
+	 * - If you set a background-image, border/padding/background-color will be ingnored.
+	 *   You can set any padding to .tip-inner instead if you need.
+	 * - If you want a tiled background-image and border/padding for the tip,
+	 *   set the background-image to .tip-inner instead.
+	 */
+}
+.poshytip table td {
+  padding: 0px;
+}
+.poshytip .tip-inner {
+	font:bold 13px/15px 'trebuchet ms',arial,helvetica,sans-serif;
+	padding:0 3px 1px 3px;
+}
+
+/* Configure an arrow image - the script will automatically position it on the correct side of the tip */
+.poshytip .tip-arrow-top {
+	margin-top:-12px;
+	margin-left:0;
+	top:0;
+	left:0;
+	width:11px;
+	height:19px;
+	background:url(/images/admin/poshytip_arrows.png) no-repeat;
+}
+.poshytip .tip-arrow-right {
+	margin-top:0;
+	margin-left:-7px;
+	top:0;
+	left:100%;
+	width:18px;
+	height:13px;
+	background:url(/images/admin/poshytip_arrows.png) no-repeat -20px 0;
+}
+.poshytip .tip-arrow-bottom {
+	margin-top:-8px;
+	margin-left:0;
+	top:100%;
+	left:0;
+	width:11px;
+	height:20px;
+	background:url(/images/admin/poshytip_arrows.png) no-repeat -40px 0;
+}
+.poshytip .tip-arrow-left {
+	margin-top:0;
+	margin-left:-11px;
+	top:0;
+	left:0;
+	width:18px;
+	height:13px;
+	background:url(/images/admin/poshytip_arrows.png) no-repeat -60px 0;
+}
+.icon-tip {
+  cursor: pointer;
+}
+.icon-tip img {
+  vertical-align: middle;
+}
+a.abutton {
+  text-decoration: none;
+  padding: 1px 0px;
+  border-bottom: #000 1px dotted;
+}
+.icon img {
+  vertical-align: middle;
+}
+.big-loader {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  text-align: center;
+  background: #FFF;
+  z-index: 10000;
+  opacity: 0.8;
+  -moz-opacity: 0.8;
+  filter: alpha(opacity=80);
+}
+fieldset .big-loader {
+  left: -1px;
+  top: -1px;
+}           
+.ui-autocomplete {
+  max-height: 220px;
+  overflow-y: auto;
+  /* prevent horizontal scrollbar */
+  overflow-x: hidden;
+}
+/* IE 6 doesn't support max-height
+ * we use height instead, but this forces the menu to always be this tall
+ */
+* html .ui-autocomplete {
+  height: 220px;
+}
+.tag {
+  border-bottom: #000 1px dashed;
+  white-space: nowrap;
+}
+table.list th a.sort {
+  text-decoration: none;
+}
+table.list th a.sort:hover {
+  text-decoration: underline;
+}
+table.form input[type=checkbox], table.form input[type=radio] {
+  margin: 0px;
+  vertical-align: middle;
+}
+.CodeMirror {border: 1px solid #AAA; height: 600px;}
+
+#read-letter, #read-letter p {
+  font: normal normal 14px/20px "Arial", sans-serif;
+  color: #606060;
+}
+#read-letter, #read-letter p, #read-letter h1, #read-letter h2, #read-letter div {
+  font-family: "Arial", sans-serif;
+  color: #606060;
+}
+#read-letter .sbutton {
+  font: 14px/100% Arial, Helvetica, sans-serif;
+  padding: .5em 2em .55em;
+}
+pre {
+  font-size: 12px;
+}
+a.dashed {
+  text-decoration: none;
+  border-bottom: #000 1px dashed;
+}
