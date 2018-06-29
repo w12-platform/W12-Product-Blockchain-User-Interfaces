@@ -14,6 +14,7 @@ export default {
     },
     // if true then infura will be used as fallback
     useInfuraAsFallbackNet: true,
+    feePercent: 50,
     contracts: {
         W12Lister: {
             address: '0x145a16991800a352b445e02d1d8bc5a0d87c79d1'
@@ -26,3 +27,4 @@ export default {
         }
     }
 }
+

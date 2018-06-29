@@ -47,6 +47,8 @@ export class Connector {
     }
 
     async connect() {
+        if (!this.inited) await this.init();
+
         const getNetwork = promisify(this.web3.version.getNetwork.bind(this.web3.version));
         const netId = await getNetwork();
 

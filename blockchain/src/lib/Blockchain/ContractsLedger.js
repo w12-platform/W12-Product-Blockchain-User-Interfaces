@@ -1,5 +1,5 @@
 import { W12ListerWrapper } from './Wrappers/W12Lister.js';
-import { Connector } from './Connector.js';
+import Connector from './DefaultConnector.js';
 
 
 async function loadContracts() {
@@ -12,7 +12,7 @@ async function loadContracts() {
     const WToken = await fetch('/blockchain/src/lib/Blockchain/contracts/WToken.json')
             .then(data => data.json());
 
-    const W12ListerW = new W12ListerWrapper(W12Lister, new Connector());
+    const W12ListerW = new W12ListerWrapper(W12Lister, Connector);
         await W12ListerW.init();
 
     return {

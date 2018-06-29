@@ -9,7 +9,6 @@ export class BaseWrapper {
     async init() {
         if (this.inited) return;
 
-        await this.connector.init();
         const { web3 } = await this.connector.connect();
 
         this._instance = web3.eth.contract(this.artifact.abi);
