@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf_token" content="2a4f8b818fda635645923e2ef0c41fa54065e950b02a455d4b32d06e84609869">
+    <!--link rel="shortcut icon" href="/images/system/" type="image/x-icon"-->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css"
+          integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg"
+          crossorigin="anonymous">
+    <link href="css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="js/custom-scroll/jquery.mCustomScrollbar.css">
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/bootstrap-reboot.css?v=20" rel="stylesheet">
+    <link href="css/bootstrap-grid.css" rel="stylesheet">
+    <link href="css/bootstrap-theme.css?v=20" rel="stylesheet">
+    <link href="js/slick/slick.css" rel="stylesheet">
+    <link href="js/fancybox/jquery.fancybox.min.css" rel="stylesheet">
+    <link href="js/formstyler/jquery.formstyler.css" rel="stylesheet">
+    <link href="js/formstyler/jquery.formstyler.theme.css" rel="stylesheet">
+    <link href="js/datepicker/css/bootstrap-datepicker.standalone.css" rel="stylesheet">
+    <link rel="stylesheet" href="js/flipclock/flipclock.css">
+    <link href="css/media.css?v=20" rel="stylesheet">
+    <link href="css/custom.css?v=20" rel="stylesheet">
+</head>
+<body>
+
+<div id="app">
+    <admin-dashboard></admin-dashboard>
+</div>
+
+<script type="x-template" id="AdminDashboardTemplate">
+    <section class="container">
+        <h2>Admin Dashboard</h2>
+        <form>
+            <div class="form-group">
+                <label for="TokenAddress">Token Address</label>
+                <input type="text" class="form-control" id="TokenAddress">
+            </div>
+            <div class="form-group">
+                <label for="OwnerAddress">Owner Address</label>
+                <input type="text" class="form-control" id="OwnerAddress">
+            </div>
+            <div>
+                <button type="submit" class="btn btn-primary">Whitelist</button>
+            </div>
+        </form>
+    </section>
+</script>
+
+<script src="blockchain/node_modules/vue/dist/vue.js"></script>
+<script src="blockchain/node_modules/web3/dist/web3.js"></script>
+<script src="blockchain/src/main.js" type="module"></script>
+</body>
+</html>
