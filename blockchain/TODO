@@ -1,6 +1,12 @@
 Admin Dashboard
 
- * Subscribe to OwnerWhitelisted event and then update the tokens list table.
- * Add the ability to add a token to whitelist
- * Add the tokens list table
- * Render any error
+ + Subscribe to OwnerWhitelisted event and then update the tokens list table.
+ + Add the ability to add a token to whitelist
+ + Add the tokens list table
+ + Render any error
+
+Project Dashboard
+
+ * Load all contracts
+ * Render any errors
+ * Add the ability to approve amount
