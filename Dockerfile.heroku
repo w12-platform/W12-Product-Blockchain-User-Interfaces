@@ -10,6 +10,5 @@ COPY . .
 RUN cd blockchain/ && npm ci && cd -
 
 ARG PORT=$PORT
-RUN echo $PORT
 
 CMD serve -l $PORT
