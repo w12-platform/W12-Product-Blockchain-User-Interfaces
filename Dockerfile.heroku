@@ -9,4 +9,7 @@ RUN npm install -g serve
 COPY . .
 RUN cd blockchain/ && npm ci && cd -
 
-CMD [ "serve", "-l", "${PORT}" ]
+ARG PORT=$PORT
+RUN echo $PORT
+
+CMD serve -l $PORT
