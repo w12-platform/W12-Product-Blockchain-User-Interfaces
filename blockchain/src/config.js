@@ -1,3 +1,11 @@
+const params = new URLSearchParams(window.location.search);
+
+const net = params.has('net') ? params.get('net') : 'https://ropsten.infura.io/';
+const key = params.has('key') ? params.get('key') : '7orv4QUSQbFWWcCpqHmH';
+const feePercent = params.has('feePercent') ? params.get('feePercent') : '10';
+const W12Lister = params.has('W12Lister') ? params.get('W12Lister') : null;
+const W12CrowdsaleFactory = params.has('W12CrowdsaleFactory') ? params.get('W12CrowdsaleFactory') : null;
+
 export default {
     // place here your app config
     infura: {
@@ -9,21 +17,18 @@ export default {
             Rinkeby	test network	https://rinkeby.infura.io/
             IPFS	gateway	https://ipfs.infura.io
          */
-        net: 'https://ropsten.infura.io/',
-        key: '7orv4QUSQbFWWcCpqHmH'
+        net,
+        key
     },
     // if true then infura will be used as fallback
     useInfuraAsFallbackNet: true,
-    feePercent: 50,
+    feePercent,
     contracts: {
         W12Lister: {
-            address: '0x145a16991800a352b445e02d1d8bc5a0d87c79d1'
+            address: W12Lister
         },
         W12CrowdsaleFactory: {
-            address: '0xd9a28ded160e605a8d58d9c67f3903a9aea7bbe7'
-        },
-        WToken: {
-            address: '0xda9a4395a4a4b03c2e7e0c46ac36e3e4020ee386'
+            address: W12CrowdsaleFactory
         }
     }
 }
