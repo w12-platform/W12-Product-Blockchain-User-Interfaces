@@ -196,6 +196,9 @@ export default {
             }
         }
     },
+    errorCaptured(error, vm, info) {
+      this.errorMessage = info || error.message;
+    },
     async created () {
         await this.createEventsHelpers();
         await this.fetchTokensList();
