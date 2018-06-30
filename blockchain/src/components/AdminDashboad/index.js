@@ -18,8 +18,8 @@ export default {
             whitelistingToken: false,
             errorMessage: '',
             whiteListForm: {
-                tokenAddress: config.contracts.WToken.address,
-                ownerAddress: '0xda9a4395a4a4b03c2e7e0c46ac36e3e4020ee386',
+                tokenAddress: '',
+                ownerAddress: '',
                 symbol: 'TT',
                 decimals: '18',
                 name: 'TestToken'
