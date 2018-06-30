@@ -1,4 +1,5 @@
 import AdminDashboard from './components/AdminDashboad/index.js';
+import ProjectDashboard from './components/ProjectDashboard/index.js';
 import ledger from './lib/Blockchain/ContractsLedger.js';
 import config from './config.js';
 import { promisify } from './lib/utils.js';
@@ -17,7 +18,8 @@ import { promisify } from './lib/utils.js';
 const View = new Vue({
     el: '#app',
     components: {
-        AdminDashboard
+        AdminDashboard,
+        ProjectDashboard
     }
 });
 

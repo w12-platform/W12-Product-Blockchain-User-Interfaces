@@ -10,25 +10,18 @@
           integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg"
           crossorigin="anonymous">
     <link href="css/font-awesome.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="js/custom-scroll/jquery.mCustomScrollbar.css">
     <link href="css/bootstrap.css" rel="stylesheet">
     <link href="css/bootstrap-reboot.css?v=20" rel="stylesheet">
     <link href="css/bootstrap-grid.css" rel="stylesheet">
     <link href="css/bootstrap-theme.css?v=20" rel="stylesheet">
-    <link href="js/slick/slick.css" rel="stylesheet">
-    <link href="js/fancybox/jquery.fancybox.min.css" rel="stylesheet">
-    <link href="js/formstyler/jquery.formstyler.css" rel="stylesheet">
-    <link href="js/formstyler/jquery.formstyler.theme.css" rel="stylesheet">
-    <link href="js/datepicker/css/bootstrap-datepicker.standalone.css" rel="stylesheet">
-    <link rel="stylesheet" href="js/flipclock/flipclock.css">
-    <link href="css/media.css?v=20" rel="stylesheet">
-    <link href="css/custom.css?v=20" rel="stylesheet">
     <link href="blockchain/src/assets/main.css?v=20" rel="stylesheet">
 </head>
 <body>
 
-<div id="app">
+<div id="app" style="padding: 0 0 100px">
     <admin-dashboard></admin-dashboard>
+    <hr style="margin: 92px 0" />
+    <project-dashboard></project-dashboard>
 </div>
 
 <script type="x-template" id="AdminDashboardTemplate">
@@ -92,6 +85,28 @@
                         id="Name"
                         v-model="whiteListForm.name">
             </div>
+            <div class="form-group">
+                <label for="FeeTokens">Fee (tokens)</label>
+                <input
+                        placeholder="0 .. 100 percent"
+                        type="text"
+                        minlength="1"
+                        maxlength="3"
+                        class="form-control"
+                        id="FeeTokens"
+                        v-model="whiteListForm.feePercent">
+            </div>
+            <div class="form-group">
+                <label for="FeeETH">Fee (ETH)</label>
+                <input
+                        placeholder="0 .. 100 percent"
+                        type="text"
+                        minlength="1"
+                        maxlength="3"
+                        class="form-control"
+                        id="FeeETH"
+                        v-model="whiteListForm.feeETHPercent">
+            </div>
             <div>
                 <button class="btn btn-primary" @click="tryWhiteListToken">Whitelist</button>
             </div>
@@ -104,6 +119,8 @@
                             <th scope="col">Symbol</th>
                             <th scope="col">Name</th>
                             <th scope="col">Decimals</th>
+                            <th scope="col">Fee (tokens)</th>
+                            <th scope="col">Fee (ETH)</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -113,6 +130,8 @@
                             <td>{{ token.symbol }}</td>
                             <td>{{ token.name }}</td>
                             <td>{{ token.decimals }}</td>
+                            <td>{{ token.feePercent }}%</td>
+                            <td>{{ token.feeETHPercent }}%</td>
                         </tr>
                     </tbody>
                 </table>
@@ -121,7 +140,174 @@
     </section>
 </script>
 
+<script type="x-template" id="ProjectDashboardTemplate">
+    <section class="container">
+        <h2>Project Dashboard</h2>
+        <div v-if="isLoading" class="alert alert-info" role="alert">
+            <span v-if="loadingLedger">Загрузка смарт-контрактов...<br></span>
+            <span v-if="fetchingToken">Поиск токена...<br></span>
+            <span v-else="!loadingLedger && !fetchingToken">Ожидайте...<br></span>
+        </div>
+        <div v-if="errorMessage" class="alert alert-danger" role="alert">
+            <span>{{ errorMessage }}</span>
+        </div>
+        <div>
+            <div class="form-group">
+                <label for="ProjectDashboardTokenAddress">Token Address</label>
+                <input
+                        placeholder="Enter your token address to check status"
+                        type="text"
+                        class="form-control"
+                        id="ProjectDashboardTokenAddress"
+                        v-model="tokenAddress">
+            </div>
+            <div v-if="token" class="row align-items-center justify-content-around py-5">
+                <div>Symbol: {{ token.symbol }}</div>
+                <div>Decimals: {{ token.decimals }}</div>
+                <div>Fee (tokens): {{ token.feePercent }}%</div>
+                <div>Fee (ETH): {{ token.feeETHPercent }}%</div>
+            </div>
+            <div>
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <div class="row align-items-center justify-content-center">
+                            <div class="col-auto">
+                                <span class="step-badge badge badge-pill badge-light">1</span>
+                            </div>
+                            <div class="col-sm-4">
+                                Contact W12 to whitelist your token
+                            </div>
+                            <div class="col-sm-2 text-center">
+                                <span v-if="isWhiteListed" class="badge badge-success">Whitelisted</span>
+                                <span v-else class="badge badge-info">Not whitelisted</span>
+                            </div>
+                            <div class="col-sm text-right"></div>
+                        </div>
+                    </li>
+                    <li class="list-group-item">
+                        <div class="row align-items-center justify-content-center">
+                            <div class="col-auto">
+                                <span class="step-badge badge badge-pill badge-light">2</span>
+                            </div>
+                            <div class="col-sm-4">
+                                Approve tokens to place
+                            </div>
+                            <div class="col-sm-2 text-center">
+                                <span v-if="!hasAllowance || !isWhiteListed" class="badge badge-success">Pending</span>
+                                <span v-else class="badge badge-success">Approved</span>
+                            </div>
+                            <div class="col-sm text-right">
+                                <span v-if="hasAllowance">{{ tokensAmountThatApprovedToPlaceByTokenOwner }}</span>
+                                <div v-else-if="isWhiteListed" class="text-left">
+                                    <p>
+                                        Spend from: {{ ownerAddress }}
+                                    </p>
+                                    <div class="form-group">
+                                        <label for="SpendFrom">Amount</label>
+                                        <input
+                                                :placeholder="`Max: ${ownerBalance}`"
+                                                type="text"
+                                                class="form-control"
+                                                id="SpendFrom"
+                                                v-model="approveForm.value">
+                                    </div>
+                                    <div class="text-right">
+                                        <button class="btn btn-primary btn-sm" @click="approveTokensToSpend">Approve
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="list-group-item">
+                        <div class="row align-items-center justify-content-center">
+                            <div class="col-auto">
+                                <span class="step-badge badge badge-pill badge-light">3</span>
+                            </div>
+                            <div class="col-sm-4">
+                                Place Tokens to Listing
+                            </div>
+                            <div class="col-sm-2 text-center">
+                                <span v-if="!hasPlacedWTokenAddress || !hasAllowance || !isWhiteListed"
+                                      class="badge badge-success">Pending</span>
+                                <span v-else class="badge badge-success">Placed</span>
+                            </div>
+                            <div class="col-sm text-right">
+                                <span v-if="hasPlacedWTokenAddress">{{ placedTokenAddress }}</span>
+                                <div v-else-if="isWhiteListed && hasAllowance" class="text-left">
+                                    <div class="form-group">
+                                        <label for="PlaceAmount">Place Amount</label>
+                                        <input
+                                                :placeholder="`Max: ${tokensAmountThatApprovedToPlaceByTokenOwner}`"
+                                                type="text"
+                                                class="form-control"
+                                                id="PlaceAmount"
+                                                v-model="placeTokensForm.value">
+                                    </div>
+                                    <div class="text-right">
+                                        <button class="btn btn-primary btn-sm" @click="placeTokens">Place</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="list-group-item">
+                        <div class="row align-items-center justify-content-center">
+                            <div class="col-auto">
+                                <span class="step-badge badge badge-pill badge-light">4</span>
+                            </div>
+                            <div class="col-sm-4">
+                                Configure Crowdsale
+                            </div>
+                            <div class="col-sm-2 text-center">
+                                <span v-if="!isCrowdsaleInited || !hasPlacedWTokenAddress || !hasAllowance || !isWhiteListed"
+                                      class="badge badge-success">Pending</span>
+                                <span v-else class="badge badge-success">Inited</span>
+                            </div>
+                            <div class="col-sm text-right">
+                                <span v-if="isCrowdsaleInited">{{ tokenCrowdsaleAddress }}</span>
+                                <div v-else-if="isWhiteListed && hasAllowance && hasPlacedWTokenAddress" class="text-left">
+                                    <div class="form-group">
+                                        <label for="StartDate">Start date (YYYY-MM-DD)</label>
+                                        <input
+                                                placeholder="YYYY-MM-DD"
+                                                type="text"
+                                                class="form-control"
+                                                id="StartDate"
+                                                v-model="crowdsaleInitForm.date">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="BaseTokenPrice">Base token price</label>
+                                        <input
+                                                type="text"
+                                                class="form-control"
+                                                id="BaseTokenPrice"
+                                                v-model="crowdsaleInitForm.price">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="AmountForSale">Amount for sale</label>
+                                        <input
+                                                :placeholder="`Min: ${token.tokensForSaleAmount}`"
+                                                type="text"
+                                                class="form-control"
+                                                id="AmountForSale"
+                                                v-model="crowdsaleInitForm.amountForSale">
+                                    </div>
+                                    <div class="text-right">
+                                        <button class="btn btn-primary btn-sm" @click="initCrawdsale">Configure</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+</script>
+
 <script src="blockchain/node_modules/vue/dist/vue.js"></script>
+<script src="blockchain/node_modules/moment/moment.js"></script>
 <script src="blockchain/node_modules/web3/dist/web3.js"></script>
 <script src="blockchain/src/main.js" type="module"></script>
 </body>

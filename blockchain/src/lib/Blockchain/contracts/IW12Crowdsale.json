@@ -82,9 +82,9 @@
   "sourceMap": "",
   "deployedSourceMap": "",
   "source": "pragma solidity ^0.4.24;\n\ninterface IW12Crowdsale {\n    function setParameters(uint32 _startDate, uint _price, address _serviceWallet, uint8 _serviceFee) public;\n\n    function setStages(uint32[] stage_endDates, uint8[] stage_discounts, uint32[] stage_vestings) external;\n\n    function getCurrentStage() public returns(uint32 endDate, uint8 discount, uint32 vesting);\n\n    function () payable external;\n}\n\ninterface IW12CrowdsaleFactory {\n    function createCrowdsale(address _wTokenAddress, uint32 _startDate, uint price, address serviceWallet, uint8 serviceFee, address owner) external returns (IW12Crowdsale);\n}\n",
-  "sourcePath": "/c/Users/Mr.Hokid/projects/work/w12-product/blockchain/@dev/rep/contracts/IW12Crowdsale.sol",
+  "sourcePath": "/home/andrey/Code/w12/platform-contracts/contracts/IW12Crowdsale.sol",
   "ast": {
-    "absolutePath": "/c/Users/Mr.Hokid/projects/work/w12-product/blockchain/@dev/rep/contracts/IW12Crowdsale.sol",
+    "absolutePath": "/home/andrey/Code/w12/platform-contracts/contracts/IW12Crowdsale.sol",
     "exportedSymbols": {
       "IW12Crowdsale": [
         37
@@ -769,7 +769,7 @@
     "src": "0:614:0"
   },
   "legacyAST": {
-    "absolutePath": "/c/Users/Mr.Hokid/projects/work/w12-product/blockchain/@dev/rep/contracts/IW12Crowdsale.sol",
+    "absolutePath": "/home/andrey/Code/w12/platform-contracts/contracts/IW12Crowdsale.sol",
     "exportedSymbols": {
       "IW12Crowdsale": [
         37
@@ -1458,6 +1458,6 @@
     "version": "0.4.24+commit.e67f0147.Emscripten.clang"
   },
   "networks": {},
-  "schemaVersion": "2.0.1",
-  "updatedAt": "2018-06-28T16:11:22.442Z"
+  "schemaVersion": "2.0.0",
+  "updatedAt": "2018-06-30T13:25:14.152Z"
 }

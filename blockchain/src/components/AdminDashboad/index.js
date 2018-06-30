@@ -20,9 +20,11 @@ export default {
             whiteListForm: {
                 tokenAddress: '',
                 ownerAddress: '',
-                symbol: 'TT',
+                symbol: 'TN',
                 decimals: '18',
-                name: 'TestToken'
+                name: 'Token Name',
+                feePercent: '10',
+                feeETHPercent: '10'
             },
             tokensList: []
         };
@@ -41,7 +43,9 @@ export default {
                 owner: item.tokenOwner,
                 symbol: item.symbol,
                 name: item.name,
-                decimals: item.decimals
+                decimals: item.decimals,
+                feePercent: item.feePercent,
+                feeETHPercent: item.feeETHPercent
             }));
         }
     },
@@ -84,7 +88,8 @@ export default {
                         data.name,
                         data.symbol,
                         data.decimals,
-                        config.feePercent
+                        data.feePercent,
+                        data.feeETHPercent
                     );
                 } catch (e) {
                     this.setErrorMessage(e.message || UNKNOWN_ERROR_WHILE_WHITELISTING_TOKEN);
@@ -136,6 +141,7 @@ export default {
                         const listedToken = await approvedTokens(tokenIndex);
                         const decimals = listedToken[2].toString();
                         const feePercent = listedToken[3].toString();
+                        const feeETHPercent = listedToken[4].toString();
 
                         list.push({
                             index: tokenIndex,
@@ -145,6 +151,7 @@ export default {
                             tokenOwner,
                             decimals,
                             feePercent,
+                            feeETHPercent,
                             listedToken
                         });
                     }
