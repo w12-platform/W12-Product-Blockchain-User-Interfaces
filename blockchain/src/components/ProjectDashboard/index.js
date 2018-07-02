@@ -24,6 +24,8 @@ export default {
             initCrawdsaleLoading: false,
             updateOwnerBalanceLoading: false,
             subscribeToEventsLoading: false,
+            fetchCrowdsaleStagesListLoading:false,
+            setStagesLoading:false,
             loading: false,
             tokenAddress: '',
             errorMessage: '',
@@ -34,6 +36,7 @@ export default {
             ownerBalance: '0',
             tokenCrowdsaleAddress: null,
             ownerAddress: '',
+            tokenCrowdsaleStages: [],
             approveForm: {
                 value: '0'
             },
@@ -44,7 +47,8 @@ export default {
                 date: '',
                 amountForSale: '0',
                 price: ''
-            }
+            },
+            crowdsaleStagesToAdd: [],
         };
     },
     computed: {
@@ -60,6 +64,8 @@ export default {
                 || this.initCrawdsaleLoading
                 || this.updateOwnerBalanceLoading
                 || this.subscribeToEventsLoading
+                || this.fetchCrowdsaleStagesListLoading
+                || this.setStagesLoading
             );
         },
         isAddress() {
@@ -128,7 +134,8 @@ export default {
           await this.updateOwnerBalance();
           await this.updateTokensApprovedToPlaceValue();
           await this.updatePlacedTokenStatus();
-          await this.fetchCrowdsaleAddress();
+          await this.fetchCrowdsaleAddressAndCreateContractInstance();
+          await this.fetchCrowdsaleStagesList();
         },
         async loadLedger () {
             let ledger
@@ -296,7 +303,7 @@ export default {
 
             this.updatePlacedTokenStatusLoading = false;
         },
-        async fetchCrowdsaleAddress () {
+        async fetchCrowdsaleAddressAndCreateContractInstance () {
             if (!this.token) return;
 
             this.fetchCrowdsaleAddressLoading = true;
@@ -486,6 +493,71 @@ export default {
 
             this.updateOwnerBalanceLoading = false;
         },
+        async fetchCrowdsaleStagesList() {
+            if (!this.token) return;
+            if (!this.isCrowdsaleInited) return;
+
+            this.fetchCrowdsaleStagesListLoading = true;
+
+            try {
+                const {
+                    W12CrowdsaleInstance
+                } = this.ContractInstances;
+
+                const list = await W12CrowdsaleInstance.getStagesList();
+
+                this.tokenCrowdsaleStages = list;
+            } catch (e) {
+                this.tokenCrowdsaleStages = [];
+                this.setErrorMessage(e.message);
+            }
+
+            this.fetchCrowdsaleStagesListLoading = false;
+        },
+        async setStages (stages) {
+            if (!this.token) return;
+            if (!this.isCrowdsaleInited) return;
+
+            this.setStagesLoading = true;
+
+            try {
+                const {
+                    W12CrowdsaleInstance
+                } = this.ContractInstances;
+
+                const tx = await W12CrowdsaleInstance.setStages(stages);
+                const connectedWeb3 = (await Connector.connect()).web3;
+
+                await waitTransactionReceipt(tx, connectedWeb3, 5000);
+
+                stages.forEach(stage => stage.wasCreated = true);
+            } catch (e) {
+                this.setErrorMessage(e.message);
+            }
+
+            this.setStagesLoading = false;
+        },
+        async setBonusVolumes (stageIndex, list) {
+            if (!this.token) return;
+            if (!this.isCrowdsaleInited) return;
+
+            this.setStagesLoading = true;
+
+            try {
+                const {
+                    W12CrowdsaleInstance
+                } = this.ContractInstances;
+
+                const tx = await W12CrowdsaleInstance.setBonusVolumes(stageIndex, list);
+                const connectedWeb3 = (await Connector.connect()).web3;
+
+                await waitTransactionReceipt(tx, connectedWeb3, 5000);
+            } catch (e) {
+                this.setErrorMessage(e.message);
+            }
+
+            this.setStagesLoading = false;
+        },
         onApprovalEvent(error, result) {
             if (!error) {
                 const {spender} = result.args;
@@ -558,6 +630,34 @@ export default {
         },
         unwatchCurrentAccountAddress() {
             clearInterval(this.currentAccountWatcherTmId);
+        },
+        addStage() {
+            this.tokenCrowdsaleStages.push({
+                endDate: '',
+                discount: '',
+                vestingDate: '',
+                bonusVolumes: [],
+                wasCreated: false
+            });
+        },
+        deleteStageAt(stageIndex) {
+            this.tokenCrowdsaleStages.splice(stageIndex, 1);
+        },
+        saveStages() {
+            this.setStages(this.tokenCrowdsaleStages);
+        },
+        saveBonusVolumesAt(stageIndex) {
+            const stage = this.tokenCrowdsaleStages[stageIndex];
+
+            if (stage.wasCreated) {
+                this.setBonusVolumes(stageIndex, stage.bonusVolumes);
+            }
+        },
+        addBonusVolumesAt(stageIndex) {
+            this.tokenCrowdsaleStages[stageIndex].bonusVolumes.push(['', '']);
+        },
+        deleteBonusVolumesAt(stageIndex, volumeIndex) {
+            this.tokenCrowdsaleStages[stageIndex].bonusVolumes.splice(volumeIndex, 1);
         }
     },
     errorCaptured(error, vm, info) {

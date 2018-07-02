@@ -300,6 +300,103 @@
                             </div>
                         </div>
                     </li>
+                    <li class="list-group-item">
+                        <div class="row align-items-center justify-content-center">
+                            <div class="col-auto">
+                                <span class="step-badge badge badge-pill badge-light">5</span>
+                            </div>
+                            <div class="col-sm-4">
+                                Configure Crowdsale Bonuses
+                            </div>
+                            <div class="col-sm">
+                                <div v-if="isCrowdsaleInited && isWhiteListed && hasAllowance && hasPlacedWTokenAddress"
+                                     class="text-left">
+                                    <div class="row" v-for="(stage, stageIndex) in tokenCrowdsaleStages" :key="stageIndex">
+                                        <div class="col-sm">
+                                            <div class="form-group">
+                                                <label for="StageEndDate">End date (YYYY-MM-DD)</label>
+                                                <input
+                                                        placeholder="YYYY-MM-DD"
+                                                        type="text"
+                                                        class="form-control"
+                                                        id="StageEndDate"
+                                                        v-model="tokenCrowdsaleStages[stageIndex].endDate">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="StageDiscount">Discount %</label>
+                                                <input
+                                                        type="text"
+                                                        class="form-control"
+                                                        id="StageDiscount"
+                                                        v-model="tokenCrowdsaleStages[stageIndex].discount">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="StageVestingDate">Vesting Date (YYYY-MM-DD)</label>
+                                                <input
+                                                        placeholder="YYYY-MM-DD"
+                                                        type="text"
+                                                        class="form-control"
+                                                        id="StageVestingDate"
+                                                        v-model="tokenCrowdsaleStages[stageIndex].vestingDate">
+                                            </div>
+                                            <div class="text-right">
+                                                <button class="btn btn-primary btn-sm" @click="deleteStageAt(stageIndex)">
+                                                    Delete
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm">
+                                            <div v-for="(bonusVolume, bonusVolumeIndex) in stage.bonusVolumes" :key="bonusVolumeIndex">
+                                                <div class="form-row">
+                                                    <div class="form-group col-md-6">
+                                                        <label for="bonusVolumeETH">From (ETH)</label>
+                                                        <input
+                                                                placeholder="ETH"
+                                                                type="text"
+                                                                class="form-control"
+                                                                id="bonusVolumeETH"
+                                                                v-model="tokenCrowdsaleStages[stageIndex].bonusVolumes[bonusVolumeIndex][0]">
+                                                    </div>
+                                                    <div class="form-group col-md-6">
+                                                        <label for="bonusVolumePercent">Bonus Percent</label>
+                                                        <input
+                                                                type="text"
+                                                                class="form-control"
+                                                                id="bonusVolumePercent"
+                                                                v-model="tokenCrowdsaleStages[stageIndex].bonusVolumes[bonusVolumeIndex][1]">
+                                                    </div>
+                                                </div>
+                                                <div class="text-right">
+                                                    <button class="btn btn-primary btn-sm"
+                                                            @click="deleteBonusVolumesAt(stageIndex, bonusVolumeIndex)">
+                                                        delete
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div class="text-center pt-2">
+                                                <button class="btn btn-primary btn-sm"
+                                                        @click="addBonusVolumesAt(stageIndex)">
+                                                    Add
+                                                </button>
+                                                <button v-if="stage.bonusVolumes.length" class="btn btn-primary btn-sm"
+                                                        @click="saveBonusVolumesAt(stageIndex)">
+                                                    Save
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="text-center pt-3">
+                                        <button class="btn btn-primary btn-sm" @click="addStage">
+                                            Add stage
+                                        </button>
+                                        <button v-if="tokenCrowdsaleStages.length" class="btn btn-primary btn-sm" @click="saveStages">
+                                            Save stages
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
                 </ul>
             </div>
         </div>

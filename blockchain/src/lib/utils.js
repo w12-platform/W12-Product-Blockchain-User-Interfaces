@@ -46,3 +46,4 @@ export function waitTransactionReceipt(tx, web3, timeout = 240000) {
         make_attempt();
     });
 }
+
