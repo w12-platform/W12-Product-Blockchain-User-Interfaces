@@ -1,4 +1,5 @@
-import { BaseWrapper } from './Base.js';
+import { BaseWrapper } from './BaseWrapper.js';
 
 
-export class W12TokenLedgerWrapper extends BaseWrapper {}
+export class W12TokenLedgerWrapper extends BaseWrapper {
+}

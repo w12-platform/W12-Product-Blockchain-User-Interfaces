@@ -73,16 +73,15 @@ export default {
         async whiteListToken (data) {
             this.whitelistingToken = true;
 
-            const {W12Lister} = await this.loadLedger();
+            const {W12ListerFactory} = await this.loadLedger();
 
-            if (W12Lister) {
+            if (W12ListerFactory) {
                 try {
-                    const deployed = W12Lister.instance.at(config.contracts.W12Lister.address);
-                    const whitelistToken = promisify(deployed.whitelistToken.bind(deployed));
+                    const W12Lister = W12ListerFactory.at(config.contracts.W12Lister.address);
 
                     console.log(data);
 
-                    await whitelistToken(
+                    await W12Lister.methods.whitelistToken(
                         data.ownerAddress,
                         data.tokenAddress,
                         data.name,
@@ -116,13 +115,11 @@ export default {
         async fetchTokensList () {
             this.fetchTokens = true;
 
-            const {W12Lister} = await this.loadLedger();
+            const {W12ListerFactory} = await this.loadLedger();
 
-            if (W12Lister) {
+            if (W12ListerFactory) {
                 try {
-                    const deployed = W12Lister.instance.at(config.contracts.W12Lister.address);
-                    const approvedTokensIndex = promisify(deployed.approvedTokensIndex.bind(deployed));
-                    const approvedTokens = promisify(deployed.approvedTokens.bind(deployed));
+                    const W12Lister = W12ListerFactory.at(config.contracts.W12Lister.address);
                     const getRecords = promisify(this.EventHelpers.all.get.bind(this.EventHelpers.all));
 
                     const records = await getRecords();
@@ -137,8 +134,8 @@ export default {
                             tokenOwner
                         } = record.args;
 
-                        const tokenIndex = (await approvedTokensIndex(tokenAddress)).toNumber();
-                        const listedToken = await approvedTokens(tokenIndex);
+                        const tokenIndex = (await W12Lister.methods.approvedTokensIndex(tokenAddress)).toNumber();
+                        const listedToken = await W12Lister.methods.approvedTokens(tokenIndex);
                         const decimals = listedToken[2].toString();
                         const feePercent = listedToken[3].toString();
                         const feeETHPercent = listedToken[4].toString();
@@ -166,20 +163,20 @@ export default {
         },
         async createEventsHelpers () {
             if (!this.EventHelpers) {
-                const {W12Lister} = await this.loadLedger();
+                const {W12ListerFactory} = await this.loadLedger();
 
-                if (W12Lister) {
+                if (W12ListerFactory) {
                     try {
-                        const deployed = W12Lister.instance.at(config.contracts.W12Lister.address);
+                        const W12Lister = W12ListerFactory.at(config.contracts.W12Lister.address);
                         // const {web3} = await Connector.connect();
                         // const getBlock = promisify(web3.eth.getBlock.bind(web3.eth));
                         // const latestBlock = await getBlock('latest');
 
-                        const all = deployed.OwnerWhitelisted(null, {
+                        const all = W12Lister.events.OwnerWhitelisted(null, {
                             fromBlock: 0
                         });
 
-                        const latests = deployed.OwnerWhitelisted(null, {
+                        const latests = W12Lister.events.OwnerWhitelisted(null, {
                             fromBlock: 'latest'
                         });
 

@@ -151,27 +151,24 @@ export default {
             this.fetchingToken = true;
 
             const tokenAddress = this.tokenAddress;
-            const {W12Lister, ERC20, W12TokenLedger} = await this.loadLedger();
+            const {W12ListerFactory, ERC20Factory, W12TokenLedgerFactory} = await this.loadLedger();
 
             if (
-                !W12Lister
-                    || !ERC20
-                        || !W12TokenLedger
+                !W12ListerFactory
+                    || !ERC20Factory
+                        || !W12TokenLedgerFactory
             ) {
                 return;
             }
 
             if (tokenAddress) {
                 try {
-                    const deployed = W12Lister.instance.at(config.contracts.W12Lister.address);
-                    const whiteListEvent = deployed.OwnerWhitelisted({tokenAddress}, { fromBlock: 0 });
+                    const W12Lister = W12ListerFactory.at(config.contracts.W12Lister.address);
+                    const whiteListEvent = W12Lister.events.OwnerWhitelisted({tokenAddress}, { fromBlock: 0 });
 
-                    const approvedTokensIndex = promisify(deployed.approvedTokensIndex.bind(deployed));
-                    const approvedTokens = promisify(deployed.approvedTokens.bind(deployed));
-                    const getLedgerAddress = promisify(deployed.ledger.bind(deployed));
                     const getEventRecord = promisify(whiteListEvent.get.bind(whiteListEvent));
 
-                    const tokenIndex = (await approvedTokensIndex(tokenAddress)).toNumber();
+                    const tokenIndex = (await W12Lister.methods.approvedTokensIndex(tokenAddress)).toNumber();
 
                     if (tokenIndex > 0) {
                         const eventRecord = await getEventRecord();
@@ -185,22 +182,23 @@ export default {
                             } = eventRecord[0].args; // take first record by default
 
 
-                            const listedToken = await approvedTokens(tokenIndex);
-                            const ledgerAddress = await getLedgerAddress();
+                            const listedToken = await W12Lister.methods.approvedTokens(tokenIndex);
+                            const ledgerAddress = await W12Lister.methods.ledger();
                             const decimals = listedToken[2].toString();
                             const feePercent = listedToken[3].toString();
                             const feeETHPercent = listedToken[4].toString();
                             const crowdsaleAddress = listedToken[5].toString();
                             const tokensForSaleAmount = listedToken[6].toString();
                             const wTokensIssuedAmount = listedToken[7].toString();
-                            const ERC20Instance = ERC20.instance.at(tokenAddress);
-                            const W12TokenLedgerInstance = W12TokenLedger.instance.at(ledgerAddress);
+                            const ERC20 = ERC20Factory.at(tokenAddress);
+                            const W12TokenLedger = W12TokenLedgerFactory.at(ledgerAddress);
 
                             this.ContractInstances = {
-                                ERC20Instance,
-                                W12TokenLedgerInstance,
-                                W12ListerInstance: deployed
+                                ERC20Instance: ERC20,
+                                W12TokenLedgerInstance: W12TokenLedger,
+                                W12ListerInstance: W12Lister
                             };
+
                             this.token = {
                                 index: tokenIndex,
                                 ledgerAddress,
@@ -236,7 +234,6 @@ export default {
                     ERC20Instance
                 } = this.ContractInstances;
 
-                const allowance = promisify(ERC20Instance.allowance.bind(ERC20Instance));
                 const connectedWeb3 = (await Connector.connect()).web3;
                 const getAccounts = promisify(connectedWeb3.eth.getAccounts.bind(connectedWeb3.eth.getAccounts));
 
@@ -249,7 +246,7 @@ export default {
                     throw new Error('not enough information to do request');
                 }
 
-                const allowanceValue = (await allowance(currentAccount, W12ListerAddress)).toString();
+                const allowanceValue = (await ERC20Instance.methods.allowance(currentAccount, W12ListerAddress)).toString();
 
                 this.tokensAmountThatApprovedToPlaceByTokenOwner = allowanceValue;
             } catch (e) {
@@ -269,7 +266,6 @@ export default {
                     W12TokenLedgerInstance
                 } = this.ContractInstances;
 
-                const getWTokenByToken = promisify(W12TokenLedgerInstance.getWTokenByToken.bind(W12TokenLedgerInstance));
                 const tokenAddress = this.tokenAddress;
 
                 if (!tokenAddress) {
@@ -277,7 +273,7 @@ export default {
                 }
 
                 try {
-                    const result = await getWTokenByToken(this.tokenAddress);
+                    const result = await W12TokenLedgerInstance.methods.getWTokenByToken(this.tokenAddress);
 
                     console.log(result);
 
@@ -310,7 +306,6 @@ export default {
                     W12ListerInstance
                 } = this.ContractInstances;
 
-                const getTokenCrowdsale = promisify(W12ListerInstance.getTokenCrowdsale.bind(W12ListerInstance));
                 const tokenAddress = this.tokenAddress;
 
                 if (!tokenAddress) {
@@ -318,19 +313,24 @@ export default {
                 }
 
                 try {
-                    const address = await getTokenCrowdsale(this.tokenAddress);
+                    const address = await W12ListerInstance.methods.getTokenCrowdsale(this.tokenAddress);
 
                     if (
                         address
                             && address != '0x0000000000000000000000000000000000000000'
                     ) {
+
+                        const { W12CrowdsaleFactory } = await this.loadLedger();
+                        const W12CrowdsaleInstance = W12CrowdsaleFactory.at(address);
+
+                        this.ContractInstances.W12CrowdsaleInstance = W12CrowdsaleInstance;
                         this.tokenCrowdsaleAddress = address;
                     } else {
                         this.tokenCrowdsaleAddress = null;
                     }
                 } catch (e) {
                     this.tokenCrowdsaleAddress = null;
-                    console.log('fetchCrowdsaleAddress', e);
+                    console.log('fetchCrowdsaleAddressAndCreateContractInstance', e);
                 }
             } catch (e) {
                 this.tokenCrowdsaleAddress = null;
@@ -356,7 +356,6 @@ export default {
                     ERC20Instance
                 } = this.ContractInstances;
 
-                const approve = promisify(ERC20Instance.approve.bind(ERC20Instance));
                 const tokenAddress = this.tokenAddress;
                 const connectedWeb3 = (await Connector.connect()).web3;
                 const getAccounts = promisify(connectedWeb3.eth.getAccounts.bind(connectedWeb3.eth.getAccounts));
@@ -368,7 +367,7 @@ export default {
                     throw new Error('not enough information to do request');
                 }
 
-                await approve(W12ListerAddress, value.toString());
+                await ERC20Instance.methods.approve(W12ListerAddress, value.toString());
             } catch (e) {
                 this.placedTokenStatus = false;
                 this.setErrorMessage(e.message);
@@ -393,14 +392,13 @@ export default {
                     W12ListerInstance
                 } = this.ContractInstances;
 
-                const placeToken = promisify(W12ListerInstance.placeToken.bind(W12ListerInstance));
                 const tokenAddress = this.tokenAddress;
 
                 if (!tokenAddress) {
                     throw new Error('not enough information to do request');
                 }
 
-                await placeToken(tokenAddress, value.toString());
+                await W12ListerInstance.methods.placeToken(tokenAddress, value.toString());
             } catch (e) {
                 this.placedTokenStatus = false;
                 this.setErrorMessage(e.message);
@@ -438,7 +436,6 @@ export default {
                     W12ListerInstance
                 } = this.ContractInstances;
 
-                const initCrowdsale = promisify(W12ListerInstance.initCrowdsale.bind(W12ListerInstance));
                 const tokenAddress = this.tokenAddress;
                 const connectedWeb3 = (await Connector.connect()).web3;
 
@@ -446,7 +443,7 @@ export default {
                     throw new Error('not enough information to do request');
                 }
 
-                const txhash = await initCrowdsale(
+                const txhash = await W12ListerInstance.methods.initCrowdsale(
                     date.utc().unix(),
                     tokenAddress,
                     amountForSale.toString(),
@@ -454,7 +451,7 @@ export default {
                 );
 
                 await waitTransactionReceipt(txhash, connectedWeb3, 5000);
-                await this.fetchCrowdsaleAddress();
+                await this.fetchCrowdsaleAddressAndCreateContractInstance();
             } catch (e) {
                 this.setErrorMessage(e.message);
             }
@@ -471,7 +468,6 @@ export default {
                     ERC20Instance
                 } = this.ContractInstances;
 
-                const balanceOf = promisify(ERC20Instance.balanceOf.bind(ERC20Instance));
                 const connectedWeb3 = (await Connector.connect()).web3;
                 const getAccounts = promisify(connectedWeb3.eth.getAccounts.bind(connectedWeb3.eth.getAccounts));
 
@@ -481,7 +477,7 @@ export default {
                     throw new Error('not enough information to do request');
                 }
 
-                const balance = await balanceOf(currentAccount);
+                const balance = await ERC20Instance.methods.balanceOf(currentAccount);
 
                 this.ownerBalance = balance.toString();
             } catch (e) {
@@ -521,8 +517,8 @@ export default {
                     W12ListerInstance
                 } = this.ContractInstances;
 
-                const ApprovalEvent = ERC20Instance.Approval(null, null, this.onApprovalEvent);
-                const TokenPlaced = W12ListerInstance.TokenPlaced(null, null, this.onTokenPlacedEvent);
+                const ApprovalEvent = ERC20Instance.events.Approval(null, null, this.onApprovalEvent);
+                const TokenPlaced = W12ListerInstance.events.TokenPlaced(null, null, this.onTokenPlacedEvent);
 
                 this.subscribedEvents = {
                     ApprovalEvent,

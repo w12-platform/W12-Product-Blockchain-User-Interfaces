@@ -1,4 +1,5 @@
-import { BaseWrapper } from './Base.js';
+import { BaseWrapper } from './BaseWrapper.js';
 
 
-export class ERC20Wrapper extends BaseWrapper {}
+export class ERC20Wrapper extends BaseWrapper {
+}
