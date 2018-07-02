@@ -48,7 +48,7 @@ async function loadContracts() {
         await W12Crowdsale.init();
 
     const W12CrowdsaleFactoryInst = new W12CrowdsaleFactoryFactory(W12CrowdsaleFactoryArtifacts, W12CrowdsaleFactoryWrapper, Connector);
-        await W12Crowdsale.init();
+        await W12CrowdsaleFactoryInst.init();
 
     return {
         W12ListerFactory: W12Lister,
