@@ -4,7 +4,7 @@ import {
     UNKNOWN_ERROR_WHILE_FETCH_TOKENS_LIST,
     UNKNOWN_ERROR_WHILE_WHITELISTING_TOKEN
 } from '../../errors.js';
-import { promisify } from '../../lib/utils.js';
+import { promisify, waitTransactionReceipt } from '../../lib/utils.js';
 import Connector from '../../lib/Blockchain/DefaultConnector.js';
 
 
@@ -78,10 +78,11 @@ export default {
             if (W12ListerFactory) {
                 try {
                     const W12Lister = W12ListerFactory.at(config.contracts.W12Lister.address);
+                    const connectedWeb3 = (await Connector.connect()).web3;
 
                     console.log(data);
 
-                    await W12Lister.methods.whitelistToken(
+                    const tx = await W12Lister.methods.whitelistToken(
                         data.ownerAddress,
                         data.tokenAddress,
                         data.name,
@@ -90,6 +91,8 @@ export default {
                         data.feePercent,
                         data.feeETHPercent
                     );
+
+                    waitTransactionReceipt(tx, connectedWeb3, 5000);
                 } catch (e) {
                     this.setErrorMessage(e.message || UNKNOWN_ERROR_WHILE_WHITELISTING_TOKEN);
                 }
@@ -120,40 +123,9 @@ export default {
             if (W12ListerFactory) {
                 try {
                     const W12Lister = W12ListerFactory.at(config.contracts.W12Lister.address);
-                    const getRecords = promisify(this.EventHelpers.all.get.bind(this.EventHelpers.all));
+                    const list = await W12Lister.fetchAllTokensComposedInformation();
 
-                    const records = await getRecords();
-                    const list = [];
-
-                    for (let idx in records) {
-                        const record = records[idx];
-                        const {
-                            name,
-                            symbol,
-                            tokenAddress,
-                            tokenOwner
-                        } = record.args;
-
-                        const tokenIndex = (await W12Lister.methods.approvedTokensIndex(tokenAddress)).toNumber();
-                        const listedToken = await W12Lister.methods.approvedTokens(tokenIndex);
-                        const decimals = listedToken[2].toString();
-                        const feePercent = listedToken[3].toString();
-                        const feeETHPercent = listedToken[4].toString();
-
-                        list.push({
-                            index: tokenIndex,
-                            name,
-                            symbol,
-                            tokenAddress,
-                            tokenOwner,
-                            decimals,
-                            feePercent,
-                            feeETHPercent,
-                            listedToken
-                        });
-                    }
-
-                    this.tokensList = list;
+                    this.tokensList = list.map(({ token }) => token);
                 } catch (e) {
                     this.setErrorMessage(e.message || UNKNOWN_ERROR_WHILE_FETCH_TOKENS_LIST);
                 }

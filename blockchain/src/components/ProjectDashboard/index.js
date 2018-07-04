@@ -158,12 +158,10 @@ export default {
             this.fetchingToken = true;
 
             const tokenAddress = this.tokenAddress;
-            const {W12ListerFactory, ERC20Factory, W12TokenLedgerFactory} = await this.loadLedger();
+            const {W12ListerFactory} = await this.loadLedger();
 
             if (
                 !W12ListerFactory
-                    || !ERC20Factory
-                        || !W12TokenLedgerFactory
             ) {
                 return;
             }
@@ -171,57 +169,18 @@ export default {
             if (tokenAddress) {
                 try {
                     const W12Lister = W12ListerFactory.at(config.contracts.W12Lister.address);
-                    const whiteListEvent = W12Lister.events.OwnerWhitelisted({tokenAddress}, { fromBlock: 0 });
+                    const data = await W12Lister.fetchComposedTokenInformationByTokenAddress(tokenAddress);
 
-                    const getEventRecord = promisify(whiteListEvent.get.bind(whiteListEvent));
+                    if (data) {
+                        this.ContractInstances = {
+                            ...data.links,
+                            W12ListerInstance: W12Lister
+                        };
 
-                    const tokenIndex = (await W12Lister.methods.approvedTokensIndex(tokenAddress)).toNumber();
-
-                    if (tokenIndex > 0) {
-                        const eventRecord = await getEventRecord();
-
-                        if (eventRecord.length > 0) {
-                            const {
-                                name,
-                                symbol,
-                                tokenAddress,
-                                tokenOwner
-                            } = eventRecord[0].args; // take first record by default
-
-
-                            const listedToken = await W12Lister.methods.approvedTokens(tokenIndex);
-                            const ledgerAddress = await W12Lister.methods.ledger();
-                            const decimals = listedToken[2].toString();
-                            const feePercent = listedToken[3].toString();
-                            const feeETHPercent = listedToken[4].toString();
-                            const crowdsaleAddress = listedToken[5].toString();
-                            const tokensForSaleAmount = listedToken[6].toString();
-                            const wTokensIssuedAmount = listedToken[7].toString();
-                            const ERC20 = ERC20Factory.at(tokenAddress);
-                            const W12TokenLedger = W12TokenLedgerFactory.at(ledgerAddress);
-
-                            this.ContractInstances = {
-                                ERC20Instance: ERC20,
-                                W12TokenLedgerInstance: W12TokenLedger,
-                                W12ListerInstance: W12Lister
-                            };
-
-                            this.token = {
-                                index: tokenIndex,
-                                ledgerAddress,
-                                name,
-                                symbol,
-                                tokenAddress,
-                                tokenOwner,
-                                decimals,
-                                feePercent,
-                                feeETHPercent,
-                                crowdsaleAddress,
-                                tokensForSaleAmount,
-                                wTokensIssuedAmount,
-                                listedToken
-                            };
-                        }
+                        this.token = data.token;
+                    } else {
+                        this.token = null;
+                        this.ContractInstances = null;
                     }
                 } catch (e) {
                     this.token = null;
