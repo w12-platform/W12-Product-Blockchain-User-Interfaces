@@ -13,9 +13,7 @@ export class W12CrowdsaleWrapper extends BaseWrapper {
         if (stagesLength > 0) {
             for(let i = 0; i< stagesLength; i++) {
                 const stage = await this.methods.stages(i);
-                const bonusVolumes = Array.isArray(stage[3])
-                    ? stage[3].map((value, index) => [web3.fromWei(value, 'ether').toString(), stage[4][index].toString()])
-                    : [];
+                const bonusVolumes = await this.getBonusVolumesAtStage(i);
 
                 const internalStageStructure = {
                     endDate: moment.unix(stage[0].toNumber()).utc().format(DATE_FORMAT),
@@ -30,6 +28,28 @@ export class W12CrowdsaleWrapper extends BaseWrapper {
         }
 
         return list;
+    }
+
+    async getBonusVolumesAtStage(stageIndex) {
+        const result = [];
+
+        const boundaries = await this.methods.getStageVolumeBoundaries(stageIndex);
+        const bonuses = await this.methods.getStageVolumeBonuses(stageIndex);
+
+        if (
+            Array.isArray(boundaries)
+                && Array.isArray(bonuses)
+                    && boundaries.length > 0
+                        && boundaries.length === bonuses.length) {
+            for (let index in boundaries) {
+                const boundary = web3.fromWei(boundaries[index], 'ether').toString();
+                const bonus = bonuses[index].toString();
+
+                return result.push([boundary, bonus]);
+            }
+        }
+
+        return result;
     }
 
     async setBonusVolumes(index, list) {

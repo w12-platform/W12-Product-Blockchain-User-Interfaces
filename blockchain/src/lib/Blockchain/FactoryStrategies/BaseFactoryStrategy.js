@@ -1,4 +1,4 @@
-export class BaseFactory {
+export class BaseFactoryStrategy {
     constructor (contractArtifacts, ContractWrapper, connector) {
         this.artifact = contractArtifacts;
         this.connector = connector;
