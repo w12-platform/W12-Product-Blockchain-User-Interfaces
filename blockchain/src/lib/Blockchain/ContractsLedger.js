@@ -22,10 +22,10 @@ async function loadContracts() {
         .then(data => data.json());
 
     const W12CrowdsaleFactoryArtifacts = await fetch('/blockchain/src/lib/Blockchain/contracts/W12CrowdsaleFactory.json')
-            .then(data => data.json());
+        .then(data => data.json());
 
     const W12TokenArtifacts = await fetch('/blockchain/src/lib/Blockchain/contracts/WToken.json')
-            .then(data => data.json());
+        .then(data => data.json());
 
     const W12TokenLedgerArtifacts = await fetch('/blockchain/src/lib/Blockchain/contracts/W12TokenLedger.json')
         .then(data => data.json());
