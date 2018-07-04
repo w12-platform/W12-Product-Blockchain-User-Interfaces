@@ -20,7 +20,7 @@ export class W12ListerWrapper extends BaseWrapper {
     }
 
     async fetchComposedTokenInformationByTokenAddress(tokenAddress) {
-        const {ERC20Factory, W12TokenLedgerFactory} = this;
+        const {ERC20Factory, W12CrowdsaleFactory, W12TokenLedgerFactory} = this;
 
         if (tokenAddress) {
             const whiteListEvent = this.events.OwnerWhitelisted({ tokenAddress }, { fromBlock: 0 });
@@ -46,11 +46,19 @@ export class W12ListerWrapper extends BaseWrapper {
                     const decimals = listedToken[2].toString();
                     const feePercent = listedToken[3].toString();
                     const feeETHPercent = listedToken[4].toString();
-                    const crowdsaleAddress = listedToken[5].toString();
+                    let crowdsaleAddress = listedToken[5].toString();
                     const tokensForSaleAmount = listedToken[6].toString();
                     const wTokensIssuedAmount = listedToken[7].toString();
                     const ERC20 = ERC20Factory.at(tokenAddress);
                     const W12TokenLedger = W12TokenLedgerFactory.at(ledgerAddress);
+
+                    if (!crowdsaleAddress || parseInt(crowdsaleAddress, 16) === 0) {
+                        crowdsaleAddress = null;
+                    }
+
+                    const W12Crowdsale = crowdsaleAddress
+                        ? W12CrowdsaleFactory.at(crowdsaleAddress)
+                        : null;
 
                     return {
                         token: {
@@ -70,7 +78,8 @@ export class W12ListerWrapper extends BaseWrapper {
                         },
                         links: {
                             ERC20Instance: ERC20,
-                            W12TokenLedgerInstance: W12TokenLedger
+                            W12TokenLedgerInstance: W12TokenLedger,
+                            W12CrowdsaleInstance: W12Crowdsale
                         }
                     }
                 }
