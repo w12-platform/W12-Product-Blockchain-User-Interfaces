@@ -403,6 +403,44 @@
     </section>
 </script>
 
+<script type="x-template" id="InvestorDashboardTemplate">
+    <section class="container">
+        <h2>Investor Dashboard</h2>
+        <div v-if="isLoading" class="alert alert-info" role="alert">
+            <span v-if="loadingLedger">Загрузка смарт-контрактов...<br></span>
+            <span v-if="fetchTokens">Загрузка списка токенов...<br></span>
+        </div>
+        <div v-if="errorMessage" class="alert alert-danger" role="alert">
+            <span>{{ errorMessage }}</span>
+        </div>
+        <div v-if="!isLoading">
+
+        </div>
+    </section>
+</script>
+
+<script type="x-template" id="ConverterTemplate">
+    <section class="container">
+        <h2>Converter</h2>
+        <div class="form-group col-md-6">
+            <label for="Tokens">Tokens</label>
+            <input
+                    type="text"
+                    class="form-control"
+                    id="Tokens"
+                    v-model="tokens">
+        </div>
+        <div class="form-group col-md-6">
+            <label for="ETHs">ETHs</label>
+            <input
+                    type="text"
+                    class="form-control"
+                    id="ETHs"
+                    v-model="ETHs">
+        </div>
+    </section>
+</script>
+
 <script src="blockchain/node_modules/vue/dist/vue.js"></script>
 <script src="blockchain/node_modules/moment/moment.js"></script>
 <script src="blockchain/node_modules/web3/dist/web3.js"></script>
