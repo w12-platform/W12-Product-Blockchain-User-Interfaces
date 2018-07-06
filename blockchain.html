@@ -22,6 +22,8 @@
     <admin-dashboard></admin-dashboard>
     <hr style="margin: 92px 0" />
     <project-dashboard></project-dashboard>
+    <hr style="margin: 92px 0"/>
+    <investor-dashboard></investor-dashboard>
 </div>
 
 <script type="x-template" id="AdminDashboardTemplate">
@@ -193,7 +195,7 @@
                                 Approve tokens to place
                             </div>
                             <div class="col-sm-2 text-center">
-                                <span v-if="!hasAllowance || !isWhiteListed" class="badge badge-success">Pending</span>
+                                <span v-if="!(hasAllowance || hasPlacedWTokenAddress) || !isWhiteListed" class="badge badge-success">Pending</span>
                                 <span v-else class="badge badge-success">Approved</span>
                             </div>
                             <div class="col-sm text-right">
@@ -228,7 +230,7 @@
                                 Place Tokens to Listing
                             </div>
                             <div class="col-sm-2 text-center">
-                                <span v-if="!hasPlacedWTokenAddress || !hasAllowance || !isWhiteListed"
+                                <span v-if="!hasPlacedWTokenAddress && (!hasAllowance || !isWhiteListed)"
                                       class="badge badge-success">Pending</span>
                                 <span v-else class="badge badge-success">Placed</span>
                             </div>
@@ -260,13 +262,13 @@
                                 Configure Crowdsale
                             </div>
                             <div class="col-sm-2 text-center">
-                                <span v-if="!isCrowdsaleInited || !hasPlacedWTokenAddress || !hasAllowance || !isWhiteListed"
+                                <span v-if="!isCrowdsaleInited && (!hasPlacedWTokenAddress && (!hasAllowance || !isWhiteListed))"
                                       class="badge badge-success">Pending</span>
                                 <span v-else class="badge badge-success">Inited</span>
                             </div>
                             <div class="col-sm text-right">
                                 <span v-if="isCrowdsaleInited">{{ tokenCrowdsaleAddress }}</span>
-                                <div v-else-if="isWhiteListed && hasAllowance && hasPlacedWTokenAddress" class="text-left">
+                                <div v-else-if="isWhiteListed && hasPlacedWTokenAddress" class="text-left">
                                     <div class="form-group">
                                         <label for="StartDate">Start date (YYYY-MM-DD)</label>
                                         <input
@@ -309,7 +311,7 @@
                                 Configure Crowdsale Bonuses
                             </div>
                             <div class="col-sm">
-                                <div v-if="isCrowdsaleInited && isWhiteListed && hasAllowance && hasPlacedWTokenAddress"
+                                <div v-if="isCrowdsaleInited && hasPlacedWTokenAddress"
                                      class="text-left">
                                     <div class="row" v-for="(stage, stageIndex) in tokenCrowdsaleStages" :key="stageIndex">
                                         <div class="col-sm">
@@ -414,14 +416,30 @@
             <span>{{ errorMessage }}</span>
         </div>
         <div v-if="!isLoading">
-
+            <div
+                class="card p-5"
+                v-for="token in filteredTokensList"
+                :key="token.tokenAddress"
+            >
+                <p>Token address: {{ token.tokenAddress }}</p>
+                <p>Token name: {{ token.name }}</p>
+                <p>Token symbol: {{ token.symbol }}</p>
+                <converter
+                        :tokenPrice="token.tokenPrice"
+                        :bonusConditions="token.bonusVolumes"
+                        @change="handleConverterChange(token.tokenAddress, $event)"
+                ></converter>
+                <p>Total buy: {{ preparedBuyAmountByTokenAddress[token.tokenAddress] }} ETH</p>
+                <button class="btn btn-primary btn-sm" @click="handleBuyClick(token.tokenAddress)">
+                    Buy
+                </button>
+            </div>
         </div>
     </section>
 </script>
 
 <script type="x-template" id="ConverterTemplate">
-    <section class="container">
-        <h2>Converter</h2>
+    <div>
         <div class="form-group col-md-6">
             <label for="Tokens">Tokens</label>
             <input
@@ -438,7 +456,10 @@
                     id="ETHs"
                     v-model="ETHs">
         </div>
-    </section>
+        <p>
+            Profit: {{ profitInEth }} ETH
+        </p>
+    </div>
 </script>
 
 <script src="blockchain/node_modules/vue/dist/vue.js"></script>

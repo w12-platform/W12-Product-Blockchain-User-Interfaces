@@ -1,9 +1,3 @@
-import Ledger from '../../lib/Blockchain/ContractsLedger.js';
-import config from '../../config.js';
-import {
-    UNKNOWN_ERROR_WHILE_FETCH_TOKENS_LIST
-} from '../../errors.js';
-
 const web3 = new Web3();
 const BigNumber = web3.BigNumber;
 
@@ -11,13 +5,17 @@ export default {
     name: 'Converter',
     template: '#ConverterTemplate',
     props: {
-        tokenPriceInETH: {
+        tokenPrice: {
             type: String,
             required: true
         },
         bonusConditions: {
             type: Array,
             required: true
+        },
+        fixedDiscountPercent: {
+            type: String,
+            default: '0'
         }
     },
     data () {
@@ -26,8 +24,28 @@ export default {
             tokensWithoutDiscount: '0',
             ETHs: '0',
             ETHsWithoutDiscount: '0',
-            currentDiscountPercent: '0'
+            blockChangeTokens: false,
+            blockChangeETHs: false,
         };
+    },
+    computed: {
+        profitInEth() {
+            const ETHs = isNaN(parseFloat(this.ETHs))
+                ? '0'
+                : this.ETHs;
+
+            return new BigNumber(this.ETHsWithoutDiscount).minus(ETHs).toString();
+        }
+    },
+    watch: {
+        tokens: {
+            handler: 'handleTokensChange',
+            immediate: true
+        },
+        ETHs: {
+            handler: 'handleETHsChange',
+            immediate: true
+        }
     },
     methods: {
         findMatchBonusRange(eth) {
@@ -35,8 +53,8 @@ export default {
                 (result, item) => {
                     const last = result[result.length - 1];
 
-                    let start = BigNumber(item[0]);
-                    let bonusPercent = BigNumber(item[1]);
+                    let start = new BigNumber(item[0]);
+                    let bonusPercent = new BigNumber(item[1]);
 
                     if (result.length > 0 && !last.end.isFinite()) {
                         last.end = start;
@@ -61,46 +79,108 @@ export default {
                         && range.end.greaterThanOrEqualTo(eth)
             );
         },
-        getDiscountByEth(amount) {
+        getPrice() {
+            const discount = new BigNumber(1).minus(
+                new BigNumber(this.fixedDiscountPercent).dividedBy(100)
+            );
+
+            return new BigNumber(this.tokenPrice).mul(discount);
+        },
+        getBonusMultiplierByEth(amount) {
             const range = this.findMatchBonusRange(amount);
 
-            if (range) {
-                return range.bonusPercent;
-            }
+            let discount = new BigNumber(1);
 
-            return new BigNumber(0);
-        },
-        getDiscountByTokens(amount) {
-            const inEth = this.convertTokensToEth(amount, this.tokenPriceInETH, 0);
-            const discount = this.getDiscountByEth(inEth);
+            if (range) {
+                discount = discount.plus(range.bonusPercent.div(100));
+            }
 
             return discount;
         },
-        convertTokensToEth(amount, price, discount) {
-            price = price
-                ? new BigNumber(price)
-                : new BigNumber(this.tokenPriceInETH);
+        getBonusMultiplierByTokens(amount) {
+            const inEth = this.convertTokensToEth(amount, this.tokenPrice, 1);
+            const discount = this.getBonusMultiplierByEth(inEth);
 
-            discount = discount
-                ? new BigNumber(discount)
-                : this.getDiscountByTokens(amount);
-
-            const priceMultiplier = new BigNumber(1).minus(discount.divideBy(100));
-
-            return amount.mul(price.mul(priceMultiplier));
+            return discount;
         },
-        convertEthToTokens(amount, price, discount) {
+        convertTokensToEth(amount, price, bonusMultiplier) {
+            price = price != null
+                ? new BigNumber(price)
+                : this.getPrice();
+
+            bonusMultiplier = bonusMultiplier != null
+                ? new BigNumber(bonusMultiplier)
+                : this.getBonusMultiplierByTokens(amount);
+
+            return new BigNumber(amount).div(bonusMultiplier).mul(price);
+        },
+        convertEthToTokens(amount, price, bonusMultiplier) {
             price = price
                 ? new BigNumber(price)
-                : new BigNumber(this.tokenPriceInETH);
+                : this.getPrice();
 
-            discount = discount
-                ? new BigNumber(discount)
-                : this.getDiscountByEth(amount);
+            bonusMultiplier = bonusMultiplier
+                ? new BigNumber(bonusMultiplier)
+                : this.getBonusMultiplierByEth(amount);
 
-            const priceMultiplier = new BigNumber(1).minus(discount.divideBy(100));
+            return new BigNumber(amount).mul(bonusMultiplier).div(price);
+        },
 
-            return amount.dividedBy(price.mul(priceMultiplier));
+        handleTokensChange(value, prevValue) {
+            value = isNaN(parseFloat(value))
+                ? '0'
+                : value;
+
+            if (this.blockChangeETHs) {
+                return;
+            }
+
+            const withDiscount = this.convertTokensToEth(value);
+            const withoutDiscount = this.convertTokensToEth(value, this.tokenPrice, 1);
+            const tokensWithoutDiscount = this.convertEthToTokens(withDiscount, this.tokenPrice, 1);
+
+            this.blockChangeTokens = true;
+
+            this.ETHs = withDiscount.toString();
+            this.ETHsWithoutDiscount = withoutDiscount.toString();
+            this.tokensWithoutDiscount = tokensWithoutDiscount.toString();
+
+            this.$emit('change', {
+                tokens: this.tokens,
+                ETHs: this.ETHs
+            });
+
+            this.$nextTick(() => {
+                this.blockChangeTokens = false;
+            });
+        },
+        handleETHsChange(value, prevValue) {
+            value = isNaN(parseFloat(value))
+                ? '0'
+                : value;
+
+            if (this.blockChangeTokens) {
+                return;
+            }
+
+            const withDiscount = this.convertEthToTokens(value);
+            const withoutDiscount = this.convertEthToTokens(value, this.tokenPrice, 1);
+            const ethWithoutDiscount = this.convertTokensToEth(withDiscount, this.tokenPrice, 1);
+
+            this.blockChangeETHs = true;
+
+            this.tokens = withDiscount.toString();
+            this.tokensWithoutDiscount = withoutDiscount.toString();
+            this.ETHsWithoutDiscount = ethWithoutDiscount.toString();
+
+            this.$emit('change', {
+               tokens: this.tokens,
+               ETHs: this.ETHs
+            });
+
+            this.$nextTick(() => {
+                this.blockChangeETHs = false;
+            });
         }
     }
 };
