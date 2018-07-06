@@ -68,24 +68,24 @@
       "type": "event"
     }
   ],
-  "bytecode": "0x608060405260008060146101000a81548160ff021916908315150217905550336000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055506103b58061006d6000396000f300608060405260043610610057576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff168063715018a61461005c5780638da5cb5b14610073578063f2fde38b146100ca575b600080fd5b34801561006857600080fd5b5061007161010d565b005b34801561007f57600080fd5b5061008861020f565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b3480156100d657600080fd5b5061010b600480360381019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190505050610234565b005b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff1614151561016857600080fd5b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff167ff8df31144d9c2f0f6b59d69b8b98abd5459d07f2742c4df920b25aae33c6482060405160405180910390a260008060006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550565b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff1614151561028f57600080fd5b600073ffffffffffffffffffffffffffffffffffffffff168173ffffffffffffffffffffffffffffffffffffffff16141515156102cb57600080fd5b8073ffffffffffffffffffffffffffffffffffffffff166000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff167f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e060405160405180910390a3806000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550505600a165627a7a72305820a7c7559ecdbc0e0a7bef3d49bc38b88ddc7949dd0f7cb0eb01a507f87a1d18f70029",
-  "deployedBytecode": "0x608060405260043610610057576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff168063715018a61461005c5780638da5cb5b14610073578063f2fde38b146100ca575b600080fd5b34801561006857600080fd5b5061007161010d565b005b34801561007f57600080fd5b5061008861020f565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b3480156100d657600080fd5b5061010b600480360381019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190505050610234565b005b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff1614151561016857600080fd5b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff167ff8df31144d9c2f0f6b59d69b8b98abd5459d07f2742c4df920b25aae33c6482060405160405180910390a260008060006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550565b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff1614151561028f57600080fd5b600073ffffffffffffffffffffffffffffffffffffffff168173ffffffffffffffffffffffffffffffffffffffff16141515156102cb57600080fd5b8073ffffffffffffffffffffffffffffffffffffffff166000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff167f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e060405160405180910390a3806000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550505600a165627a7a72305820a7c7559ecdbc0e0a7bef3d49bc38b88ddc7949dd0f7cb0eb01a507f87a1d18f70029",
+  "bytecode": "0x608060405260008060146101000a81548160ff021916908315150217905550336000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055506103b58061006d6000396000f300608060405260043610610057576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff168063715018a61461005c5780638da5cb5b14610073578063f2fde38b146100ca575b600080fd5b34801561006857600080fd5b5061007161010d565b005b34801561007f57600080fd5b5061008861020f565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b3480156100d657600080fd5b5061010b600480360381019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190505050610234565b005b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff1614151561016857600080fd5b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff167ff8df31144d9c2f0f6b59d69b8b98abd5459d07f2742c4df920b25aae33c6482060405160405180910390a260008060006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550565b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff1614151561028f57600080fd5b600073ffffffffffffffffffffffffffffffffffffffff168173ffffffffffffffffffffffffffffffffffffffff16141515156102cb57600080fd5b8073ffffffffffffffffffffffffffffffffffffffff166000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff167f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e060405160405180910390a3806000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550505600a165627a7a723058204772f8c13851f9320afc222769bba909ee609026f784239a89eb427114d8b4be0029",
+  "deployedBytecode": "0x608060405260043610610057576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff168063715018a61461005c5780638da5cb5b14610073578063f2fde38b146100ca575b600080fd5b34801561006857600080fd5b5061007161010d565b005b34801561007f57600080fd5b5061008861020f565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b3480156100d657600080fd5b5061010b600480360381019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190505050610234565b005b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff1614151561016857600080fd5b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff167ff8df31144d9c2f0f6b59d69b8b98abd5459d07f2742c4df920b25aae33c6482060405160405180910390a260008060006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550565b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff1614151561028f57600080fd5b600073ffffffffffffffffffffffffffffffffffffffff168173ffffffffffffffffffffffffffffffffffffffff16141515156102cb57600080fd5b8073ffffffffffffffffffffffffffffffffffffffff166000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff167f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e060405160405180910390a3806000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550505600a165627a7a723058204772f8c13851f9320afc222769bba909ee609026f784239a89eb427114d8b4be0029",
   "sourceMap": "246:48:5:-;;;351:5:9;321:35;;;;;;;;;;;;;;;;;;;;575:10:11;567:5;;:18;;;;;;;;;;;;;;;;;;246:48:5;;;;;;",
   "deployedSourceMap": "246:48:5:-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1162:111:11;;8:9:-1;5:2;;;30:1;27;20:12;5:2;1162:111:11;;;;;;238:20;;8:9:-1;5:2;;;30:1;27;20:12;5:2;238:20:11;;;;;;;;;;;;;;;;;;;;;;;;;;;898:174;;8:9:-1;5:2;;;30:1;27;20:12;5:2;898:174:11;;;;;;;;;;;;;;;;;;;;;;;;;;;;1162:111;719:5;;;;;;;;;;;705:19;;:10;:19;;;697:28;;;;;;;;1238:5;;;;;;;;;;;1219:25;;;;;;;;;;;;1266:1;1250:5;;:18;;;;;;;;;;;;;;;;;;1162:111::o;238:20::-;;;;;;;;;;;;;:::o;898:174::-;719:5;;;;;;;;;;;705:19;;:10;:19;;;697:28;;;;;;;;994:1;974:22;;:8;:22;;;;966:31;;;;;;;;1036:8;1008:37;;1029:5;;;;;;;;;;;1008:37;;;;;;;;;;;;1059:8;1051:5;;:16;;;;;;;;;;;;;;;;;;898:174;:::o",
   "source": "pragma solidity ^0.4.24;\n\nimport \"../openzeppelin-solidity/contracts/ownership/Ownable.sol\";\nimport \"../openzeppelin-solidity/contracts/ReentrancyGuard.sol\";\nimport \"../openzeppelin-solidity/contracts/math/SafeMath.sol\";\nimport \"./WToken.sol\";\n\n\ncontract W12Fund is Ownable, ReentrancyGuard {\n}\n",
-  "sourcePath": "/c/Users/Mr.Hokid/projects/work/w12-product-contracts/contracts/W12Fund.sol",
+  "sourcePath": "/home/andrey/Code/w12/platform-contracts/contracts/W12Fund.sol",
   "ast": {
-    "absolutePath": "/c/Users/Mr.Hokid/projects/work/w12-product-contracts/contracts/W12Fund.sol",
+    "absolutePath": "/home/andrey/Code/w12/platform-contracts/contracts/W12Fund.sol",
     "exportedSymbols": {
       "W12Fund": [
-        973
+        1012
       ]
     },
-    "id": 974,
+    "id": 1013,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 964,
+        "id": 1003,
         "literals": [
           "solidity",
           "^",
@@ -96,45 +96,45 @@
         "src": "0:24:5"
       },
       {
-        "absolutePath": "/c/Users/Mr.Hokid/projects/work/w12-product-contracts/openzeppelin-solidity/contracts/ownership/Ownable.sol",
+        "absolutePath": "/home/andrey/Code/w12/platform-contracts/openzeppelin-solidity/contracts/ownership/Ownable.sol",
         "file": "../openzeppelin-solidity/contracts/ownership/Ownable.sol",
-        "id": 965,
+        "id": 1004,
         "nodeType": "ImportDirective",
-        "scope": 974,
-        "sourceUnit": 2536,
+        "scope": 1013,
+        "sourceUnit": 2575,
         "src": "26:66:5",
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
-        "absolutePath": "/c/Users/Mr.Hokid/projects/work/w12-product-contracts/openzeppelin-solidity/contracts/ReentrancyGuard.sol",
+        "absolutePath": "/home/andrey/Code/w12/platform-contracts/openzeppelin-solidity/contracts/ReentrancyGuard.sol",
         "file": "../openzeppelin-solidity/contracts/ReentrancyGuard.sol",
-        "id": 966,
+        "id": 1005,
         "nodeType": "ImportDirective",
-        "scope": 974,
-        "sourceUnit": 2366,
+        "scope": 1013,
+        "sourceUnit": 2405,
         "src": "93:64:5",
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
-        "absolutePath": "/c/Users/Mr.Hokid/projects/work/w12-product-contracts/openzeppelin-solidity/contracts/math/SafeMath.sol",
+        "absolutePath": "/home/andrey/Code/w12/platform-contracts/openzeppelin-solidity/contracts/math/SafeMath.sol",
         "file": "../openzeppelin-solidity/contracts/math/SafeMath.sol",
-        "id": 967,
+        "id": 1006,
         "nodeType": "ImportDirective",
-        "scope": 974,
-        "sourceUnit": 2460,
+        "scope": 1013,
+        "sourceUnit": 2499,
         "src": "158:62:5",
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
-        "absolutePath": "/c/Users/Mr.Hokid/projects/work/w12-product-contracts/contracts/WToken.sol",
+        "absolutePath": "/home/andrey/Code/w12/platform-contracts/contracts/WToken.sol",
         "file": "./WToken.sol",
-        "id": 968,
+        "id": 1007,
         "nodeType": "ImportDirective",
-        "scope": 974,
-        "sourceUnit": 2343,
+        "scope": 1013,
+        "sourceUnit": 2382,
         "src": "221:22:5",
         "symbolAliases": [],
         "unitAlias": ""
@@ -145,17 +145,17 @@
             "arguments": null,
             "baseName": {
               "contractScope": null,
-              "id": 969,
+              "id": 1008,
               "name": "Ownable",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 2535,
+              "referencedDeclaration": 2574,
               "src": "266:7:5",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_Ownable_$2535",
+                "typeIdentifier": "t_contract$_Ownable_$2574",
                 "typeString": "contract Ownable"
               }
             },
-            "id": 970,
+            "id": 1009,
             "nodeType": "InheritanceSpecifier",
             "src": "266:7:5"
           },
@@ -163,55 +163,55 @@
             "arguments": null,
             "baseName": {
               "contractScope": null,
-              "id": 971,
+              "id": 1010,
               "name": "ReentrancyGuard",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 2365,
+              "referencedDeclaration": 2404,
               "src": "275:15:5",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_ReentrancyGuard_$2365",
+                "typeIdentifier": "t_contract$_ReentrancyGuard_$2404",
                 "typeString": "contract ReentrancyGuard"
               }
             },
-            "id": 972,
+            "id": 1011,
             "nodeType": "InheritanceSpecifier",
             "src": "275:15:5"
           }
         ],
         "contractDependencies": [
-          2365,
-          2535
+          2404,
+          2574
         ],
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 973,
+        "id": 1012,
         "linearizedBaseContracts": [
-          973,
-          2365,
-          2535
+          1012,
+          2404,
+          2574
         ],
         "name": "W12Fund",
         "nodeType": "ContractDefinition",
         "nodes": [],
-        "scope": 974,
+        "scope": 1013,
         "src": "246:48:5"
       }
     ],
     "src": "0:295:5"
   },
   "legacyAST": {
-    "absolutePath": "/c/Users/Mr.Hokid/projects/work/w12-product-contracts/contracts/W12Fund.sol",
+    "absolutePath": "/home/andrey/Code/w12/platform-contracts/contracts/W12Fund.sol",
     "exportedSymbols": {
       "W12Fund": [
-        973
+        1012
       ]
     },
-    "id": 974,
+    "id": 1013,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 964,
+        "id": 1003,
         "literals": [
           "solidity",
           "^",
@@ -222,45 +222,45 @@
         "src": "0:24:5"
       },
       {
-        "absolutePath": "/c/Users/Mr.Hokid/projects/work/w12-product-contracts/openzeppelin-solidity/contracts/ownership/Ownable.sol",
+        "absolutePath": "/home/andrey/Code/w12/platform-contracts/openzeppelin-solidity/contracts/ownership/Ownable.sol",
         "file": "../openzeppelin-solidity/contracts/ownership/Ownable.sol",
-        "id": 965,
+        "id": 1004,
         "nodeType": "ImportDirective",
-        "scope": 974,
-        "sourceUnit": 2536,
+        "scope": 1013,
+        "sourceUnit": 2575,
         "src": "26:66:5",
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
-        "absolutePath": "/c/Users/Mr.Hokid/projects/work/w12-product-contracts/openzeppelin-solidity/contracts/ReentrancyGuard.sol",
+        "absolutePath": "/home/andrey/Code/w12/platform-contracts/openzeppelin-solidity/contracts/ReentrancyGuard.sol",
         "file": "../openzeppelin-solidity/contracts/ReentrancyGuard.sol",
-        "id": 966,
+        "id": 1005,
         "nodeType": "ImportDirective",
-        "scope": 974,
-        "sourceUnit": 2366,
+        "scope": 1013,
+        "sourceUnit": 2405,
         "src": "93:64:5",
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
-        "absolutePath": "/c/Users/Mr.Hokid/projects/work/w12-product-contracts/openzeppelin-solidity/contracts/math/SafeMath.sol",
+        "absolutePath": "/home/andrey/Code/w12/platform-contracts/openzeppelin-solidity/contracts/math/SafeMath.sol",
         "file": "../openzeppelin-solidity/contracts/math/SafeMath.sol",
-        "id": 967,
+        "id": 1006,
         "nodeType": "ImportDirective",
-        "scope": 974,
-        "sourceUnit": 2460,
+        "scope": 1013,
+        "sourceUnit": 2499,
         "src": "158:62:5",
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
-        "absolutePath": "/c/Users/Mr.Hokid/projects/work/w12-product-contracts/contracts/WToken.sol",
+        "absolutePath": "/home/andrey/Code/w12/platform-contracts/contracts/WToken.sol",
         "file": "./WToken.sol",
-        "id": 968,
+        "id": 1007,
         "nodeType": "ImportDirective",
-        "scope": 974,
-        "sourceUnit": 2343,
+        "scope": 1013,
+        "sourceUnit": 2382,
         "src": "221:22:5",
         "symbolAliases": [],
         "unitAlias": ""
@@ -271,17 +271,17 @@
             "arguments": null,
             "baseName": {
               "contractScope": null,
-              "id": 969,
+              "id": 1008,
               "name": "Ownable",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 2535,
+              "referencedDeclaration": 2574,
               "src": "266:7:5",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_Ownable_$2535",
+                "typeIdentifier": "t_contract$_Ownable_$2574",
                 "typeString": "contract Ownable"
               }
             },
-            "id": 970,
+            "id": 1009,
             "nodeType": "InheritanceSpecifier",
             "src": "266:7:5"
           },
@@ -289,38 +289,38 @@
             "arguments": null,
             "baseName": {
               "contractScope": null,
-              "id": 971,
+              "id": 1010,
               "name": "ReentrancyGuard",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 2365,
+              "referencedDeclaration": 2404,
               "src": "275:15:5",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_ReentrancyGuard_$2365",
+                "typeIdentifier": "t_contract$_ReentrancyGuard_$2404",
                 "typeString": "contract ReentrancyGuard"
               }
             },
-            "id": 972,
+            "id": 1011,
             "nodeType": "InheritanceSpecifier",
             "src": "275:15:5"
           }
         ],
         "contractDependencies": [
-          2365,
-          2535
+          2404,
+          2574
         ],
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 973,
+        "id": 1012,
         "linearizedBaseContracts": [
-          973,
-          2365,
-          2535
+          1012,
+          2404,
+          2574
         ],
         "name": "W12Fund",
         "nodeType": "ContractDefinition",
         "nodes": [],
-        "scope": 974,
+        "scope": 1013,
         "src": "246:48:5"
       }
     ],
@@ -332,5 +332,5 @@
   },
   "networks": {},
   "schemaVersion": "2.0.0",
-  "updatedAt": "2018-07-02T16:46:49.940Z"
+  "updatedAt": "2018-07-04T08:44:18.038Z"
 }
