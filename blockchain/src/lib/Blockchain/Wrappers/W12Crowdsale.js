@@ -45,7 +45,7 @@ export class W12CrowdsaleWrapper extends BaseWrapper {
                 const boundary = web3.fromWei(boundaries[index], 'ether').toString();
                 const bonus = bonuses[index].toString();
 
-                return result.push([boundary, bonus]);
+                result.push([boundary, bonus]);
             }
         }
 
