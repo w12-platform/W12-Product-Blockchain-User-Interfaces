@@ -386,7 +386,7 @@ export default {
 
             if (
                 !date.isValid()
-                    || !date.isAfter(moment())
+                    || !date.isSameOrAfter(moment())
                         || !amountForSale.greaterThan(0)
                             || !price.greaterThan(0)
                                 || !price.lessThanOrEqualTo(amountForSale)
