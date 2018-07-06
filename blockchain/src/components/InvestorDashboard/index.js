@@ -53,6 +53,7 @@ export default {
                 } = crowdsaleInformation;
 
                 let bonusVolumes = [];
+                let stageDiscount = '0';
 
                 if (stages.length) {
                     const ranges = [
@@ -89,6 +90,7 @@ export default {
 
                     if (foundStage) {
                         bonusVolumes = foundStage.stage.bonusVolumes;
+                        stageDiscount = foundStage.stage.discount;
                     }
                 }
 
@@ -96,6 +98,7 @@ export default {
                     tokenAddress,
                     tokenPrice,
                     bonusVolumes,
+                    stageDiscount,
                     name,
                     symbol
                 };

@@ -427,6 +427,7 @@
                 <converter
                         :tokenPrice="token.tokenPrice"
                         :bonusConditions="token.bonusVolumes"
+                        :fixedDiscountPercent="token.stageDiscount"
                         @change="handleConverterChange(token.tokenAddress, $event)"
                 ></converter>
                 <p>Total buy: {{ preparedBuyAmountByTokenAddress[token.tokenAddress] }} ETH</p>
