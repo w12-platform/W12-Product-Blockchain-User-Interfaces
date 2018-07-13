@@ -11,4 +11,6 @@ RUN cd blockchain/ && npm ci && npm run build && cd -
 
 ARG PORT=$PORT
 
+EXPOSE $PORT
+
 CMD serve -l $PORT
