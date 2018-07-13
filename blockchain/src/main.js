@@ -1,26 +1,40 @@
-import AdminDashboard from './components/AdminDashboad/index.js';
-import ProjectDashboard from './components/ProjectDashboard/index.js';
-import InvestorDashboard from './components/InvestorDashboard/index.js';
-import ledger from './lib/Blockchain/ContractsLedger.js';
-import config from './config.js';
-import { promisify } from './lib/utils.js';
+import Vue from 'vue';
 
+import ConfigDashboad from './bem/ConfigDashboad';
+import AdminDashboard from './bem/AdminDashboad';
+import ProjectDashboard from './bem/ProjectDashboard';
+import InvestorDashboard from './bem/InvestorDashboard';
+import store from "./store";
 
-// for test
-// ledger
-// 	.then(({ W12Lister }) => {
-// 		const deployed = W12Lister.instance.at(config.contracts.W12Lister.address);
-// 		const approvedTokensLength = promisify(deployed.approvedTokensLength.bind(deployed));
-//
-//         approvedTokensLength()
-// 			.then(result => console.log(result), error => console.log(error));
-// 	});
-
-const View = new Vue({
-    el: '#app',
+const appConfigDashboad = new Vue({
+    store,
+    el: '#appConfigDashboad',
+    template: "<config-dashboad></config-dashboad>",
     components: {
-        AdminDashboard,
-        ProjectDashboard,
+        ConfigDashboad
+    }
+});
+
+const appAdminDashboard = new Vue({
+    el: '#appAdminDashboard',
+    template: "<admin-dashboard></admin-dashboard>",
+    components: {
+        AdminDashboard
+    }
+});
+
+const appProjectDashboard = new Vue({
+    el: '#appProjectDashboard',
+    template: "<project-dashboard></project-dashboard>",
+    components: {
+        ProjectDashboard
+    }
+});
+
+const appInvestorDashboard = new Vue({
+    el: '#appInvestorDashboard',
+    template: "<investor-dashboard></investor-dashboard>",
+    components: {
         InvestorDashboard
     }
 });
