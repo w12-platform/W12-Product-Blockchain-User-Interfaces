@@ -86,7 +86,7 @@
                     <button class="btn btn-primary" @click="tryWhiteListToken">Whitelist</button>
                 </div>
                 <div class="AdminDashboard__tokens-table" v-if="tokensListTableData.length">
-                    <table class="table table-striped table-bordered table-hover">
+                    <table class="table table-striped table-bordered table-hover table-responsive-sm">
                         <thead class="thead-dark">
                         <tr>
                             <th scope="col">Token</th>
@@ -117,8 +117,6 @@
 </template>
 
 <script>
-    import './default.scss';
-
     import Ledger from '../../lib/Blockchain/ContractsLedger.js';
     import {
         UNKNOWN_ERROR_WHILE_FETCH_TOKENS_LIST,
@@ -321,3 +319,11 @@
         }
     };
 </script>
+<style lang="scss">
+    .AdminDashboard {
+        &__tokens-table {
+            margin-top: 24px;
+            overflow: auto;
+        }
+    }
+</style>
