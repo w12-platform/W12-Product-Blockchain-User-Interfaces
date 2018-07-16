@@ -16,6 +16,7 @@ const appConfigDashboad = new Vue({
 });
 
 const appAdminDashboard = new Vue({
+    store,
     el: '#appAdminDashboard',
     template: "<admin-dashboard></admin-dashboard>",
     components: {
@@ -24,6 +25,7 @@ const appAdminDashboard = new Vue({
 });
 
 const appProjectDashboard = new Vue({
+    store,
     el: '#appProjectDashboard',
     template: "<project-dashboard></project-dashboard>",
     components: {
@@ -32,6 +34,7 @@ const appProjectDashboard = new Vue({
 });
 
 const appInvestorDashboard = new Vue({
+    store,
     el: '#appInvestorDashboard',
     template: "<investor-dashboard></investor-dashboard>",
     components: {

@@ -6,9 +6,7 @@ import PersistedStatePlugin from "vuex-persistedstate";
 Vue.use(Vuex);
 
 const store = {
-    state: {
-        test: 2
-    },
+    state: {},
     actions: {},
     mutations: {},
     getters: {},
