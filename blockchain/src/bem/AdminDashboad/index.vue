@@ -120,13 +120,15 @@
     import './default.scss';
 
     import Ledger from '../../lib/Blockchain/ContractsLedger.js';
-    import config from '../../config.js';
     import {
         UNKNOWN_ERROR_WHILE_FETCH_TOKENS_LIST,
         UNKNOWN_ERROR_WHILE_WHITELISTING_TOKEN
     } from '../../errors.js';
     import {promisify, waitTransactionReceipt} from '../../lib/utils.js';
     import Connector from '../../lib/Blockchain/DefaultConnector.js';
+    import { createNamespacedHelpers } from 'vuex';
+
+    const ConfigNS = createNamespacedHelpers('config');
 
     export default {
         name: 'AdminDashboard',
@@ -150,6 +152,9 @@
             };
         },
         computed: {
+            ...ConfigNS.mapState({
+                W12ListerAddress: state => state.W12Lister.address
+            }),
             isLoading() {
                 return (
                     this.loadingLedger
@@ -169,8 +174,12 @@
                 }));
             }
         },
+        watch: {
+            W12ListerAddress: {
+                handler: 'onW12ListerAddressChange',
+            }
+        },
         methods: {
-
             async tryWhiteListToken() {
                 this.clearErrorMessage();
 
@@ -198,7 +207,7 @@
 
                 if (W12ListerFactory) {
                     try {
-                        const W12Lister = W12ListerFactory.at(config.contracts.W12Lister.address);
+                        const W12Lister = W12ListerFactory.at(this.W12ListerAddress);
                         const connectedWeb3 = (await Connector.connect()).web3;
 
                         console.log(data);
@@ -243,7 +252,7 @@
 
                 if (W12ListerFactory) {
                     try {
-                        const W12Lister = W12ListerFactory.at(config.contracts.W12Lister.address);
+                        const W12Lister = W12ListerFactory.at(this.W12ListerAddress);
                         const list = await W12Lister.fetchAllTokensComposedInformation();
 
                         this.tokensList = list.map(({token}) => token);
@@ -260,7 +269,7 @@
 
                     if (W12ListerFactory) {
                         try {
-                            const W12Lister = W12ListerFactory.at(config.contracts.W12Lister.address);
+                            const W12Lister = W12ListerFactory.at(this.W12ListerAddress);
                             // const {web3} = await Connector.connect();
                             // const getBlock = promisify(web3.eth.getBlock.bind(web3.eth));
                             // const latestBlock = await getBlock('latest');
@@ -291,6 +300,13 @@
                     this.EventHelpers.fromLatestBlock.stopWatching();
                     delete this.EventHelpers;
                 }
+            },
+
+            async onW12ListerAddressChange(value) {
+                this.setErrorMessage('');
+                this.destroyEventsHelpers();
+                await this.createEventsHelpers();
+                await this.fetchTokensList();
             }
         },
         errorCaptured(error, vm, info) {
