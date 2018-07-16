@@ -1,0 +1,46 @@
+.CrowdsdalList {
+  @import "~bulma";
+  @import "~buefy/src/scss/buefy";
+
+  margin-bottom: 40px;
+  font-size: 12px;
+
+  &__eth {
+    font-size: 10px;
+    color: grey;
+  }
+
+  .table {
+    tbody {
+      td, th {
+        vertical-align: middle;
+      }
+      td {
+        cursor: pointer;
+      }
+    }
+  }
+  &__selected {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &__left {
+    flex-basis: 30%;
+  }
+  &__center {
+    flex-basis: 30%;
+  }
+  &__right {
+    flex-basis: 30%;
+  }
+
+  .pagination {
+    .pagination-previous {
+      display: none;
+    }
+    .pagination-next {
+      display: none;
+    }
+  }
+}

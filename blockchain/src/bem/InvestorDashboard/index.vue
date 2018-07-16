@@ -10,6 +10,7 @@
                 <span>{{ errorMessage }}</span>
             </div>
             <div v-if="!isLoading">
+                <crowdsdal-list :list="filteredTokensList"></crowdsdal-list>
                 <div
                         class="card p-5"
                         v-for="token in filteredTokensList"
@@ -41,7 +42,7 @@
         UNKNOWN_ERROR_WHILE_FETCH_TOKENS_LIST
     } from '../../errors.js';
     import Converter from '../Converter';
-
+    import CrowdsdalList from '../CrowdsdalList';
 
     const moment = window.moment;
     const web3 = new Web3();
@@ -51,7 +52,8 @@
         name: 'InvestorDashboard',
         template: '#InvestorDashboardTemplate',
         components: {
-            Converter
+            Converter,
+            CrowdsdalList
         },
         data () {
             return {
@@ -60,7 +62,9 @@
                 loadingLedger: false,
                 tokensList: [],
                 crawdsaleInformationByTokenAddress: {},
-                preparedBuyAmountByTokenAddress: {}
+                tokenInformationByTokenAddress: {},
+                preparedBuyAmountByTokenAddress: {},
+                currentDateUnix: moment.utc().unix()
             };
         },
         watch: {
@@ -78,19 +82,37 @@
             },
             filteredTokensList() {
                 const list = this.tokensList.map(token => {
-                    const {tokenAddress, name, symbol} = token;
-                    const crowdsaleInformation = this.crawdsaleInformationByTokenAddress[tokenAddress];
+                    const tokenAddress = token.tokenAddress;
+                    const nameW = token.name;
+                    const symbolW = token.symbol;
+                    //тут не точто тотал и OnSale
+                    const WTokenTotal = token.wTokensIssuedAmount;
+                    const WTokenOnSale = token.tokensForSaleAmount;
 
-                    if (!crowdsaleInformation) return;
+                    const crowdsaleInformation = this.crawdsaleInformationByTokenAddress[tokenAddress];
+                    const tokensInformation = this.tokenInformationByTokenAddress[tokenAddress];
+
+                    if (!crowdsaleInformation || !tokensInformation) return;
 
                     const {
                         tokenPrice,
                         startDate,
-                        stages
+                        stages,
+                        WTokenAddress
                     } = crowdsaleInformation;
+
+                    const {
+                        name,
+                        symbol,
+                        total,
+                    } = tokensInformation;
 
                     let bonusVolumes = [];
                     let stageDiscount = '0';
+                    let endDate = null;
+                    let status = false;
+                    let stageEndDate = null;
+                    let timeLeft = null;
 
                     if (stages.length) {
                         const ranges = [
@@ -113,31 +135,54 @@
                                 range: [endDateUnix],
                                 stage: null
                             });
+
+                            /* Получаем данные о дате окончания (последняя стадия) */
+                            const stageEndDate = moment.utc(stage.endDate, 'YYYY-MM-DD').unix();
+                            endDate = endDate < stageEndDate ? stageEndDate : endDate;
                         }
+
 
                         ranges.pop();
 
-                        const currentDateUnix = moment.utc().unix();
                         const foundStage = ranges.find(item => {
                             return (
-                                currentDateUnix >= item.range[0]
-                                && currentDateUnix <= item.range[1]
+                                this.currentDateUnix >= item.range[0]
+                                && this.currentDateUnix <= item.range[1]
                             );
                         });
 
+
                         if (foundStage) {
+                            status = true;
                             bonusVolumes = foundStage.stage.bonusVolumes;
                             stageDiscount = foundStage.stage.discount;
+                            stageEndDate = moment.utc(foundStage.stage.endDate, 'YYYY-MM-DD').unix();
+                            timeLeft = stageEndDate - this.currentDateUnix;
                         }
                     }
 
+                    //console.log(timeLeft);
+
                     return {
+                        WTokenTotal,
+                        WTokenOnSale,
+
+                        WTokenAddress,
                         tokenAddress,
                         tokenPrice,
                         bonusVolumes,
                         stageDiscount,
+                        stageEndDate,
+                        timeLeft,
+                        nameW,
+                        symbolW,
                         name,
-                        symbol
+                        symbol,
+                        startDate,
+                        endDate,
+                        status,
+                        total,
+                        stages
                     };
                 });
 
@@ -152,7 +197,7 @@
                 this.errorMessage = message;
             },
             async loadLedger () {
-                let ledger
+                let ledger;
 
                 this.loadingLedger = true;
 
@@ -166,6 +211,22 @@
 
                 return ledger;
             },
+            async fetchTokensInfo(){
+                for (let token of this.tokensList) {
+                    const {W12TokenFactory, W12TokenLedgerFactory} = await this.loadLedger();
+                    const W12Token = W12TokenFactory.at(token.tokenAddress);
+
+                    const name = (await W12Token.methods.name());
+                    const symbol = (await W12Token.methods.symbol());
+                    const total = (await W12Token.methods.totalSupply()).toNumber();
+
+                    this.$set(this.tokenInformationByTokenAddress, token.tokenAddress, {
+                        total,
+                        symbol,
+                        name,
+                    });
+                }
+            },
             async fetchTokensList () {
                 this.fetchTokens = true;
 
@@ -173,6 +234,8 @@
 
                 if (W12ListerFactory) {
                     try {
+
+
                         const W12Lister = W12ListerFactory.at(config.contracts.W12Lister.address);
                         let list = await W12Lister.fetchAllTokensComposedInformation();
 
@@ -193,6 +256,7 @@
                     const W12Crowdsale = W12CrowdsaleFactory.at(token.crowdsaleAddress);
 
                     const tokenPrice = (await W12Crowdsale.methods.price());
+                    const WTokenAddress = (await  W12Crowdsale.methods.token());
                     const startDate = (await W12Crowdsale.methods.startDate()).toNumber();
                     const stages = await W12Crowdsale.getStagesList();
 
@@ -200,7 +264,9 @@
                         tokenPrice: new BigNumber(1).dividedBy(tokenPrice).toString(),
                         startDate,
                         crowdsaleAddress: token.crowdsaleAddress,
-                        stages
+                        stages,
+                        token,
+                        WTokenAddress
                     });
                 }
             },
@@ -237,6 +303,7 @@
         },
         async created () {
             await this.fetchTokensList();
+            await this.fetchTokensInfo();
             await this.fetchCrawdsaleInformationForEachToken();
         }
     };
