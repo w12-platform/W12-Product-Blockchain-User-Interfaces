@@ -6,6 +6,7 @@
                 <span v-if="loadingLedger">Загрузка смарт-контрактов...<br></span>
                 <span v-if="fetchTokens">Загрузка списка токенов...<br></span>
                 <span v-if="whitelistingToken">Добавление токена в whitelist...</span>
+                <span v-if="checkingToken">Проверка токена...</span>
             </div>
             <div v-if="errorMessage" class="alert alert-danger" role="alert">
                 <span>{{ errorMessage }}</span>
@@ -83,10 +84,13 @@
                             v-model="whiteListForm.feeETHPercent">
                 </div>
                 <div>
-                    <button class="btn btn-primary" @click="tryWhiteListToken">Whitelist</button>
+                    <p v-if="disableWhiteListButton" class="alert alert-warning">
+                        Проверте корректность всех полей, корректность адреса токена и отсутствие токена в таблице уже добавленных в WhiteList токенов
+                    </p>
+                    <button class="btn btn-primary" @click="tryWhiteListToken" :disabled="disableWhiteListButton">Whitelist</button>
                 </div>
                 <div class="AdminDashboard__tokens-table" v-if="tokensListTableData.length">
-                    <table class="table table-striped table-bordered table-hover">
+                    <table class="table table-striped table-bordered table-hover table-responsive-sm">
                         <thead class="thead-dark">
                         <tr>
                             <th scope="col">Token</th>
@@ -117,16 +121,16 @@
 </template>
 
 <script>
-    import './default.scss';
-
     import Ledger from '../../lib/Blockchain/ContractsLedger.js';
-    import config from '../../config.js';
     import {
         UNKNOWN_ERROR_WHILE_FETCH_TOKENS_LIST,
         UNKNOWN_ERROR_WHILE_WHITELISTING_TOKEN
     } from '../../errors.js';
     import {promisify, waitTransactionReceipt} from '../../lib/utils.js';
     import Connector from '../../lib/Blockchain/DefaultConnector.js';
+    import { createNamespacedHelpers } from 'vuex';
+
+    const ConfigNS = createNamespacedHelpers('config');
 
     export default {
         name: 'AdminDashboard',
@@ -136,6 +140,8 @@
                 loadingLedger: false,
                 fetchTokens: false,
                 whitelistingToken: false,
+                checkingToken: false,
+                tokenExistsAndAllowedToWhiteList: false,
                 errorMessage: '',
                 whiteListForm: {
                     tokenAddress: '',
@@ -150,11 +156,28 @@
             };
         },
         computed: {
+            ...ConfigNS.mapState({
+                W12ListerAddress: state => state.W12Lister.address
+            }),
             isLoading() {
                 return (
                     this.loadingLedger
                     || this.fetchTokens
                     || this.whitelistingToken
+                    || this.checkingToken
+                );
+            },
+            disableWhiteListButton() {
+                return (
+                    this.isLoading
+                    || !this.whiteListForm.tokenAddress
+                    || !this.whiteListForm.ownerAddress
+                    || !this.whiteListForm.symbol
+                    || !this.whiteListForm.decimals
+                    || !this.whiteListForm.name
+                    || !this.whiteListForm.feePercent
+                    || !this.whiteListForm.feeETHPercent
+                    || !this.tokenExistsAndAllowedToWhiteList
                 );
             },
             tokensListTableData() {
@@ -169,8 +192,18 @@
                 }));
             }
         },
+        watch: {
+            W12ListerAddress: {
+                handler: 'onW12ListerAddressChange',
+            },
+            'whiteListForm.tokenAddress': {
+                handler: 'onTokenAddressChange'
+            },
+            tokensList: {
+                handler: 'onTokenListChange'
+            }
+        },
         methods: {
-
             async tryWhiteListToken() {
                 this.clearErrorMessage();
 
@@ -198,7 +231,7 @@
 
                 if (W12ListerFactory) {
                     try {
-                        const W12Lister = W12ListerFactory.at(config.contracts.W12Lister.address);
+                        const W12Lister = W12ListerFactory.at(this.W12ListerAddress);
                         const connectedWeb3 = (await Connector.connect()).web3;
 
                         console.log(data);
@@ -213,7 +246,9 @@
                             data.feeETHPercent
                         );
 
-                        waitTransactionReceipt(tx, connectedWeb3, 5000);
+                        await waitTransactionReceipt(tx, connectedWeb3, 5000);
+
+                        this.endTokenWhiteListOperation();
                     } catch (e) {
                         this.setErrorMessage(e.message || UNKNOWN_ERROR_WHILE_WHITELISTING_TOKEN);
                     }
@@ -243,7 +278,7 @@
 
                 if (W12ListerFactory) {
                     try {
-                        const W12Lister = W12ListerFactory.at(config.contracts.W12Lister.address);
+                        const W12Lister = W12ListerFactory.at(this.W12ListerAddress);
                         const list = await W12Lister.fetchAllTokensComposedInformation();
 
                         this.tokensList = list.map(({token}) => token);
@@ -254,13 +289,45 @@
 
                 this.fetchTokens = false;
             },
+            async checkToken() {
+                const address = this.whiteListForm.tokenAddress;
+
+                if (address) {
+                    this.checkingToken = true;
+
+                    const { DetailedERC20Factory, W12ListerFactory } = await this.loadLedger();
+                    const DetailedERC20 = DetailedERC20Factory.at(address);
+                    const W12Lister = W12ListerFactory.at(this.W12ListerAddress);
+                    const isExists = await DetailedERC20.isCurrentAddressСompatibleWithToken();
+                    const isWhitelisted = await W12Lister.isTokenWhitelisted(address);
+
+                    this.tokenExistsAndAllowedToWhiteList = isExists && !isWhitelisted;
+                    this.checkingToken = false;
+                }
+            },
+            async predefineTokenInformation() {
+                const address = this.whiteListForm.tokenAddress;
+
+                if (this.tokenExistsAndAllowedToWhiteList) {
+                    const {DetailedERC20Factory} = await this.loadLedger();
+                    const DetailedERC20 = DetailedERC20Factory.at(address);
+                    const tokenInformation = await DetailedERC20.getDescription();
+                    const { name, symbol, decimals } = tokenInformation;
+
+                    Object.assign(this.whiteListForm, {
+                        name,
+                        symbol,
+                        decimals: decimals.toString()
+                    });
+                }
+            },
             async createEventsHelpers() {
                 if (!this.EventHelpers) {
                     const {W12ListerFactory} = await this.loadLedger();
 
                     if (W12ListerFactory) {
                         try {
-                            const W12Lister = W12ListerFactory.at(config.contracts.W12Lister.address);
+                            const W12Lister = W12ListerFactory.at(this.W12ListerAddress);
                             // const {web3} = await Connector.connect();
                             // const getBlock = promisify(web3.eth.getBlock.bind(web3.eth));
                             // const latestBlock = await getBlock('latest');
@@ -291,6 +358,31 @@
                     this.EventHelpers.fromLatestBlock.stopWatching();
                     delete this.EventHelpers;
                 }
+            },
+
+            async onW12ListerAddressChange(value) {
+                this.setErrorMessage('');
+                this.destroyEventsHelpers();
+                await this.createEventsHelpers();
+                await this.fetchTokensList();
+            },
+            async onTokenAddressChange(value) {
+                if (value) {
+                    await this.checkToken();
+                    await this.predefineTokenInformation();
+                }
+            },
+            async onTokenListChange() {
+                await this.checkToken();
+            },
+            endTokenWhiteListOperation() {
+                Object.assign(this.whiteListForm, {
+                    tokenAddress: '',
+                    ownerAddress: '',
+                    name: '',
+                    symbol: '',
+                    decimals: '18'
+                });
             }
         },
         errorCaptured(error, vm, info) {
@@ -305,3 +397,11 @@
         }
     };
 </script>
+<style lang="scss">
+    .AdminDashboard {
+        &__tokens-table {
+            margin-top: 24px;
+            overflow: auto;
+        }
+    }
+</style>
