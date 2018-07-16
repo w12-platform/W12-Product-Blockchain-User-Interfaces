@@ -1,3 +1,7 @@
+Global:
+
+ * Replace usage of ERC20 contract to DetailedERC20
+
 Admin Dashboard
 
  + Subscribe to OwnerWhitelisted event and then update the tokens list table.
@@ -7,6 +11,7 @@ Admin Dashboard
 
 Project Dashboard
 
- * Load all contracts
- * Render any errors
- * Add the ability to approve amount
+ + Load all contracts
+ + Render any errors
+ + Add the ability to approve amount
+

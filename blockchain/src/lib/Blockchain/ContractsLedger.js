@@ -1,5 +1,6 @@
 import Connector from './DefaultConnector.js';
 import { ContractWrappersFactory } from './Factory.js';
+import { DetailedERC20FactoryStrategy } from './FactoryStrategies/DetailedERC20.js';
 import { ERC20FactoryStrategy } from './FactoryStrategies/ERC20.js';
 import { W12CrowdsaleFactoryStrategy } from './FactoryStrategies/W12Crowdsale.js';
 import { W12CrowdsaleFactoryFactoryStrategy } from './FactoryStrategies/W12CrowdsaleFactory.js';
@@ -16,6 +17,9 @@ import { W12TokenLedgerWrapper } from './Wrappers/W12TokenLedger.js';
 
 async function loadContracts() {
     const ERC20Artifacts = await fetch('/blockchain/src/lib/Blockchain/contracts/ERC20.json')
+        .then(data => data.json());
+
+    const DetailedERC20Artifacts = await fetch('/blockchain/src/lib/Blockchain/contracts/DetailedERC20.json')
         .then(data => data.json());
 
     const W12ListerArtifacts = await fetch('/blockchain/src/lib/Blockchain/contracts/W12Lister.json')
@@ -48,6 +52,11 @@ async function loadContracts() {
     );
         await ERC20.init();
 
+    const DetailedERC20 = new ContractWrappersFactory(
+        new DetailedERC20FactoryStrategy(DetailedERC20Artifacts, ERC20Wrapper, Connector)
+    );
+        await DetailedERC20.init();
+
     const W12Crowdsale = new ContractWrappersFactory(
         new W12CrowdsaleFactoryStrategy(W12CrowdsaleArtifacts, W12CrowdsaleWrapper, Connector)
     );
@@ -64,6 +73,7 @@ async function loadContracts() {
             W12ListerWrapper,
             Connector,
             W12Crowdsale,
+            DetailedERC20,
             ERC20,
             W12TokenLedger
         )
@@ -76,7 +86,8 @@ async function loadContracts() {
         W12CrowdsaleFactory: W12Crowdsale,
         W12TokenFactory: W12Token,
         W12TokenLedgerFactory: W12TokenLedger,
-        ERC20Factory: ERC20
+        ERC20Factory: ERC20,
+        DetailedERC20Factory: DetailedERC20
     };
 }
 
