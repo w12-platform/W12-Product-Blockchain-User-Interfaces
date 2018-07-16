@@ -128,4 +128,17 @@ export class W12ListerWrapper extends BaseWrapper {
 
         return result;
     }
+
+    async isTokenWhitelisted(tokenAddress) {
+        if (tokenAddress) {
+            try {
+                const tokenIndex = (await this.methods.approvedTokensIndex(tokenAddress)).toNumber();
+                return tokenIndex > 0;
+            } catch (e) {
+                console.log(e);
+            }
+        }
+
+        return false;
+    }
 }

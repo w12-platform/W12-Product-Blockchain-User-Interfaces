@@ -7,6 +7,7 @@ import { W12CrowdsaleFactoryFactoryStrategy } from './FactoryStrategies/W12Crowd
 import { W12ListerFactoryStrategy } from './FactoryStrategies/W12Lister.js';
 import { W12TokenFactoryStrategy } from './FactoryStrategies/W12Token.js';
 import { W12TokenLedgerFactoryStrategy } from './FactoryStrategies/W12TokenLedger.js';
+import { DetailedERC20Wrapper } from './Wrappers/DetailedERC20.js';
 import { ERC20Wrapper } from './Wrappers/ERC20.js';
 import { W12CrowdsaleWrapper } from './Wrappers/W12Crowdsale.js';
 import { W12CrowdsaleFactoryWrapper } from './Wrappers/W12CrowdsaleFactory.js';
@@ -53,7 +54,7 @@ async function loadContracts() {
         await ERC20.init();
 
     const DetailedERC20 = new ContractWrappersFactory(
-        new DetailedERC20FactoryStrategy(DetailedERC20Artifacts, ERC20Wrapper, Connector)
+        new DetailedERC20FactoryStrategy(DetailedERC20Artifacts, DetailedERC20Wrapper, Connector)
     );
         await DetailedERC20.init();
 
