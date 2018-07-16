@@ -11,7 +11,7 @@ export class W12CrowdsaleWrapper extends BaseWrapper {
         const list = [];
 
         if (stagesLength > 0) {
-            for(let i = 0; i< stagesLength; i++) {
+            for(let i = stagesLength-1; i>=0; i--) {
                 const stage = await this.methods.stages(i);
                 const bonusVolumes = await this.getBonusVolumesAtStage(i);
 
