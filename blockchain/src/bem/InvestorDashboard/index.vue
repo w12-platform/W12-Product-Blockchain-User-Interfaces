@@ -212,12 +212,12 @@
             },
             async fetchTokensInfo(){
                 for (let token of this.tokensList) {
-                    const {W12TokenFactory, W12TokenLedgerFactory} = await this.loadLedger();
-                    const W12Token = W12TokenFactory.at(token.tokenAddress);
+                    const {DetailedERC20Factory} = await this.loadLedger();
+                    const DetailedERC20 = DetailedERC20Factory.at(token.tokenAddress);
 
-                    const name = (await W12Token.methods.name());
-                    const symbol = (await W12Token.methods.symbol());
-                    const total = (await W12Token.methods.totalSupply()).toNumber();
+                    const name = (await DetailedERC20.methods.name());
+                    const symbol = (await DetailedERC20.methods.symbol());
+                    const total = (await DetailedERC20.methods.totalSupply()).toNumber();
 
                     this.$set(this.tokenInformationByTokenAddress, token.tokenAddress, {
                         total,
