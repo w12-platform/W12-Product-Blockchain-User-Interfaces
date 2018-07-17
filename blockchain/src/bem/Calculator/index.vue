@@ -36,7 +36,7 @@
         UNKNOWN_ERROR_WHILE_FETCH_TOKENS_LIST
     } from '../../errors.js';
     import Ledger from '../../lib/Blockchain/ContractsLedger.js';
-    const crowdsdalListStore = createNamespacedHelpers("crowdsdalList");
+    const crowdSaleListStore = createNamespacedHelpers("crowdSaleList");
     const web3 = new Web3();
     const BigNumber = web3.BigNumber;
 
@@ -74,7 +74,7 @@
             }
         },
         computed: {
-            ...crowdsdalListStore.mapState({
+            ...crowdSaleListStore.mapState({
                 selected: "selected"
             }),
             tokenPrice(){

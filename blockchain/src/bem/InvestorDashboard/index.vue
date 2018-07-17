@@ -10,14 +10,14 @@
                 <span>{{ errorMessage }}</span>
             </div>
             <div v-if="!isLoading">
-                <crowdsdal-switch :list="filteredTokensList"></crowdsdal-switch>
-                <crowdsdal></crowdsdal>
+                <crowdsale-switch :list="filteredTokensList"></crowdsale-switch>
+                <crowdsale v-if="selected"></crowdsale>
 
-                <h2>Скидки</h2>
-                <sale-table></sale-table>
+                <h2 v-if="selected">Скидки</h2>
+                <sale-table v-if="selected"></sale-table>
 
-                <h2>Купить токены {{ selected.symbolW }}</h2>
-                <calculator></calculator>
+                <h2 v-if="selected">Купить токены {{ selected.symbolW }}</h2>
+                <calculator v-if="selected"></calculator>
             </div>
         </section>
     </div>
@@ -31,12 +31,11 @@
         UNKNOWN_ERROR_WHILE_FETCH_TOKENS_LIST
     } from '../../errors.js';
     import Converter from '../Converter';
-    import CrowdsdalSwitch from '../CrowdsdalSwitch';
-    import Crowdsdal from '../Crowdsdal';
+    import CrowdsaleSwitch from '../CrowdsaleSwitch';
+    import Crowdsale from '../Crowdsale';
 
     const configStore = createNamespacedHelpers("config");
-    const crowdsdalListStore = createNamespacedHelpers("crowdsdalList");
-
+    const crowdSaleListStore = createNamespacedHelpers("crowdSaleList");
 
     const moment = window.moment;
     const web3 = new Web3();
@@ -50,8 +49,8 @@
         template: '#InvestorDashboardTemplate',
         components: {
             Converter,
-            Crowdsdal,
-            CrowdsdalSwitch,
+            Crowdsale,
+            CrowdsaleSwitch,
             SaleTable,
             Calculator
         },
@@ -70,7 +69,7 @@
             ...configStore.mapState({
                 W12Lister: "W12Lister"
             }),
-            ...crowdsdalListStore.mapState({
+            ...crowdSaleListStore.mapState({
                 selected: "selected"
             }),
 
@@ -247,7 +246,7 @@
 
                 this.fetchTokens = false;
             },
-            async fetchCrawdsaleInformationForEachToken() {
+            async fetchCrawdSaleInformationForEachToken() {
                 for (let token of this.tokensList) {
                     const {W12CrowdsaleFactory} = await this.loadLedger();
 
@@ -275,7 +274,7 @@
         async created () {
             await this.fetchTokensList();
             await this.fetchTokensInfo();
-            await this.fetchCrawdsaleInformationForEachToken();
+            await this.fetchCrawdSaleInformationForEachToken();
 
             setInterval(()=>{ this.currentDateUnix = moment.utc().unix() }, 1000);
         }

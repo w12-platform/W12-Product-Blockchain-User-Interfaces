@@ -33,7 +33,7 @@
     import './default.scss';
     import {createNamespacedHelpers} from "vuex";
 
-    const crowdsdalListStore = createNamespacedHelpers("crowdsdalList");
+    const crowdSaleListStore = createNamespacedHelpers("crowdSaleList");
 
     export default {
         name: 'SaleTable',
@@ -44,7 +44,7 @@
         },
         watch: {},
         computed: {
-            ...crowdsdalListStore.mapState({
+            ...crowdSaleListStore.mapState({
                 selected: "selected"
             }),
             saleTableData() {

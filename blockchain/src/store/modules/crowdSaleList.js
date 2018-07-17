@@ -1,4 +1,4 @@
-export const CROWDSDAL_LIST_SELECTED = "CROWDSDAL_LIST_SELECTED";
+export const CROWDSALE_LIST_SELECTED = "CROWDSALE_LIST_SELECTED";
 
 export default {
     namespaced: true,
@@ -8,7 +8,7 @@ export default {
     modules: {},
     getters: {},
     mutations: {
-        [CROWDSDAL_LIST_SELECTED](state, payload) {
+        [CROWDSALE_LIST_SELECTED](state, payload) {
             Object.assign(state, payload);
         },
     },

@@ -1,6 +1,6 @@
 <template>
-    <div class="CrowdsdalSwitch">
-        <div v-for="(token, idx) in list" :key="idx" @click="onSelect(token)" :class="{ 'CrowdsdalSwitch__tag': true, 'selected': checkSelection(token),}">
+    <div class="x">
+        <div v-for="(token, idx) in list" :key="idx" @click="onSelect(token)" :class="{ 'CrowdSaleSwitch__tag': true, 'selected': checkSelection(token),}">
             {{ token.name }}
         </div>
     </div>
@@ -8,13 +8,13 @@
 
 <script>
     import './default.scss';
-    import { CROWDSDAL_LIST_SELECTED } from "../../store/modules/crowdsdalList";
+    import { CROWDSALE_LIST_SELECTED } from "../../store/modules/crowdSaleList";
     import { createNamespacedHelpers } from "vuex";
-    const crowdsdalListStore = createNamespacedHelpers("crowdsdalList");
+    const crowdSaleListStore = createNamespacedHelpers("crowdSaleList");
 
     export default {
-        name: 'CrowdsdalSwitch',
-        template: '#CrowdsdalSwitchTemplate',
+        name: 'CrowdSaleSwitch',
+        template: '#CrowdSaleSwitchTemplate',
         components: {},
         props: {
             /* Массив краудсейлов */
@@ -28,21 +28,21 @@
         },
         watch: {},
         computed: {
-            ...crowdsdalListStore.mapState({
+            ...crowdSaleListStore.mapState({
                 selected: "selected"
             }),
         },
         methods: {
             onSelect(token){
                 this.flag = true;
-                this.$store.commit(`crowdsdalList/${CROWDSDAL_LIST_SELECTED}`, { selected: token });
+                this.$store.commit(`crowdSaleList/${CROWDSALE_LIST_SELECTED}`, { selected: token });
             },
             checkSelection(token){
                 if(!this.selected && this.list[0] || !this.flag) {
                     this.onSelect(this.list[0]);
                 } else {
                     if(this.selected.name === token.name){
-                        this.$store.commit(`crowdsdalList/${CROWDSDAL_LIST_SELECTED}`, { selected: token });
+                        this.$store.commit(`crowdSaleList/${CROWDSALE_LIST_SELECTED}`, { selected: token });
                     }
                 }
                 return this.selected && token && token.name === this.selected.name

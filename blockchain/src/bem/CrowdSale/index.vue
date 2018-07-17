@@ -1,5 +1,5 @@
 <template>
-    <div class="Crowdsdal">
+    <div class="CrowdSale">
         <table v-if="selected" class="table table-striped table-bordered table-hover table-responsive-sm">
             <tbody>
             <tr>
@@ -64,7 +64,7 @@
             </tr>
             <tr>
                 <td>Стоимость одного токена {{ selected.symbolW }}</td>
-                <td>{{ selected.tokenPrice }} <span class="Crowdsdal__eth">ETH</span></td>
+                <td>{{ selected.tokenPrice }} <span class="CrowdSale__eth">ETH</span></td>
             </tr>
             <tr>
                 <td>Скидка на {{ selected.symbolW }} в %</td>
@@ -78,7 +78,7 @@
                 <td>Стоимость одного токена {{ selected.symbolW }} с учетом текущей скидки</td>
                 <td>
                     <span v-if="selected.status">{{ selected.tokenPrice - (selected.tokenPrice * (selected.stageDiscount / 100)) }}
-                        <span class="Crowdsdal__eth">ETH</span>
+                        <span class="CrowdSale__eth">ETH</span>
                     </span>
                 </td>
             </tr>
@@ -97,20 +97,20 @@
     import './default.scss';
     import {createNamespacedHelpers} from "vuex";
 
-    const crowdsdalListStore = createNamespacedHelpers("crowdsdalList");
+    const crowdSaleListStore = createNamespacedHelpers("crowdSaleList");
 
     const moment = window.moment;
 
     export default {
-        name: 'Crowdsdal',
-        template: '#CrowdsdalTemplate',
+        name: 'CrowdSale',
+        template: '#CrowdsaleTemplate',
         components: {},
         data() {
             return {};
         },
         watch: {},
         computed: {
-            ...crowdsdalListStore.mapState({
+            ...crowdSaleListStore.mapState({
                 selected: "selected"
             }),
 
