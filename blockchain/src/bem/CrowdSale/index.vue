@@ -95,6 +95,7 @@
 <script>
     import './default.scss';
     import {createNamespacedHelpers} from "vuex";
+    import countdown from 'countdown';
 
     const crowdSaleListStore = createNamespacedHelpers("crowdSaleList");
 
@@ -114,24 +115,7 @@
             }),
 
             countdown() {
-                let countdownValue = '';
-                let days = Math.floor(this.selected.timeLeft / (60 * 60 * 24));
-                if(days) {
-                    countdownValue += days + "d ";
-                }
-                let hours = Math.floor((this.selected.timeLeft - (days * 60 * 60 * 24)) / (60 * 60));
-                if(hours) {
-                    countdownValue += hours + "h ";
-                }
-                let minuts = Math.floor((this.selected.timeLeft - (days * 60 * 60 * 24) - (hours * 60 * 60)) / (60));
-                if(minuts) {
-                    countdownValue += minuts + "m ";
-                }
-                let sek = Math.floor((this.selected.timeLeft - (days * 60 * 60 * 24) - (hours * 60 * 60) - (minuts * 60)));
-                if(sek) {
-                    countdownValue += sek + "s ";
-                }
-                return countdownValue;
+                return countdown(new Date(this.selected.stageEndDate*1000)).toString();
             }
         },
         methods: {

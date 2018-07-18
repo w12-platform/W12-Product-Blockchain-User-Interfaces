@@ -13,6 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "buefy": "^0.6.6",
+    "countdown": "^2.6.0",
     "lodash": "^4.17.10",
     "moment": "^2.22.2",
     "resolve": "^1.8.1",

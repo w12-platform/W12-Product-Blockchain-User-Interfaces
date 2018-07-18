@@ -106,7 +106,7 @@
                     const {
                         name,
                         symbol,
-                        total,
+                        totalSupply,
                     } = tokensInformation;
 
                     let bonusVolumes = [];
@@ -180,7 +180,7 @@
                         startDate,
                         endDate,
                         status,
-                        total,
+                        totalSupply,
                         stages,
                         crowdsaleAddress
                     };
@@ -198,7 +198,6 @@
                         const getAccounts = promisify(connectedWeb3.eth.getAccounts.bind(connectedWeb3.eth.getAccounts));
 
                         const currentAccount = (await getAccounts())[0];
-
 
                         this.currentAccount = currentAccount;
                     } catch (e) {
@@ -237,16 +236,8 @@
                 for (let token of this.tokensList) {
                     const {DetailedERC20Factory} = await this.loadLedger();
                     const DetailedERC20 = DetailedERC20Factory.at(token.tokenAddress);
-
-                    const name = (await DetailedERC20.methods.name());
-                    const symbol = (await DetailedERC20.methods.symbol());
-                    const total = (await DetailedERC20.methods.totalSupply()).toNumber();
-
-                    this.$set(this.tokenInformationByTokenAddress, token.tokenAddress, {
-                        total,
-                        symbol,
-                        name,
-                    });
+                    
+                    this.$set(this.tokenInformationByTokenAddress, token.tokenAddress, await DetailedERC20.getDescription());
                 }
             },
             async fetchTokensList () {
