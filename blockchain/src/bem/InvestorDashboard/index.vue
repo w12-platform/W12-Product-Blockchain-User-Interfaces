@@ -10,8 +10,8 @@
                 <span>{{ errorMessage }}</span>
             </div>
             <div v-if="!isLoading">
-                <crowdsale-switch :list="filteredTokensList"></crowdsale-switch>
-                <crowdsale v-if="selected"></crowdsale>
+                <crowd-sale-switch :list="filteredTokensList"></crowd-sale-switch>
+                <crowd-sale v-if="selected"></crowd-sale>
 
                 <h2 v-if="selected">Скидки</h2>
                 <sale-table v-if="selected"></sale-table>
@@ -32,8 +32,8 @@
     } from '../../errors.js';
     import Converter from '../Converter';
     import { promisify } from '../../lib/utils.js';
-    import CrowdsaleSwitch from '../CrowdsaleSwitch';
-    import Crowdsale from '../Crowdsale';
+    import CrowdSaleSwitch from '../CrowdSaleSwitch';
+    import CrowdSale from '../CrowdSale';
     import Connector from '../../lib/Blockchain/DefaultConnector.js';
 
     const configStore = createNamespacedHelpers("config");
@@ -51,8 +51,8 @@
         template: '#InvestorDashboardTemplate',
         components: {
             Converter,
-            Crowdsale,
-            CrowdsaleSwitch,
+            CrowdSale,
+            CrowdSaleSwitch,
             SaleTable,
             Calculator
         },
