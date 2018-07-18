@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "serve": "webpack-dev-server --host w12 --mode development",
+    "serve": "webpack-dev-server --host localhost --mode development",
     "dev": "webpack --mode development",
     "build": "webpack -p",
     "watch": "webpack --watch --mode development"
@@ -12,10 +12,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "buefy": "^0.6.6",
+    "countdown": "^2.6.0",
     "lodash": "^4.17.10",
     "moment": "^2.22.2",
     "resolve": "^1.8.1",
     "vue": "^2.5.16",
+    "vue-timers": "^1.7.3",
     "vuex": "^3.0.1",
     "vuex-persistedstate": "^2.5.2",
     "web3": "^0.20.6"

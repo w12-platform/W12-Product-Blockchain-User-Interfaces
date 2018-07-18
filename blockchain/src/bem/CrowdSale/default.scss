@@ -1,0 +1,11 @@
+.CrowdSale {
+  @import "~bulma";
+  @import "~buefy/src/scss/buefy";
+
+  margin: 20px 0;
+
+  &__eth {
+    font-size: 10px;
+    color: grey;
+  }
+}
