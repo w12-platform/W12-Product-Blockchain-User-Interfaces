@@ -25,25 +25,25 @@
     <link href="css/media.css?v=20" rel="stylesheet">
     <link href="css/custom.css?v=20" rel="stylesheet">
     <script type="text/javascript">
-    window.afterDocReady = [];
-    window.afterWinLoad = [];
-  </script>
+        window.afterDocReady = [];
+        window.afterWinLoad = [];
+    </script>
 </head>
 <body>
 <script>
-  window.afterDocReady.push(function () {
-      $(document).on('click', 'a[data-swlang]', function (ev) {
-          ev.preventDefault();
-          var _href = window.location.pathname.replace(/^\/(en|ru|kr|jp|cn)\//, '/');
-          var _code = $(this).attr('data-swlang');
-          if (_code != 'en') {
-              _href = '/' + _code + _href;
-          }
-          _href += window.location.search;
-          _href += window.location.hash;
-          window.location.href = _href;
-      });
-  });
+    window.afterDocReady.push(function () {
+        $(document).on('click', 'a[data-swlang]', function (ev) {
+            ev.preventDefault();
+            var _href = window.location.pathname.replace(/^\/(en|ru|kr|jp|cn)\//, '/');
+            var _code = $(this).attr('data-swlang');
+            if (_code != 'en') {
+                _href = '/' + _code + _href;
+            }
+            _href += window.location.search;
+            _href += window.location.hash;
+            window.location.href = _href;
+        });
+    });
 </script>
 <div class="global-menu">
     <div class="global-menu-head d-flex justify-content-between align-items-center">
@@ -191,21 +191,14 @@
             <div class="col-xs-12 col-lg-8">
                 <div class="bytoken tokenb">
 
-
-
-                    <div><a href="/listing.html">Listing</a></div>
-                    <div><a href="/project.html">Project</a></div>
-                    <div><a href="/crowdsale.html">CrowdSale</a></div>
-                    <div><a href="/fund.html">Fund</a></div>
-
                     <!--INJECTED PAGES: START-->
-                    <hr style="margin: 92px 0"/>
-                    <div id="appConfigDashboad"></div>
+                    <!--<hr style="margin: 92px 0"/>-->
+                    <!--<div id="appConfigDashboad"></div>-->
 
-                    <script src="blockchain/node_modules/moment/moment.js"></script>
-                    <script src="blockchain/node_modules/web3/dist/web3.js"></script>
+                    <!--<script src="blockchain/node_modules/moment/moment.js"></script>-->
+                    <!--<script src="blockchain/node_modules/web3/dist/web3.js"></script>-->
 
-                    <script src="/blockchain/build/build.js"></script>
+                    <!--<script src="/blockchain/build/build.js"></script>-->
                     <!--INJECTED PAGES: END-->
 
 
@@ -225,16 +218,16 @@
                             <span class="token-price__discount__label">22.12% discount</span>
                             <div class="token-price__timer"></div>
                             <script>
-                      window.afterDocReady.push(function () {
-                          var firstTimer = $('.token-price__timer').FlipClock({
-                              clockFace: 'DailyCounter',
-                              countdown: true
-                          });
-                          firstTimer.setTime(84689);
-                          firstTimer.setCountdown(true);
-                          firstTimer.start();
-                      });
-                    </script>
+                                window.afterDocReady.push(function () {
+                                    var firstTimer = $('.token-price__timer').FlipClock({
+                                        clockFace: 'DailyCounter',
+                                        countdown: true
+                                    });
+                                    firstTimer.setTime(84689);
+                                    firstTimer.setCountdown(true);
+                                    firstTimer.start();
+                                });
+                            </script>
                         </div>
                     </div>
                     <h3 class="features-title">
@@ -375,152 +368,152 @@
                         }
                     </style>
                     <script>
-              window.afterDocReady.push(function () {
-                  $('[name=payment-btn]').on('change', function () {
-                      _togglePaymensB();
-                  });
-                  _togglePaymensB();
-                  new Clipboard('[data-clipboard-text]');
+                        window.afterDocReady.push(function () {
+                            $('[name=payment-btn]').on('change', function () {
+                                _togglePaymensB();
+                            });
+                            _togglePaymensB();
+                            new Clipboard('[data-clipboard-text]');
 
-                  caclPayment_4();
-                  $(document).on('change keyup', '.payment-b-4 [name=summ]', function () {
-                      caclPayment_4();
-                  });
-                  caclPayment_3();
-                  $(document).on('change keyup', '.payment-b-3 [name=summ]', function () {
-                      caclPayment_3();
-                  });
-                  caclPayment_5();
-                  $(document).on('change keyup', '.payment-b-5 [name=summ]', function () {
-                      caclPayment_5();
-                  });
-              });
+                            caclPayment_4();
+                            $(document).on('change keyup', '.payment-b-4 [name=summ]', function () {
+                                caclPayment_4();
+                            });
+                            caclPayment_3();
+                            $(document).on('change keyup', '.payment-b-3 [name=summ]', function () {
+                                caclPayment_3();
+                            });
+                            caclPayment_5();
+                            $(document).on('change keyup', '.payment-b-5 [name=summ]', function () {
+                                caclPayment_5();
+                            });
+                        });
 
-              function _togglePaymensB () {
-                  $('.payment-b').hide();
-                  var _val = $('[name=payment-btn]:checked').val();
-                  if (_val) {
-                      $('.payment-b-' + _val).show();
-                  }
-              }
+                        function _togglePaymensB() {
+                            $('.payment-b').hide();
+                            var _val = $('[name=payment-btn]:checked').val();
+                            if (_val) {
+                                $('.payment-b-' + _val).show();
+                            }
+                        }
 
-              function _get_next (v, rate, summ) {
-                  var _next = v * rate - summ;
-                  if (_next < 0.01) {
-                      _next = 0.01;
-                  }
-                  _next = Math.ceil(_next * 100) / 100;
-                  return _next;
-              }
+                        function _get_next(v, rate, summ) {
+                            var _next = v * rate - summ;
+                            if (_next < 0.01) {
+                                _next = 0.01;
+                            }
+                            _next = Math.ceil(_next * 100) / 100;
+                            return _next;
+                        }
 
-              function _calcAccountType (eth_summ, _class, coin, summ, rate) {
-                  var _html = '';
-                  var _html_left = '';
-                  if (eth_summ >= 300) {
-                      _html = '<b>DIAMOND</b>';
-                  } else {
-                      if (eth_summ >= 100) {
-                          _html = '<b>PLATINUM</b>';
-                          _html_left = 'To receive DIAMOND account you must buy W12 tokens for at least ' + _get_next(300, rate, summ) + '&nbsp;' + coin;
-                      } else {
-                          if (eth_summ >= 30) {
-                              _html = '<b>GOLD</b>';
-                              _html_left = 'To receive PLATINUM account you must buy W12 tokens for at least ' + _get_next(100, rate, summ) + '&nbsp;' + coin;
-                          } else {
-                              if (eth_summ >= 10) {
-                                  _html = '<b>SILVER</b>';
-                                  _html_left = 'To receive GOLD account you must buy W12 tokens for at least ' + _get_next(30, rate, summ) + '&nbsp;' + coin;
-                              } else {
-                                  if (eth_summ >= 3) {
-                                      _html = '<b>BRONZE</b>';
-                                      _html_left = 'To receive SILVER account you must buy W12 tokens for at least ' + _get_next(10, rate, summ) + '&nbsp;' + coin;
-                                  } else {
-                                      _html = 'Not premium';
-                                      _html_left = 'To receive BRONZE account you must buy W12 tokens for at least ' + _get_next(3, rate, summ) + '&nbsp;' + coin;
-                                  }
-                              }
-                          }
-                      }
-                  }
-                  $('.' + _class + ' .calc-account-type').html(_html);
-                  $('.' + _class + ' .calc-account-type-left').html(_html_left);
-              }
+                        function _calcAccountType(eth_summ, _class, coin, summ, rate) {
+                            var _html = '';
+                            var _html_left = '';
+                            if (eth_summ >= 300) {
+                                _html = '<b>DIAMOND</b>';
+                            } else {
+                                if (eth_summ >= 100) {
+                                    _html = '<b>PLATINUM</b>';
+                                    _html_left = 'To receive DIAMOND account you must buy W12 tokens for at least ' + _get_next(300, rate, summ) + '&nbsp;' + coin;
+                                } else {
+                                    if (eth_summ >= 30) {
+                                        _html = '<b>GOLD</b>';
+                                        _html_left = 'To receive PLATINUM account you must buy W12 tokens for at least ' + _get_next(100, rate, summ) + '&nbsp;' + coin;
+                                    } else {
+                                        if (eth_summ >= 10) {
+                                            _html = '<b>SILVER</b>';
+                                            _html_left = 'To receive GOLD account you must buy W12 tokens for at least ' + _get_next(30, rate, summ) + '&nbsp;' + coin;
+                                        } else {
+                                            if (eth_summ >= 3) {
+                                                _html = '<b>BRONZE</b>';
+                                                _html_left = 'To receive SILVER account you must buy W12 tokens for at least ' + _get_next(10, rate, summ) + '&nbsp;' + coin;
+                                            } else {
+                                                _html = 'Not premium';
+                                                _html_left = 'To receive BRONZE account you must buy W12 tokens for at least ' + _get_next(3, rate, summ) + '&nbsp;' + coin;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            $('.' + _class + ' .calc-account-type').html(_html);
+                            $('.' + _class + ' .calc-account-type-left').html(_html_left);
+                        }
 
-              function caclPayment_4 () {
-                  var summ = Number($('.payment-b-4 [name=summ]').val());
-                  var eth_summ = summ;
-                  if (summ > 0) {
-                      var count = Math.round(summ / 0.00027258);
-                      $('.payment-b-4 .calc-tokens-count').html('<b>' + count + '</b>');
-                      var summ_old = count * 0.00035000;
-                      var _diff = summ_old - summ;
-                      if (_diff >= 0.01) {
-                          var _v = '<b>' + _diff.toFixed(2);
-                          _v = _v.replace(/0+$/, '');
-                          _v = _v.replace(/\.$/, '');
-                          _v = _v + '&nbsp;ETH</b>';
-                          _v += ' (~' + Math.floor(_diff * 607.54491827202) + '&nbsp;USD)';
-                          $('.payment-b-4 .calc-tokens-disc').html(_v);
-                      } else {
-                          $('.payment-b-4 .calc-tokens-disc').html('<b>0 ETH</b>');
-                      }
-                  } else {
-                      $('.payment-b-4 .calc-tokens-count').html('<b>0</b>');
-                      $('.payment-b-4 .calc-tokens-disc').html('<b>0 ETH</b>');
-                  }
-                  _calcAccountType(eth_summ, 'payment-b-4', 'ETH', summ, 1);
-              }
+                        function caclPayment_4() {
+                            var summ = Number($('.payment-b-4 [name=summ]').val());
+                            var eth_summ = summ;
+                            if (summ > 0) {
+                                var count = Math.round(summ / 0.00027258);
+                                $('.payment-b-4 .calc-tokens-count').html('<b>' + count + '</b>');
+                                var summ_old = count * 0.00035000;
+                                var _diff = summ_old - summ;
+                                if (_diff >= 0.01) {
+                                    var _v = '<b>' + _diff.toFixed(2);
+                                    _v = _v.replace(/0+$/, '');
+                                    _v = _v.replace(/\.$/, '');
+                                    _v = _v + '&nbsp;ETH</b>';
+                                    _v += ' (~' + Math.floor(_diff * 607.54491827202) + '&nbsp;USD)';
+                                    $('.payment-b-4 .calc-tokens-disc').html(_v);
+                                } else {
+                                    $('.payment-b-4 .calc-tokens-disc').html('<b>0 ETH</b>');
+                                }
+                            } else {
+                                $('.payment-b-4 .calc-tokens-count').html('<b>0</b>');
+                                $('.payment-b-4 .calc-tokens-disc').html('<b>0 ETH</b>');
+                            }
+                            _calcAccountType(eth_summ, 'payment-b-4', 'ETH', summ, 1);
+                        }
 
-              function caclPayment_3 () {
-                  var summ = Number($('.payment-b-3 [name=summ]').val());
-                  var eth_summ = summ / 0.078971000000000000000000;
-                  if (summ > 0) {
-                      var count = Math.round(summ / (0.00027258 * 0.078971000000000000000000));
-                      $('.payment-b-3 .calc-tokens-count').html('<b>' + count + '</b>');
-                      var summ_old = count * 0.00035000 * 0.078971000000000000000000;
-                      var _diff = summ_old - summ;
-                      if (_diff >= 0.01) {
-                          var _v = '<b>' + _diff.toFixed(2);
-                          _v = _v.replace(/0+$/, '');
-                          _v = _v.replace(/\.$/, '');
-                          _v = _v + '&nbsp;BTC</b>';
-                          _v += ' (~' + Math.floor(_diff * 7693.2661137888) + '&nbsp;USD)';
-                          $('.payment-b-3 .calc-tokens-disc').html(_v);
-                      } else {
-                          $('.payment-b-3 .calc-tokens-disc').html('<b>0 BTC</b>');
-                      }
-                  } else {
-                      $('.payment-b-3 .calc-tokens-count').html('<b>0</b>');
-                      $('.payment-b-3 .calc-tokens-disc').html('<b>0 BTC</b>');
-                  }
-                  _calcAccountType(eth_summ, 'payment-b-3', 'BTC', summ, 0.078971000000000000000000);
-              }
+                        function caclPayment_3() {
+                            var summ = Number($('.payment-b-3 [name=summ]').val());
+                            var eth_summ = summ / 0.078971000000000000000000;
+                            if (summ > 0) {
+                                var count = Math.round(summ / (0.00027258 * 0.078971000000000000000000));
+                                $('.payment-b-3 .calc-tokens-count').html('<b>' + count + '</b>');
+                                var summ_old = count * 0.00035000 * 0.078971000000000000000000;
+                                var _diff = summ_old - summ;
+                                if (_diff >= 0.01) {
+                                    var _v = '<b>' + _diff.toFixed(2);
+                                    _v = _v.replace(/0+$/, '');
+                                    _v = _v.replace(/\.$/, '');
+                                    _v = _v + '&nbsp;BTC</b>';
+                                    _v += ' (~' + Math.floor(_diff * 7693.2661137888) + '&nbsp;USD)';
+                                    $('.payment-b-3 .calc-tokens-disc').html(_v);
+                                } else {
+                                    $('.payment-b-3 .calc-tokens-disc').html('<b>0 BTC</b>');
+                                }
+                            } else {
+                                $('.payment-b-3 .calc-tokens-count').html('<b>0</b>');
+                                $('.payment-b-3 .calc-tokens-disc').html('<b>0 BTC</b>');
+                            }
+                            _calcAccountType(eth_summ, 'payment-b-3', 'BTC', summ, 0.078971000000000000000000);
+                        }
 
-              function caclPayment_5 () {
-                  var summ = Number($('.payment-b-5 [name=summ]').val());
-                  var eth_summ = summ / 4.9993115509096;
-                  if (summ > 0) {
-                      var count = Math.round(summ / (0.00027258 * 4.9993115509096));
-                      $('.payment-b-5 .calc-tokens-count').html('<b>' + count + '</b>');
-                      var summ_old = count * 0.00035000 * 4.9993115509096;
-                      var _diff = summ_old - summ;
-                      if (_diff >= 0.01) {
-                          var _v = '<b>' + _diff.toFixed(2);
-                          _v = _v.replace(/0+$/, '');
-                          _v = _v.replace(/\.$/, '');
-                          _v = _v + '&nbsp;LTC</b>';
-                          _v += ' (~' + Math.floor(_diff * 121.5257165082) + '&nbsp;USD)';
-                          $('.payment-b-5 .calc-tokens-disc').html(_v);
-                      } else {
-                          $('.payment-b-5 .calc-tokens-disc').html('<b>0 LTC</b>');
-                      }
-                  } else {
-                      $('.payment-b-5 .calc-tokens-count').html('<b>0</b>');
-                      $('.payment-b-5 .calc-tokens-disc').html('<b>0 LTC</b>');
-                  }
-                  _calcAccountType(eth_summ, 'payment-b-5', 'LTC', summ, 4.9993115509096);
-              }
-            </script>
+                        function caclPayment_5() {
+                            var summ = Number($('.payment-b-5 [name=summ]').val());
+                            var eth_summ = summ / 4.9993115509096;
+                            if (summ > 0) {
+                                var count = Math.round(summ / (0.00027258 * 4.9993115509096));
+                                $('.payment-b-5 .calc-tokens-count').html('<b>' + count + '</b>');
+                                var summ_old = count * 0.00035000 * 4.9993115509096;
+                                var _diff = summ_old - summ;
+                                if (_diff >= 0.01) {
+                                    var _v = '<b>' + _diff.toFixed(2);
+                                    _v = _v.replace(/0+$/, '');
+                                    _v = _v.replace(/\.$/, '');
+                                    _v = _v + '&nbsp;LTC</b>';
+                                    _v += ' (~' + Math.floor(_diff * 121.5257165082) + '&nbsp;USD)';
+                                    $('.payment-b-5 .calc-tokens-disc').html(_v);
+                                } else {
+                                    $('.payment-b-5 .calc-tokens-disc').html('<b>0 LTC</b>');
+                                }
+                            } else {
+                                $('.payment-b-5 .calc-tokens-count').html('<b>0</b>');
+                                $('.payment-b-5 .calc-tokens-disc').html('<b>0 LTC</b>');
+                            }
+                            _calcAccountType(eth_summ, 'payment-b-5', 'LTC', summ, 4.9993115509096);
+                        }
+                    </script>
 
                     <div class="payment-b payment-b-4">
                         <form action="" method="post" target="_blank">
@@ -772,20 +765,20 @@
                                         onclick="_footer_subscribe();"></button>
                             </div>
                             <script>
-                  function _footer_subscribe () {
-                      _ajaxJson({
-                          url: '/?ajax=FooterSubscribe',
-                          data: $('#footer_subscribe_form').serialize(),
-                          success: function (json) {
-                              $('#footer_subscribe_form input').val('');
-                              alert(json.res);
-                          },
-                          error: function (e) {
-                              alert(e);
-                          }
-                      });
-                  }
-                </script>
+                                function _footer_subscribe() {
+                                    _ajaxJson({
+                                        url: '/?ajax=FooterSubscribe',
+                                        data: $('#footer_subscribe_form').serialize(),
+                                        success: function (json) {
+                                            $('#footer_subscribe_form input').val('');
+                                            alert(json.res);
+                                        },
+                                        error: function (e) {
+                                            alert(e);
+                                        }
+                                    });
+                                }
+                            </script>
                         </form>
                     </div>
                     <div class="footer-signin-info d-hide" data-html="UHJpdmF0ZSwgc2VjdXJlLCBzcGFtLWZyZWU="></div>

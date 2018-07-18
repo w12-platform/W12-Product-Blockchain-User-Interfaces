@@ -15,12 +15,12 @@
                 </b-table-column>
                 <b-table-column v-if="props.row.bonusVolume.length" field="bonusVolume" label="Бонус за объем покупки" centered>
                     <div class="SaleTable__volumeElem" v-for="bonusVolume in props.row.bonusVolume">
-                        <span class="tag is-danger">-{{ bonusVolume[1] }} %</span>
+                        <span class="tag is-danger">{{ bonusVolume[1] }} %</span>
                     </div>
                 </b-table-column>
                 <b-table-column v-if="props.row.bonusVolume.length" field="bonusVolume" label="Общий % W-tokens, получаемых бесплатно" centered>
                     <div class="SaleTable__volumeElem" v-for="bonusVolume in props.row.bonusVolume">
-                        <span class="tag is-danger">-{{ parseFloat(bonusVolume[1]) + parseFloat(props.row.sale) }} %</span>
+                        <span class="tag is-danger">{{ parseFloat(bonusVolume[1]) + parseFloat(props.row.sale) }} %</span>
                     </div>
                 </b-table-column>
             </template>

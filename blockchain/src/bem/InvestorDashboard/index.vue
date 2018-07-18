@@ -31,8 +31,10 @@
         UNKNOWN_ERROR_WHILE_FETCH_TOKENS_LIST
     } from '../../errors.js';
     import Converter from '../Converter';
+    import { promisify } from '../../lib/utils.js';
     import CrowdsaleSwitch from '../CrowdsaleSwitch';
     import Crowdsale from '../Crowdsale';
+    import Connector from '../../lib/Blockchain/DefaultConnector.js';
 
     const configStore = createNamespacedHelpers("config");
     const crowdSaleListStore = createNamespacedHelpers("crowdSaleList");
@@ -62,7 +64,8 @@
                 tokensList: [],
                 crawdsaleInformationByTokenAddress: {},
                 tokenInformationByTokenAddress: {},
-                currentDateUnix: moment.utc().unix()
+                currentDateUnix: moment.utc().unix(),
+                currentAccount: null,
             };
         },
         computed: {
@@ -84,9 +87,7 @@
                     const tokenAddress = token.tokenAddress;
                     const nameW = token.name;
                     const symbolW = token.symbol;
-                    //тут не точто тотал и OnSale
                     const WTokenTotal = token.wTokensIssuedAmount;
-                    const WTokenOnSale = token.tokensForSaleAmount;
 
                     const crowdsaleInformation = this.crawdsaleInformationByTokenAddress[tokenAddress];
                     const tokensInformation = this.tokenInformationByTokenAddress[tokenAddress];
@@ -98,7 +99,8 @@
                         startDate,
                         stages,
                         WTokenAddress,
-                        crowdsaleAddress
+                        crowdsaleAddress,
+                        tokensOnSale
                     } = crowdsaleInformation;
 
                     const {
@@ -163,8 +165,7 @@
 
                     return {
                         WTokenTotal,
-                        WTokenOnSale,
-
+                        tokensOnSale,
                         WTokenAddress,
                         tokenAddress,
                         tokenPrice,
@@ -189,6 +190,28 @@
             }
         },
         methods: {
+            watchCurrentAccountAddress() {
+                this.unwatchCurrentAccountAddress();
+                const watcher = async () => {
+                    try {
+                        const connectedWeb3 = (await Connector.connect()).web3;
+                        const getAccounts = promisify(connectedWeb3.eth.getAccounts.bind(connectedWeb3.eth.getAccounts));
+
+                        const currentAccount = (await getAccounts())[0];
+
+
+                        this.currentAccount = currentAccount;
+                    } catch (e) {
+                        console.log(e);
+                    }
+                };
+
+                watcher();
+                this.currentAccountWatcherTmId = setInterval(watcher, 5000);
+            },
+            unwatchCurrentAccountAddress() {
+                clearInterval(this.currentAccountWatcherTmId);
+            },
             clearErrorMessage () {
                 this.errorMessage = '';
             },
@@ -257,13 +280,19 @@
                     const startDate = (await W12Crowdsale.methods.startDate()).toNumber();
                     const stages = await W12Crowdsale.getStagesList();
 
+                    const {DetailedERC20Factory} = await this.loadLedger();
+                    const DetailedERC20 = DetailedERC20Factory.at(WTokenAddress);
+
+                    const tokensOnSale = (await DetailedERC20.methods.balanceOf(token.crowdsaleAddress)).toString();
+
                     this.$set(this.crawdsaleInformationByTokenAddress, token.tokenAddress, {
-                        tokenPrice: new BigNumber(1).dividedBy(tokenPrice).toString(),
+                        tokenPrice: new BigNumber(tokenPrice).toString(),
                         startDate,
                         crowdsaleAddress: token.crowdsaleAddress,
                         stages,
                         token,
-                        WTokenAddress
+                        WTokenAddress,
+                        tokensOnSale
                     });
                 }
             },
@@ -272,6 +301,8 @@
             this.errorMessage = info || error.message;
         },
         async created () {
+            this.watchCurrentAccountAddress();
+
             await this.fetchTokensList();
             await this.fetchTokensInfo();
             await this.fetchCrawdSaleInformationForEachToken();

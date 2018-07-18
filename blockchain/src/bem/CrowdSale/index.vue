@@ -40,10 +40,9 @@
             <tr>
                 <td>Дата и время окончания продажи токенов</td>
                 <td>
-                <span class="tag is-danger" v-if="selected.endDate">
+                    <span class="tag is-danger" v-if="selected.endDate">
                         {{ dateFormat(selected.endDate) }}
                     </span>
-                    <span v-else>---</span>
                 </td>
             </tr>
             <tr>
@@ -52,15 +51,15 @@
             </tr>
             <tr>
                 <td>Кол-во проданных защищенных токенов</td>
-                <td>---</td>
+                <td>{{ selected.WTokenTotal-selected.tokensOnSale }}</td>
             </tr>
             <tr>
                 <td>Доля проданных защищённых токенов</td>
-                <td>---</td>
+                <td>{{ (selected.WTokenTotal-selected.tokensOnSale)/(selected.WTokenTotal/100) }}%</td>
             </tr>
             <tr>
                 <td>Кол-во защищенных токенов, которое осталось в продаже</td>
-                <td>---</td>
+                <td>{{ selected.tokensOnSale }}</td>
             </tr>
             <tr>
                 <td>Стоимость одного токена {{ selected.symbolW }}</td>
