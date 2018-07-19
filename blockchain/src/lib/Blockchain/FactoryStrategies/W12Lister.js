@@ -7,6 +7,7 @@ export class W12ListerFactoryStrategy extends BaseFactoryStrategy {
         ContractWrapper,
         connector,
         W12CrowdsaleFactory,
+        DetailedERC20Factory,
         ERC20Factory,
         W12TokenLedgerFactory
     ) {
@@ -14,6 +15,7 @@ export class W12ListerFactoryStrategy extends BaseFactoryStrategy {
 
         this.W12CrowdsaleFactory = W12CrowdsaleFactory;
         this.ERC20Factory = ERC20Factory;
+        this.DetailedERC20Factory = DetailedERC20Factory;
         this.W12TokenLedgerFactory = W12TokenLedgerFactory;
     }
 

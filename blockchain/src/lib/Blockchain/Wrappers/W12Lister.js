@@ -12,11 +12,13 @@ export class W12ListerWrapper extends BaseWrapper {
     setFactories({
         W12CrowdsaleFactory,
         ERC20Factory,
+        DetailedERC20Factory,
         W12TokenLedgerFactory
     }) {
         this.W12CrowdsaleFactory = W12CrowdsaleFactory;
         this.ERC20Factory = ERC20Factory;
         this.W12TokenLedgerFactory = W12TokenLedgerFactory;
+        this.DetailedERC20Factory = DetailedERC20Factory;
     }
 
     async fetchComposedTokenInformationByTokenAddress(tokenAddress) {
