@@ -18,6 +18,9 @@
 
                 <h2 v-if="selected">Купить токены {{ selected.symbolW }}</h2>
                 <calculator v-if="selected"></calculator>
+
+                <h2 v-if="selected">REFUND. Вернуть: {{ selected.symbolW }}, получить: ETH</h2>
+                <RefundInformation v-if="refundInformation" :data="refundInformation"></RefundInformation>
             </div>
         </section>
     </div>
@@ -34,6 +37,8 @@
     import { promisify } from '../../lib/utils.js';
     import CrowdSaleSwitch from '../CrowdSaleSwitch';
     import CrowdSale from '../CrowdSale';
+    import RefundInformation from '../RefundInformation';
+    import {RefundInformationModel} from '../RefundInformation/shared.js';
     import Connector from '../../lib/Blockchain/DefaultConnector.js';
 
     const configStore = createNamespacedHelpers("config");
@@ -54,7 +59,8 @@
             CrowdSale,
             CrowdSaleSwitch,
             SaleTable,
-            Calculator
+            Calculator,
+            RefundInformation
         },
         data () {
             return {
@@ -62,10 +68,20 @@
                 errorMessage: '',
                 loadingLedger: false,
                 tokensList: [],
-                crawdsaleInformationByTokenAddress: {},
+                crowdsaleInformationByTokenAddress: {},
                 tokenInformationByTokenAddress: {},
                 currentDateUnix: moment.utc().unix(),
                 currentAccount: null,
+                currentAccountData: {
+                    balance: 0,
+                    vestingBalance: 0,
+                    refundForOneToken: 0,
+                    totalRefundAmount: 0,
+                    investorInformation: {
+                        totalBought: 0,
+                        averageTokenPrice: 0
+                    }
+                }
             };
         },
         computed: {
@@ -89,8 +105,9 @@
                     const symbolW = token.symbol;
                     const WTokenTotal = token.wTokensIssuedAmount;
 
-                    const crowdsaleInformation = this.crawdsaleInformationByTokenAddress[tokenAddress];
+                    const crowdsaleInformation = this.crowdsaleInformationByTokenAddress[tokenAddress];
                     const tokensInformation = this.tokenInformationByTokenAddress[tokenAddress];
+                    const refundInformationData = {};
 
                     if (!crowdsaleInformation || !tokensInformation) return;
 
@@ -100,7 +117,8 @@
                         stages,
                         WTokenAddress,
                         crowdsaleAddress,
-                        tokensOnSale
+                        tokensOnSale,
+                        fund
                     } = crowdsaleInformation;
 
                     const {
@@ -182,15 +200,53 @@
                         status,
                         totalSupply,
                         stages,
-                        crowdsaleAddress
+                        crowdsaleAddress,
+                        refundInformationData,
+                        fund
                     };
                 });
 
                 return list.filter(Boolean);
+            },
+            refundInformation() {
+                if (this.selected) {
+                    const freezeTokensVolume = new BigNumber(this.currentAccountData.vestingBalance)
+                        .minus(this.currentAccountData.balance)
+                        .toString();
+                    const totalRefundPercent = new BigNumber(this.selected.fund.totalRefunded).eq(0)
+                        ? '0'
+                        : new BigNumber(this.selected.fund.totalRefunded)
+                            .div(this.selected.fund.totalFunded)
+                            .mul(100)
+                            .toFixed(2)
+                            .toString();
+
+                    return new RefundInformationModel({
+                        tokenSymbol: this.selected.symbolW,
+                        freezeTokensVolume,
+                        refundTokensVolume: this.currentAccountData.balance,
+                        refundAmountPerToken:  web3.fromWei(this.currentAccountData.refundForOneToken, 'ether').toString(),
+                        tokenPrice: web3.fromWei(this.currentAccountData.investorInformation.averageTokenPrice, 'ether').toString(),
+                        fundTokensBalance: 0,
+                        fundBalance: web3.fromWei(this.selected.fund.foundBalanceInWei, 'ether').toString(),
+                        totalRefundPercent,
+                        currentWalletBalanceInTokens: this.currentAccountData.balance,
+                        currentWalletBalanceInRefundAmount: web3.fromWei(this.currentAccountData.totalRefundAmount, 'ether').toString()
+                    });
+                }
+            }
+        },
+        watch: {
+            currentAccount() {
+                this.updateAccountData();
+            },
+            selected: {
+                handler() { this.updateAccountData(); },
+                deep: true
             }
         },
         methods: {
-            watchCurrentAccountAddress() {
+            watchCurrentAccountAddress () {
                 this.unwatchCurrentAccountAddress();
                 const watcher = async () => {
                     try {
@@ -199,7 +255,9 @@
 
                         const currentAccount = (await getAccounts())[0];
 
-                        this.currentAccount = currentAccount;
+                        if (this.currentAccount !== currentAccount) {
+                            this.currentAccount = currentAccount;
+                        }
                     } catch (e) {
                         console.log(e);
                     }
@@ -208,7 +266,7 @@
                 watcher();
                 this.currentAccountWatcherTmId = setInterval(watcher, 5000);
             },
-            unwatchCurrentAccountAddress() {
+            unwatchCurrentAccountAddress () {
                 clearInterval(this.currentAccountWatcherTmId);
             },
             clearErrorMessage () {
@@ -232,11 +290,11 @@
 
                 return ledger;
             },
-            async fetchTokensInfo(){
+            async fetchTokensInfo () {
                 for (let token of this.tokensList) {
                     const {DetailedERC20Factory} = await this.loadLedger();
                     const DetailedERC20 = DetailedERC20Factory.at(token.tokenAddress);
-                    
+
                     this.$set(this.tokenInformationByTokenAddress, token.tokenAddress, await DetailedERC20.getDescription());
                 }
             },
@@ -250,9 +308,9 @@
                         const W12Lister = W12ListerFactory.at(this.W12Lister.address);
                         let list = await W12Lister.fetchAllTokensComposedInformation();
 
-                        list = list.filter(({ token }) => Boolean(token.crowdsaleAddress));
+                        list = list.filter(({token}) => Boolean(token.crowdsaleAddress));
 
-                        this.tokensList = list.map(({ token }) => token);
+                        this.tokensList = list.map(({token}) => token);
                     } catch (e) {
                         this.setErrorMessage(e.message || UNKNOWN_ERROR_WHILE_FETCH_TOKENS_LIST);
                     }
@@ -260,35 +318,83 @@
 
                 this.fetchTokens = false;
             },
-            async fetchCrawdSaleInformationForEachToken() {
+            async fetchCrowdSaleInformationForEachToken () {
                 for (let token of this.tokensList) {
                     const {W12CrowdsaleFactory} = await this.loadLedger();
-
+                    const {web3} = await Connector.connect();
                     const W12Crowdsale = W12CrowdsaleFactory.at(token.crowdsaleAddress);
 
                     const tokenPrice = (await W12Crowdsale.methods.price());
-                    const WTokenAddress = (await  W12Crowdsale.methods.token());
+                    const WTokenAddress = (await W12Crowdsale.methods.token());
+                    const W12FundAddress = (await W12Crowdsale.methods.fund());
                     const startDate = (await W12Crowdsale.methods.startDate()).toNumber();
                     const stages = await W12Crowdsale.getStagesList();
 
-                    const {DetailedERC20Factory} = await this.loadLedger();
-                    const DetailedERC20 = DetailedERC20Factory.at(WTokenAddress);
+                    const {W12TokenFactory, W12FundFactory} = await this.loadLedger();
 
-                    const tokensOnSale = (await DetailedERC20.methods.balanceOf(token.crowdsaleAddress)).toString();
+                    const W12Token = W12TokenFactory.at(WTokenAddress);
+                    const W12Fund = W12FundFactory.at(W12FundAddress);
 
-                    this.$set(this.crawdsaleInformationByTokenAddress, token.tokenAddress, {
-                        tokenPrice: new BigNumber(tokenPrice).toString(),
+                    const tokensOnSale = (await W12Token.methods.balanceOf(token.crowdsaleAddress)).toString();
+                    const getBalance = promisify(web3.eth.getBalance.bind(web3.eth));
+                    const foundBalanceInWei = (await getBalance(W12FundAddress)).toString();
+
+                    this.$set(this.crowdsaleInformationByTokenAddress, token.tokenAddress, {
+                        tokenPrice: web3.fromWei(tokenPrice, 'ether').toString(),
                         startDate,
                         crowdsaleAddress: token.crowdsaleAddress,
                         stages,
                         token,
                         WTokenAddress,
-                        tokensOnSale
+                        fund: {
+                            W12FundAddress,
+                            foundBalanceInWei,
+                            totalFunded: (await W12Fund.methods.totalFunded()).toString(),
+                            totalRefunded: (await W12Fund.methods.totalRefunded()).toString(),
+                        },
+                        tokensOnSale,
                     });
                 }
             },
+            async updateAccountData () {
+                const selectedToken = this.selected;
+
+                if (!selectedToken) return;
+
+                const {web3} = await Connector.connect();
+                const {W12TokenFactory, W12FundFactory} = await this.loadLedger();
+
+                try {
+                    const wTokenAddress = selectedToken.WTokenAddress;
+                    const fundAddress = selectedToken.fund.W12FundAddress;
+                    const W12Token = W12TokenFactory.at(wTokenAddress);
+                    const W12Fund = W12FundFactory.at(fundAddress);
+
+                    const balance = (await W12Token.methods.balanceOf(this.currentAccount)).toString();
+                    const vestingBalance = (await W12Token.methods.vestingBalanceOf(this.currentAccount, 0)).toString();
+                    const refundForOneToken = (await W12Fund.methods.getRefundAmount(1)).toString();
+                    const totalRefundAmount = (await W12Fund.methods.getRefundAmount(balance)).toString();
+                    const investorInformation = await W12Fund.methods.getInvestmentsInfo(this.currentAccount);
+
+                    const account = {
+                        balance,
+                        vestingBalance,
+                        refundForOneToken,
+                        totalRefundAmount,
+                        investorInformation: {
+                            totalBought: investorInformation[0].toString(),
+                            averageTokenPrice: investorInformation[1].toString()
+                        }
+                    };
+
+                    this.currentAccountData = account;
+                } catch (e) {
+                    console.log(e);
+                    this.setErrorMessage(e.message);
+                }
+            },
         },
-        errorCaptured(error, vm, info) {
+        errorCaptured (error, vm, info) {
             this.errorMessage = info || error.message;
         },
         async created () {
@@ -296,9 +402,10 @@
 
             await this.fetchTokensList();
             await this.fetchTokensInfo();
-            await this.fetchCrawdSaleInformationForEachToken();
+            await this.fetchCrowdSaleInformationForEachToken();
+            await this.updateAccountData();
 
-            setInterval(()=>{ this.currentDateUnix = moment.utc().unix() }, 1000);
+            setInterval(() => { this.currentDateUnix = moment.utc().unix() }, 1000);
         }
     };
 
