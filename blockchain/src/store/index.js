@@ -19,7 +19,6 @@ const store = {
         PersistedStatePlugin({
             paths: [
                 "config.W12Lister.address",
-                "crowdSaleList.selected",
             ]
         })
     ]
