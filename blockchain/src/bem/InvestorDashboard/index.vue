@@ -19,8 +19,20 @@
                 <h2 v-if="selected">Купить токены {{ selected.symbolW }}</h2>
                 <calculator v-if="selected"></calculator>
 
-                <h2 v-if="selected">REFUND. Вернуть: {{ selected.symbolW }}, получить: ETH</h2>
-                <RefundInformation v-if="refundInformation" :data="refundInformation"></RefundInformation>
+                <h2 v-if="selected" class="m-3">REFUND. Вернуть: {{ selected.symbolW }}, получить: ETH</h2>
+                <div v-if="refundInformation">
+                    <RefundInformation v-if="refundInformation" :data="refundInformation"></RefundInformation>
+                    <RefundCalculator v-if="refundInformation.currentWalletBalanceInRefundAmount"
+                                      v-model="refundValue"
+                                      :fundAddress="selected.fund.W12FundAddress"
+                                      :accountAddress="currentAccount"
+                                      :tokenSymbol="selected.symbolW"></RefundCalculator>
+                    <p v-if="refundInformation.currentWalletBalanceInRefundAmount" class="alert alert-warning m-3">Вы должны будете подтвердить 2-е транзакции: подтвердить, что вы
+                        согласны вывести токены со своего аккаунта и сам вывод</p>
+                    <button v-if="refundInformation.currentWalletBalanceInRefundAmount" class="btn m-3" @click="refund" :disabled="!refundValue || refundValue == 0">Вернуть
+                        средства
+                    </button>
+                </div>
             </div>
         </section>
     </div>
@@ -34,12 +46,14 @@
         UNKNOWN_ERROR_WHILE_FETCH_TOKENS_LIST
     } from '../../errors.js';
     import Converter from '../Converter';
-    import { promisify } from '../../lib/utils.js';
+    import { promisify, waitTransactionReceipt } from '../../lib/utils.js';
     import CrowdSaleSwitch from '../CrowdSaleSwitch';
     import CrowdSale from '../CrowdSale';
     import RefundInformation from '../RefundInformation';
-    import {RefundInformationModel} from '../RefundInformation/shared.js';
+    import RefundCalculator from '../RefundCalculator';
+    import { RefundInformationModel } from '../RefundInformation/shared.js';
     import Connector from '../../lib/Blockchain/DefaultConnector.js';
+
 
     const configStore = createNamespacedHelpers("config");
     const crowdSaleListStore = createNamespacedHelpers("crowdSaleList");
@@ -51,6 +65,7 @@
     import SaleTable from '../SaleTable'
     import Calculator from '../Calculator'
 
+
     export default {
         name: 'InvestorDashboard',
         template: '#InvestorDashboardTemplate',
@@ -60,12 +75,14 @@
             CrowdSaleSwitch,
             SaleTable,
             Calculator,
-            RefundInformation
+            RefundInformation,
+            RefundCalculator
         },
         data () {
             return {
                 fetchTokens: false,
                 errorMessage: '',
+                refundValue: '0',
                 loadingLedger: false,
                 tokensList: [],
                 crowdsaleInformationByTokenAddress: {},
@@ -98,7 +115,7 @@
                     || this.fetchTokens
                 );
             },
-            filteredTokensList() {
+            filteredTokensList () {
                 const list = this.tokensList.map(token => {
                     const tokenAddress = token.tokenAddress;
                     const nameW = token.name;
@@ -124,7 +141,7 @@
                     const {
                         name,
                         symbol,
-                        totalSupply,
+                        totalSupply
                     } = tokensInformation;
 
                     let bonusVolumes = [];
@@ -139,10 +156,10 @@
                             {
                                 range: [startDate],
                                 stage: null
-                            },
+                            }
                         ];
 
-                        for(let stage of stages) {
+                        for (let stage of stages) {
                             const last = ranges[ranges.length - 1];
                             const endDateUnix = moment.utc(stage.endDate, 'YYYY-MM-DD').unix();
 
@@ -208,10 +225,10 @@
 
                 return list.filter(Boolean);
             },
-            refundInformation() {
+            refundInformation () {
                 if (this.selected) {
-                    const freezeTokensVolume = new BigNumber(this.currentAccountData.vestingBalance)
-                        .minus(this.currentAccountData.balance)
+                    const freezeTokensVolume = new BigNumber(this.currentAccountData.balance)
+                        .minus(this.currentAccountData.vestingBalance)
                         .toString();
                     const totalRefundPercent = new BigNumber(this.selected.fund.totalRefunded).eq(0)
                         ? '0'
@@ -225,7 +242,7 @@
                         tokenSymbol: this.selected.symbolW,
                         freezeTokensVolume,
                         refundTokensVolume: this.currentAccountData.balance,
-                        refundAmountPerToken:  web3.fromWei(this.currentAccountData.refundForOneToken, 'ether').toString(),
+                        refundAmountPerToken: web3.fromWei(this.currentAccountData.refundForOneToken, 'ether').toString(),
                         tokenPrice: web3.fromWei(this.currentAccountData.investorInformation.averageTokenPrice, 'ether').toString(),
                         fundTokensBalance: 0,
                         fundBalance: web3.fromWei(this.selected.fund.foundBalanceInWei, 'ether').toString(),
@@ -237,11 +254,11 @@
             }
         },
         watch: {
-            currentAccount() {
+            currentAccount () {
                 this.updateAccountData();
             },
             selected: {
-                handler() { this.updateAccountData(); },
+                handler () { this.updateAccountData(); },
                 deep: true
             }
         },
@@ -350,9 +367,9 @@
                             W12FundAddress,
                             foundBalanceInWei,
                             totalFunded: (await W12Fund.methods.totalFunded()).toString(),
-                            totalRefunded: (await W12Fund.methods.totalRefunded()).toString(),
+                            totalRefunded: (await W12Fund.methods.totalRefunded()).toString()
                         },
-                        tokensOnSale,
+                        tokensOnSale
                     });
                 }
             },
@@ -393,6 +410,35 @@
                     this.setErrorMessage(e.message);
                 }
             },
+            async refund() {
+                try {
+                    if (this.refundValue && this.selected) {
+                        const {W12FundFactory, W12TokenFactory} = await this.loadLedger();
+                        const { web3 } = await Connector.connect();
+                        const W12Fund = W12FundFactory.at(this.selected.fund.W12FundAddress);
+                        const W12Token = W12TokenFactory.at(this.selected.WTokenAddress);
+
+                        // TODO: temporally solution. approve tokens amount to refund from buyer account
+                        const approveTx = await W12Token.methods.approve(
+                            this.selected.fund.W12FundAddress,
+                            this.refundValue,
+                            { from: this.currentAccount }
+                        );
+
+                        await waitTransactionReceipt(approveTx, web3, 10000);
+
+                        const tx = await W12Fund.methods.refund(this.refundValue, { from: this.currentAccount });
+
+                        await waitTransactionReceipt(tx, web3, 5000);
+
+                        await this.updateAccountData();
+                        await this.fetchCrowdSaleInformationForEachToken();
+                    }
+                } catch (e) {
+                    console.log(e);
+                    this.setErrorMessage(e.message);
+                }
+            }
         },
         errorCaptured (error, vm, info) {
             this.errorMessage = info || error.message;
@@ -405,7 +451,7 @@
             await this.fetchCrowdSaleInformationForEachToken();
             await this.updateAccountData();
 
-            setInterval(() => { this.currentDateUnix = moment.utc().unix() }, 1000);
+            // setInterval(() => { this.currentDateUnix = moment.utc().unix() }, 1000);
         }
     };
 
