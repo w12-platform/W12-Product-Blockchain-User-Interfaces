@@ -450,7 +450,7 @@
             await this.fetchTokensInfo();
             await this.fetchCrowdSaleInformationForEachToken();
             await this.updateAccountData();
-
+            // TODO: fix it, it trigger full rerender
             // setInterval(() => { this.currentDateUnix = moment.utc().unix() }, 1000);
         }
     };
