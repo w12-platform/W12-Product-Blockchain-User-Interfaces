@@ -141,7 +141,7 @@
                 fetchTokens: false,
                 whitelistingToken: false,
                 checkingToken: false,
-                tokenExistsAndAllowedToWhiteList: false,
+                isTokenExists: false,
                 errorMessage: '',
                 whiteListForm: {
                     tokenAddress: '',
@@ -190,6 +190,16 @@
                     feePercent: item.feePercent,
                     feeETHPercent: item.feeETHPercent
                 }));
+            },
+            tokenExistsAndAllowedToWhiteList() {
+                const foundInList = this.tokensList.find(token => token.tokenAddress === this.whiteListForm.tokenAddress);
+                const isTheSameOwner = foundInList ? foundInList.tokenOwner === this.whiteListForm.ownerAddress : false;
+                const isWhiteListed = !!foundInList;
+
+                return (
+                    this.isTokenExists
+                        && (!isWhiteListed || !isTheSameOwner)
+                )
             }
         },
         watch: {
@@ -233,8 +243,6 @@
                     try {
                         const W12Lister = W12ListerFactory.at(this.W12ListerAddress);
                         const connectedWeb3 = (await Connector.connect()).web3;
-
-                        console.log(data);
 
                         const tx = await W12Lister.methods.whitelistToken(
                             data.ownerAddress,
@@ -295,20 +303,21 @@
                 if (address) {
                     this.checkingToken = true;
 
-                    const { DetailedERC20Factory, W12ListerFactory } = await this.loadLedger();
+                    const { DetailedERC20Factory } = await this.loadLedger();
                     const DetailedERC20 = DetailedERC20Factory.at(address);
-                    const W12Lister = W12ListerFactory.at(this.W12ListerAddress);
                     const isExists = await DetailedERC20.isCurrentAddressСompatibleWithToken();
-                    const isWhitelisted = await W12Lister.isTokenWhitelisted(address);
 
-                    this.tokenExistsAndAllowedToWhiteList = isExists && !isWhitelisted;
+                    this.isTokenExists = isExists;
                     this.checkingToken = false;
                 }
             },
             async predefineTokenInformation() {
                 const address = this.whiteListForm.tokenAddress;
+                const {web3} = await Connector.connect();
+                const getAccounts = promisify(web3.eth.getAccounts.bind(web3.eth));
+                const currentAccount = (await getAccounts())[0];
 
-                if (this.tokenExistsAndAllowedToWhiteList) {
+                if (this.isTokenExists) {
                     const {DetailedERC20Factory} = await this.loadLedger();
                     const DetailedERC20 = DetailedERC20Factory.at(address);
                     const tokenInformation = await DetailedERC20.getDescription();
@@ -317,6 +326,7 @@
                     Object.assign(this.whiteListForm, {
                         name,
                         symbol,
+                        ownerAddress: currentAccount,
                         decimals: decimals.toString()
                     });
                 }
