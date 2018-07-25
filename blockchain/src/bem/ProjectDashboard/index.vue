@@ -92,8 +92,7 @@
                                 <span v-else class="badge badge-success">Placed</span>
                             </div>
                             <div class="col-sm text-right">
-                                <span v-if="hasPlacedWTokenAddress">{{ placedTokenAddress }}</span>
-                                <div v-else-if="isWhiteListed && hasAllowance" class="text-left">
+                                <div v-if="isWhiteListed && hasAllowance" class="text-left">
                                     <div class="form-group">
                                         <label for="PlaceAmount">Place Amount</label>
                                         <input
@@ -793,12 +792,13 @@
                     }
                 }
             },
-            onTokenPlacedEvent (error, result) {
+            async onTokenPlacedEvent (error, result) {
                 if (!error) {
                     const {originalTokenAddress} = result.args;
 
                     if (originalTokenAddress.toString() == this.tokenAddress) {
-                        this.updatePlacedTokenStatus();
+                        await this.updatePlacedTokenStatus();
+                        await this.updateTokensApprovedToPlaceValue();
                     }
                 }
             },
