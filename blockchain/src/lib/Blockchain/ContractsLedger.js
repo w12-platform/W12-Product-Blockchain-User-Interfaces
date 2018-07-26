@@ -42,11 +42,6 @@ async function loadContracts() {
     const W12FundArtifacts = await fetch('/blockchain/src/lib/Blockchain/contracts/W12Fund.json')
         .then(data => data.json());
 
-    const W12Fund = new ContractWrappersFactory(
-        new W12FundFactoryStrategy(W12FundArtifacts, W12FundWrapper, Connector)
-    );
-        await W12Fund.init();
-
     const W12Token = new ContractWrappersFactory(
         new W12TokenFactoryStrategy(W12TokenArtifacts, W12TokenWrapper, Connector)
     );
@@ -76,6 +71,11 @@ async function loadContracts() {
         new W12CrowdsaleFactoryFactoryStrategy(W12CrowdsaleFactoryArtifacts, W12CrowdsaleFactoryWrapper, Connector)
     );
         await W12CrowdsaleFactoryInst.init();
+
+    const W12Fund = new ContractWrappersFactory(
+        new W12FundFactoryStrategy(W12FundArtifacts, W12FundWrapper, Connector, W12Crowdsale)
+    );
+        await W12Fund.init();
 
     const W12Lister = new ContractWrappersFactory(
         new W12ListerFactoryStrategy(

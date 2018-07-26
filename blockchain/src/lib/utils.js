@@ -47,3 +47,5 @@ export function waitTransactionReceipt(tx, web3, timeout = 240000) {
     });
 }
 
+export function wait(ms) { return new Promise(rs => setTimeout(rs, ms)); }
+

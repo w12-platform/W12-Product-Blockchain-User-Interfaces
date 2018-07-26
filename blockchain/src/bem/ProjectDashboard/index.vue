@@ -258,6 +258,11 @@
                 </ul>
             </div>
         </div>
+        <div v-if="trancheInformationData">
+            <h2>Получение ETH</h2>
+            <TrancheInformation :data="trancheInformationData"></TrancheInformation>
+            <button class="btn btn-primary" :disabled="!allowTranche" @click="tryTranche">Получить</button>
+        </div>
     </section>
     </div>
 </template>
@@ -265,18 +270,24 @@
 <script>
     import Ledger from '../../lib/Blockchain/ContractsLedger.js';
     import config from '../../config.js';
-    import { promisify } from '../../lib/utils.js';
+    import { promisify, wait } from '../../lib/utils.js';
     import Connector from '../../lib/Blockchain/DefaultConnector.js';
     import { waitTransactionReceipt } from '../../lib/utils.js';
+    import TrancheInformation from '../TrancheInformation';
+    import { TrancheInformationModel } from '../TrancheInformation/shared.js';
+
 
     const moment = window.moment;
 
     // as utils
     const web3 = new Web3();
+    const BigNumber = web3.BigNumber;
 
     export default {
         name: 'ProjectDashboard',
-        template: '#ProjectDashboardTemplate',
+        components: {
+            TrancheInformation
+        },
         data () {
             return {
                 loadingLedger: false,
@@ -314,6 +325,11 @@
                     price: ''
                 },
                 crowdsaleStagesToAdd: [],
+                fundData: {
+                    address: null,
+                    balanceWei: '0',
+                    trancheAmount: '0'
+                }
             };
         },
         computed: {
@@ -359,6 +375,21 @@
             },
             isCrowdsaleInited() {
                 return Boolean(this.tokenCrowdsaleAddress);
+            },
+            trancheInformationData() {
+                if (this.fundData.address) {
+                    return new TrancheInformationModel({
+                        fundBalanceInWei: this.fundData.balanceWei,
+                        fundBalanceInTokens: '0',
+                        trancheIntervals: [],
+                        trancheAmountInWei: this.fundData.trancheAmount
+                    });
+                }
+            },
+            allowTranche() {
+                return (
+                    new BigNumber(this.fundData.trancheAmount).gt(0)
+                );
             }
         },
         watch: {
@@ -401,6 +432,7 @@
                 await this.updatePlacedTokenStatus();
                 await this.fetchCrowdsaleAddressAndCreateContractInstance();
                 await this.fetchCrowdsaleStagesList();
+                await this.updateFundInformation();
             },
             async loadLedger () {
                 let ledger
@@ -781,6 +813,52 @@
                 }
 
                 this.setStagesLoading = false;
+            },
+            async updateFundInformation() {
+                if (!this.token || !this.tokenCrowdsaleAddress) return;
+
+                try {
+                    const crowdsaleAddress = this.tokenCrowdsaleAddress;
+                    const { W12CrowdsaleFactory, W12FundFactory } = await this.loadLedger();
+                    const {web3} = await Connector.connect();
+                    const W12Crowdsale = W12CrowdsaleFactory.at(crowdsaleAddress);
+                    const fundAddress = await W12Crowdsale.methods.fund();
+                    const W12Fund = W12FundFactory.at(fundAddress);
+                    const getBalance = promisify(web3.eth.getBalance.bind(web3.eth));
+                    const data = {
+                        address: fundAddress,
+                        balanceWei: (await getBalance(fundAddress)).toString(),
+                        trancheAmount: (await W12Fund.methods.getTrancheAmount()).toString(),
+                    };
+
+                    this.fundData = data;
+                } catch (e) {
+                    this.setErrorMessage(e.message);
+                }
+            },
+            async tryTranche() {
+                const trancheAmount = new BigNumber(this.fundData.trancheAmount);
+
+                if (
+                    !this.token
+                    || !this.tokenCrowdsaleAddress
+                    || !this.fundData.address
+                    || !trancheAmount.gt(0)
+                ) return;
+
+                try {
+                    const fundAddress = this.fundData.address;
+                    const { W12FundFactory} = await this.loadLedger();
+                    const {web3} = await Connector.connect();
+                    const W12Fund = W12FundFactory.at(fundAddress);
+
+                    const tx = await W12Fund.methods.tranche();
+
+                    await waitTransactionReceipt(tx, web3, 5000);
+                    await this.updateFundInformation();
+                } catch (e) {
+                    this.setErrorMessage(e.message);
+                }
             },
             onApprovalEvent(error, result) {
                 if (!error) {
