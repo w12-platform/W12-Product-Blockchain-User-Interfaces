@@ -1,34 +1,44 @@
 <template>
-    <div class="ProjectDashboard">
+    <div class="ProjectDashboard buefy">
         <section class="container">
-        <h2>Project Dashboard</h2>
-        <div v-if="isLoading" class="alert alert-info" role="alert">
-            <span v-if="loadingLedger">Загрузка смарт-контрактов...<br></span>
-            <span v-if="fetchingToken">Поиск токена...<br></span>
-            <span v-else="!loadingLedger && !fetchingToken">Ожидайте...<br></span>
-        </div>
-        <div v-if="errorMessage" class="alert alert-danger" role="alert">
-            <span>{{ errorMessage }}</span>
-        </div>
-        <div>
-            <div class="form-group">
-                <label for="ProjectDashboardTokenAddress">Token Address</label>
-                <input
-                        placeholder="Enter your token address to check status"
-                        type="text"
-                        class="form-control"
-                        id="ProjectDashboardTokenAddress"
-                        v-model="tokenAddress">
+            <h2>Project Dashboard</h2>
+            <div v-if="isLoading" class="alert alert-info" role="alert">
+                <span v-if="loadingLedger">Загрузка смарт-контрактов...<br></span>
+                <span v-if="fetchingToken">Поиск токена...<br></span>
+                <span v-else="!loadingLedger && !fetchingToken">Ожидайте...<br></span>
             </div>
-            <div v-if="token" class="row align-items-center justify-content-around py-5">
-                <div>Symbol: {{ token.symbol }}</div>
-                <div>Decimals: {{ token.decimals }}</div>
-                <div>Fee (tokens): {{ token.feePercent }}%</div>
-                <div>Fee (ETH): {{ token.feeETHPercent }}%</div>
+            <div v-if="errorMessage" class="alert alert-danger" role="alert">
+                <span>{{ errorMessage }}</span>
             </div>
-            <div>
-                <ul class="list-group">
-                    <li class="list-group-item">
+            <div v-if="!isLoading">
+
+                <b-field class="ProjectDashboard__select">
+                    <b-field>
+                        <b-select
+                                v-model="tokenAddress"
+                                @input="tokenSelected"
+                                v-if="this.W12Lister"
+                                placeholder="Select a token"
+                                expanded>
+                            <option
+                                    v-for="(token, idx) in this.W12Lister"
+                                    :key="idx"
+                                    :value="token.tokenAddress">{{ token.symbol }} - {{ token.tokenAddress }}
+                            </option>
+                        </b-select>
+                    </b-field>
+                </b-field>
+
+                <div v-if="token"
+                     class="ProjectDashboard__tokenInfo row align-items-center justify-content-around py-4">
+                    <div>Symbol: {{ token.symbol }}</div>
+                    <div>Decimals: {{ token.decimals }}</div>
+                    <div>Fee (tokens): {{ token.feePercent }}%</div>
+                    <div>Fee (ETH): {{ token.feeETHPercent }}%</div>
+                </div>
+
+                <div class="ProjectDashboard__stages">
+                    <div class="ProjectDashboard__stage">
                         <div class="row align-items-center justify-content-center">
                             <div class="col-auto">
                                 <span class="ProjectDashboard__step-badge step-badge badge badge-pill badge-light">1</span>
@@ -37,14 +47,14 @@
                                 Contact W12 to whitelist your token
                             </div>
                             <div class="col-sm-2 text-center">
-                                <span v-if="isWhiteListed" class="badge badge-success">Whitelisted</span>
-                                <span v-else class="badge badge-info">Not whitelisted</span>
+                                <b-tag v-if="isWhiteListed" type="is-success">Whitelisted</b-tag>
+                                <b-tag v-else type="is-info">Not whitelisted</b-tag>
                             </div>
                             <div class="col-sm text-right"></div>
                         </div>
-                    </li>
-                    <li class="list-group-item">
-                        <div class="row align-items-center justify-content-center">
+                    </div>
+                    <div class="ProjectDashboard__stage">
+                        <div class="row align-items-center justify-content-left">
                             <div class="col-auto">
                                 <span class="ProjectDashboard__step-badge step-badge badge badge-pill badge-light">2</span>
                             </div>
@@ -52,20 +62,24 @@
                                 Approve tokens to place
                             </div>
                             <div class="col-sm-2 text-center">
-                                <span v-if="!(hasAllowance || hasPlacedWTokenAddress) || !isWhiteListed" class="badge badge-success">Pending</span>
-                                <span v-else class="badge badge-success">Approved</span>
+                                <b-tag v-if="!(hasAllowance || hasPlacedWTokenAddress) || !isWhiteListed"
+                                       type="is-success">Pending
+                                </b-tag>
+                                <b-tag v-else type="is-success">Approved</b-tag>
                             </div>
                             <div class="col-sm text-right">
-                                <span v-if="hasAllowance">{{ tokensAmountThatApprovedToPlaceByTokenOwner }}</span>
+                                <span v-if="hasAllowance">{{ tokensAmountThatApprovedToPlaceByTokenOwnerToNumber }}</span>
                                 <div v-else-if="isWhiteListed" class="text-left">
-                                    <p>
-                                        Spend from: {{ ownerAddress }}
-                                    </p>
+                                    <b-tag class="ProjectDashboard__approveInfo" type="is-info">Spend from: {{
+                                        ownerAddress }}
+                                    </b-tag>
                                     <div class="form-group">
                                         <label for="SpendFrom">Amount</label>
                                         <input
-                                                :placeholder="`Max: ${ownerBalance}`"
-                                                type="text"
+                                                :placeholder="`Max: ${ownerBalanceToNumber}`"
+                                                type="number"
+                                                min="0"
+                                                :max="ownerBalanceToNumber"
                                                 class="form-control"
                                                 id="SpendFrom"
                                                 v-model="approveForm.value">
@@ -77,9 +91,9 @@
                                 </div>
                             </div>
                         </div>
-                    </li>
-                    <li class="list-group-item">
-                        <div class="row align-items-center justify-content-center">
+                    </div>
+                    <div class="ProjectDashboard__stage">
+                        <div class="row align-items-center justify-content-left">
                             <div class="col-auto">
                                 <span class="ProjectDashboard__step-badge step-badge badge badge-pill badge-light">3</span>
                             </div>
@@ -87,17 +101,25 @@
                                 Place Tokens to Listing
                             </div>
                             <div class="col-sm-2 text-center">
-                                <span v-if="!hasPlacedWTokenAddress && (!hasAllowance || !isWhiteListed)"
-                                      class="badge badge-success">Pending</span>
-                                <span v-else class="badge badge-success">Placed</span>
+                                <b-tag v-if="!hasPlacedWTokenAddress && (!hasAllowance || !isWhiteListed)"
+                                       type="is-success">Pending
+                                </b-tag>
+                                <b-tag v-else type="is-success">Placed</b-tag>
                             </div>
-                            <div class="col-sm text-right">
+                            <div class="col-12 text-left">
+                                <b-tag class="ProjectDashboard__placedWTokenAddress" v-if="hasPlacedWTokenAddress"
+                                       type="is-info">{{ placedTokenAddress }}
+                                </b-tag>
+                            </div>
+                            <div class="ProjectDashboard__placeForm col-12 text-right">
                                 <div v-if="isWhiteListed && hasAllowance" class="text-left">
                                     <div class="form-group">
                                         <label for="PlaceAmount">Place Amount</label>
                                         <input
-                                                :placeholder="`Max: ${tokensAmountThatApprovedToPlaceByTokenOwner}`"
-                                                type="text"
+                                                :placeholder="`Max: ${tokensAmountThatApprovedToPlaceByTokenOwnerToNumber}`"
+                                                type="number"
+                                                min="0"
+                                                :max="tokensAmountThatApprovedToPlaceByTokenOwnerToNumber"
                                                 class="form-control"
                                                 id="PlaceAmount"
                                                 v-model="placeTokensForm.value">
@@ -108,9 +130,9 @@
                                 </div>
                             </div>
                         </div>
-                    </li>
-                    <li class="list-group-item">
-                        <div class="row align-items-center justify-content-center">
+                    </div>
+                    <div class="ProjectDashboard__stage">
+                        <div class="row align-items-center justify-content-left">
                             <div class="col-auto">
                                 <span class="ProjectDashboard__step-badge step-badge badge badge-pill badge-light">4</span>
                             </div>
@@ -118,165 +140,231 @@
                                 Configure Crowdsale
                             </div>
                             <div class="col-sm-2 text-center">
-                                <span v-if="!isCrowdsaleInited && (!hasPlacedWTokenAddress && (!hasAllowance || !isWhiteListed))"
-                                      class="badge badge-success">Pending</span>
-                                <span v-else class="badge badge-success">Inited</span>
+                                <b-tag v-if="!isCrowdsaleInited && (!hasPlacedWTokenAddress && (!hasAllowance || !isWhiteListed))"
+                                       type="is-success">Pending
+                                </b-tag>
+                                <b-tag v-else type="is-success">Inited</b-tag>
                             </div>
-                            <div class="col-sm text-right">
-                                <span v-if="isCrowdsaleInited">{{ tokenCrowdsaleAddress }}</span>
+                            <div class="ProjectDashboard__configureCrowdsale col-12 text-left">
+                                <b-tag class="ProjectDashboard__initCrowdsaleAddress" v-if="isCrowdsaleInited"
+                                       type="is-info">{{ tokenCrowdsaleAddress }}
+                                </b-tag>
+
                                 <div v-else-if="isWhiteListed && hasPlacedWTokenAddress" class="text-left">
                                     <div class="form-group">
-                                        <label for="StartDate">Start date (YYYY-MM-DD)</label>
-                                        <input
-                                                placeholder="YYYY-MM-DD"
-                                                type="text"
-                                                class="form-control"
-                                                id="StartDate"
-                                                v-model="crowdsaleInitForm.date">
+                                        <label for="StartDate">Start date</label>
+                                        <b-field id="StartDate" class="ProjectDashboard__dateSelect">
+                                            <b-datepicker
+                                                    :min-date="minStartDate"
+                                                    placeholder="Click to select..."
+                                                    icon="calendar-today"
+                                                    v-model="crowdsaleInitForm.date">
+                                            </b-datepicker>
+                                        </b-field>
                                     </div>
                                     <div class="form-group">
                                         <label for="BaseTokenPrice">Base token price</label>
-                                        <input
-                                                type="text"
-                                                class="form-control"
-                                                id="BaseTokenPrice"
-                                                v-model="crowdsaleInitForm.price">
+                                        <b-field id="BaseTokenPrice">
+                                            <b-input placeholder="ETH"
+                                                     type="number"
+                                                     :step="0.0001"
+                                                     min="0"
+                                                     v-model="crowdsaleInitForm.price"
+                                                     icon="ethereum">
+                                            </b-input>
+                                        </b-field>
                                     </div>
                                     <div class="form-group">
                                         <label for="AmountForSale">Amount for sale</label>
-                                        <input
-                                                :placeholder="`Min: ${token.tokensForSaleAmount}`"
-                                                type="text"
-                                                class="form-control"
-                                                id="AmountForSale"
-                                                v-model="crowdsaleInitForm.amountForSale">
+                                        <b-field id="AmountForSale">
+                                            <b-input :placeholder="`Min: ${tokensForSaleAmountToNumber}`"
+                                                     type="number"
+                                                     min="0"
+                                                     v-model="crowdsaleInitForm.amountForSale"
+                                                     icon="shopping">
+                                            </b-input>
+                                        </b-field>
                                     </div>
                                     <div class="text-right">
-                                        <button class="btn btn-primary btn-sm" @click="initCrawdsale">Configure</button>
+                                        <button class="btn btn-primary btn-sm" @click="initCrawdsale">Configure
+                                        </button>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </li>
-                    <li class="list-group-item">
-                        <div class="row align-items-center justify-content-center">
+                    </div>
+                    <div class="ProjectDashboard__stage">
+                        <div class="row align-items-center justify-content-left">
                             <div class="col-auto">
                                 <span class="ProjectDashboard__step-badge step-badge badge badge-pill badge-light">5</span>
                             </div>
-                            <div class="col-sm-4">
+                            <div class="col-sm-5">
                                 Configure Crowdsale Bonuses
                             </div>
-                            <div class="col-sm">
-                                <div v-if="isCrowdsaleInited && hasPlacedWTokenAddress"
-                                     class="text-left">
-                                    <div class="row" v-for="(stage, stageIndex) in tokenCrowdsaleStages" :key="stageIndex">
-                                        <div class="col-sm">
-                                            <div class="form-group">
-                                                <label for="StageEndDate">End date (YYYY-MM-DD)</label>
-                                                <input
-                                                        placeholder="YYYY-MM-DD"
-                                                        type="text"
-                                                        class="form-control"
-                                                        id="StageEndDate"
-                                                        v-model="tokenCrowdsaleStages[stageIndex].endDate">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="StageDiscount">Discount %</label>
-                                                <input
-                                                        type="text"
-                                                        class="form-control"
-                                                        id="StageDiscount"
-                                                        v-model="tokenCrowdsaleStages[stageIndex].discount">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="StageVestingDate">Vesting Date (YYYY-MM-DD)</label>
-                                                <input
-                                                        placeholder="YYYY-MM-DD"
-                                                        type="text"
-                                                        class="form-control"
-                                                        id="StageVestingDate"
-                                                        v-model="tokenCrowdsaleStages[stageIndex].vestingDate">
-                                            </div>
-                                            <div class="text-right">
-                                                <button class="btn btn-primary btn-sm" @click="deleteStageAt(stageIndex)">
-                                                    Delete
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm">
-                                            <div v-for="(bonusVolume, bonusVolumeIndex) in stage.bonusVolumes" :key="bonusVolumeIndex">
-                                                <div class="form-row">
-                                                    <div class="form-group col-md-6">
-                                                        <label for="bonusVolumeETH">From (ETH)</label>
-                                                        <input
-                                                                placeholder="ETH"
-                                                                type="text"
-                                                                class="form-control"
-                                                                id="bonusVolumeETH"
-                                                                v-model="tokenCrowdsaleStages[stageIndex].bonusVolumes[bonusVolumeIndex][0]">
+                            <div class="col-12">
+                                <div v-if="isCrowdsaleInited && hasPlacedWTokenAddress" class="text-left">
+                                    <b-collapse class="ProjectDashboard__bonuses card">
+                                        <div class="card-content">
+                                            <div class="content" v-if="tokenCrowdsaleStages.length">
+                                                <b-collapse class="ProjectDashboard__stageBonus card" v-for="(stage, stageIndex) in tokenCrowdsaleStages" :key="stageIndex">
+                                                    <div class="col-12">
+                                                        <div class="p-3 row align-items-center justify-content-between">
+                                                            <span class="ProjectDashboard__stageTitle">Stage #{{ stageIndex+1 }}</span>
+                                                            <button class="btn btn-primary btn-sm" @click="deleteStageAt(stageIndex)">Remove stage</button>
+                                                        </div>
+                                                        <div class="ProjectDashboard__stageBonus col-sm py-2">
+                                                            <div class="row justify-content-between">
+                                                                <!--<div class="col-sm py-2">-->
+                                                                    <!--<label>Start date</label>-->
+                                                                    <!--<b-field class="ProjectDashboard__dateSelect">-->
+                                                                        <!--<b-datepicker-->
+                                                                                <!--disabled-->
+                                                                                <!--v-model="crowdsaleInitForm.date"-->
+                                                                                <!--placeholder="Click to select..."-->
+                                                                                <!--icon="calendar-today">-->
+                                                                        <!--</b-datepicker>-->
+                                                                    <!--</b-field>-->
+                                                                <!--</div>-->
+                                                                <div class="col-sm py-2">
+                                                                    <label>End date</label>
+                                                                    <b-field class="ProjectDashboard__dateSelect">
+                                                                        <b-datepicker
+                                                                                v-model="tokenCrowdsaleStages[stageIndex].endDate"
+                                                                                placeholder="Click to select..."
+                                                                                icon="calendar-today">
+                                                                        </b-datepicker>
+                                                                    </b-field>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row justify-content-between">
+                                                                <div class="col-sm py-2">
+                                                                    <label for="StageDiscount">Discount</label>
+                                                                    <b-field id="StageDiscount">
+                                                                        <b-input
+                                                                                type="number"
+                                                                                min="0"
+                                                                                max="100"
+                                                                                v-model="tokenCrowdsaleStages[stageIndex].discount"
+                                                                                icon="sale">
+                                                                        </b-input>
+                                                                    </b-field>
+                                                                </div>
+                                                                <div class="col-sm py-2">
+                                                                    <label for="StageVestingDate">Vesting Date</label>
+                                                                    <b-field id="StageVestingDate"
+                                                                             class="ProjectDashboard__dateSelect">
+                                                                        <b-datepicker
+                                                                                v-model="tokenCrowdsaleStages[stageIndex].vestingDate"
+                                                                                placeholder="Click to select..."
+                                                                                icon="calendar-today">
+                                                                        </b-datepicker>
+                                                                    </b-field>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="p-3 row align-items-center justify-content-between">
+                                                            <span class="ProjectDashboard__stageTitle">Volume bonuses</span>
+                                                        </div>
+                                                        <div class="col-sm py-2">
+                                                            <div v-for="(bonusVolume, bonusVolumeIndex) in stage.bonusVolumes"
+                                                                 :key="bonusVolumeIndex">
+                                                                <div class="row justify-content-between">
+                                                                    <div class="col-sm py-2">
+                                                                        <label for="bonusVolumeETH">From (ETH)</label>
+                                                                        <b-field id="bonusVolumeETH">
+                                                                            <b-input
+                                                                                    placeholder="ETH"
+                                                                                    type="number"
+                                                                                    min="0"
+                                                                                    :step="0.0001"
+                                                                                    v-model="tokenCrowdsaleStages[stageIndex].bonusVolumes[bonusVolumeIndex][0]"
+                                                                                    icon="ethereum">
+                                                                            </b-input>
+                                                                        </b-field>
+                                                                    </div>
+                                                                    <div class="col-sm py-2">
+                                                                        <div class="row">
+                                                                            <div class="col-md-8">
+                                                                                <label for="bonusVolumePercent">Bonus</label>
+                                                                                <b-field id="bonusVolumePercent">
+                                                                                    <b-input
+                                                                                            type="number"
+                                                                                            min="0"
+                                                                                            max="100"
+                                                                                            v-model="tokenCrowdsaleStages[stageIndex].bonusVolumes[bonusVolumeIndex][1]"
+                                                                                            icon="sale">
+                                                                                    </b-input>
+                                                                                </b-field>
+                                                                            </div>
+                                                                            <div class="col-md-2">
+                                                                                <a class="delete is-large"
+                                                                                   @click="deleteBonusVolumesAt(stageIndex, bonusVolumeIndex)"></a>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+                                                            <div class="text-right pt-2">
+                                                                <button class="btn btn-primary btn-sm"
+                                                                        @click="addBonusVolumesAt(stageIndex)">
+                                                                    Add
+                                                                </button>
+                                                                <button v-if="stage.bonusVolumes.length"
+                                                                        class="btn btn-primary btn-sm"
+                                                                        @click="saveBonusVolumesAt(stageIndex)">
+                                                                    Save
+                                                                </button>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                    <div class="form-group col-md-6">
-                                                        <label for="bonusVolumePercent">Bonus Percent</label>
-                                                        <input
-                                                                type="text"
-                                                                class="form-control"
-                                                                id="bonusVolumePercent"
-                                                                v-model="tokenCrowdsaleStages[stageIndex].bonusVolumes[bonusVolumeIndex][1]">
-                                                    </div>
-                                                </div>
-                                                <div class="text-right">
-                                                    <button class="btn btn-primary btn-sm"
-                                                            @click="deleteBonusVolumesAt(stageIndex, bonusVolumeIndex)">
-                                                        delete
-                                                    </button>
-                                                </div>
+                                                </b-collapse>
                                             </div>
-                                            <div class="text-center pt-2">
-                                                <button class="btn btn-primary btn-sm"
-                                                        @click="addBonusVolumesAt(stageIndex)">
-                                                    Add
-                                                </button>
-                                                <button v-if="stage.bonusVolumes.length" class="btn btn-primary btn-sm"
-                                                        @click="saveBonusVolumesAt(stageIndex)">
-                                                    Save
-                                                </button>
-                                            </div>
+
+                                            <footer class="card-footer">
+                                                <a class="card-footer-item" @click="addStage">Add stage</a>
+                                                <a class="card-footer-item" v-if="tokenCrowdsaleStages.length"
+                                                   @click="saveStages">Save stages</a>
+                                            </footer>
                                         </div>
-                                    </div>
-                                    <div class="text-center pt-3">
-                                        <button class="btn btn-primary btn-sm" @click="addStage">
-                                            Add stage
-                                        </button>
-                                        <button v-if="tokenCrowdsaleStages.length" class="btn btn-primary btn-sm" @click="saveStages">
-                                            Save stages
-                                        </button>
-                                    </div>
+
+                                    </b-collapse>
+
                                 </div>
                             </div>
                         </div>
-                    </li>
-                </ul>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div v-if="trancheInformationData">
-            <h2>Получение ETH</h2>
-            <TrancheInformation :data="trancheInformationData"></TrancheInformation>
-            <button class="btn btn-primary" :disabled="!allowTranche" @click="tryTranche">Получить</button>
-        </div>
-    </section>
+            <div v-if="trancheInformationData">
+                <h2>Получение ETH</h2>
+                <TrancheInformation :data="trancheInformationData"></TrancheInformation>
+                <button class="btn btn-primary" :disabled="!allowTranche" @click="tryTranche">Получить</button>
+            </div>
+        </section>
     </div>
 </template>
 
 <script>
-    import Ledger from '../../lib/Blockchain/ContractsLedger.js';
-    import config from '../../config.js';
+    import config from '../../config.js'; //нужно переместить конфиг и убрать ../../ дабавив alias в вебпак
+    import 'bem/buefy/default.scss';
+    import 'bem/ProjectDashboard/default.scss';
+
+    import Ledger from 'lib/Blockchain/ContractsLedger.js';
+    import Connector from 'lib/Blockchain/DefaultConnector.js';
     import { promisify, wait } from '../../lib/utils.js';
-    import Connector from '../../lib/Blockchain/DefaultConnector.js';
-    import { waitTransactionReceipt } from '../../lib/utils.js';
+    import {waitTransactionReceipt} from 'lib/utils.js';
+    import {createNamespacedHelpers} from 'vuex';
+    import BField from "buefy/src/components/field/Field";
     import TrancheInformation from '../TrancheInformation';
-    import { TrancheInformationModel } from '../TrancheInformation/shared.js';
+    import { TrancheInformationModel } from 'bem/TrancheInformation/shared.js';
 
 
+    import {W12LISTER_UPDATE} from "store/modules/W12Lister";
+
+    const ConfigNS = createNamespacedHelpers('config');
+    const W12ListerNS = createNamespacedHelpers('W12Lister');
     const moment = window.moment;
 
     // as utils
@@ -286,9 +374,10 @@
     export default {
         name: 'ProjectDashboard',
         components: {
+            BField,
             TrancheInformation
         },
-        data () {
+        data() {
             return {
                 loadingLedger: false,
                 fetchingToken: false,
@@ -300,10 +389,10 @@
                 initCrawdsaleLoading: false,
                 updateOwnerBalanceLoading: false,
                 subscribeToEventsLoading: false,
-                fetchCrowdsaleStagesListLoading:false,
-                setStagesLoading:false,
+                fetchCrowdsaleStagesListLoading: false,
+                setStagesLoading: false,
                 loading: false,
-                tokenAddress: '',
+                tokenAddress: null,
                 errorMessage: '',
                 infoMessage: '',
                 token: null,
@@ -314,15 +403,15 @@
                 ownerAddress: '',
                 tokenCrowdsaleStages: [],
                 approveForm: {
-                    value: '0'
+                    value: null
                 },
                 placeTokensForm: {
-                    value: '0'
+                    value: null
                 },
                 crowdsaleInitForm: {
-                    date: '',
-                    amountForSale: '0',
-                    price: ''
+                    date: null,
+                    amountForSale: null,
+                    price: null
                 },
                 crowdsaleStagesToAdd: [],
                 fundData: {
@@ -333,7 +422,17 @@
             };
         },
         computed: {
-            isLoading () {
+            ...ConfigNS.mapState({
+                W12ListerAddress: state => state.W12Lister.address
+            }),
+            ...W12ListerNS.mapState({
+                W12Lister: state => state.list
+            }),
+            minStartDate() {
+                const today = new Date();
+                return new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
+            },
+            isLoading() {
                 return (
                     this.loadingLedger
                     || this.fetchingToken
@@ -352,7 +451,7 @@
             isAddress() {
                 return web3.isAddress(this.tokenAddress);
             },
-            isChecksumAddress () {
+            isChecksumAddress() {
                 return web3.isChecksumAddress(this.tokenAddress);
             },
             isValidAddress() {
@@ -367,7 +466,7 @@
                     && (parseFloat(this.tokensAmountThatApprovedToPlaceByTokenOwner) !== 0)
                 );
             },
-            isWhiteListed () {
+            isWhiteListed() {
                 return Boolean(this.token);
             },
             hasPlacedWTokenAddress() {
@@ -390,6 +489,21 @@
                 return (
                     new BigNumber(this.fundData.trancheAmount).gt(0)
                 );
+            },
+            ownerBalanceToNumber() {
+                return this.ownerBalance
+                    ? web3.fromWei(this.ownerBalance, 'ether').toString()
+                    : 0;
+            },
+            tokensAmountThatApprovedToPlaceByTokenOwnerToNumber() {
+                return this.tokensAmountThatApprovedToPlaceByTokenOwner
+                    ? web3.fromWei(this.tokensAmountThatApprovedToPlaceByTokenOwner, 'ether').toString()
+                    : '0';
+            },
+            tokensForSaleAmountToNumber() {
+                return this.token.tokensForSaleAmount
+                    ? web3.fromWei(this.token.tokensForSaleAmount, 'ether').toString()
+                    : 0;
             }
         },
         watch: {
@@ -402,10 +516,10 @@
             }
         },
         methods: {
-            clearErrorMessage () {
+            clearErrorMessage() {
                 this.errorMessage = '';
             },
-            setErrorMessage (message) {
+            setErrorMessage(message) {
                 this.errorMessage = message;
             },
             handleTokenAddressChange(value, prevValue) {
@@ -424,6 +538,10 @@
 
                 this.fetchToken();
             },
+
+            tokenSelected(value) {
+                this.tokenAddress = value;
+            },
             async handleTokenChange(value, prevValue) {
                 this.unsubscribeFromEvents();
                 await this.subscribeToEvents();
@@ -434,7 +552,7 @@
                 await this.fetchCrowdsaleStagesList();
                 await this.updateFundInformation();
             },
-            async loadLedger () {
+            async loadLedger() {
                 let ledger
 
                 this.loadingLedger = true;
@@ -449,7 +567,25 @@
 
                 return ledger;
             },
-            async fetchToken () {
+            async fetchTokensList() {
+                this.fetchTokens = true;
+
+                const {W12ListerFactory} = await this.loadLedger();
+
+                if (W12ListerFactory) {
+                    try {
+                        const W12Lister = W12ListerFactory.at(this.W12ListerAddress);
+                        const list = await W12Lister.fetchAllTokensComposedInformation();
+
+                        this.$store.commit(`W12Lister/${W12LISTER_UPDATE}`, {list: list.map(({token}) => token)});
+                    } catch (e) {
+                        this.setErrorMessage(e.message || UNKNOWN_ERROR_WHILE_FETCH_TOKENS_LIST);
+                    }
+                }
+
+                this.fetchTokens = false;
+            },
+            async fetchToken() {
                 if (this.isLoading) return;
 
                 this.fetchingToken = true;
@@ -519,7 +655,7 @@
 
                 this.updateTokensApprovedToPlaceValueLoading = false;
             },
-            async updatePlacedTokenStatus () {
+            async updatePlacedTokenStatus() {
                 if (!this.token) return;
 
                 this.updatePlacedTokenStatusLoading = false;
@@ -559,7 +695,7 @@
 
                 this.updatePlacedTokenStatusLoading = false;
             },
-            async fetchCrowdsaleAddressAndCreateContractInstance () {
+            async fetchCrowdsaleAddressAndCreateContractInstance() {
                 if (!this.token) return;
 
                 this.fetchCrowdsaleAddressLoading = true;
@@ -583,7 +719,7 @@
                             && address != '0x0000000000000000000000000000000000000000'
                         ) {
 
-                            const { W12CrowdsaleFactory } = await this.loadLedger();
+                            const {W12CrowdsaleFactory} = await this.loadLedger();
                             const W12CrowdsaleInstance = W12CrowdsaleFactory.at(address);
 
                             this.ContractInstances.W12CrowdsaleInstance = W12CrowdsaleInstance;
@@ -630,7 +766,7 @@
                         throw new Error('not enough information to do request');
                     }
 
-                    await ERC20Instance.methods.approve(W12ListerAddress, value.toString());
+                    await ERC20Instance.methods.approve(W12ListerAddress, web3.toWei(value, 'ether'));
                 } catch (e) {
                     this.placedTokenStatus = false;
                     this.setErrorMessage(e.message);
@@ -661,7 +797,7 @@
                         throw new Error('not enough information to do request');
                     }
 
-                    await W12ListerInstance.methods.placeToken(tokenAddress, value.toString());
+                    await W12ListerInstance.methods.placeToken(tokenAddress, web3.toWei(value, 'ether'));
                 } catch (e) {
                     this.placedTokenStatus = false;
                     this.setErrorMessage(e.message);
@@ -675,8 +811,8 @@
 
                 const data = this.crowdsaleInitForm;
                 const date = moment(data.date, 'YYYY-MM-DD');
-                const amountForSale = new web3.BigNumber(data.amountForSale || 0);
-                const price = new web3.BigNumber(data.price || 0);
+                const amountForSale = new web3.BigNumber(web3.toWei(data.amountForSale, 'ether') || 0);
+                const price = new web3.BigNumber(web3.toWei(data.price, 'ether') || 0);
                 const tokensForSaleAmount = new web3.BigNumber(this.token.tokensForSaleAmount || 0);
                 const wTokensIssuedAmount = new web3.BigNumber(this.token.wTokensIssuedAmount || 0);
                 const limit = amountForSale.plus(wTokensIssuedAmount);
@@ -721,7 +857,7 @@
 
                 this.initCrawdsaleLoading = false;
             },
-            async updateOwnerBalance () {
+            async updateOwnerBalance() {
                 if (!this.token) return;
 
                 this.updateOwnerBalanceLoading = true;
@@ -770,7 +906,7 @@
 
                 this.fetchCrowdsaleStagesListLoading = false;
             },
-            async setStages (stages) {
+            async setStages(stages) {
                 if (!this.token) return;
                 if (!this.isCrowdsaleInited) return;
 
@@ -793,7 +929,7 @@
 
                 this.setStagesLoading = false;
             },
-            async setBonusVolumes (stageIndex, list) {
+            async setBonusVolumes(stageIndex, list) {
                 if (!this.token) return;
                 if (!this.isCrowdsaleInited) return;
 
@@ -936,9 +1072,10 @@
             },
             addStage() {
                 this.tokenCrowdsaleStages.push({
-                    endDate: '',
-                    discount: '',
-                    vestingDate: '',
+                    startDate: null,
+                    endDate: null,
+                    discount: null,
+                    vestingDate: null,
                     bonusVolumes: [],
                     wasCreated: false
                 });
@@ -967,6 +1104,7 @@
             this.errorMessage = info || error.message;
         },
         created() {
+            this.fetchTokensList();
             this.watchCurrentAccountAddress();
         },
         beforeDestroy() {

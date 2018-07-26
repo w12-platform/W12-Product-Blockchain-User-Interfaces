@@ -15,10 +15,14 @@ export class W12CrowdsaleWrapper extends BaseWrapper {
                 const stage = await this.methods.stages(i);
                 const bonusVolumes = await this.getBonusVolumesAtStage(i);
 
+                console.log(this);
+                console.log(this.methods);
+
                 const internalStageStructure = {
-                    endDate: moment.unix(stage[0].toNumber()).utc().format(DATE_FORMAT),
+                    startDate: null,
+                    endDate: new Date(moment.unix(stage[0].toNumber()).utc()), //moment.unix(stage[0].toNumber()).utc(),//.format(DATE_FORMAT),
                     discount: stage[1].toString(),
-                    vestingDate: moment.unix(stage[2].toNumber()).utc().format(DATE_FORMAT),
+                    vestingDate: new Date(moment.unix(stage[2].toNumber()).utc()), //moment.unix(stage[2].toNumber()).utc(),//.format(DATE_FORMAT),
                     bonusVolumes,
                     wasCreated: true
                 };
@@ -42,7 +46,7 @@ export class W12CrowdsaleWrapper extends BaseWrapper {
                     && boundaries.length > 0
                         && boundaries.length === bonuses.length) {
             for (let index in boundaries) {
-                const boundary = web3.fromWei(boundaries[index], 'ether').toString();
+                const boundary = web3.fromWei(boundaries[index], 'ether').toNumber();
                 const bonus = bonuses[index].toString();
 
                 result.push([boundary, bonus]);

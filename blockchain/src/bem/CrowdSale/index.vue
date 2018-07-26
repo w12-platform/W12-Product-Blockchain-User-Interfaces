@@ -1,5 +1,5 @@
 <template>
-    <div class="CrowdSale">
+    <div class="CrowdSale byefy">
         <table v-if="selected" class="table table-striped table-bordered table-hover table-responsive-sm">
             <tbody>
             <tr>

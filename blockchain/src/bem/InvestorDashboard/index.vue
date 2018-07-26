@@ -120,7 +120,8 @@
                     const tokenAddress = token.tokenAddress;
                     const nameW = token.name;
                     const symbolW = token.symbol;
-                    const WTokenTotal = token.wTokensIssuedAmount;
+                    const WTokenTotal = web3.fromWei(token.wTokensIssuedAmount, 'ether');
+                    const tokensForSaleAmount = web3.fromWei(token.tokensForSaleAmount, 'ether');
 
                     const crowdsaleInformation = this.crowdsaleInformationByTokenAddress[tokenAddress];
                     const tokensInformation = this.tokenInformationByTokenAddress[tokenAddress];
@@ -199,6 +200,7 @@
                     }
 
                     return {
+                        tokensForSaleAmount,
                         WTokenTotal,
                         tokensOnSale,
                         WTokenAddress,
@@ -341,9 +343,9 @@
                     const {web3} = await Connector.connect();
                     const W12Crowdsale = W12CrowdsaleFactory.at(token.crowdsaleAddress);
 
-                    const tokenPrice = (await W12Crowdsale.methods.price());
-                    const WTokenAddress = (await W12Crowdsale.methods.token());
-                    const W12FundAddress = (await W12Crowdsale.methods.fund());
+                    const tokenPrice = await W12Crowdsale.methods.price();
+                    const WTokenAddress = await W12Crowdsale.methods.token();
+                    const W12FundAddress = await W12Crowdsale.methods.fund();
                     const startDate = (await W12Crowdsale.methods.startDate()).toNumber();
                     const stages = await W12Crowdsale.getStagesList();
 
@@ -357,7 +359,7 @@
                     const foundBalanceInWei = (await getBalance(W12FundAddress)).toString();
 
                     this.$set(this.crowdsaleInformationByTokenAddress, token.tokenAddress, {
-                        tokenPrice: web3.fromWei(tokenPrice, 'ether').toString(),
+                        tokenPrice: web3.fromWei(tokenPrice, 'ether'),
                         startDate,
                         crowdsaleAddress: token.crowdsaleAddress,
                         stages,
@@ -369,7 +371,7 @@
                             totalFunded: (await W12Fund.methods.totalFunded()).toString(),
                             totalRefunded: (await W12Fund.methods.totalRefunded()).toString()
                         },
-                        tokensOnSale
+                        tokensOnSale: web3.fromWei(tokensOnSale, 'ether')
                     });
                 }
             },
@@ -450,6 +452,7 @@
             await this.fetchTokensInfo();
             await this.fetchCrowdSaleInformationForEachToken();
             await this.updateAccountData();
+
             // TODO: fix it, it trigger full rerender
             // setInterval(() => { this.currentDateUnix = moment.utc().unix() }, 1000);
         }
