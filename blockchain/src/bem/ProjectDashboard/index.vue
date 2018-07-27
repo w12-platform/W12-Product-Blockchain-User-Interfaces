@@ -17,11 +17,11 @@
                         <b-select
                                 v-model="tokenAddress"
                                 @input="tokenSelected"
-                                v-if="this.W12Lister"
+                                v-if="W12Lister"
                                 placeholder="Select a token"
                                 expanded>
                             <option
-                                    v-for="(token, idx) in this.W12Lister"
+                                    v-for="(token, idx) in W12Lister"
                                     :key="idx"
                                     :value="token.tokenAddress">{{ token.symbol }} - {{ token.tokenAddress }}
                             </option>
@@ -579,7 +579,7 @@
 
                         this.$store.commit(`W12Lister/${W12LISTER_UPDATE}`, {list: list.map(({token}) => token)});
                     } catch (e) {
-                        this.setErrorMessage(e.message || UNKNOWN_ERROR_WHILE_FETCH_TOKENS_LIST);
+                        this.setErrorMessage(e.message);
                     }
                 }
 
@@ -638,8 +638,6 @@
 
                     const currentAccount = (await getAccounts())[0];
                     const W12ListerAddress = config.contracts.W12Lister.address;
-
-                    console.log(currentAccount, W12ListerAddress);
 
                     if (!currentAccount || !W12ListerAddress) {
                         throw new Error('not enough information to do request');

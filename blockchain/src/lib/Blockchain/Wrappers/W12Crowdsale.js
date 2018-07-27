@@ -15,14 +15,11 @@ export class W12CrowdsaleWrapper extends BaseWrapper {
                 const stage = await this.methods.stages(i);
                 const bonusVolumes = await this.getBonusVolumesAtStage(i);
 
-                console.log(this);
-                console.log(this.methods);
-
                 const internalStageStructure = {
                     startDate: null,
-                    endDate: new Date(moment.unix(stage[0].toNumber()).utc()), //moment.unix(stage[0].toNumber()).utc(),//.format(DATE_FORMAT),
+                    endDate: stage[2].toNumber(),
                     discount: stage[1].toString(),
-                    vestingDate: new Date(moment.unix(stage[2].toNumber()).utc()), //moment.unix(stage[2].toNumber()).utc(),//.format(DATE_FORMAT),
+                    vestingDate: stage[2].toNumber(),
                     bonusVolumes,
                     wasCreated: true
                 };
@@ -74,14 +71,15 @@ export class W12CrowdsaleWrapper extends BaseWrapper {
         const endDates = [];
         const discounts = [];
         const vestings = [];
+        const format = (date) => moment(date).isValid() ? undefined : 'YYYY-MM-DD';
 
         for(let stage of stages) {
             endDates.push(
-                moment(stage.endDate, DATE_FORMAT).utc().unix()
+                moment(stage.endDate, format(stage.endDate)).utc().unix()
             );
             discounts.push(stage.discount);
             vestings.push(
-                moment(stage.vestingDate, DATE_FORMAT).utc().unix()
+                moment(stage.vestingDate, format(stage.endDate)).utc().unix()
             );
         }
 

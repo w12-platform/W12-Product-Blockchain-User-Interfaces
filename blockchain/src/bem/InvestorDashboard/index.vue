@@ -162,7 +162,7 @@
 
                         for (let stage of stages) {
                             const last = ranges[ranges.length - 1];
-                            const endDateUnix = moment.utc(stage.endDate, 'YYYY-MM-DD').unix();
+                            const endDateUnix = stage.endDate;
 
                             if (last.range.length === 1) {
                                 last.range.push(endDateUnix);
@@ -175,7 +175,7 @@
                             });
 
                             /* Получаем данные о дате окончания (последняя стадия) */
-                            const stageEndDate = moment.utc(stage.endDate, 'YYYY-MM-DD').unix();
+                            const stageEndDate = stage.endDate;
                             endDate = endDate < stageEndDate ? stageEndDate : endDate;
                         }
 
@@ -194,7 +194,7 @@
                             status = true;
                             bonusVolumes = foundStage.stage.bonusVolumes;
                             stageDiscount = foundStage.stage.discount;
-                            stageEndDate = moment.utc(foundStage.stage.endDate, 'YYYY-MM-DD').unix();
+                            stageEndDate = foundStage.stage.endDate;
                             timeLeft = stageEndDate - this.currentDateUnix;
                         }
                     }
