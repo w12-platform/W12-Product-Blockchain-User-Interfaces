@@ -120,8 +120,8 @@
                     const tokenAddress = token.tokenAddress;
                     const nameW = token.name;
                     const symbolW = token.symbol;
-                    const WTokenTotal = web3.fromWei(token.wTokensIssuedAmount, 'ether');
-                    const tokensForSaleAmount = web3.fromWei(token.tokensForSaleAmount, 'ether');
+                    const WTokenTotal = web3.fromWei(token.wTokensIssuedAmount, 'ether').toString();
+                    const tokensForSaleAmount = web3.fromWei(token.tokensForSaleAmount, 'ether').toString();
 
                     const crowdsaleInformation = this.crowdsaleInformationByTokenAddress[tokenAddress];
                     const tokensInformation = this.tokenInformationByTokenAddress[tokenAddress];
@@ -142,7 +142,8 @@
                     const {
                         name,
                         symbol,
-                        totalSupply
+                        totalSupply,
+                        decimals
                     } = tokensInformation;
 
                     let bonusVolumes = [];
@@ -206,6 +207,7 @@
                         WTokenAddress,
                         tokenAddress,
                         tokenPrice,
+                        decimals: decimals.toString(),
                         bonusVolumes,
                         stageDiscount,
                         stageEndDate,
@@ -359,7 +361,7 @@
                     const foundBalanceInWei = (await getBalance(W12FundAddress)).toString();
 
                     this.$set(this.crowdsaleInformationByTokenAddress, token.tokenAddress, {
-                        tokenPrice: web3.fromWei(tokenPrice, 'ether'),
+                        tokenPrice: web3.fromWei(tokenPrice, 'ether').toString(),
                         startDate,
                         crowdsaleAddress: token.crowdsaleAddress,
                         stages,
@@ -371,7 +373,7 @@
                             totalFunded: (await W12Fund.methods.totalFunded()).toString(),
                             totalRefunded: (await W12Fund.methods.totalRefunded()).toString()
                         },
-                        tokensOnSale: web3.fromWei(tokensOnSale, 'ether')
+                        tokensOnSale: web3.fromWei(tokensOnSale, 'ether').toString()
                     });
                 }
             },

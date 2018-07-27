@@ -17,7 +17,7 @@ export class W12CrowdsaleWrapper extends BaseWrapper {
 
                 const internalStageStructure = {
                     startDate: null,
-                    endDate: stage[2].toNumber(),
+                    endDate: stage[0].toNumber(),
                     discount: stage[1].toString(),
                     vestingDate: stage[2].toNumber(),
                     bonusVolumes,

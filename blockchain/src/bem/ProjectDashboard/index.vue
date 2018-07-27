@@ -896,6 +896,11 @@
 
                     const list = await W12CrowdsaleInstance.getStagesList();
 
+                    list.forEach(stage => {
+                        stage.endDate = new Date(stage.endDate * 1000);
+                        stage.vestingDate = stage.vestingDate ? new Date(stage.vestingDate * 1000) : null;
+                    });
+
                     this.tokenCrowdsaleStages = list;
                 } catch (e) {
                     this.tokenCrowdsaleStages = [];
