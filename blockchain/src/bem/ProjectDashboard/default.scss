@@ -1,5 +1,91 @@
 .ProjectDashboard {
+
+  &__select {
+
+  }
+
+  &__tokenInfo {
+
+  }
+
+  &__stages {
+    border: 1px solid #b5b5b5;
+    border-radius: 3px;
+  }
+  &__stage {
+    padding: 15px;
+    border-bottom: 1px solid #b5b5b5;
+  }
+  &__stageTitle {
+    font-size: 20px;
+  }
+
+  &__approveInfo {
+    margin: 10px 0;
+  }
+  &__placeForm {
+    margin-top: 10px;
+  }
+  &__placedWTokenAddress {
+    margin-top: 10px;
+  }
+  &__configureCrowdsale {
+    margin-top: 10px;
+  }
+  &__bonuses {
+    margin-top: 10px;
+    .card-content {
+      padding: 0;
+      width: 100%;
+    }
+    .card {
+      border: none;
+      border-radius: 0;
+    }
+    .content {
+      padding: 0;
+      margin: 0 !important;
+    }
+    .card-footer {
+      width: 100%;
+      padding: 0;
+      .card-footer-item {
+        &:hover {
+          background: #e4e4e4;
+        }
+      }
+    }
+  }
+  &__initCrowdsaleAddress {
+    margin-top: 10px;
+  }
+  &__dateSelect {
+    .datepicker {
+      padding: 0;
+    }
+    header {
+      position: relative;
+      background: none;
+    }
+    .dropdown-item:focus, .dropdown-item:hover {
+      background: none;
+    }
+    .dropdown-menu {
+      padding: 0;
+    }
+  }
+
+  &__stageBonus {
+    .delete {
+      margin-top: 28px;
+    }
+  }
+
   &__step-badge {
-    font-size: 24px
+    width: 50px;
+    height: 50px;
+    line-height: 40px;
+    display: block;
+    font-size: 24px;
   }
 }

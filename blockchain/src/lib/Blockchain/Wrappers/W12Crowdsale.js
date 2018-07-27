@@ -16,9 +16,10 @@ export class W12CrowdsaleWrapper extends BaseWrapper {
                 const bonusVolumes = await this.getBonusVolumesAtStage(i);
 
                 const internalStageStructure = {
-                    endDate: moment.unix(stage[0].toNumber()).utc().format(DATE_FORMAT),
+                    startDate: null,
+                    endDate: stage[0].toNumber(),
                     discount: stage[1].toString(),
-                    vestingDate: moment.unix(stage[2].toNumber()).utc().format(DATE_FORMAT),
+                    vestingDate: stage[2].toNumber(),
                     bonusVolumes,
                     wasCreated: true
                 };
@@ -42,7 +43,7 @@ export class W12CrowdsaleWrapper extends BaseWrapper {
                     && boundaries.length > 0
                         && boundaries.length === bonuses.length) {
             for (let index in boundaries) {
-                const boundary = web3.fromWei(boundaries[index], 'ether').toString();
+                const boundary = web3.fromWei(boundaries[index], 'ether').toNumber();
                 const bonus = bonuses[index].toString();
 
                 result.push([boundary, bonus]);
@@ -70,14 +71,15 @@ export class W12CrowdsaleWrapper extends BaseWrapper {
         const endDates = [];
         const discounts = [];
         const vestings = [];
+        const format = (date) => moment(date).isValid() ? undefined : 'YYYY-MM-DD';
 
         for(let stage of stages) {
             endDates.push(
-                moment(stage.endDate, DATE_FORMAT).utc().unix()
+                moment(stage.endDate, format(stage.endDate)).utc().unix()
             );
             discounts.push(stage.discount);
             vestings.push(
-                moment(stage.vestingDate, DATE_FORMAT).utc().unix()
+                moment(stage.vestingDate, format(stage.endDate)).utc().unix()
             );
         }
 

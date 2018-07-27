@@ -6,13 +6,17 @@ module.exports = {
     entry: './src/main.js',
     output: {
         filename: 'build.js',
-        path: path.resolve(__dirname, 'build')
+        path: path.resolve(__dirname, 'build'),
+        publicPath: '/blockchain/build/',
     },
     resolve: {
         extensions: ['.js', '.vue', '.json'],
         alias: {
             'vue$': 'vue/dist/vue.esm.js',
-            '@': path.join(__dirname, '..', "src")
+            '@': path.join(__dirname, '..', "src"),
+            'bem': path.join(__dirname, "src/bem"),
+            'lib': path.join(__dirname, "src/lib"),
+            'store': path.join(__dirname, "src/store")
         }
     },
     module: {
@@ -48,6 +52,7 @@ module.exports = {
     ],
     devServer: {
         contentBase: path.join(__dirname, '../'),
+        publicPath: '/blockchain/build/',
         compress: true,
         port: 8080
     }

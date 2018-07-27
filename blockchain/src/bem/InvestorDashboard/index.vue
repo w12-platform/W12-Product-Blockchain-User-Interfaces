@@ -120,7 +120,8 @@
                     const tokenAddress = token.tokenAddress;
                     const nameW = token.name;
                     const symbolW = token.symbol;
-                    const WTokenTotal = token.wTokensIssuedAmount;
+                    const WTokenTotal = web3.fromWei(token.wTokensIssuedAmount, 'ether').toString();
+                    const tokensForSaleAmount = web3.fromWei(token.tokensForSaleAmount, 'ether').toString();
 
                     const crowdsaleInformation = this.crowdsaleInformationByTokenAddress[tokenAddress];
                     const tokensInformation = this.tokenInformationByTokenAddress[tokenAddress];
@@ -141,7 +142,8 @@
                     const {
                         name,
                         symbol,
-                        totalSupply
+                        totalSupply,
+                        decimals
                     } = tokensInformation;
 
                     let bonusVolumes = [];
@@ -161,7 +163,7 @@
 
                         for (let stage of stages) {
                             const last = ranges[ranges.length - 1];
-                            const endDateUnix = moment.utc(stage.endDate, 'YYYY-MM-DD').unix();
+                            const endDateUnix = stage.endDate;
 
                             if (last.range.length === 1) {
                                 last.range.push(endDateUnix);
@@ -174,7 +176,7 @@
                             });
 
                             /* Получаем данные о дате окончания (последняя стадия) */
-                            const stageEndDate = moment.utc(stage.endDate, 'YYYY-MM-DD').unix();
+                            const stageEndDate = stage.endDate;
                             endDate = endDate < stageEndDate ? stageEndDate : endDate;
                         }
 
@@ -193,17 +195,19 @@
                             status = true;
                             bonusVolumes = foundStage.stage.bonusVolumes;
                             stageDiscount = foundStage.stage.discount;
-                            stageEndDate = moment.utc(foundStage.stage.endDate, 'YYYY-MM-DD').unix();
+                            stageEndDate = foundStage.stage.endDate;
                             timeLeft = stageEndDate - this.currentDateUnix;
                         }
                     }
 
                     return {
+                        tokensForSaleAmount,
                         WTokenTotal,
                         tokensOnSale,
                         WTokenAddress,
                         tokenAddress,
                         tokenPrice,
+                        decimals: decimals.toString(),
                         bonusVolumes,
                         stageDiscount,
                         stageEndDate,
@@ -341,9 +345,9 @@
                     const {web3} = await Connector.connect();
                     const W12Crowdsale = W12CrowdsaleFactory.at(token.crowdsaleAddress);
 
-                    const tokenPrice = (await W12Crowdsale.methods.price());
-                    const WTokenAddress = (await W12Crowdsale.methods.token());
-                    const W12FundAddress = (await W12Crowdsale.methods.fund());
+                    const tokenPrice = await W12Crowdsale.methods.price();
+                    const WTokenAddress = await W12Crowdsale.methods.token();
+                    const W12FundAddress = await W12Crowdsale.methods.fund();
                     const startDate = (await W12Crowdsale.methods.startDate()).toNumber();
                     const stages = await W12Crowdsale.getStagesList();
 
@@ -369,7 +373,7 @@
                             totalFunded: (await W12Fund.methods.totalFunded()).toString(),
                             totalRefunded: (await W12Fund.methods.totalRefunded()).toString()
                         },
-                        tokensOnSale
+                        tokensOnSale: web3.fromWei(tokensOnSale, 'ether').toString()
                     });
                 }
             },
@@ -450,6 +454,7 @@
             await this.fetchTokensInfo();
             await this.fetchCrowdSaleInformationForEachToken();
             await this.updateAccountData();
+
             // TODO: fix it, it trigger full rerender
             // setInterval(() => { this.currentDateUnix = moment.utc().unix() }, 1000);
         }

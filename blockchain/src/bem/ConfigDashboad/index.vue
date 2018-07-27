@@ -22,11 +22,11 @@
 </template>
 
 <script>
-    import "./default.scss";
+    import "bem/ConfigDashboad/default.scss";
     import { createNamespacedHelpers } from "vuex";
-    import { CONFIG_UPDATE } from "../../store/modules/config";
+    import { CONFIG_UPDATE } from "store/modules/config";
 
-    const configStore = createNamespacedHelpers("config");
+    const ConfigNS = createNamespacedHelpers('config');
 
     export default {
         name: 'ConfigDashboard',
@@ -41,7 +41,7 @@
             };
         },
         computed: {
-            ...configStore.mapState({
+            ...ConfigNS.mapState({
                 W12Lister: "W12Lister"
             }),
         },
@@ -49,6 +49,8 @@
             saveConfig () {
                 this.$store.commit(`config/${CONFIG_UPDATE}`, { W12Lister: { address: this.form.W12Lister.address }});
                 this.form.W12Lister.address = null;
+                //удалить данные о выбранном токене
+
             },
         },
     };

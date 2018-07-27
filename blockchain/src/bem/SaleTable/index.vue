@@ -3,7 +3,7 @@
         <b-table v-if="saleTableData" :data="saleTableData" class="table table-striped table-bordered table-responsive-sm">
             <template slot-scope="props">
                 <b-table-column field="date" label="Даты периода Crowdsale" centered>
-                    {{ props.row.date }}
+                    {{ dateFormat(props.row.date) }}
                 </b-table-column>
                 <b-table-column field="sale" label="Скидка за период Crowdsale" centered>
                     <span class="tag is-danger">-{{ props.row.sale }} %</span>
@@ -32,6 +32,7 @@
 <script>
     import './default.scss';
     import {createNamespacedHelpers} from "vuex";
+    import moment from 'moment';
 
     const crowdSaleListStore = createNamespacedHelpers("crowdSaleList");
 

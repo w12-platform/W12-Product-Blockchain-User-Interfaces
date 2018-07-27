@@ -1,5 +1,5 @@
 <template>
-    <div class="CrowdSale">
+    <div class="CrowdSale byefy">
         <table v-if="selected" class="table table-striped table-bordered table-hover table-responsive-sm">
             <tbody>
             <tr>
@@ -47,19 +47,19 @@
             </tr>
             <tr>
                 <td>Общее количество защищённых токенов</td>
-                <td>{{ selected.WTokenTotal }}</td>
+                <td>{{ decimals(selected.WTokenTotal) }}</td>
             </tr>
             <tr>
                 <td>Кол-во проданных защищенных токенов</td>
-                <td>{{ selected.WTokenTotal-selected.tokensOnSale }}</td>
+                <td>{{ saleAmount }}</td>
             </tr>
             <tr>
                 <td>Доля проданных защищённых токенов</td>
-                <td>{{ (selected.WTokenTotal-selected.tokensOnSale)/(selected.WTokenTotal/100) }}%</td>
+                <td>{{ salePercent }}%</td>
             </tr>
             <tr>
                 <td>Кол-во защищенных токенов, которое осталось в продаже</td>
-                <td>{{ selected.tokensOnSale }}</td>
+                <td>{{ decimals(selected.tokensOnSale) }}</td>
             </tr>
             <tr>
                 <td>Стоимость одного токена {{ selected.symbolW }}</td>
@@ -76,7 +76,7 @@
             <tr>
                 <td>Стоимость одного токена {{ selected.symbolW }} с учетом текущей скидки</td>
                 <td>
-                    <span v-if="selected.status">{{ selected.tokenPrice - (selected.tokenPrice * (selected.stageDiscount / 100)) }}
+                    <span v-if="selected.status">{{ price }}
                         <span class="CrowdSale__eth">ETH</span>
                     </span>
                 </td>
@@ -100,6 +100,8 @@
     const crowdSaleListStore = createNamespacedHelpers("crowdSaleList");
 
     const moment = window.moment;
+    const web3 = new Web3();
+    const BigNumber = web3.BigNumber;
 
     export default {
         name: 'CrowdSale',
@@ -116,12 +118,40 @@
 
             countdown() {
                 return countdown(new Date(this.selected.stageEndDate*1000)).toString();
+            },
+            price() {
+                if (!this.selected) return '0';
+
+                const price = new BigNumber(this.selected.tokenPrice);
+
+                return price.mul(100 - +selected.stageDiscount).div(100).toString();
+            },
+            saleAmount() {
+                return new BigNumber(this.selected.WTokenTotal)
+                    .minus(this.selected.tokensOnSale)
+                    .toString();
+            },
+            salePercent() {
+                return new BigNumber(this.selected.WTokenTotal)
+                    .minus(this.selected.tokensOnSale)
+                    .div(this.selected.WTokenTotal)
+                    .div(100)
+                    .toString();
             }
         },
         methods: {
             dateFormat(date) {
                 return moment(date * 1000).format("DD.MM.YYYY hh:mm")
-            }
+            },
+            decimals(value) {
+                // const d = this.selected.decimals;
+                // const base = new BigNumber(10);
+
+                value = new BigNumber(value);
+
+                // return value.div(base.pow(d)).toString();
+                return value.toString();
+            },
         },
         created() {
         }
