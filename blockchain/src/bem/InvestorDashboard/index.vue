@@ -199,6 +199,10 @@
                         }
                     }
 
+                    if(!endDate){
+                        return null;
+                    }
+
                     return {
                         tokensForSaleAmount,
                         WTokenTotal,
