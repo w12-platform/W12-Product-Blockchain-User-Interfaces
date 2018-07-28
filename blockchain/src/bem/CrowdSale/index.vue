@@ -68,7 +68,7 @@
             <tr v-if="selected.stageDiscount!=='0'">
                 <td>Скидка на {{ selected.symbolW }} в %</td>
                 <td>
-                    <span v-if="selected.status" class="tag is-danger">-{{ selected.stageDiscount }}%</span>
+                    <span v-if="selected.status" class="tag is-success">-{{ selected.stageDiscount }}%</span>
                     <span v-else></span>
                 </td>
 

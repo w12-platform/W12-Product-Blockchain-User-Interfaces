@@ -9,14 +9,17 @@ export class W12CrowdsaleWrapper extends BaseWrapper {
     async getStagesList() {
         const stagesLength = (await this.methods.stagesLength()).toNumber();
         const list = [];
+        const startDate = (await this.methods.startDate()).toNumber();
 
         if (stagesLength > 0) {
             for(let i = stagesLength-1; i>=0; i--) {
                 const stage = await this.methods.stages(i);
+                const stagePrev = (i === stagesLength-1) ? false : await this.methods.stages(i+1);
                 const bonusVolumes = await this.getBonusVolumesAtStage(i);
+                const startDateStage = stagePrev ? stagePrev[0].toNumber()+1 : startDate;
 
                 const internalStageStructure = {
-                    startDate: null,
+                    startDate: startDateStage,
                     endDate: stage[0].toNumber(),
                     discount: stage[1].toString(),
                     vestingDate: stage[2].toNumber(),

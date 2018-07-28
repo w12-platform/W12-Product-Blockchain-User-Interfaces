@@ -1,28 +1,51 @@
 <template>
-    <div class="SaleTable">
-        <b-table v-if="saleTableData" :data="saleTableData" class="table table-striped table-bordered table-responsive-sm">
+    <div class="SaleTable buefy">
+        <b-table v-if="saleTableData" :data="saleTableData" class="table table-striped table-bordered table-responsive-sm" :mobile-cards="false">
             <template slot-scope="props">
-                <b-table-column field="date" label="Даты периода Crowdsale" centered>
-                    {{ dateFormat(props.row.date) }}
+
+                <b-table-column field="date" label="Crowdsale stage (UTC)" centered :title="props.row.fullDate">
+                    {{ props.row.date }}
                 </b-table-column>
-                <b-table-column field="sale" label="Скидка за период Crowdsale" centered>
-                    <span class="tag is-danger">-{{ props.row.sale }} %</span>
+                <b-table-column field="sale" label="Stage discount" centered>
+                    <span v-if="props.row.sale !== '0'" class="tag is-success">{{ props.row.sale }} %</span>
                 </b-table-column>
-                <b-table-column v-if="props.row.bonusVolume.length" field="volume" label="Объем покупки W-tokens" centered>
-                    <div class="SaleTable__volumeElem" v-for="bonusVolume in props.row.bonusVolume">
-                        <span class="tag">{{ bonusVolume[0] }}</span>
+
+                <b-table-column v-if="props.row.bonusVolume.length" field="volume" label="ETH amount" centered>
+                    <div class="SaleTable__volumeElem" v-for="bonusVolume in props.row.bonusVolume.slice().reverse()">
+                        <span>{{ bonusVolume[0] }}</span>
                     </div>
                 </b-table-column>
-                <b-table-column v-if="props.row.bonusVolume.length" field="bonusVolume" label="Бонус за объем покупки" centered>
-                    <div class="SaleTable__volumeElem" v-for="bonusVolume in props.row.bonusVolume">
-                        <span class="tag is-danger">{{ bonusVolume[1] }} %</span>
+                <b-table-column v-if="props.row.bonusVolume.length" field="bonusVolume" label="Volume bonus" centered>
+                    <div class="SaleTable__volumeElem" v-for="bonusVolume in props.row.bonusVolume.slice().reverse()">
+                        <span>{{ bonusVolume[1] }} %</span>
                     </div>
                 </b-table-column>
-                <b-table-column v-if="props.row.bonusVolume.length" field="bonusVolume" label="Общий % W-tokens, получаемых бесплатно" centered>
-                    <div class="SaleTable__volumeElem" v-for="bonusVolume in props.row.bonusVolume">
-                        <span class="tag is-danger">{{ parseFloat(bonusVolume[1]) + parseFloat(props.row.sale) }} %</span>
+
+                <!--<b-table-column v-if="props.row.bonusVolume.length" field="bonusVolume" label="Token amount with discount" centered>-->
+                    <!--<div class="SaleTable__volumeElem" v-for="bonusVolume in props.row.bonusVolume.slice().reverse()">-->
+                        <!--<span>{{ bonusVolume[0] * (1 / props.row.price) + bonusVolume[0] * (1 / props.row.price) * (props.row.sale/100) }}</span>-->
+                    <!--</div>-->
+                <!--</b-table-column>-->
+
+                <b-table-column v-if="props.row.bonusVolume.length" field="bonusVolume" label="Token amount with volume bonus" centered>
+                    <div class="SaleTable__volumeElem" v-for="bonusVolume in props.row.bonusVolume.slice().reverse()">
+                        <span>{{
+                            (bonusVolume[0] * (1 / props.row.price) + bonusVolume[0] * (1 / props.row.price) * (props.row.sale/100)) +
+                            (bonusVolume[0] * (1 / props.row.price) + bonusVolume[0] * (1 / props.row.price) * (props.row.sale/100)) * (bonusVolume[1]/100)
+                            }}</span>
                     </div>
                 </b-table-column>
+                <b-table-column v-if="props.row.bonusVolume.length" field="bonusVolume" label="W-tokens gain, total (%)" centered>
+                    <div class="SaleTable__volumeElem" v-for="bonusVolume in props.row.bonusVolume.slice().reverse()">
+                        <span>{{
+                            ((((bonusVolume[0] * (1 / props.row.price) + bonusVolume[0] * (1 / props.row.price) * (props.row.sale/100))
+                            + (bonusVolume[0] * (1 / props.row.price) + bonusVolume[0] * (1 / props.row.price) * (props.row.sale/100)) * (bonusVolume[1]/100))
+                            / (bonusVolume[0] * (1 / props.row.price)) - 1)
+                            *100).toFixed(2)
+                            }} %</span>
+                    </div>
+                </b-table-column>
+
             </template>
         </b-table>
     </div>
@@ -50,10 +73,17 @@
             }),
             saleTableData() {
                 const list = this.selected.stages.map(stage => {
-                    //console.log(stage);
+
+                    // stage.bonusVolumes.map((bonus)=>{
+                    //     console.log(bonus);
+                    //     return 1;
+                    // });
+
                     return {
-                        'date': stage.endDate,
+                        'date': this.dateFormat(stage.startDate) + " - " + this.dateFormat(stage.endDate),
+                        'fullDate': this.fullDateFormat(stage.startDate) + " - " + this.fullDateFormat(stage.endDate),
                         'sale': stage.discount,
+                        'price': this.selected.tokenPrice,
                         'bonusVolume': stage.bonusVolumes
                     }
                 });
@@ -65,7 +95,10 @@
         },
         methods: {
             dateFormat(date) {
-                return moment(date * 1000).format("DD.MM.YYYY hh:mm")
+                return moment(date * 1000).utc().format("DD.MM.YYYY");
+            },
+            fullDateFormat(date) {
+                return moment(date * 1000).utc().format("DD.MM.YYYY HH:mm");
             }
         },
         async created() {

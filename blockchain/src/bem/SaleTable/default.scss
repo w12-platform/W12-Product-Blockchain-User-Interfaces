@@ -1,7 +1,4 @@
 .SaleTable {
-  @import "~bulma";
-  @import "~buefy/src/scss/buefy";
-
   font-size: 12px;
   margin: 20px 0;
 
@@ -13,5 +10,6 @@
 
   &__volumeElem {
     margin: 3px;
+    white-space: nowrap;
   }
 }
