@@ -207,24 +207,24 @@
                                         <div class="card-content">
                                             <div class="content" v-if="tokenCrowdsaleStages.length">
                                                 <b-collapse class="ProjectDashboard__stageBonus card" v-for="(stage, stageIndex) in tokenCrowdsaleStages" :key="stageIndex">
-                                                    <div class="col-12">
+                                                    <div class="col-12 pb-4">
                                                         <div class="p-3 row align-items-center justify-content-between">
                                                             <span class="ProjectDashboard__stageTitle">Stage #{{ stageIndex+1 }}</span>
                                                             <button class="btn btn-primary btn-sm" @click="deleteStageAt(stageIndex)">Remove stage</button>
                                                         </div>
                                                         <div class="ProjectDashboard__stageBonus col-sm py-2">
                                                             <div class="row justify-content-between">
-                                                                <!--<div class="col-sm py-2">-->
-                                                                    <!--<label>Start date</label>-->
-                                                                    <!--<b-field class="ProjectDashboard__dateSelect">-->
-                                                                        <!--<b-datepicker-->
-                                                                                <!--disabled-->
-                                                                                <!--v-model="crowdsaleInitForm.date"-->
-                                                                                <!--placeholder="Click to select..."-->
-                                                                                <!--icon="calendar-today">-->
-                                                                        <!--</b-datepicker>-->
-                                                                    <!--</b-field>-->
-                                                                <!--</div>-->
+                                                                <div class="col-sm py-2">
+                                                                    <label>Start date</label>
+                                                                    <b-field class="ProjectDashboard__dateSelect">
+                                                                        <b-datepicker
+                                                                                disabled
+                                                                                v-model="tokenCrowdsaleStages[stageIndex].startDate"
+                                                                                placeholder="Click to select..."
+                                                                                icon="calendar-today">
+                                                                        </b-datepicker>
+                                                                    </b-field>
+                                                                </div>
                                                                 <div class="col-sm py-2">
                                                                     <label>End date</label>
                                                                     <b-field class="ProjectDashboard__dateSelect">
@@ -267,11 +267,10 @@
                                                             <span class="ProjectDashboard__stageTitle">Volume bonuses</span>
                                                         </div>
                                                         <div class="col-sm py-2">
-                                                            <div v-for="(bonusVolume, bonusVolumeIndex) in stage.bonusVolumes"
-                                                                 :key="bonusVolumeIndex">
+                                                            <div v-for="(bonusVolume, bonusVolumeIndex) in stage.bonusVolumes" :key="bonusVolumeIndex">
                                                                 <div class="row justify-content-between">
                                                                     <div class="col-sm py-2">
-                                                                        <label for="bonusVolumeETH">From (ETH)</label>
+                                                                        <label v-if="bonusVolumeIndex === 0" for="bonusVolumeETH">From (ETH)</label>
                                                                         <b-field id="bonusVolumeETH">
                                                                             <b-input
                                                                                     placeholder="ETH"
@@ -286,7 +285,7 @@
                                                                     <div class="col-sm py-2">
                                                                         <div class="row">
                                                                             <div class="col-md-8">
-                                                                                <label for="bonusVolumePercent">Bonus</label>
+                                                                                <label v-if="bonusVolumeIndex === 0" for="bonusVolumePercent">Bonus</label>
                                                                                 <b-field id="bonusVolumePercent">
                                                                                     <b-input
                                                                                             type="number"
@@ -297,7 +296,7 @@
                                                                                     </b-input>
                                                                                 </b-field>
                                                                             </div>
-                                                                            <div class="col-md-2">
+                                                                            <div class="ProjectDashboard__deleteContainer col-md-2">
                                                                                 <a class="delete is-large"
                                                                                    @click="deleteBonusVolumesAt(stageIndex, bonusVolumeIndex)"></a>
                                                                             </div>
@@ -306,7 +305,7 @@
                                                                 </div>
 
                                                             </div>
-                                                            <div class="text-right pt-2">
+                                                            <div class="text-left pt-2">
                                                                 <button class="btn btn-primary btn-sm"
                                                                         @click="addBonusVolumesAt(stageIndex)">
                                                                     Add
@@ -897,6 +896,7 @@
                     const list = await W12CrowdsaleInstance.getStagesList();
 
                     list.forEach(stage => {
+                        stage.startDate = new Date(stage.startDate * 1000);
                         stage.endDate = new Date(stage.endDate * 1000);
                         stage.vestingDate = stage.vestingDate ? new Date(stage.vestingDate * 1000) : null;
                     });

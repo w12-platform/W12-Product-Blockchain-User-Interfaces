@@ -74,13 +74,13 @@
       padding: 0;
     }
   }
-
-  &__stageBonus {
-    .delete {
-      margin-top: 28px;
-    }
+  &__deleteContainer{
+    display: flex;
+    flex-direction: column-reverse;
+    margin-bottom: 2px;
   }
-
+  &__stageBonus {
+  }
   &__step-badge {
     width: 50px;
     height: 50px;
