@@ -11,4 +11,19 @@
   .container {
     max-width: 100%;
   }
+
+  .datepicker {
+    padding: 0;
+
+    header {
+      position: relative;
+      background: none;
+    }
+    .dropdown-item:focus, .dropdown-item:hover {
+      background: none;
+    }
+    .dropdown-menu {
+      padding: 0;
+    }
+  }
 }

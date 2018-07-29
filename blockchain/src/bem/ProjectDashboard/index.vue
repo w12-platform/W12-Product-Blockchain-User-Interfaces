@@ -336,6 +336,14 @@
                     </div>
                 </div>
             </div>
+            <div v-if="token && isCrowdsaleInited">
+                <h2>Milestones</h2>
+                <div class="box">
+                    <MilestoneList v-model="tokenCrowdsaleMilestones"></MilestoneList>
+                </div>
+                <button class="btn btn-primary btn-sm btn-block" @click="saveMilestones">Send Milestones to blockchain
+                </button>
+            </div>
             <div v-if="trancheInformationData">
                 <h2>Получение ETH</h2>
                 <TrancheInformation :data="trancheInformationData"></TrancheInformation>
@@ -355,8 +363,8 @@
     import { promisify, wait } from '../../lib/utils.js';
     import {waitTransactionReceipt} from 'lib/utils.js';
     import {createNamespacedHelpers} from 'vuex';
-    import BField from "buefy/src/components/field/Field";
     import TrancheInformation from '../TrancheInformation';
+    import MilestoneList from 'bem/Milestones/MilestoneList.vue';
     import { TrancheInformationModel } from 'bem/TrancheInformation/shared.js';
 
 
@@ -373,8 +381,8 @@
     export default {
         name: 'ProjectDashboard',
         components: {
-            BField,
-            TrancheInformation
+            TrancheInformation,
+            MilestoneList
         },
         data() {
             return {
@@ -401,6 +409,7 @@
                 tokenCrowdsaleAddress: null,
                 ownerAddress: '',
                 tokenCrowdsaleStages: [],
+                tokenCrowdsaleMilestones: [],
                 approveForm: {
                     value: null
                 },
@@ -549,6 +558,7 @@
                 await this.updatePlacedTokenStatus();
                 await this.fetchCrowdsaleAddressAndCreateContractInstance();
                 await this.fetchCrowdsaleStagesList();
+                await this.fetchCrowdsaleMilestonesList();
                 await this.updateFundInformation();
             },
             async loadLedger() {
@@ -909,6 +919,42 @@
 
                 this.fetchCrowdsaleStagesListLoading = false;
             },
+            async fetchCrowdsaleMilestonesList () {
+                if (!this.token) return;
+                if (!this.isCrowdsaleInited) return;
+
+                try {
+                    const {
+                        W12CrowdsaleInstance
+                    } = this.ContractInstances;
+
+                    const list = await W12CrowdsaleInstance.getMilestones();
+
+                    this.tokenCrowdsaleMilestones = list;
+                } catch (e) {
+                    this.tokenCrowdsaleMilestones = [];
+                    this.setErrorMessage(e.message);
+                }
+            },
+            async setMilestines (milestones) {
+                if (!this.token) return;
+                if (!this.isCrowdsaleInited) return;
+
+                try {
+                    const {
+                        W12CrowdsaleInstance
+                    } = this.ContractInstances;
+
+                    const tx = await W12CrowdsaleInstance.setMilestones(milestones);
+                    const connectedWeb3 = (await Connector.connect()).web3;
+
+                    await waitTransactionReceipt(tx, connectedWeb3, 5000);
+
+                    milestones.forEach(stage => stage.wasCreated = true);
+                } catch (e) {
+                    this.setErrorMessage(e.message);
+                }
+            },
             async setStages(stages) {
                 if (!this.token) return;
                 if (!this.isCrowdsaleInited) return;
@@ -1088,6 +1134,9 @@
             },
             saveStages() {
                 this.setStages(this.tokenCrowdsaleStages);
+            },
+            saveMilestones () {
+                this.setMilestines(this.tokenCrowdsaleMilestones);
             },
             saveBonusVolumesAt(stageIndex) {
                 const stage = this.tokenCrowdsaleStages[stageIndex];
