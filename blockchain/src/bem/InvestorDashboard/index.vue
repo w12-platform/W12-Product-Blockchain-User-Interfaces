@@ -22,16 +22,43 @@
                 <h2 v-if="selected" class="m-3">REFUND. Вернуть: {{ selected.symbolW }}, получить: ETH</h2>
                 <div v-if="refundInformation">
                     <RefundInformation v-if="refundInformation" :data="refundInformation"></RefundInformation>
+                    <hr>
                     <RefundCalculator v-if="refundInformation.currentWalletBalanceInRefundAmount"
-                                      v-model="refundValue"
+                                      v-model="refundValueInTokens"
                                       :fundAddress="selected.fund.W12FundAddress"
                                       :accountAddress="currentAccount"
-                                      :tokenSymbol="selected.symbolW"></RefundCalculator>
-                    <p v-if="refundInformation.currentWalletBalanceInRefundAmount" class="alert alert-warning m-3">Вы должны будете подтвердить 2-е транзакции: подтвердить, что вы
-                        согласны вывести токены со своего аккаунта и сам вывод</p>
-                    <button v-if="refundInformation.currentWalletBalanceInRefundAmount" class="btn m-3" @click="refund" :disabled="!refundValue || refundValue == 0">Вернуть
-                        средства
-                    </button>
+                                      :tokenSymbol="selected.symbolW"
+                                      :tokenDecimals="selected.decimals">
+                    </RefundCalculator>
+                    <div>
+                        <button class="btn m-3 btn-sm"
+                                @click="approveTheFundToSpend" :disabled="isApproveButtonDisabled">
+                            Разрешить возврат
+                        </button>
+                    </div>
+                    <hr>
+                    <div>
+                        Ожидается обработка операции разрешения, через некоторое время потребуется Ваше подтверждение
+                        <br><br>
+                        <span>{{ currentAccountData.allowanceForTheFund }} {{ selected.symbolW }} на {{ currentAccountData.allowanceForTheFundInRefundAmount | toEth }} ETH</span>
+                    </div>
+                    <hr>
+                    <div>
+                        Подтвердите операцию возврата
+                        <br><br>
+                        <span>{{ currentAccountData.allowanceForTheFund }} {{ selected.symbolW }} на {{ currentAccountData.allowanceForTheFundInRefundAmount | toEth }} ETH</span>
+                        <div>
+                            <button class="btn m-3 btn-sm"
+                                    @click="decreaseTheFundApprovalToSpend" :disabled="isRejectApprovalDisabled">
+                                Отменить
+                            </button>
+                            <button class="btn m-3 btn-sm"
+                                    @click="refund" :disabled="isConfirmRefundDisabled">
+                                Подтвердить возврать средств
+                            </button>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </section>
@@ -67,6 +94,13 @@
 
     export default {
         name: 'InvestorDashboard',
+        filters: {
+            toEth(value) {
+                value = new BigNumber(value);
+
+                return web3.fromWei(value, 'ether').toString();
+            }
+        },
         components: {
             Converter,
             CrowdSale,
@@ -80,7 +114,7 @@
             return {
                 fetchTokens: false,
                 errorMessage: '',
-                refundValue: '0',
+                refundValueInTokens: '0',
                 loadingLedger: false,
                 tokensList: [],
                 crowdsaleInformationByTokenAddress: {},
@@ -92,6 +126,8 @@
                     vestingBalance: 0,
                     refundForOneToken: 0,
                     totalRefundAmount: 0,
+                    allowanceForTheFund: 0,
+                    allowanceForTheFundInRefundAmount: 0,
                     investorInformation: {
                         totalBought: 0,
                         averageTokenPrice: 0
@@ -246,6 +282,7 @@
 
                     return new RefundInformationModel({
                         tokenSymbol: this.selected.symbolW,
+                        tokenDecimals: this.selected.decimals,
                         freezeTokensVolume,
                         refundTokensVolume: this.currentAccountData.balance,
                         refundAmountPerToken: web3.fromWei(this.currentAccountData.refundForOneToken, 'ether').toString(),
@@ -257,6 +294,35 @@
                         currentWalletBalanceInRefundAmount: web3.fromWei(this.currentAccountData.totalRefundAmount, 'ether').toString()
                     });
                 }
+            },
+            isApproveButtonDisabled() {
+                const currentRefund = new BigNumber(this.refundValueInTokens || 0);
+                const prevRefund = new BigNumber(this.currentAccountData.allowanceForTheFund || 0);
+
+                return (
+                    currentRefund.eq(0)
+                        || prevRefund.gt(0)
+                );
+            },
+            isRejectApprovalDisabled() {
+                const value = new BigNumber(this.currentAccountData.allowanceForTheFund || 0);
+
+                return (
+                    value.eq(0)
+                );
+            },
+            isConfirmRefundDisabled () {
+                const value = new BigNumber(this.currentAccountData.allowanceForTheFundInRefundAmount || 0);
+
+                return (
+                    value.eq(0)
+                );
+            },
+            adjustedRefundValueInTokens() {
+                const value = new BigNumber(this.refundValueInTokens || 0);
+                const decimals = this.selected ? this.selected.decimals : 0;
+
+                return value.mul(new BigNumber(10).pow(decimals)).toString();
             }
         },
         watch: {
@@ -396,10 +462,14 @@
                     const fundAddress = selectedToken.fund.W12FundAddress;
                     const W12Token = W12TokenFactory.at(wTokenAddress);
                     const W12Fund = W12FundFactory.at(fundAddress);
+                    const decimals = selectedToken.decimals;
+                    const oneToken = new BigNumber(10).pow(decimals);
 
                     const balance = (await W12Token.methods.balanceOf(this.currentAccount)).toString();
+                    const allowanceForTheFund = (await W12Token.methods.allowance(this.currentAccount, fundAddress)).toString();
+                    const allowanceForTheFundInRefundAmount = (await W12Fund.methods.getRefundAmount(allowanceForTheFund)).toString();
                     const vestingBalance = (await W12Token.methods.vestingBalanceOf(this.currentAccount, 0)).toString();
-                    const refundForOneToken = (await W12Fund.methods.getRefundAmount(1)).toString();
+                    const refundForOneToken = (await W12Fund.methods.getRefundAmount(oneToken)).toString();
                     const totalRefundAmount = (await W12Fund.methods.getRefundAmount(balance)).toString();
                     const investorInformation = await W12Fund.methods.getInvestmentsInfo(this.currentAccount);
 
@@ -408,6 +478,8 @@
                         vestingBalance,
                         refundForOneToken,
                         totalRefundAmount,
+                        allowanceForTheFund,
+                        allowanceForTheFundInRefundAmount,
                         investorInformation: {
                             totalBought: investorInformation[0].toString(),
                             averageTokenPrice: investorInformation[1].toString()
@@ -420,35 +492,90 @@
                     this.setErrorMessage(e.message);
                 }
             },
-            async refund() {
+            async approveTheFundToSpend() {
                 try {
-                    if (this.refundValue && this.selected) {
-                        const {W12FundFactory, W12TokenFactory} = await this.loadLedger();
-                        const { web3 } = await Connector.connect();
-                        const W12Fund = W12FundFactory.at(this.selected.fund.W12FundAddress);
+                    const value = new BigNumber(this.adjustedRefundValueInTokens);
+
+                    if (value.gt(0) && this.selected) {
+                        const {W12TokenFactory} = await this.loadLedger();
+                        const {web3} = await Connector.connect();
                         const W12Token = W12TokenFactory.at(this.selected.WTokenAddress);
 
-                        // TODO: temporally solution. approve tokens amount to refund from buyer account
                         const approveTx = await W12Token.methods.approve(
                             this.selected.fund.W12FundAddress,
-                            this.refundValue,
-                            { from: this.currentAccount }
+                            value,
+                            {from: this.currentAccount}
                         );
 
                         await waitTransactionReceipt(approveTx, web3, 10000);
-
-                        const tx = await W12Fund.methods.refund(this.refundValue, { from: this.currentAccount });
-
-                        await waitTransactionReceipt(tx, web3, 5000);
-
                         await this.updateAccountData();
-                        await this.fetchCrowdSaleInformationForEachToken();
                     }
                 } catch (e) {
                     console.log(e);
                     this.setErrorMessage(e.message);
                 }
-            }
+            },
+            async decreaseTheFundApprovalToSpend () {
+                try {
+                    if (this.selected) {
+                        const value = new BigNumber(this.currentAccountData.allowanceForTheFund);
+
+                        if (value.gt(0)) {
+                            const {W12TokenFactory} = await this.loadLedger();
+                            const {web3} = await Connector.connect();
+                            const W12Token = W12TokenFactory.at(this.selected.WTokenAddress);
+
+                            // TODO: temporally solution. approve tokens amount to refund from buyer account
+                            const approveTx = await W12Token.methods.decreaseApproval(
+                                this.selected.fund.W12FundAddress,
+                                value,
+                                {from: this.currentAccount}
+                            );
+
+                            await waitTransactionReceipt(approveTx, web3, 10000);
+                            await this.updateAccountData();
+                        }
+                    }
+                } catch (e) {
+                    console.log(e);
+                    this.setErrorMessage(e.message);
+                }
+            },
+            async refund() {
+                try {
+                    const value = new BigNumber(this.adjustedRefundValueInTokens);
+
+                    if (value.gt(0) && this.selected) {
+                        const value = new BigNumber(this.currentAccountData.allowanceForTheFundInRefundAmount);
+
+                        if (value.gt(0)) {
+                            const {W12FundFactory} = await this.loadLedger();
+                            const { web3 } = await Connector.connect();
+                            const W12Fund = W12FundFactory.at(this.selected.fund.W12FundAddress);
+
+                            const tx = await W12Fund.methods.refund(value, { from: this.currentAccount });
+
+                            await waitTransactionReceipt(tx, web3, 5000);
+
+                            await this.updateAccountData();
+                            await this.fetchCrowdSaleInformationForEachToken();
+                        }
+                    }
+                } catch (e) {
+                    console.log(e);
+                    this.setErrorMessage(e.message);
+                }
+            },
+
+            decimals (value) {
+                const d = this.selected ? this.selected.decimals : 0;
+                const base = new BigNumber(10);
+
+                value = new BigNumber(value);
+
+                return value.div(base.pow(d)).toString();
+                // return value.toString();
+            },
         },
         errorCaptured (error, vm, info) {
             this.errorMessage = info || error.message;
