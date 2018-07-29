@@ -58,7 +58,12 @@
                             </button>
                         </div>
                     </div>
-
+                    <hr>
+                    <div>
+                        Ожидается обработка операции возврата
+                        <br><br>
+                        <span>{{ currentAccountData.allowanceForTheFund }} {{ selected.symbolW }} на {{ currentAccountData.allowanceForTheFundInRefundAmount | toEth }} ETH</span>
+                    </div>
                 </div>
             </div>
         </section>
