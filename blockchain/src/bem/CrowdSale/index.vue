@@ -68,7 +68,7 @@
             <tr v-if="selected.stageDiscount!=='0'">
                 <td>Скидка на {{ selected.symbolW }} в %</td>
                 <td>
-                    <span v-if="selected.status" class="tag is-success">-{{ selected.stageDiscount }}%</span>
+                    <span v-if="selected.status" class="tag is-success">{{ selected.stageDiscount }}%</span>
                     <span v-else></span>
                 </td>
 
@@ -133,7 +133,7 @@
                 return new BigNumber(this.selected.WTokenTotal)
                     .minus(this.selected.tokensOnSale)
                     .div(this.selected.WTokenTotal)
-                    .div(100)
+                    .mul(100)
                     .toString();
             }
         },
