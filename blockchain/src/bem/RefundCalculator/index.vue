@@ -43,6 +43,9 @@
             tokenSymbol: {
                 type: [String]
             },
+            tokenDecimals: {
+                type: [String]
+            },
             value: {
                 type: [String]
             },
@@ -103,7 +106,11 @@
                 try {
                     if (this.helpers) {
                         const {W12Fund} = this.helpers;
-                        const value = await W12Fund.methods.getRefundAmount(this.value || 0, {from: this.accountAddress});
+                        const multiplier = new BigNumber(10).pow(this.tokenDecimals);
+                        const value = await W12Fund.methods.getRefundAmount(
+                            (new BigNumber(this.value || 0)).mul(multiplier).toString(),
+                            {from: this.accountAddress}
+                        );
 
                         this.refundAmount = value.toString();
                     }
