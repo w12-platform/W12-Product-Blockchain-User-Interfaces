@@ -21,8 +21,8 @@
                         id="MilestoneCard__tranche"
                         label="Количество средств, выделяемых проекту по окончании milestone в случае позитивного голосования">
                     <b-input
-                            :value="viewData.tranchePercents"
-                            @input="onInput('tranchePercents', $event)"
+                            :value="viewData.tranchePercent"
+                            @input="onInput('tranchePercent', $event)"
                             type="number"></b-input>
                 </b-field>
                 <p>% относительно общего количества</p>

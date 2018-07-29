@@ -6,7 +6,7 @@
                 @delete="onDelete"
                 :key="idx"
         ></MilestoneCard>
-        <button class="btn btn-sm btn-primary" @click="onAdd">Добавить Milestone</button>
+        <button class="btn btn-sm btn-primary btn-block" @click="onAdd">Добавить Milestone</button>
     </div>
 </template>
 <script>
@@ -71,10 +71,11 @@
                 this.observableData.push(new MilestoneModel({
                     name: '',
                     description: '',
-                    tranchePercents: null,
+                    tranchePercent: '10',
                     endDate: now,
                     voteEndDate: now,
-                    withdrawalEndDate: now
+                    withdrawalEndDate: now,
+                    wasCreated: false
                 }))
             }
         }
