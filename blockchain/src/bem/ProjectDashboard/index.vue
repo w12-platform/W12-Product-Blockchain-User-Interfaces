@@ -336,6 +336,8 @@
                     </div>
                 </div>
             </div>
+            <h2>Milestones</h2>
+            <MilestoneList v-model="tokenCrowdsaleMilestones"></MilestoneList>
             <div v-if="trancheInformationData">
                 <h2>Получение ETH</h2>
                 <TrancheInformation :data="trancheInformationData"></TrancheInformation>
@@ -355,8 +357,8 @@
     import { promisify, wait } from '../../lib/utils.js';
     import {waitTransactionReceipt} from 'lib/utils.js';
     import {createNamespacedHelpers} from 'vuex';
-    import BField from "buefy/src/components/field/Field";
     import TrancheInformation from '../TrancheInformation';
+    import MilestoneList from 'bem/Milestones/MilestoneList.vue';
     import { TrancheInformationModel } from 'bem/TrancheInformation/shared.js';
 
 
@@ -373,8 +375,8 @@
     export default {
         name: 'ProjectDashboard',
         components: {
-            BField,
-            TrancheInformation
+            TrancheInformation,
+            MilestoneList
         },
         data() {
             return {
@@ -401,6 +403,7 @@
                 tokenCrowdsaleAddress: null,
                 ownerAddress: '',
                 tokenCrowdsaleStages: [],
+                tokenCrowdsaleMilestones: [],
                 approveForm: {
                     value: null
                 },
