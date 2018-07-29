@@ -67,7 +67,6 @@
 
     export default {
         name: 'InvestorDashboard',
-        template: '#InvestorDashboardTemplate',
         components: {
             Converter,
             CrowdSale,
