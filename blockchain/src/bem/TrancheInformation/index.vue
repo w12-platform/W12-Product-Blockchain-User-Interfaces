@@ -8,7 +8,7 @@
                 </tr>
                 <tr>
                     <td>Дата и время получения следующего транша</td>
-                    <td>__</td>
+                    <td>{{ nextTrancheDate | formatDate }}</td>
                 </tr>
                 <tr>
                     <td>Средства, доступные для получения на данный момент</td>
@@ -20,23 +20,36 @@
 </template>
 <script>
     import { TrancheInformationModel } from './shared.js';
+    import moment from 'moment';
 
 
     const web3 = new Web3();
 
     export default {
+        name: 'TrancheInformation',
         filters: {
             weiToEth (value) {
                 return web3.fromWei(value, 'ether');
+            },
+            formatDate (value) {
+                return value ? moment.unix(value).format('DD.MM.YYYY[ г. ]hh:mm') : '-';
             }
         },
-        name: 'TrancheInformation',
         props: {
             data: {
                 type: TrancheInformationModel,
                 required: true
             }
-        }
+        },
+        computed: {
+            nextTrancheDate () {
+                const now = moment().unix();
+                const found = this.data.trancheIntervals
+                    .find(item => item[0] >= now);
+
+                return found ? found[0] : null;
+            }
+        },
     };
 </script>
 <style lang="scss">
