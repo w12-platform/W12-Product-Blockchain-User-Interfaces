@@ -698,7 +698,7 @@
                 const {W12AtomicSwapFactory} = await this.loadLedger();
                 const W12AtomicSwap = W12AtomicSwapFactory.at(this.swapAddress);
 
-                const tx = await W12AtomicSwap.methods.exchange(this.selected.WTokenAddress, 500);
+                const tx = await W12AtomicSwap.methods.exchange(this.selected.WTokenAddress, this.currentAccountData.allowanceForSwap);
 
                 await waitTransactionReceipt(tx, web3, 5000);
 
