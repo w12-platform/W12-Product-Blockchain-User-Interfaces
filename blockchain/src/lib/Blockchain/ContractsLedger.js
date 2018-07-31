@@ -16,6 +16,8 @@ import { W12ListerWrapper } from './Wrappers/W12Lister.js';
 import { W12TokenWrapper } from './Wrappers/W12Token.js';
 import { W12TokenLedgerWrapper } from './Wrappers/W12TokenLedger.js';
 import { W12FundWrapper } from './Wrappers/W12Fund.js';
+import { W12AtomicSwapWrapper } from './Wrappers/W12AtomicSwap.js';
+import {W12AtomicSwapFactoryStrategy} from "./FactoryStrategies/W12AtomicSwap";
 
 async function loadContracts() {
     const ERC20Artifacts = await fetch('/blockchain/src/lib/Blockchain/contracts/ERC20.json')
@@ -40,6 +42,9 @@ async function loadContracts() {
         .then(data => data.json());
 
     const W12FundArtifacts = await fetch('/blockchain/src/lib/Blockchain/contracts/W12Fund.json')
+        .then(data => data.json());
+
+    const W12AtomicSwapArtifacts = await fetch('/blockchain/src/lib/Blockchain/contracts/W12AtomicSwap.json')
         .then(data => data.json());
 
     const W12Token = new ContractWrappersFactory(
@@ -77,6 +82,11 @@ async function loadContracts() {
     );
         await W12Fund.init();
 
+    const W12AtomicSwap = new ContractWrappersFactory(
+        new W12AtomicSwapFactoryStrategy(W12AtomicSwapArtifacts, W12AtomicSwapWrapper, Connector)
+    );
+        await W12AtomicSwap.init();
+
     const W12Lister = new ContractWrappersFactory(
         new W12ListerFactoryStrategy(
             W12ListerArtifacts,
@@ -98,7 +108,8 @@ async function loadContracts() {
         W12TokenLedgerFactory: W12TokenLedger,
         ERC20Factory: ERC20,
         DetailedERC20Factory: DetailedERC20,
-        W12FundFactory: W12Fund
+        W12FundFactory: W12Fund,
+        W12AtomicSwapFactory: W12AtomicSwap
     };
 }
 

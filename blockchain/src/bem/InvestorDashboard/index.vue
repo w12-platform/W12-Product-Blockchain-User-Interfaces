@@ -19,6 +19,66 @@
                 <h2 v-if="selected && selected.status">Купить токены {{ selected.symbolW }}</h2>
                 <calculator v-if="selected && selected.status"></calculator>
 
+                <h2 v-if="selected">Обмен {{ selected.symbolW }} на {{ selected.symbol }}</h2>
+                <div class="ExchangeTokens buefy" v-if="selected">
+                    <div v-if="errorMessage" class="alert alert-danger" role="alert">
+                        <span>{{ errorMessage }}</span>
+                    </div>
+                    <table v-if="selected && currentAccountData" class="table table-striped table-bordered table-hover table-responsive-sm">
+                        <tbody>
+                        <tr>
+                            <td>Курс обмена 1 {{ selected.symbolW }}</td>
+                            <td>{{ rate }} {{ selected.symbol }}</td>
+                        </tr>
+                        <tr>
+                            <td>Баланс {{ selected.symbolW }}</td>
+                            <td>{{ balance }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Размороженный баланс {{ selected.symbolW }}</td>
+                            <td>{{ unVestingBalance }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- Разрешить выводить wtokens с адреса -->
+
+                    <div class="ExchangeTokens__form">
+                        <label for="Amount">Укажите количество {{ selected.symbolW }}:</label>
+                        <b-field id="Amount">
+                            <b-input
+                                    placeholder="Token amount"
+                                    type="number"
+                                    min="0"
+                                    :max="selected.symbolW"
+                                    :step="0.000001"
+                                    v-model="amount"
+                                    icon="shopping">
+                            </b-input>
+                        </b-field>
+
+                        <div>Данное колличество позволит вернуть: {{ amount * rate }} {{ selected.symbol }}</div>
+
+                        <div class="ExchangeTokens__exchange py-2">
+                            <button class="btn btn-primary py-2" @click="approveSwapToSpend">Разрешить обмен</button>
+
+                            <div v-if="this.currentAccountData.allowanceForSwap !== '0'" class="py-2">Обменять {{ currentAccountData.allowanceForSwap }} {{ selected.symbolW }} на {{ currentAccountData.allowanceForSwap }} {{ selected.symbol }}?</div>
+                            <div v-if="this.currentAccountData.allowanceForSwap !== '0'" class="row pl-3 pr-3">
+
+                                <button
+                                        class="btn btn-primary py-2"
+                                        :disabled="this.currentAccountData.allowanceForSwap === '0'"
+                                        @click="decreaseSwapApprovalToSpend">Отменить</button>
+                                <button
+                                        class="btn btn-primary py-2 ml-3"
+                                        :disabled="this.currentAccountData.allowanceForSwap === '0'"
+                                        @click="exchange">Обменять</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <h2 v-if="selected" class="m-3">REFUND. Вернуть: {{ selected.symbolW }}, получить: ETH</h2>
                 <div v-if="refundInformation">
                     <RefundInformation v-if="refundInformation" :data="refundInformation"></RefundInformation>
@@ -73,6 +133,8 @@
 <script>
     import './default.scss';
     import 'bem/buefy/default.scss';
+    import 'bem/ExchangeTokens/default.scss';
+
     import { createNamespacedHelpers } from "vuex";
     import Ledger from '../../lib/Blockchain/ContractsLedger.js';
     import {
@@ -129,15 +191,20 @@
                 currentAccountData: {
                     balance: 0,
                     vestingBalance: 0,
+                    unVestingBalance: 0,
                     refundForOneToken: 0,
                     totalRefundAmount: 0,
+                    allowanceForSwap: 0,
                     allowanceForTheFund: 0,
                     allowanceForTheFundInRefundAmount: 0,
                     investorInformation: {
                         totalBought: 0,
                         averageTokenPrice: 0
                     }
-                }
+                },
+                swapAddress: false,
+                rate: 1,
+                amount: 0,
             };
         },
         computed: {
@@ -328,6 +395,15 @@
                 const decimals = this.selected ? this.selected.decimals : 0;
 
                 return value.mul(new BigNumber(10).pow(decimals)).toString();
+            },
+            balance () {
+                return web3.fromWei(this.currentAccountData.balance, 'ether').toString();
+            },
+            unVestingBalance(){
+                return web3.fromWei(this.currentAccountData.unVestingBalance, 'ether').toString();
+            },
+            vestingBalance(){
+                return web3.fromWei(this.currentAccountData.vestingBalance, 'ether').toString();
             }
         },
         watch: {
@@ -404,6 +480,7 @@
                 if (W12ListerFactory) {
                     try {
                         const W12Lister = W12ListerFactory.at(this.W12Lister.address);
+                        this.swapAddress = (await W12Lister.methods.swap());
                         let list = await W12Lister.fetchAllTokensComposedInformation();
 
                         list = list.filter(({token}) => Boolean(token.crowdsaleAddress));
@@ -472,8 +549,10 @@
 
                     const balance = (await W12Token.methods.balanceOf(this.currentAccount)).toString();
                     const allowanceForTheFund = (await W12Token.methods.allowance(this.currentAccount, fundAddress)).toString();
+                    const allowanceForSwap = (await W12Token.methods.allowance(this.currentAccount, this.swapAddress)).toString();
                     const allowanceForTheFundInRefundAmount = (await W12Fund.methods.getRefundAmount(allowanceForTheFund)).toString();
                     const vestingBalance = (await W12Token.methods.vestingBalanceOf(this.currentAccount, 0)).toString();
+                    const unVestingBalance = (await W12Token.methods.accountBalance(this.currentAccount)).toString();
                     const refundForOneToken = (await W12Fund.methods.getRefundAmount(oneToken)).toString();
                     const totalRefundAmount = (await W12Fund.methods.getRefundAmount(balance)).toString();
                     const investorInformation = await W12Fund.methods.getInvestmentsInfo(this.currentAccount);
@@ -481,8 +560,10 @@
                     const account = {
                         balance,
                         vestingBalance,
+                        unVestingBalance,
                         refundForOneToken,
                         totalRefundAmount,
+                        allowanceForSwap,
                         allowanceForTheFund,
                         allowanceForTheFundInRefundAmount,
                         investorInformation: {
@@ -571,7 +652,59 @@
                     this.setErrorMessage(e.message);
                 }
             },
+            async approveSwapToSpend() {
+                try {
+                    if (this.swapAddress) {
+                        const {W12TokenFactory} = await this.loadLedger();
+                        const {web3} = await Connector.connect();
+                        const W12Token = W12TokenFactory.at(this.selected.WTokenAddress);
 
+                        const approveTx = await W12Token.methods.approve(
+                            this.swapAddress,
+                            new BigNumber(this.amount),
+                            {from: this.currentAccount}
+                        );
+
+                        await waitTransactionReceipt(approveTx, web3, 10000);
+                        await this.updateAccountData();
+                    }
+                } catch (e) {
+                    console.log(e);
+                    this.setErrorMessage(e.message);
+                }
+            },
+            async decreaseSwapApprovalToSpend () {
+                try {
+                    if (this.swapAddress) {
+                        const {W12TokenFactory} = await this.loadLedger();
+                        const {web3} = await Connector.connect();
+                        const W12Token = W12TokenFactory.at(this.selected.WTokenAddress);
+
+                        const approveTx = await W12Token.methods.decreaseApproval(
+                            this.swapAddress,
+                            new BigNumber(this.currentAccountData.allowanceForSwap),
+                            {from: this.currentAccount}
+                        );
+
+                        await waitTransactionReceipt(approveTx, web3, 10000);
+                        await this.updateAccountData();
+                    }
+                } catch (e) {
+                    console.log(e);
+                    this.setErrorMessage(e.message);
+                }
+            },
+            async exchange(){
+                const {W12AtomicSwapFactory} = await this.loadLedger();
+                const W12AtomicSwap = W12AtomicSwapFactory.at(this.swapAddress);
+
+                const tx = await W12AtomicSwap.methods.exchange(this.selected.WTokenAddress, 500);
+
+                await waitTransactionReceipt(tx, web3, 5000);
+
+                await this.updateAccountData();
+                await this.fetchCrowdSaleInformationForEachToken();
+            },
             decimals (value) {
                 const d = this.selected ? this.selected.decimals : 0;
                 const base = new BigNumber(10);
