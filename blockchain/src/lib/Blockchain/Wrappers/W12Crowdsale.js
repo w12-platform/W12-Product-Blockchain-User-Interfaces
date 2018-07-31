@@ -95,8 +95,6 @@ export class W12CrowdsaleWrapper extends BaseWrapper {
         const offsets = [];
         const namesAndDescriptions = [];
 
-        let lastOffset = 0;
-
         for (let milestone of milestones) {
             dates.push(
                 milestone.endDate,
@@ -105,8 +103,8 @@ export class W12CrowdsaleWrapper extends BaseWrapper {
             );
             tranchePercents.push(milestone.tranchePercent);
             offsets.push(
-                lastOffset += countStringBytes(milestone.name),
-                lastOffset += countStringBytes(milestone.description),
+                countStringBytes(milestone.name),
+                countStringBytes(milestone.description),
             );
             namesAndDescriptions.push(
                 encodeStringToBytes(milestone.name),
