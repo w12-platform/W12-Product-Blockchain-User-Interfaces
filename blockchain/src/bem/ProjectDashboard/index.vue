@@ -307,10 +307,12 @@
                                                             </div>
                                                             <div class="text-left pt-2">
                                                                 <button class="btn btn-primary btn-sm"
+                                                                        :disabled="tokenCrowdsaleStagesChange"
                                                                         @click="addBonusVolumesAt(stageIndex)">
                                                                     Add
                                                                 </button>
                                                                 <button v-if="stage.bonusVolumes.length"
+                                                                        :disabled="tokenCrowdsaleStagesChange"
                                                                         class="btn btn-primary btn-sm"
                                                                         @click="saveBonusVolumesAt(stageIndex)">
                                                                     Save
@@ -408,6 +410,7 @@
                 ownerBalance: '0',
                 tokenCrowdsaleAddress: null,
                 ownerAddress: '',
+                tokenCrowdsaleStagesChange: false,
                 tokenCrowdsaleStages: [],
                 tokenCrowdsaleMilestones: [],
                 approveForm: {
@@ -548,6 +551,8 @@
             handleTokenAddressChange(value, prevValue) {
                 this.clearErrorMessage();
 
+                this.tokenCrowdsaleStages = [];
+                this.tokenCrowdsaleMilestones = [];
                 if (
                     value
                     && (
@@ -987,6 +992,7 @@
                     await waitTransactionReceipt(tx, connectedWeb3);
 
                     stages.forEach(stage => stage.wasCreated = true);
+                    this.tokenCrowdsaleStagesChange = false;
                 } catch (e) {
                     this.setErrorMessage(e.message);
                 }
@@ -1004,7 +1010,7 @@
                         W12CrowdsaleInstance
                     } = this.ContractInstances;
 
-                    const tx = await W12CrowdsaleInstance.setBonusVolumes(stageIndex, list);
+                    const tx = await W12CrowdsaleInstance.setBonusVolumes(this.tokenCrowdsaleStages.length-stageIndex-1, list);
                     const connectedWeb3 = (await Connector.connect()).web3;
 
                     await waitTransactionReceipt(tx, connectedWeb3);
@@ -1135,6 +1141,7 @@
                 clearInterval(this.currentAccountWatcherTmId);
             },
             addStage() {
+                this.tokenCrowdsaleStagesChange = true;
                 this.tokenCrowdsaleStages.push({
                     startDate: null,
                     endDate: null,
@@ -1146,6 +1153,7 @@
             },
             deleteStageAt(stageIndex) {
                 this.tokenCrowdsaleStages.splice(stageIndex, 1);
+                this.tokenCrowdsaleStagesChange = true;
             },
             saveStages() {
                 this.setStages(this.tokenCrowdsaleStages);
