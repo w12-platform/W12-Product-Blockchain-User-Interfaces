@@ -485,10 +485,25 @@
             },
             trancheInformationData() {
                 if (this.fundData.address) {
+                    const trancheIntervals = this.tokenCrowdsaleMilestones
+                        .reduce((out, item, idx, origin) => {
+                            if (out.length === 0) {
+                                out.push([item.voteEndDate])
+                            } else if (idx + 1 === origin.length) {
+                                out[out.length - 1].push(item.endDate);
+                                out.push([item.voteEndDate, Infinity]);
+                            } else {
+                                out[out.length - 1].push(item.endDate);
+                                out.push([item.voteEndDate]);
+                            }
+
+                            return out;
+                        }, []);
+
                     return new TrancheInformationModel({
                         fundBalanceInWei: this.fundData.balanceWei,
                         fundBalanceInTokens: '0',
-                        trancheIntervals: [],
+                        trancheIntervals,
                         trancheAmountInWei: this.fundData.trancheAmount
                     });
                 }

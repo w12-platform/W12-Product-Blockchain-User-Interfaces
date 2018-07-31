@@ -27,11 +27,11 @@
     export default {
         name: 'RefundCalculator',
         filters: {
-          ETH(value) {
+            ETH(value) {
               const result = web3.fromWei(value, 'ether');
 
               return new BigNumber(result).toString();
-          }
+            }
         },
         props: {
             fundAddress: {
