@@ -512,7 +512,7 @@
                             {from: this.currentAccount}
                         );
 
-                        await waitTransactionReceipt(approveTx, web3, 10000);
+                        await waitTransactionReceipt(approveTx, web3);
                         await this.updateAccountData();
                     }
                 } catch (e) {
@@ -537,7 +537,7 @@
                                 {from: this.currentAccount}
                             );
 
-                            await waitTransactionReceipt(approveTx, web3, 10000);
+                            await waitTransactionReceipt(approveTx, web3);
                             await this.updateAccountData();
                         }
                     }
@@ -560,7 +560,7 @@
 
                             const tx = await W12Fund.methods.refund(value, { from: this.currentAccount });
 
-                            await waitTransactionReceipt(tx, web3, 5000);
+                            await waitTransactionReceipt(tx, web3);
 
                             await this.updateAccountData();
                             await this.fetchCrowdSaleInformationForEachToken();

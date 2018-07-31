@@ -1,5 +1,7 @@
 import jsunicode from 'jsunicode';
 
+const web3 = new Web3();
+
 export function promisify (funct) {
     return function (...args) {
         return new Promise((accept, reject) => {
@@ -63,5 +65,13 @@ export function encodeStringToBytes (string) {
 
 export function countStringBytes (string) {
     return jsunicode.countEncodedBytes(string, jsunicode.constants.encoding.utf16);
+}
+
+export function isZeroAddress(address) {
+    try {
+        return /^0x$/.test(address) || web3.toBigNumber(address).eq(0);
+    } catch (e) {
+        return false;
+    }
 }
 

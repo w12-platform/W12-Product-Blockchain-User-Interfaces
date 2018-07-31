@@ -254,7 +254,7 @@
                             data.feeETHPercent
                         );
 
-                        await waitTransactionReceipt(tx, connectedWeb3, 5000);
+                        await waitTransactionReceipt(tx, connectedWeb3);
 
                         this.endTokenWhiteListOperation();
                     } catch (e) {

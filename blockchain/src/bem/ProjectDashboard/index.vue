@@ -361,7 +361,7 @@
     import Ledger from 'lib/Blockchain/ContractsLedger.js';
     import Connector from 'lib/Blockchain/DefaultConnector.js';
     import { promisify, wait } from '../../lib/utils.js';
-    import {waitTransactionReceipt} from 'lib/utils.js';
+    import { isZeroAddress, waitTransactionReceipt } from 'lib/utils.js';
     import {createNamespacedHelpers} from 'vuex';
     import TrancheInformation from '../TrancheInformation';
     import MilestoneList from 'bem/Milestones/MilestoneList.vue';
@@ -700,7 +700,7 @@
 
                         if (
                             result
-                            && result != '0x0000000000000000000000000000000000000000'
+                            && !isZeroAddress(result)
                         ) {
                             this.placedTokenAddress = result;
                         } else {
@@ -738,7 +738,7 @@
 
                         if (
                             address
-                            && address != '0x0000000000000000000000000000000000000000'
+                            && !isZeroAddress(address)
                         ) {
 
                             const {W12CrowdsaleFactory} = await this.loadLedger();
@@ -871,7 +871,7 @@
                         price.toString()
                     );
 
-                    await waitTransactionReceipt(txhash, connectedWeb3, 5000);
+                    await waitTransactionReceipt(txhash, connectedWeb3);
                     await this.fetchCrowdsaleAddressAndCreateContractInstance();
                 } catch (e) {
                     this.setErrorMessage(e.message);
@@ -963,7 +963,7 @@
                     const tx = await W12CrowdsaleInstance.setMilestones(milestones);
                     const connectedWeb3 = (await Connector.connect()).web3;
 
-                    await waitTransactionReceipt(tx, connectedWeb3, 5000);
+                    await waitTransactionReceipt(tx, connectedWeb3);
 
                     milestones.forEach(stage => stage.wasCreated = true);
                 } catch (e) {
@@ -984,7 +984,7 @@
                     const tx = await W12CrowdsaleInstance.setStages(stages);
                     const connectedWeb3 = (await Connector.connect()).web3;
 
-                    await waitTransactionReceipt(tx, connectedWeb3, 5000);
+                    await waitTransactionReceipt(tx, connectedWeb3);
 
                     stages.forEach(stage => stage.wasCreated = true);
                 } catch (e) {
@@ -1007,7 +1007,7 @@
                     const tx = await W12CrowdsaleInstance.setBonusVolumes(stageIndex, list);
                     const connectedWeb3 = (await Connector.connect()).web3;
 
-                    await waitTransactionReceipt(tx, connectedWeb3, 5000);
+                    await waitTransactionReceipt(tx, connectedWeb3);
                 } catch (e) {
                     this.setErrorMessage(e.message);
                 }
@@ -1054,7 +1054,7 @@
 
                     const tx = await W12Fund.methods.tranche();
 
-                    await waitTransactionReceipt(tx, web3, 5000);
+                    await waitTransactionReceipt(tx, web3);
                     await this.updateFundInformation();
                 } catch (e) {
                     this.setErrorMessage(e.message);
