@@ -64,7 +64,7 @@ export function encodeStringToBytes (string) {
 }
 
 export function countStringBytes (string) {
-    return jsunicode.countEncodedBytes(string, jsunicode.constants.encoding.utf16);
+    return jsunicode.countEncodedBytes(string, jsunicode.constants.encoding.utf16) / 2;
 }
 
 export function isZeroAddress(address) {
