@@ -38,14 +38,15 @@
                 this.$store.commit(`crowdSaleList/${CROWDSALE_LIST_SELECTED}`, { selected: token });
             },
             checkSelection(token){
+                //console.log(token);
                 if(!this.selected && this.list[0] && !this.flag) {
                     this.onSelect(this.list[0]);
                 } else {
-                    if(this.selected.name === token.name){
-                        this.$store.commit(`crowdSaleList/${CROWDSALE_LIST_SELECTED}`, { selected: token });
-                    }
+                    // if(this.selected.name === token.name){
+                    //     this.$store.commit(`crowdSaleList/${CROWDSALE_LIST_SELECTED}`, { selected: token });
+                    // }
                 }
-                return this.selected && token && token.name === this.selected.name
+                return false;//this.selected && token && token.name === this.selected.name
             }
         },
         created() {
