@@ -291,6 +291,7 @@
                     const {W12CrowdsaleFactory} = await this.loadLedger();
                     const W12Crowdsale = W12CrowdsaleFactory.at(this.selected.crowdsaleAddress);
                     await W12Crowdsale.methods.buyTokens({ value: web3.toWei(amount.toFixed(6), 'ether') });
+                    this.$emit('updateAccountData');
                 }
             },
 

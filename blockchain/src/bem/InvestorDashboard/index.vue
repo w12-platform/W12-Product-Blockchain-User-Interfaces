@@ -17,7 +17,7 @@
                 <sale-table v-if="selected"></sale-table>
 
                 <h2 v-if="selected && selected.status">Купить токены {{ selected.symbolW }}</h2>
-                <calculator v-if="selected && selected.status"></calculator>
+                <calculator @updateAccountData="updateAccountData" v-if="selected && selected.status"></calculator>
 
                 <h2 v-if="selected">Обмен {{ selected.symbolW }} на {{ selected.symbol }}</h2>
                 <div class="ExchangeTokens buefy" v-if="selected">
@@ -63,7 +63,7 @@
                         <div class="ExchangeTokens__exchange py-2">
                             <button class="btn btn-primary py-2" @click="approveSwapToSpend">Разрешить обмен</button>
 
-                            <div v-if="this.currentAccountData.allowanceForSwap !== '0'" class="py-2">Обменять {{ currentAccountData.allowanceForSwap }} {{ selected.symbolW }} на {{ currentAccountData.allowanceForSwap }} {{ selected.symbol }}?</div>
+                            <div v-if="this.currentAccountData.allowanceForSwap !== '0'" class="py-2">Обменять {{ currentAccountData.allowanceForSwap | toEth }} {{ selected.symbolW }} на {{ currentAccountData.allowanceForSwap | toEth }} {{ selected.symbol }}?</div>
                             <div v-if="this.currentAccountData.allowanceForSwap !== '0'" class="row pl-3 pr-3">
 
                                 <button
@@ -125,6 +125,8 @@
                         <span>{{ currentAccountData.allowanceForTheFund }} {{ selected.symbolW }} на {{ currentAccountData.allowanceForTheFundInRefundAmount | toEth }} ETH</span>
                     </div>
                 </div>
+
+
             </div>
         </section>
     </div>
@@ -661,11 +663,11 @@
 
                         const approveTx = await W12Token.methods.approve(
                             this.swapAddress,
-                            new BigNumber(this.amount),
-                            {from: this.currentAccount}
+                            web3.toWei(this.amount, 'ether'),
+                            { from: this.currentAccount }
                         );
 
-                        await waitTransactionReceipt(approveTx, web3, 10000);
+                        await waitTransactionReceipt(approveTx, web3, 5000);
                         await this.updateAccountData();
                     }
                 } catch (e) {
@@ -680,13 +682,15 @@
                         const {web3} = await Connector.connect();
                         const W12Token = W12TokenFactory.at(this.selected.WTokenAddress);
 
+                        console.log(this.currentAccountData.allowanceForSwap);
+
                         const approveTx = await W12Token.methods.decreaseApproval(
                             this.swapAddress,
                             new BigNumber(this.currentAccountData.allowanceForSwap),
                             {from: this.currentAccount}
                         );
 
-                        await waitTransactionReceipt(approveTx, web3, 10000);
+                        await waitTransactionReceipt(approveTx, web3, 5000);
                         await this.updateAccountData();
                     }
                 } catch (e) {
@@ -696,14 +700,15 @@
             },
             async exchange(){
                 const {W12AtomicSwapFactory} = await this.loadLedger();
+                const {web3} = await Connector.connect();
                 const W12AtomicSwap = W12AtomicSwapFactory.at(this.swapAddress);
 
-                const tx = await W12AtomicSwap.methods.exchange(this.selected.WTokenAddress, this.currentAccountData.allowanceForSwap);
+                const tx = await W12AtomicSwap.methods.exchange(this.selected.WTokenAddress, new BigNumber(this.currentAccountData.allowanceForSwap));
 
                 await waitTransactionReceipt(tx, web3, 5000);
 
-                await this.updateAccountData();
                 await this.fetchCrowdSaleInformationForEachToken();
+                await this.updateAccountData();
             },
             decimals (value) {
                 const d = this.selected ? this.selected.decimals : 0;
@@ -720,14 +725,10 @@
         },
         async created () {
             this.watchCurrentAccountAddress();
-
             await this.fetchTokensList();
             await this.fetchTokensInfo();
             await this.fetchCrowdSaleInformationForEachToken();
             await this.updateAccountData();
-
-            // TODO: fix it, it trigger full rerender
-            // setInterval(() => { this.currentDateUnix = moment.utc().unix() }, 1000);
         }
     };
 

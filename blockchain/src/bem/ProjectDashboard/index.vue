@@ -351,6 +351,12 @@
                 <TrancheInformation :data="trancheInformationData"></TrancheInformation>
                 <button class="btn btn-primary" :disabled="!allowTranche" @click="tryTranche">Получить</button>
             </div>
+
+            <Receiving
+                    v-if="receiving"
+                    :data="receiving"
+                    @claimRemainingTokens="claimRemainingTokens"
+            ></Receiving>
         </section>
     </div>
 </template>
@@ -368,7 +374,8 @@
     import TrancheInformation from '../TrancheInformation';
     import MilestoneList from 'bem/Milestones/MilestoneList.vue';
     import { TrancheInformationModel } from 'bem/TrancheInformation/shared.js';
-
+    import Receiving from 'bem/Receiving';
+    import { ReceivingModel } from 'bem/Receiving/model.js';
 
     import {W12LISTER_UPDATE} from "store/modules/W12Lister";
 
@@ -384,7 +391,8 @@
         name: 'ProjectDashboard',
         components: {
             TrancheInformation,
-            MilestoneList
+            MilestoneList,
+            Receiving
         },
         data() {
             return {
@@ -429,7 +437,8 @@
                     address: null,
                     balanceWei: '0',
                     trancheAmount: '0'
-                }
+                },
+                receiving: null,
             };
         },
         computed: {
@@ -553,6 +562,7 @@
 
                 this.tokenCrowdsaleStages = [];
                 this.tokenCrowdsaleMilestones = [];
+
                 if (
                     value
                     && (
@@ -580,6 +590,7 @@
                 await this.fetchCrowdsaleStagesList();
                 await this.fetchCrowdsaleMilestonesList();
                 await this.updateFundInformation();
+                await this.updateReceivingInformation();
             },
             async loadLedger() {
                 let ledger
@@ -1020,6 +1031,32 @@
 
                 this.setStagesLoading = false;
             },
+            async updateReceivingInformation(){
+                if (!this.token || !this.tokenCrowdsaleAddress) return;
+
+                try {
+                    const { W12TokenFactory, W12CrowdsaleFactory, DetailedERC20Factory } = await this.loadLedger();
+                    const {W12TokenLedgerInstance} = this.ContractInstances;
+                    const W12Crowdsale = W12CrowdsaleFactory.at(this.tokenCrowdsaleAddress);
+                    const wTokenAddress = await W12Crowdsale.methods.getWToken();
+                    const W12Token = W12TokenFactory.at(wTokenAddress);
+                    const tokenAddress = await W12TokenLedgerInstance.methods.getTokenByWToken(wTokenAddress);
+                    const DetailedERC20 = DetailedERC20Factory.at(tokenAddress);
+                    const token = await DetailedERC20.getDescription();
+
+
+                    this.receiving = new ReceivingModel({
+                        symbol: token.symbol,
+                        symbolW: this.token.symbol,
+                        amountUnSold: web3.fromWei(await W12Token.methods.balanceOf(this.tokenCrowdsaleAddress), 'ether').toString(),
+                        amountRemainingInTokenChanger: 0,
+                        amountRemainingAfterTheExchange: 0,
+                        amountTotalAvailable: 0,
+                    });
+                } catch (e) {
+                    this.setErrorMessage(e.message);
+                }
+            },
             async updateFundInformation() {
                 if (!this.token || !this.tokenCrowdsaleAddress) return;
 
@@ -1062,6 +1099,28 @@
 
                     await waitTransactionReceipt(tx, web3);
                     await this.updateFundInformation();
+                } catch (e) {
+                    this.setErrorMessage(e.message);
+                }
+            },
+            async claimRemainingTokens() {
+
+                if (
+                    !this.token
+                    || !this.tokenCrowdsaleAddress
+                ) return;
+
+                try {
+                    const crowdsaleAddress = this.tokenCrowdsaleAddress;
+                    const { W12CrowdsaleFactory } = await this.loadLedger();
+                    const W12Crowdsale = W12CrowdsaleFactory.at(crowdsaleAddress);
+
+                    console.log(W12Crowdsale.methods);
+
+                    const tx = await W12Crowdsale.methods.claimRemainingTokens();
+
+                    await waitTransactionReceipt(tx, web3);
+                    await this.updateReceivingInformation();
                 } catch (e) {
                     this.setErrorMessage(e.message);
                 }

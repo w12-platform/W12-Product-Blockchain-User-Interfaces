@@ -81,7 +81,7 @@
                     </span>
                 </td>
             </tr>
-            <tr>
+            <tr v-if="selected.status && countdown">
                 <td>Кол-во дней, часов, минут до окончания действия текущей скидки</td>
                 <td>
                     <span v-if="selected.status">{{ countdown }}</span>
