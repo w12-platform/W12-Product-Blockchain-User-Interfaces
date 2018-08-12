@@ -391,7 +391,7 @@
         components: {
             TrancheInformation,
             MilestoneList,
-            Receiving
+            Receiving,
         },
         data() {
             return {
@@ -683,7 +683,6 @@
                     }
 
                     const allowanceValue = (await ERC20Instance.methods.allowance(currentAccount, W12ListerAddress)).toString();
-                    console.log(allowanceValue);
 
                     this.tokensAmountThatApprovedToPlaceByTokenOwner = allowanceValue;
                 } catch (e) {
@@ -711,8 +710,6 @@
 
                     try {
                         const result = await W12TokenLedgerInstance.methods.getWTokenByToken(this.tokenAddress);
-
-                        console.log(result);
 
                         if (
                             result
@@ -1103,6 +1100,7 @@
                     this.setErrorMessage(e.message);
                 }
             },
+
             async claimRemainingTokens() {
 
                 if (

@@ -26,13 +26,14 @@
             </tbody>
         </table>
 
-        <button class="btn btn-primary py-2 my-2" @click="getUnsold">Получить непроданные {{ data.symbolW }}</button>
-        <button class="btn btn-primary py-2 my-2" @click="exchange">Обменять {{ data.symbolW }} на {{ data.symbol }}</button>
+        <button class="btn btn-primary py-2 my-2" @click="claimRemainingTokens">Получить непроданные {{ data.symbolW }}</button>
+        <ExchangeTokensProjects></ExchangeTokensProjects>
     </div>
 </template>
 <script>
     import "./default.scss";
     import {ReceivingModel} from './model.js';
+    import ExchangeTokensProjects from 'bem/ExchangeTokensProjects';
 
     export default {
         name: 'Receiving',
@@ -43,13 +44,16 @@
                 required: true
             }
         },
+        components: {
+            ExchangeTokensProjects
+        },
         computed: {},
         methods: {
-            getUnsold(){
+            claimRemainingTokens(){
                 this.$emit('claimRemainingTokens');
             },
             exchange(){
-
+                this.$emit('exchange');
             }
         }
     };

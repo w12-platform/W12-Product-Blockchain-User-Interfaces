@@ -1,43 +1,8 @@
 <template>
-    <div class="ExchangeTokens buefy">
-        <h2>Обмен {{ currentToken.symbol }} на {{ currentToken.tokenInformation.symbol }}</h2>
+    <div class="ExchangeTokens buefy" v-if="balance !== '0'">
+        <h2>Обмен {{ balance }} {{ currentToken.symbol }} на {{ balance }} {{ currentToken.tokenInformation.symbol }}</h2>
         <div class="ExchangeTokens__content">
-            <table v-if="currentToken && currentAccountData"
-                   class="table table-striped table-bordered table-hover table-responsive-sm">
-                <tbody>
-                <tr>
-                    <td>Курс обмена 1 {{ currentToken.symbol }}</td>
-                    <td>{{ rate }} {{ currentToken.tokenInformation.symbol }}</td>
-                </tr>
-                <tr>
-                    <td>Баланс {{ currentToken.symbol }}</td>
-                    <td>{{ balance }}
-                    </td>
-                </tr>
-                <tr>
-                    <td>Размороженный баланс {{ currentToken.symbol }}</td>
-                    <td>{{ unVestingBalance }}</td>
-                </tr>
-                </tbody>
-            </table>
-
             <div class="ExchangeTokens__form">
-                <label for="Amount">Укажите количество {{ currentToken.symbol }}:</label>
-                <b-field id="Amount">
-                    <b-input
-                            placeholder="Token amount"
-                            type="number"
-                            min="0"
-                            :step="0.000001"
-                            v-model="amount"
-                            icon="shopping">
-                    </b-input>
-                </b-field>
-
-                <div>Данное колличество позволит вернуть: {{ amount * rate }} {{ currentToken.tokenInformation.symbol
-                    }}
-                </div>
-
                 <div class="ExchangeTokens__exchange py-2">
                     <button class="btn btn-primary py-2" @click="approveSwapToSpend">Разрешить обмен</button>
 
@@ -84,8 +49,10 @@
         components: {},
         filters: {
             toEth(value) {
-                value = new BigNumber(value);
-                return web3.fromWei(value, 'ether').toString();
+                if(value){
+                    value = new BigNumber(value);
+                    return web3.fromWei(value, 'ether').toString();
+                }
             },
             decimals(value) {
                 const d = this.currentToken ? this.currentToken.decimals : 0;
@@ -143,7 +110,7 @@
                     const swapAddress = (await W12Lister.methods.swap());
                     const approveTx = await W12Token.methods.approve(
                         swapAddress,
-                        web3.toWei(this.amount, 'ether'),
+                        web3.toWei(this.balance, 'ether'),
                         {from: this.currentAccount}
                     );
                     await waitTransactionReceipt(approveTx, web3);
