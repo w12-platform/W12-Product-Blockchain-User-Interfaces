@@ -1,52 +1,61 @@
 <template>
-    <div class="Calculator">
-        <div v-if="errorMessage" class="alert alert-danger" role="alert">
-            <span>{{ errorMessage }}</span>
-        </div>
-        <div class="Calculator__infoToken">
-            <p>Token address: <b-tag type="is-success">{{ selected.WTokenAddress }}</b-tag></p>
-            <p>Token name: {{ selected.nameW }}</p>
-            <p>Token symbol: {{ selected.symbolW }}</p>
-        </div>
+    <div class="Calculator byefy" v-if="currentToken.crowdSaleInformation.status">
+        <h2>Купить токены {{ currentToken.symbol }}</h2>
 
-        <div class="Calculator__inputs row">
-            <div class="col-sm py-2">
-                <label for="Tokens">{{ selected.symbolW }}</label>
-                <b-field id="Tokens">
-                    <b-input
-                            placeholder="Token amount"
-                            type="number"
-                            min="0"
-                            :step="0.000001"
-                            v-model="tokens"
-                            icon="shopping">
-                    </b-input>
-                </b-field>
+        <div class="Calculator__content">
+            <div class="Calculator__infoToken">
+                <p>Token address:
+                    <b-tag type="is-success">{{ currentToken.crowdSaleInformation.WTokenAddress }}</b-tag>
+                </p>
+                <p>Token name: {{ currentToken.name }}</p>
+                <p>Token symbol: {{ currentToken.symbol }}</p>
             </div>
-            <div class="col-sm py-2">
-                <label for="ETHs">ETHs</label>
-                <b-field id="ETHs">
-                    <b-input
-                            placeholder="ETH"
-                            type="number"
-                            min="0"
-                            :step="0.000001"
-                            v-model="ETHs"
-                            icon="ethereum">
-                    </b-input>
-                </b-field>
+
+            <div class="Calculator__inputs row">
+                <div class="col-sm py-2">
+                    <label for="Tokens">{{ currentToken.symbol }}</label>
+                    <b-field id="Tokens">
+                        <b-input
+                                placeholder="Token amount"
+                                type="number"
+                                min="0"
+                                :step="0.000001"
+                                v-model="tokens"
+                                icon="shopping">
+                        </b-input>
+                    </b-field>
+                </div>
+                <div class="col-sm py-2">
+                    <label for="ETHs">ETHs</label>
+                    <b-field id="ETHs">
+                        <b-input
+                                placeholder="ETH"
+                                type="number"
+                                min="0"
+                                :step="0.000001"
+                                v-model="ETHs"
+                                icon="ethereum">
+                        </b-input>
+                    </b-field>
+                </div>
             </div>
-        </div>
 
-        <div class="Calculator__info">
-            <p v-if="selected.stageDiscount !== '0'">Discount: <b-tag type="is-success">{{ selected.stageDiscount }}%</b-tag> {{ profitInEth }} ETH</p>
-            <p v-if="bonusVolume !== '0.00'">Bonus: <b-tag type="is-success">+{{ bonusVolume }} {{ selected.symbolW }}</b-tag></p>
+            <div class="Calculator__info">
+                <p v-if="currentToken.crowdSaleInformation.stageDiscount !== '0'">Discount:
+                    <b-tag type="is-success">{{ currentToken.crowdSaleInformation.stageDiscount }}%</b-tag>
+                    {{ profitInEth }} ETH
+                </p>
+                <p v-if="bonusVolume !== '0.00'">Bonus:
+                    <b-tag type="is-success">+{{ bonusVolume }} {{ currentToken.symbol }}</b-tag>
+                </p>
 
-            <div class="Calculator__total">Total buy: {{ totalToken }} {{ selected.symbolW }} - {{ total }} ETH</div>
-        </div>
+                <div class="Calculator__total">Total buy: {{ totalToken }} {{ currentToken.symbol }} - {{ total }} ETH
+                </div>
+            </div>
 
-        <div class="Calculator__buy">
-            <button class="btn btn-danger" @click="buy">Buy</button>
+            <div class="Calculator__buy">
+                <button class="btn btn-danger" @click="buy">Buy</button>
+            </div>
         </div>
     </div>
 </template>
@@ -54,23 +63,21 @@
 <script>
     import './default.scss';
     import {createNamespacedHelpers} from "vuex";
-    import {
-        UNKNOWN_ERROR_WHILE_FETCH_TOKENS_LIST
-    } from '../../errors.js';
-    import Ledger from '../../lib/Blockchain/ContractsLedger.js';
-    const crowdSaleListStore = createNamespacedHelpers("crowdSaleList");
+    import {waitTransactionReceipt} from 'lib/utils.js';
+
+    const LedgerNS = createNamespacedHelpers("Ledger");
+    const AccountNS = createNamespacedHelpers("Account");
+    const TokensListNS = createNamespacedHelpers("TokensList");
+
     const web3 = new Web3();
     const BigNumber = web3.BigNumber;
+    import Connector from 'lib/Blockchain/DefaultConnector.js';
 
     export default {
         name: 'Calculator',
         template: '#CalculatorTemplate',
-        components: {
-
-        },
         data() {
             return {
-                loadingLedger: false,
                 tokens: '0',
                 tokensWithoutDiscount: '0',
                 ETHs: '0',
@@ -78,7 +85,6 @@
                 blockChangeTokens: false,
                 blockChangeETHs: false,
                 total: 0,
-                errorMessage: '',
             };
         },
         watch: {
@@ -90,23 +96,25 @@
                 handler: 'handleETHsChange',
                 immediate: true
             },
-            selected: {
+            currentToken: {
                 handler: 'handleSelectedChange',
                 immediate: true
             }
         },
         computed: {
-            ...crowdSaleListStore.mapState({
-                selected: "selected"
+            ...TokensListNS.mapState({
+                tokensListMeta: 'meta',
+                tokensList: 'list',
+                currentToken: 'currentToken',
             }),
-            tokenPrice(){
-                return this.selected.tokenPrice;
+            tokenPrice() {
+                return this.currentToken.crowdSaleInformation.tokenPrice;
             },
             bonusConditions() {
-                return this.selected.bonusVolumes;
+                return this.currentToken.crowdSaleInformation.bonusVolumes;
             },
             fixedDiscountPercent() {
-                return this.selected.stageDiscount;
+                return this.currentToken.crowdSaleInformation.stageDiscount;
             },
             profitInEth() {
                 const ETHs = isNaN(parseFloat(this.ETHs))
@@ -115,7 +123,7 @@
 
                 return new BigNumber(this.ETHsWithoutDiscount).minus(ETHs).toFixed(4).toString();
             },
-            bonusVolume(){
+            bonusVolume() {
                 const amount = this.ETHs ? this.ETHs : 0;
                 const price = this.getPrice();
                 const bonusMultiplier = amount ? this.getBonusMultiplierByEth(amount) : new BigNumber(1);
@@ -124,7 +132,7 @@
                     new BigNumber(amount).div(price)
                 ).toFixed(2).toString();
             },
-            totalToken(){
+            totalToken() {
                 const amount = this.ETHs ? this.ETHs : 0;
                 const price = this.getPrice();
                 const bonusMultiplier = amount ? this.getBonusMultiplierByEth(amount) : new BigNumber(1);
@@ -133,27 +141,15 @@
             }
         },
         methods: {
-            clearErrorMessage () {
-                this.errorMessage = '';
-            },
-            setErrorMessage (message) {
-                this.errorMessage = message;
-            },
-            async loadLedger () {
-                let ledger;
-
-                this.loadingLedger = true;
-
-                try {
-                    ledger = await Ledger;
-                } catch (e) {
-                    this.setErrorMessage(e.message || UNKNOWN_ERROR_WHILE_FETCH_TOKENS_LIST);
-                }
-
-                this.loadingLedger = false;
-
-                return ledger;
-            },
+            ...LedgerNS.mapActions({
+                ledgerFetch: "fetch"
+            }),
+            ...AccountNS.mapActions({
+                updateAccountData: 'updateAccountData'
+            }),
+            ...TokensListNS.mapActions({
+                tokensListUpdate: "update"
+            }),
             findMatchBonusRange(eth) {
                 const ranges = this.bonusConditions.reduce(
                     (result, item) => {
@@ -188,7 +184,7 @@
                     new BigNumber(this.fixedDiscountPercent).dividedBy(100)
                 );
 
-                return new BigNumber(this.selected.tokenPrice).mul(discount);
+                return new BigNumber(this.currentToken.crowdSaleInformation.tokenPrice).mul(discount);
             },
             getBonusMultiplierByEth(amount) {
                 const range = this.findMatchBonusRange(amount);
@@ -202,7 +198,7 @@
                 return discount;
             },
             getBonusMultiplierByTokens(amount) {
-                const inEth = this.convertTokensToEth(amount, this.selected.tokenPrice, 1);
+                const inEth = this.convertTokensToEth(amount, this.currentToken.crowdSaleInformation.tokenPrice, 1);
                 const discount = this.getBonusMultiplierByEth(inEth);
 
                 return discount;
@@ -217,7 +213,6 @@
                     ? new BigNumber(bonusMultiplier)
                     : this.getBonusMultiplierByTokens(amount);
 
-                //return new BigNumber(amount).div(bonusMultiplier).mul(price);
                 return new BigNumber(amount).mul(price);
             },
             convertEthToTokens(amount, price, bonusMultiplier) {
@@ -229,7 +224,6 @@
                     ? new BigNumber(bonusMultiplier)
                     : this.getBonusMultiplierByEth(amount);
 
-                //return new BigNumber(amount).mul(bonusMultiplier).div(price);
                 return new BigNumber(amount).div(price);
             },
 
@@ -243,8 +237,8 @@
                 }
 
                 const withDiscount = this.convertTokensToEth(value);
-                const withoutDiscount = this.convertTokensToEth(value, this.selected.tokenPrice, 1);
-                const tokensWithoutDiscount = this.convertEthToTokens(withDiscount, this.selected.tokenPrice, 1);
+                const withoutDiscount = this.convertTokensToEth(value, this.currentToken.crowdSaleInformation.tokenPrice, 1);
+                const tokensWithoutDiscount = this.convertEthToTokens(withDiscount, this.currentToken.crowdSaleInformation.tokenPrice, 1);
 
                 this.blockChangeTokens = true;
 
@@ -268,8 +262,8 @@
                 }
 
                 const withDiscount = this.convertEthToTokens(value);
-                const withoutDiscount = this.convertEthToTokens(value, this.selected.tokenPrice, 1);
-                const ethWithoutDiscount = this.convertTokensToEth(withDiscount, this.selected.tokenPrice, 1);
+                const withoutDiscount = this.convertEthToTokens(value, this.currentToken.crowdSaleInformation.tokenPrice, 1);
+                const ethWithoutDiscount = this.convertTokensToEth(withDiscount, this.currentToken.crowdSaleInformation.tokenPrice, 1);
 
                 this.blockChangeETHs = true;
 
@@ -288,23 +282,26 @@
                 const amount = new BigNumber(this.total);
 
                 if (amount.greaterThan(0)) {
-                    const {W12CrowdsaleFactory} = await this.loadLedger();
-                    const W12Crowdsale = W12CrowdsaleFactory.at(this.selected.crowdsaleAddress);
-                    await W12Crowdsale.methods.buyTokens({ value: web3.toWei(amount.toFixed(6), 'ether') });
-                    this.$emit('updateAccountData');
+                    const {W12CrowdsaleFactory} = await this.ledgerFetch();
+                    const connectedWeb3 = (await Connector.connect()).web3;
+                    const W12Crowdsale = W12CrowdsaleFactory.at(this.currentToken.crowdSaleInformation.crowdsaleAddress);
+                    const tx = await W12Crowdsale.methods.buyTokens({value: web3.toWei(amount.toFixed(6), 'ether')});
+                    await waitTransactionReceipt(tx, connectedWeb3);
+                    setTimeout(async ()=>{
+                        await this.updateAccountData();
+                        await this.tokensListUpdate({Index: this.currentToken.index});
+                    }, 5000);
                 }
             },
 
-            handleSelectedChange(newSelected,oldSelected){
-                if(newSelected && oldSelected && newSelected.name !== oldSelected.name) {
+            handleSelectedChange(newSelected, oldSelected) {
+                if (newSelected && oldSelected && newSelected.name !== oldSelected.name) {
                     this.total = 0;
                     this.ETHs = 0;
                     this.tokens = 0;
                 }
             }
         },
-        async created() {
-        }
     };
 
 </script>

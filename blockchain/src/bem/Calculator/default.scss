@@ -1,7 +1,10 @@
 .Calculator {
-  background: #f2f2f2;
-  padding: 20px;
-  border: 1px solid #dbdbdb;
+
+  &__content {
+    background: #f2f2f2;
+    padding: 20px;
+    border: 1px solid #dbdbdb;
+  }
   p {
     padding-bottom: 5px;
     font-size: 12px;

@@ -4,7 +4,7 @@ import store from "./store";
 const net = params.has('net') ? params.get('net') : 'https://ropsten.infura.io/';
 const key = params.has('key') ? params.get('key') : '7orv4QUSQbFWWcCpqHmH';
 const feePercent = params.has('feePercent') ? params.get('feePercent') : '10';
-const W12Lister = params.has('W12Lister') ? params.get('W12Lister') : store.state.config.W12Lister.address;
+const W12Lister = params.has('W12Lister') ? params.get('W12Lister') : store.state.Config.W12Lister.address;
 const W12CrowdsaleFactory = params.has('W12CrowdsaleFactory') ? params.get('W12CrowdsaleFactory') : null;
 
 export default {

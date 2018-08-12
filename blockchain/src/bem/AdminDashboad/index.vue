@@ -130,7 +130,7 @@
     import Connector from '../../lib/Blockchain/DefaultConnector.js';
     import { createNamespacedHelpers } from 'vuex';
 
-    const ConfigNS = createNamespacedHelpers('config');
+    const ConfigNS = createNamespacedHelpers('Config');
 
     export default {
         name: 'AdminDashboard',
@@ -255,7 +255,6 @@
                         );
 
                         await waitTransactionReceipt(tx, connectedWeb3);
-
                         this.endTokenWhiteListOperation();
                     } catch (e) {
                         this.setErrorMessage(e.message || UNKNOWN_ERROR_WHILE_WHITELISTING_TOKEN);

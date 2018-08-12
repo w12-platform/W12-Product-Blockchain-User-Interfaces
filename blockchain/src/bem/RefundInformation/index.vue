@@ -11,13 +11,11 @@
                 <td>{{ decimals(data.refundTokensVolume) }} {{ data.tokenSymbol }}</td>
             </tr>
             <tr>
-                <td>
-                    Кол-во средств, которые может вернут 1 STK-W12 в ближайший интервал дат возврата средств
-                </td>
+                <td>Кол-во средств, которые может вернуть 1 {{ data.tokenSymbol }} в ближайший интервал дат возврата средств</td>
                 <td>{{ data.refundAmountPerToken }} ETH</td>
             </tr>
             <tr>
-                <td>Стоимость первоначальной покупки 1 STK-W12</td>
+                <td>Стоимость первоначальной покупки 1 {{ data.tokenSymbol }}</td>
                 <td>{{ data.tokenPrice }} ETH</td>
             </tr>
             <tr>
@@ -29,11 +27,11 @@
                 <td>{{ data.totalRefundPercent }} %</td>
             </tr>
             <tr>
-                <td>Баланс STK-W12 на текущем выбранном аккаунте в Metamask</td>
+                <td>Баланс {{ data.tokenSymbol }} на текущем выбранном аккаунте в Metamask</td>
                 <td>{{ decimals(data.currentWalletBalanceInTokens) }} {{ data.tokenSymbol }}</td>
             </tr>
             <tr>
-                <td>Все STK-W12 на текущем выбранном аккаунте в Metamask можно продать за:</td>
+                <td>Все {{ data.tokenSymbol }} на текущем выбранном аккаунте в Metamask можно продать за:</td>
                 <td>{{ data.currentWalletBalanceInRefundAmount }} ETH</td>
             </tr>
             </tbody>
@@ -42,7 +40,6 @@
 </template>
 <script>
     import { RefundInformationModel } from './shared.js';
-
 
     const web3 = new Web3();
     const BigNumber = web3.BigNumber;
@@ -63,7 +60,6 @@
                 value = new BigNumber(value);
 
                 return value.div(base.pow(d)).toString();
-                // return value.toString();
             },
         }
     };

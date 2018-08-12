@@ -11,7 +11,7 @@
                             class="form-control"
                             id="W12ListerAddress"
                             @keyup.enter="saveConfig"
-                            v-model="form.W12Lister.address">
+                            v-model="address">
                 </div>
                 <div>
                     <button class="btn btn-primary" @click="saveConfig">Save</button>
@@ -22,36 +22,35 @@
 </template>
 
 <script>
-    import "bem/ConfigDashboad/default.scss";
+    import "./default.scss";
     import { createNamespacedHelpers } from "vuex";
     import { CONFIG_UPDATE } from "store/modules/config";
 
-    const ConfigNS = createNamespacedHelpers('config');
-    import { CROWDSALE_LIST_RESET } from "store/modules/crowdSaleList";
+    const ConfigNS = createNamespacedHelpers('Config');
+    const TokensListNS = createNamespacedHelpers('TokensList');
 
     export default {
         name: 'ConfigDashboard',
         template: '#ConfigDashboardTemplate',
         data () {
             return {
-                form: {
-                    W12Lister: {
-                        address: null
-                    }
-                }
+                address: null
             };
         },
         computed: {
             ...ConfigNS.mapState({
                 W12Lister: "W12Lister"
             }),
-
         },
         methods: {
+            ...TokensListNS.mapActions({
+                reset: 'reset'
+            }),
+
             saveConfig () {
-                this.$store.commit(`config/${CONFIG_UPDATE}`, { W12Lister: { address: this.form.W12Lister.address }});
-                this.$store.commit(`crowdSaleList/${CROWDSALE_LIST_RESET}`);
-                this.form.W12Lister.address = null;
+                this.$store.commit(`Config/${CONFIG_UPDATE}`, { W12Lister: { address: this.address }});
+                this.reset();
+                this.address = null;
             },
         },
     };

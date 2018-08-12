@@ -54,6 +54,6 @@ module.exports = {
         contentBase: path.join(__dirname, '../'),
         publicPath: '/blockchain/build/',
         compress: true,
-        port: 8080
+        port: 8090
     }
 };

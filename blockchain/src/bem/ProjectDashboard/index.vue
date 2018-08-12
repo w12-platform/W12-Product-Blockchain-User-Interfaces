@@ -379,7 +379,7 @@
 
     import {W12LISTER_UPDATE} from "store/modules/W12Lister";
 
-    const ConfigNS = createNamespacedHelpers('config');
+    const ConfigNS = createNamespacedHelpers('Config');
     const W12ListerNS = createNamespacedHelpers('W12Lister');
     const moment = window.moment;
 
@@ -684,6 +684,7 @@
                     }
 
                     const allowanceValue = (await ERC20Instance.methods.allowance(currentAccount, W12ListerAddress)).toString();
+                    console.log(allowanceValue);
 
                     this.tokensAmountThatApprovedToPlaceByTokenOwner = allowanceValue;
                 } catch (e) {
@@ -1113,10 +1114,9 @@
                 try {
                     const crowdsaleAddress = this.tokenCrowdsaleAddress;
                     const { W12CrowdsaleFactory } = await this.loadLedger();
+                    const {web3} = await Connector.connect();
+
                     const W12Crowdsale = W12CrowdsaleFactory.at(crowdsaleAddress);
-
-                    console.log(W12Crowdsale.methods);
-
                     const tx = await W12Crowdsale.methods.claimRemainingTokens();
 
                     await waitTransactionReceipt(tx, web3);

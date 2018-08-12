@@ -1,3 +1,10 @@
 .InvestorDashboard {
+  z-index: 1;
+  position: relative;
 
+  &__loader {
+    min-height: 250px;
+  }
+  &__error {
+  }
 }

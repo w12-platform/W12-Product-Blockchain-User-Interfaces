@@ -1,6 +1,7 @@
 <template>
-    <div class="SaleTable buefy">
-        <b-table v-if="saleTableData" :data="saleTableData" class="table table-striped table-bordered table-responsive-sm" :mobile-cards="false">
+    <div class="SaleTable buefy" v-if="saleTableData">
+        <h2>Скидки</h2>
+        <b-table :data="saleTableData" class="table table-striped table-bordered table-responsive-sm" :mobile-cards="false">
             <template slot-scope="props">
 
                 <b-table-column field="date" label="Crowdsale stage (UTC)" centered :title="props.row.fullDate">
@@ -56,35 +57,30 @@
 <script>
     import './default.scss';
     import {createNamespacedHelpers} from "vuex";
-    import moment from 'moment';
 
-    const crowdSaleListStore = createNamespacedHelpers("crowdSaleList");
+    const TokensListNS = createNamespacedHelpers("TokensList");
+
+    const moment = window.moment;
+    const web3 = new Web3();
 
     export default {
         name: 'SaleTable',
         template: '#SaleTableTemplate',
         components: {},
-        data() {
-            return {};
-        },
         watch: {},
         computed: {
-            ...crowdSaleListStore.mapState({
-                selected: "selected"
+            ...TokensListNS.mapState({
+                tokensListMeta: 'meta',
+                tokensList: 'list',
+                currentToken: 'currentToken'
             }),
             saleTableData() {
-                const list = this.selected.stages.map(stage => {
-
-                    // stage.bonusVolumes.map((bonus)=>{
-                    //     console.log(bonus);
-                    //     return 1;
-                    // });
-
+                const list = this.currentToken.crowdSaleInformation.stages.map(stage => {
                     return {
                         'date': this.dateFormat(stage.startDate) + " - " + this.dateFormat(stage.endDate),
                         'fullDate': this.fullDateFormat(stage.startDate) + " - " + this.fullDateFormat(stage.endDate),
                         'sale': stage.discount,
-                        'price': this.selected.tokenPrice,
+                        'price': this.currentToken.crowdSaleInformation.tokenPrice,
                         'bonusVolume': stage.bonusVolumes
                     }
                 });

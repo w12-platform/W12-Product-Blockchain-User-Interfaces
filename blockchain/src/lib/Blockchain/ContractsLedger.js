@@ -19,6 +19,7 @@ import { W12FundWrapper } from './Wrappers/W12Fund.js';
 import { W12AtomicSwapWrapper } from './Wrappers/W12AtomicSwap.js';
 import {W12AtomicSwapFactoryStrategy} from "./FactoryStrategies/W12AtomicSwap";
 
+
 async function loadContracts() {
     const ERC20Artifacts = await fetch('/blockchain/src/lib/Blockchain/contracts/ERC20.json')
         .then(data => data.json());
@@ -109,7 +110,7 @@ async function loadContracts() {
         ERC20Factory: ERC20,
         DetailedERC20Factory: DetailedERC20,
         W12FundFactory: W12Fund,
-        W12AtomicSwapFactory: W12AtomicSwap
+        W12AtomicSwapFactory: W12AtomicSwap,
     };
 }
 
