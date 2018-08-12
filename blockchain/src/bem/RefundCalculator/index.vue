@@ -25,7 +25,6 @@
 </template>
 <script>
     import 'bem/RefundCalculator/default.scss';
-    import 'bem/buefy/default.scss';
     import Ledger from 'lib/Blockchain/ContractsLedger.js';
     import { RefundInformationModel } from 'bem/RefundInformation/shared.js';
 

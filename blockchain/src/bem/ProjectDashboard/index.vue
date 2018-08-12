@@ -363,7 +363,6 @@
 
 <script>
     import config from '../../config.js'; //нужно переместить конфиг и убрать ../../ дабавив alias в вебпак
-    import 'bem/buefy/default.scss';
     import 'bem/ProjectDashboard/default.scss';
 
     import Ledger from 'lib/Blockchain/ContractsLedger.js';

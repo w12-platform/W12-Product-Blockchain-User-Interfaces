@@ -121,7 +121,7 @@
 </template>
 
 <script>
-    import Ledger from '../../lib/Blockchain/ContractsLedger.js';
+    import Ledger from 'lib/Blockchain/ContractsLedger.js';
     import {
         UNKNOWN_ERROR_WHILE_FETCH_TOKENS_LIST,
         UNKNOWN_ERROR_WHILE_WHITELISTING_TOKEN

@@ -1,5 +1,5 @@
 <template>
-    <div class="TrancheInformation">
+    <div class="TrancheInformation buefy">
         <table class="table table-striped table-bordered table-hover table-responsive-sm">
             <tbody>
                 <tr>
@@ -54,9 +54,6 @@
 </script>
 <style lang="scss">
     .TrancheInformation {
-        @import "~bulma";
-        @import "~buefy/src/scss/buefy";
-
         font-size: 12px;
         margin: 20px 0;
 

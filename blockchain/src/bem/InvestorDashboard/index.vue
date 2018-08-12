@@ -29,7 +29,6 @@
 
 <script>
     import './default.scss';
-    import 'bem/buefy/default.scss';
     import 'bem/ExchangeTokens/default.scss';
 
     import {createNamespacedHelpers} from "vuex";

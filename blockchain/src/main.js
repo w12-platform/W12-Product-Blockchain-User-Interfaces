@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Buefy from 'buefy'
 
+import 'bem/buefy/default.scss';
 import ConfigDashboad from 'bem/ConfigDashboad';
 import AdminDashboard from 'bem/AdminDashboad';
 import ProjectDashboard from 'bem/ProjectDashboard';
