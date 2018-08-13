@@ -1,6 +1,6 @@
 <template>
-    <div class="CrowdSale buefy">
-        <table v-if="currentToken"
+    <div class="CrowdSale buefy" v-if="currentToken">
+        <table
                class="CrowdSale__table table table-striped table-bordered table-hover table-responsive-sm">
             <tbody>
             <tr>
@@ -140,21 +140,23 @@
                 this.unwatchCountdown();
 
                 const watcher = async () => {
-                    const currentDate = moment().utc().unix();
-                    const stageEndDate = this.currentToken.crowdSaleInformation.stageEndDate;
-                    const EndDate = this.currentToken.crowdSaleInformation.endDate;
+                    if (this.currentToken){
+                        const currentDate = moment().utc().unix();
+                        const stageEndDate = this.currentToken.crowdSaleInformation.stageEndDate;
+                        const EndDate = this.currentToken.crowdSaleInformation.endDate;
 
-                    if (currentDate >= stageEndDate) {
-                        if (currentDate <= EndDate) {
-                            const Index = this.currentToken.index;
-                            setTimeout(() => {
-                                this.tokensListUpdate({Index});
-                            }, 1000);
+                        if (currentDate >= stageEndDate) {
+                            if (currentDate <= EndDate) {
+                                const Index = this.currentToken.index;
+                                setTimeout(() => {
+                                    this.tokensListUpdate({Index});
+                                }, 1000);
+                            }
+                            this.unwatchCountdown();
+                            this.countdown = false;
+                        } else {
+                            this.countdown = countdown(new Date(stageEndDate * 1000)).toString();
                         }
-                        this.unwatchCountdown();
-                        this.countdown = false;
-                    } else {
-                        this.countdown = countdown(new Date(stageEndDate * 1000)).toString();
                     }
                 };
 

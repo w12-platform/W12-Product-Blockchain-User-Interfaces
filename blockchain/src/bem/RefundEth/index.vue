@@ -1,5 +1,5 @@
 <template>
-    <div class="RefundEth byefy">
+    <div class="RefundEth byefy" v-if="currentToken">
         <h2>REFUND. Вернуть: {{ currentToken.symbol }}, получить: ETH</h2>
         <RefundInformation v-if="refundInformation" :data="refundInformation"></RefundInformation>
         <div v-if="refundInformation">

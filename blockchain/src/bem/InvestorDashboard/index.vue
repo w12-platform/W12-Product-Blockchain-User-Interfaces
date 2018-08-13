@@ -82,6 +82,7 @@
             }),
             ...TokensListNS.mapState({
                 tokensListMeta: 'meta',
+                currentToken: "currentToken"
             }),
 
             isLoading() {

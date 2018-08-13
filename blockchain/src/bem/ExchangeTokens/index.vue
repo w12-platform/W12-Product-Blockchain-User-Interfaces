@@ -1,5 +1,5 @@
 <template>
-    <div class="ExchangeTokens buefy">
+    <div class="ExchangeTokens buefy" v-if="currentToken">
         <h2>Обмен {{ currentToken.symbol }} на {{ currentToken.tokenInformation.symbol }}</h2>
         <div class="ExchangeTokens__content">
             <table v-if="currentToken && currentAccountData"

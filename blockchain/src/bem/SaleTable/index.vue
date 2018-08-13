@@ -1,5 +1,5 @@
 <template>
-    <div class="SaleTable buefy" v-if="saleTableData">
+    <div class="SaleTable buefy" v-if="currentToken && saleTableData">
         <h2>Скидки</h2>
         <b-table :data="saleTableData" class="table table-striped table-bordered table-responsive-sm" :mobile-cards="false">
             <template slot-scope="props">
@@ -75,16 +75,18 @@
                 currentToken: 'currentToken'
             }),
             saleTableData() {
-                const list = this.currentToken.crowdSaleInformation.stages.map(stage => {
-                    return {
-                        'date': this.dateFormat(stage.startDate) + " - " + this.dateFormat(stage.endDate),
-                        'fullDate': this.fullDateFormat(stage.startDate) + " - " + this.fullDateFormat(stage.endDate),
-                        'sale': stage.discount,
-                        'price': this.currentToken.crowdSaleInformation.tokenPrice,
-                        'bonusVolume': stage.bonusVolumes
-                    }
-                });
-                return list.filter(Boolean);
+                if(this.currentToken){
+                    const list = this.currentToken.crowdSaleInformation.stages.map(stage => {
+                        return {
+                            'date': this.dateFormat(stage.startDate) + " - " + this.dateFormat(stage.endDate),
+                            'fullDate': this.fullDateFormat(stage.startDate) + " - " + this.fullDateFormat(stage.endDate),
+                            'sale': stage.discount,
+                            'price': this.currentToken.crowdSaleInformation.tokenPrice,
+                            'bonusVolume': stage.bonusVolumes
+                        }
+                    });
+                    return list.filter(Boolean);
+                }
             },
             sumSale(x, y){
                 return (x) + parseFloat(y);

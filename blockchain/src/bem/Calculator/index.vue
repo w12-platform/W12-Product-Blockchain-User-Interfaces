@@ -1,5 +1,5 @@
 <template>
-    <div class="Calculator byefy" v-if="currentToken.crowdSaleInformation.status">
+    <div class="Calculator byefy" v-if="currentToken && currentToken.crowdSaleInformation.status">
         <h2>Купить токены {{ currentToken.symbol }}</h2>
 
         <div class="Calculator__content">
