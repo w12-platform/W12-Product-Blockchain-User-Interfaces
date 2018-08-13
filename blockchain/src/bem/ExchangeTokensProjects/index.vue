@@ -49,10 +49,8 @@
         components: {},
         filters: {
             toEth(value) {
-                if(value){
-                    value = new BigNumber(value);
-                    return web3.fromWei(value, 'ether').toString();
-                }
+                value = value ? new BigNumber(value):0;
+                return web3.fromWei(value, 'ether').toString();
             },
             decimals(value) {
                 const d = this.currentToken ? this.currentToken.decimals : 0;

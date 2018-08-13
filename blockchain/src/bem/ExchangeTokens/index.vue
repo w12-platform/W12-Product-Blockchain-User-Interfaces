@@ -84,7 +84,7 @@
         components: {},
         filters: {
             toEth(value) {
-                value = new BigNumber(value);
+                value = value ? new BigNumber(value):0;
                 return web3.fromWei(value, 'ether').toString();
             },
             decimals(value) {

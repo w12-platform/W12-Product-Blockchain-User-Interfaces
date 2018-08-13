@@ -75,7 +75,7 @@
                 currentToken: 'currentToken'
             }),
             saleTableData() {
-                if(this.currentToken){
+                if(this.currentToken && this.currentToken.crowdSaleInformation){
                     const list = this.currentToken.crowdSaleInformation.stages.map(stage => {
                         return {
                             'date': this.dateFormat(stage.startDate) + " - " + this.dateFormat(stage.endDate),

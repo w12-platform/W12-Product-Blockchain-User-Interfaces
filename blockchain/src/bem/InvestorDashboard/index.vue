@@ -15,7 +15,7 @@
                 <b-loading :is-full-page="false" :active.sync="isLoading" :can-cancel="true"></b-loading>
             </b-notification>
 
-            <div v-if="!isLoading">
+            <div v-if="!isLoading && currentToken && currentAccountData">
                 <TokenSwitch></TokenSwitch>
                 <CrowdSale></CrowdSale>
                 <SaleTable></SaleTable>
@@ -84,9 +84,13 @@
                 tokensListMeta: 'meta',
                 currentToken: "currentToken"
             }),
+            ...AccountNS.mapState({
+                currentAccount: "currentAccount",
+                currentAccountData: "currentAccountData",
+            }),
 
             isLoading() {
-                return this.tokensListMeta.loading || this.meta.loading;
+                return this.tokensListMeta.loading && this.meta.loading;
             },
             isError() {
                 return this.ledgerMeta.loadingError || this.tokensListMeta.loadingError;

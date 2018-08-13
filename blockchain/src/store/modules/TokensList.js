@@ -19,7 +19,7 @@ export default {
     namespaced: true,
     state: {
         meta: {
-            loading: false,
+            loading: true,
             loadingError: false,
             updated: false,
         },
