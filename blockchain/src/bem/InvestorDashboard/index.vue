@@ -85,7 +85,7 @@
             }),
 
             isLoading() {
-                return this.ledgerMeta.loading || this.tokensListMeta.loading || this.meta.loading;
+                return this.tokensListMeta.loading || this.meta.loading;
             },
             isError() {
                 return this.ledgerMeta.loadingError || this.tokensListMeta.loadingError;
@@ -114,5 +114,4 @@
             this.meta.loading = false;
         }
     };
-
 </script>

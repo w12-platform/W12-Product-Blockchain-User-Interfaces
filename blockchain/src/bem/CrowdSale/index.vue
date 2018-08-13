@@ -74,7 +74,7 @@
                     <span v-else></span>
                 </td>
             </tr>
-            <tr v-if="currentToken.crowdSaleInformation.stageDiscount !== '0'">
+            <tr v-if="currentToken.crowdSaleInformation.stageDiscount !== '0' && currentToken.crowdSaleInformation.status">
                 <td>Стоимость одного токена {{ currentToken.symbol }} с учетом текущей скидки</td>
                 <td>
                     <span v-if="currentToken.crowdSaleInformation.status">{{ currentToken.crowdSaleInformation.price }}
