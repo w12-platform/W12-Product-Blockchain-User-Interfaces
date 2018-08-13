@@ -24,7 +24,7 @@
 <script>
     import "./default.scss";
     import { createNamespacedHelpers } from "vuex";
-    import { CONFIG_UPDATE } from "store/modules/config";
+    import { CONFIG_UPDATE } from "store/modules/Сonfig";
 
     const ConfigNS = createNamespacedHelpers('Config');
     const TokensListNS = createNamespacedHelpers('TokensList');
