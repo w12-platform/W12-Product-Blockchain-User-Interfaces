@@ -1,10 +1,10 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import Config from "store/modules/config";
-import Ledger from "store/modules/Ledger";
-import Account from "store/modules/Account";
-import TokensList from "store/modules/TokensList";
-import W12Lister from "store/modules/W12Lister";
+import Config from "store/modules/Config.js";
+import Ledger from "store/modules/Ledger.js";
+import Account from "store/modules/Account.js";
+import TokensList from "store/modules/TokensList.js";
+import W12Lister from "store/modules/W12Lister.js";
 import PersistedStatePlugin from "vuex-persistedstate";
 
 Vue.use(Vuex);
