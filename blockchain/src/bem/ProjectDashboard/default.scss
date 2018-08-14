@@ -60,19 +60,51 @@
     margin-top: 10px;
   }
   &__dateSelect {
-    .datepicker {
-      padding: 0;
+    .mx-datepicker {
+      width: 100%;
     }
-    header {
-      position: relative;
-      background: none;
+    .mx-input-append{
+      left: 0;
     }
-    .dropdown-item:focus, .dropdown-item:hover {
-      background: none;
+    .mx-input {
+      padding: 6px 10px;
+      padding-left: 30px;
     }
-    .dropdown-menu {
-      padding: 0;
+    .mx-time-list {
+      margin: auto !important;
     }
+    .mx-panel-date {
+      thead {
+        tr {
+          th {
+            padding: 0;
+            text-align: center;
+            vertical-align: middle;
+          }
+        }
+      }
+      tbody {
+        tr {
+          td {
+            text-align: center;
+            border: none;
+          }
+        }
+      }
+    }
+    //.datepicker {
+    //  padding: 0;
+    //}
+    //header {
+    //  position: relative;
+    //  background: none;
+    //}
+    //.dropdown-item:focus, .dropdown-item:hover {
+    //  background: none;
+    //}
+    //.dropdown-menu {
+    //  padding: 0;
+    //}
   }
   &__deleteContainer{
     display: flex;

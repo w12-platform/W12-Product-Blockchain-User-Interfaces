@@ -101,7 +101,7 @@ export class W12CrowdsaleWrapper extends BaseWrapper {
                 milestone.voteEndDate,
                 milestone.withdrawalEndDate
             );
-            tranchePercents.push(milestone.tranchePercent);
+            tranchePercents.push(Number.parseInt(milestone.tranchePercent));
             offsets.push(
                 countStringBytes(milestone.name),
                 countStringBytes(milestone.description),

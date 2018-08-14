@@ -241,13 +241,8 @@ export default {
                         token.crowdSaleInformation.stageDiscount = stageDiscount;
                         token.crowdSaleInformation.stageEndDate = stageEndDate;
                         token.crowdSaleInformation.price = new BigNumber(tokenPrice).mul(100 - stageDiscount).div(100).toString();
-
-                        return token;
                     }
-                });
-
-                list = list.filter((n) => {
-                    return n !== undefined;
+                    return token;
                 });
                 commit(UPDATE, {list});
             } catch (e) {

@@ -153,13 +153,15 @@
                                 <div v-else-if="isWhiteListed && hasPlacedWTokenAddress" class="text-left">
                                     <div class="form-group">
                                         <label for="StartDate">Start date</label>
-                                        <b-field id="StartDate" class="ProjectDashboard__dateSelect">
-                                            <b-datepicker
-                                                    :min-date="minStartDate"
-                                                    placeholder="Click to select..."
-                                                    icon="calendar-today"
-                                                    v-model="crowdsaleInitForm.date">
-                                            </b-datepicker>
+                                        <b-field id="StartDate" class="ProjectDashboard__dateSelect bootstrap">
+                                            <date-picker :min-date="minStartDate" v-model="crowdsaleInitForm.date" type="datetime" lang="en" format="YYYY-MM-DD hh:mm:ss" confirm></date-picker>
+
+                                            <!--<b-datepicker-->
+                                                    <!--:min-date="minStartDate"-->
+                                                    <!--placeholder="Click to select..."-->
+                                                    <!--icon="calendar-today"-->
+                                                    <!--v-model="crowdsaleInitForm.date">-->
+                                            <!--</b-datepicker>-->
                                         </b-field>
                                     </div>
                                     <div class="form-group">
@@ -177,7 +179,7 @@
                                     <div class="form-group">
                                         <label for="AmountForSale">Amount for sale</label>
                                         <b-field id="AmountForSale">
-                                            <b-input :placeholder="`Min: ${tokensForSaleAmountToNumber}`"
+                                            <b-input :placeholder="`${tokensForSaleAmountToNumber}`"
                                                      type="number"
                                                      min="0"
                                                      v-model="crowdsaleInitForm.amountForSale"
@@ -217,22 +219,26 @@
                                                                 <div class="col-sm py-2">
                                                                     <label>Start date</label>
                                                                     <b-field class="ProjectDashboard__dateSelect">
-                                                                        <b-datepicker
-                                                                                disabled
-                                                                                v-model="tokenCrowdsaleStages[stageIndex].startDate"
-                                                                                placeholder="Click to select..."
-                                                                                icon="calendar-today">
-                                                                        </b-datepicker>
+                                                                        <date-picker v-model="tokenCrowdsaleStages[stageIndex].startDate" type="datetime" lang="en" format="YYYY-MM-DD hh:mm:ss" confirm></date-picker>
+
+                                                                        <!--<b-datepicker-->
+                                                                                <!--disabled-->
+                                                                                <!--v-model="tokenCrowdsaleStages[stageIndex].startDate"-->
+                                                                                <!--placeholder="Click to select..."-->
+                                                                                <!--icon="calendar-today">-->
+                                                                        <!--</b-datepicker>-->
                                                                     </b-field>
                                                                 </div>
                                                                 <div class="col-sm py-2">
                                                                     <label>End date</label>
                                                                     <b-field class="ProjectDashboard__dateSelect">
-                                                                        <b-datepicker
-                                                                                v-model="tokenCrowdsaleStages[stageIndex].endDate"
-                                                                                placeholder="Click to select..."
-                                                                                icon="calendar-today">
-                                                                        </b-datepicker>
+                                                                        <date-picker v-model="tokenCrowdsaleStages[stageIndex].endDate" type="datetime" lang="en" format="YYYY-MM-DD hh:mm:ss" confirm></date-picker>
+
+                                                                        <!--<b-datepicker-->
+                                                                                <!--v-model="tokenCrowdsaleStages[stageIndex].endDate"-->
+                                                                                <!--placeholder="Click to select..."-->
+                                                                                <!--icon="calendar-today">-->
+                                                                        <!--</b-datepicker>-->
                                                                     </b-field>
                                                                 </div>
                                                             </div>
@@ -253,11 +259,13 @@
                                                                     <label for="StageVestingDate">Vesting Date</label>
                                                                     <b-field id="StageVestingDate"
                                                                              class="ProjectDashboard__dateSelect">
-                                                                        <b-datepicker
-                                                                                v-model="tokenCrowdsaleStages[stageIndex].vestingDate"
-                                                                                placeholder="Click to select..."
-                                                                                icon="calendar-today">
-                                                                        </b-datepicker>
+                                                                        <date-picker v-model="tokenCrowdsaleStages[stageIndex].vestingDate" type="datetime" lang="en" format="YYYY-MM-DD hh:mm:ss" confirm></date-picker>
+
+                                                                        <!--<b-datepicker-->
+                                                                                <!--v-model="tokenCrowdsaleStages[stageIndex].vestingDate"-->
+                                                                                <!--placeholder="Click to select..."-->
+                                                                                <!--icon="calendar-today">-->
+                                                                        <!--</b-datepicker>-->
                                                                     </b-field>
                                                                 </div>
                                                             </div>
@@ -349,7 +357,7 @@
             <div v-if="trancheInformationData">
                 <h2>Получение ETH</h2>
                 <TrancheInformation :data="trancheInformationData"></TrancheInformation>
-                <button class="btn btn-primary" :disabled="!allowTranche" @click="tryTranche">Получить</button>
+                <button class="btn btn-primary py-2 my-2" :disabled="!allowTranche" @click="tryTranche">Получить</button>
             </div>
 
             <Receiving
@@ -364,6 +372,7 @@
 <script>
     import config from '../../config.js'; //нужно переместить конфиг и убрать ../../ дабавив alias в вебпак
     import 'bem/ProjectDashboard/default.scss';
+    import DatePicker from 'vue2-datepicker';
 
     import Ledger from 'lib/Blockchain/ContractsLedger.js';
     import Connector from 'lib/Blockchain/DefaultConnector.js';
@@ -392,6 +401,7 @@
             TrancheInformation,
             MilestoneList,
             Receiving,
+            DatePicker
         },
         data() {
             return {
@@ -428,6 +438,12 @@
                 },
                 crowdsaleInitForm: {
                     date: null,
+                    config: {
+                        format: 'DD/MM/YYYY h:mm:ss',
+                        useCurrent: false,
+                        showClear: true,
+                        showClose: true,
+                    },
                     amountForSale: null,
                     price: null
                 },
@@ -449,7 +465,7 @@
             }),
             minStartDate() {
                 const today = new Date();
-                return new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
+                return new Date(today.getFullYear(), today.getMonth(), today.getDate());
             },
             isLoading() {
                 return (
@@ -764,7 +780,7 @@
                         }
                     } catch (e) {
                         this.tokenCrowdsaleAddress = null;
-                        console.log('fetchCrowdsaleAddressAndCreateContractInstance', e);
+                        //console.log('fetchCrowdsaleAddressAndCreateContractInstance', e);
                     }
                 } catch (e) {
                     this.tokenCrowdsaleAddress = null;
@@ -845,7 +861,7 @@
                 if (this.isCrowdsaleInited) return;
 
                 const data = this.crowdsaleInitForm;
-                const date = moment(data.date, 'YYYY-MM-DD');
+                const date = moment(data.date, 'YYYY-MM-DD hh:mm:ss');
                 const amountForSale = new web3.BigNumber(web3.toWei(data.amountForSale, 'ether') || 0);
                 const price = new web3.BigNumber(web3.toWei(data.price, 'ether') || 0);
                 const tokensForSaleAmount = new web3.BigNumber(this.token.tokensForSaleAmount || 0);

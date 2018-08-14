@@ -32,32 +32,38 @@
                 <b-field
                         id="MilestoneCard__end"
                         label="Дата достижение milestone">
-                    <b-datepicker
-                            :value="viewData.endDate"
-                            @input="onInput('endDate', $event)"
-                            placeholder="Click to select..."
-                            icon="calendar-today">
-                    </b-datepicker>
+                    <date-picker v-model="viewData.endDate" type="datetime" @input="onInput('endDate', $event)" lang="en" format="YYYY-MM-DD hh:mm:ss" confirm></date-picker>
+
+                    <!--<b-datepicker-->
+                            <!--:value="viewData.endDate"-->
+                            <!--@input="onInput('endDate', $event)"-->
+                            <!--placeholder="Click to select..."-->
+                            <!--icon="calendar-today">-->
+                    <!--</b-datepicker>-->
                 </b-field>
                 <b-field
                         id="MilestoneCard__voteEnd"
                         label="Дата окончания голосования о достижении milestone">
-                    <b-datepicker
-                            :value="viewData.voteEndDate"
-                            @input="onInput('voteEndDate', $event)"
-                            placeholder="Click to select..."
-                            icon="calendar-today">
-                    </b-datepicker>
+                    <date-picker v-model="viewData.voteEndDate" type="datetime" @input="onInput('voteEndDate', $event)" lang="en" format="YYYY-MM-DD hh:mm:ss" confirm></date-picker>
+
+                    <!--<b-datepicker-->
+                            <!--:value="viewData.voteEndDate"-->
+                            <!--@input="onInput('voteEndDate', $event)"-->
+                            <!--placeholder="Click to select..."-->
+                            <!--icon="calendar-today">-->
+                    <!--</b-datepicker>-->
                 </b-field>
                 <b-field
                         id="MilestoneCard__withdrawalEnd"
                         label="Дата окончания вывода средств в случае негативного голосования">
-                    <b-datepicker
-                            :value="viewData.withdrawalEndDate"
-                            @input="onInput('withdrawalEndDate', $event)"
-                            placeholder="Click to select..."
-                            icon="calendar-today">
-                    </b-datepicker>
+                    <date-picker v-model="viewData.withdrawalEndDate" @input="onInput('withdrawalEndDate', $event)" type="datetime" lang="en" format="YYYY-MM-DD hh:mm:ss" confirm></date-picker>
+
+                    <!--<b-datepicker-->
+                            <!--:value="viewData.withdrawalEndDate"-->
+                            <!--@input="onInput('withdrawalEndDate', $event)"-->
+                            <!--placeholder="Click to select..."-->
+                            <!--icon="calendar-today">-->
+                    <!--</b-datepicker>-->
                 </b-field>
             </div>
         </div>
@@ -66,11 +72,15 @@
 <script>
     import { MilestoneModel } from './shared.js';
     import moment from 'moment';
+    import DatePicker from 'vue2-datepicker';
 
     const web3 = new Web3();
 
     export default {
         name: 'MilestoneCard',
+        components: {
+            DatePicker
+        },
         props: {
             value: {
                 type: MilestoneModel,

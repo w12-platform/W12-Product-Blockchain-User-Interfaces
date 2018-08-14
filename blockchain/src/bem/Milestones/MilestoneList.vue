@@ -83,5 +83,37 @@
 </script>
 <style lang="scss">
     .MilestoneList {
+        .mx-datepicker {
+            width: 100%;
+            .mx-input-append {
+                left: 0;
+            }
+            .mx-input {
+                padding: 6px 10px;
+                padding-left: 30px;
+            }
+            .mx-time-list {
+                margin: auto !important;
+            }
+            .mx-panel-date {
+                thead {
+                    tr {
+                        th {
+                            padding: 0;
+                            text-align: center;
+                            vertical-align: middle;
+                        }
+                    }
+                }
+                tbody {
+                    tr {
+                        td {
+                            text-align: center;
+                            border: none;
+                        }
+                    }
+                }
+            }
+        }
     }
 </style>
