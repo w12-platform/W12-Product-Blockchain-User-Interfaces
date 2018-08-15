@@ -192,6 +192,23 @@
                                         </button>
                                     </div>
                                 </div>
+                                <div class="pt-2" v-if="isCrowdsaleInited && isWhiteListed && hasPlacedWTokenAddress && tokensForAddCrowdsale !== '0'">
+                                    <div class="form-group">
+                                        <label for="AmountForSale">Добавить токены в краудсейл</label>
+                                        <b-field id="AmountForSale">
+                                            <b-input :placeholder="`${tokensForAddCrowdsale}`"
+                                                     type="number"
+                                                     min="0"
+                                                     v-model="crowdsaleInitForm.amountForSale"
+                                                     icon="shopping">
+                                            </b-input>
+                                        </b-field>
+                                    </div>
+                                    <div class="text-right">
+                                        <button class="btn btn-primary btn-sm" @click="addTokensToCrowdsale">Add
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -554,6 +571,11 @@
                 return this.token.tokensForSaleAmount
                     ? web3.fromWei(this.token.tokensForSaleAmount, 'ether').toString()
                     : 0;
+            },
+            tokensForAddCrowdsale(){
+                return this.token && this.token.wTokensIssuedAmount && this.token.tokensForSaleAmount
+                    ? web3.fromWei(new BigNumber(this.token.tokensForSaleAmount).minus(this.token.wTokensIssuedAmount), 'ether').toString()
+                    : 0;
             }
         },
         watch: {
@@ -595,17 +617,19 @@
             tokenSelected(value) {
                 this.tokenAddress = value;
             },
-            async handleTokenChange(value, prevValue) {
+            async handleTokenChange() {
                 this.unsubscribeFromEvents();
                 await this.subscribeToEvents();
                 await this.updateOwnerBalance();
                 await this.updateTokensApprovedToPlaceValue();
                 await this.updatePlacedTokenStatus();
                 await this.fetchCrowdsaleAddressAndCreateContractInstance();
-                await this.fetchCrowdsaleStagesList();
-                await this.fetchCrowdsaleMilestonesList();
-                await this.updateFundInformation();
-                await this.updateReceivingInformation();
+                if(this.isCrowdsaleInited) {
+                    await this.fetchCrowdsaleStagesList();
+                    await this.fetchCrowdsaleMilestonesList();
+                    await this.updateFundInformation();
+                    await this.updateReceivingInformation();
+                }
             },
             async loadLedger() {
                 let ledger
@@ -752,6 +776,7 @@
                 this.fetchCrowdsaleAddressLoading = true;
 
                 try {
+
                     const {
                         W12ListerInstance
                     } = this.ContractInstances;
@@ -763,13 +788,13 @@
                     }
 
                     try {
-                        const address = await W12ListerInstance.methods.getTokenCrowdsale(this.tokenAddress);
 
+                        console.log(tokenAddress);
+                        const address = await W12ListerInstance.methods.getTokenCrowdsale(tokenAddress);
                         if (
                             address
                             && !isZeroAddress(address)
                         ) {
-
                             const {W12CrowdsaleFactory} = await this.loadLedger();
                             const W12CrowdsaleInstance = W12CrowdsaleFactory.at(address);
 
@@ -780,11 +805,9 @@
                         }
                     } catch (e) {
                         this.tokenCrowdsaleAddress = null;
-                        //console.log('fetchCrowdsaleAddressAndCreateContractInstance', e);
                     }
                 } catch (e) {
                     this.tokenCrowdsaleAddress = null;
-                    this.setErrorMessage(e.message);
                 }
 
                 this.fetchCrowdsaleAddressLoading = false;
@@ -817,7 +840,11 @@
                         throw new Error('not enough information to do request');
                     }
 
-                    await ERC20Instance.methods.approve(W12ListerAddress, web3.toWei(value, 'ether'));
+                    const txhash = await ERC20Instance.methods.approve(W12ListerAddress, web3.toWei(value, 'ether'));
+
+                    await waitTransactionReceipt(txhash, connectedWeb3);
+                    await this.handleTokenChange();
+                    await this.fetchToken();
                 } catch (e) {
                     this.placedTokenStatus = false;
                     this.setErrorMessage(e.message);
@@ -848,7 +875,11 @@
                         throw new Error('not enough information to do request');
                     }
 
-                    await W12ListerInstance.methods.placeToken(tokenAddress, web3.toWei(value, 'ether'));
+                    const txhash = await W12ListerInstance.methods.placeToken(tokenAddress, web3.toWei(value, 'ether'));
+
+                    await waitTransactionReceipt(txhash, connectedWeb3);
+                    await this.handleTokenChange();
+                    await this.fetchToken();
                 } catch (e) {
                     this.placedTokenStatus = false;
                     this.setErrorMessage(e.message);
@@ -901,7 +932,53 @@
                     );
 
                     await waitTransactionReceipt(txhash, connectedWeb3);
-                    await this.fetchCrowdsaleAddressAndCreateContractInstance();
+                    await this.handleTokenChange();
+                    await this.fetchToken();
+                } catch (e) {
+                    this.setErrorMessage(e.message);
+                }
+
+                this.initCrawdsaleLoading = false;
+            },
+            async addTokensToCrowdsale() {
+                if (!this.token) return;
+                if (!this.isCrowdsaleInited) return;
+
+                const data = this.crowdsaleInitForm;
+                const amountForSale = new web3.BigNumber(web3.toWei(data.amountForSale, 'ether') || 0);
+                const tokensForSaleAmount = new web3.BigNumber(this.token.tokensForSaleAmount || 0);
+                const wTokensIssuedAmount = new web3.BigNumber(this.token.wTokensIssuedAmount || 0);
+                const limit = amountForSale.plus(wTokensIssuedAmount);
+
+                if (
+                    !amountForSale.greaterThan(0)
+                    || !tokensForSaleAmount.lessThanOrEqualTo(limit)
+                ) {
+                    return;
+                }
+
+                this.initCrawdsaleLoading = true;
+
+                try {
+                    const {
+                        W12ListerInstance
+                    } = this.ContractInstances;
+
+                    const tokenAddress = this.tokenAddress;
+                    const connectedWeb3 = (await Connector.connect()).web3;
+
+                    if (!tokenAddress) {
+                        throw new Error('not enough information to do request');
+                    }
+
+                    const txhash = await W12ListerInstance.methods.addTokensToCrowdsale(
+                        tokenAddress,
+                        amountForSale.toString(),
+                    );
+
+                    await waitTransactionReceipt(txhash, connectedWeb3);
+                    await this.fetchToken();
+                    await this.handleTokenChange();
                 } catch (e) {
                     this.setErrorMessage(e.message);
                 }
@@ -1089,7 +1166,8 @@
 
                     this.fundData = data;
                 } catch (e) {
-                    this.setErrorMessage(e.message);
+                    console.log(e.message);
+                    //this.setErrorMessage(e.message);
                 }
             },
             async tryTranche() {
