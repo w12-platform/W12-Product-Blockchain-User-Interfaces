@@ -3,35 +3,35 @@
         <table class="table table-striped table-bordered table-hover table-responsive-sm">
             <tbody>
             <tr>
-                <td>Объем замороженных токенов</td>
+                <td>{{ $t('InvestorDashboardRefundEthInfoVolumeFrozen') }}</td>
                 <td>{{ decimals(data.freezeTokensVolume) }} {{ data.tokenSymbol }}</td>
             </tr>
             <tr>
-                <td>Объем доступных к возврату токенов</td>
+                <td>{{ $t('InvestorDashboardRefundEthInfoAvailableReturn') }}</td>
                 <td>{{ decimals(data.refundTokensVolume) }} {{ data.tokenSymbol }}</td>
             </tr>
             <tr>
-                <td>Кол-во средств, которые может вернуть 1 {{ data.tokenSymbol }} в ближайший интервал дат возврата средств</td>
+                <td>{{ $t('InvestorDashboardRefundEthInfoReturnOne', {WToken: data.tokenSymbol})}}</td>
                 <td>{{ data.refundAmountPerToken }} ETH</td>
             </tr>
             <tr>
-                <td>Стоимость первоначальной покупки 1 {{ data.tokenSymbol }}</td>
+                <td>{{ $t('InvestorDashboardRefundEthInfoInitial', {WToken: data.tokenSymbol}) }}</td>
                 <td>{{ data.tokenPrice }} ETH</td>
             </tr>
             <tr>
-                <td>Баланс фонда хранения средств</td>
+                <td>{{ $t('InvestorDashboardRefundEthInfoFundBalance') }}</td>
                 <td>{{ decimals(data.fundTokensBalance) }} {{ data.tokenSymbol }} | {{ data.fundBalance }} ETH</td>
             </tr>
             <tr>
-                <td>% возврата фонда</td>
+                <td>{{ $t('InvestorDashboardRefundEthInfoFundReturn') }}</td>
                 <td>{{ data.totalRefundPercent }} %</td>
             </tr>
             <tr>
-                <td>Баланс {{ data.tokenSymbol }} на текущем выбранном аккаунте в Metamask</td>
+                <td>{{ $t('InvestorDashboardRefundEthInfoBalance', {WToken: data.tokenSymbol}) }}</td>
                 <td>{{ decimals(data.currentWalletBalanceInTokens) }} {{ data.tokenSymbol }}</td>
             </tr>
             <tr>
-                <td>Все {{ data.tokenSymbol }} на текущем выбранном аккаунте в Metamask можно продать за:</td>
+                <td>{{ $t('InvestorDashboardRefundEthInfoAllSold', {WToken: data.tokenSymbol}) }}</td>
                 <td>{{ data.currentWalletBalanceInRefundAmount }} ETH</td>
             </tr>
             </tbody>
@@ -39,7 +39,7 @@
     </div>
 </template>
 <script>
-    import { RefundInformationModel } from './shared.js';
+    import {RefundInformationModel} from './shared.js';
 
     const web3 = new Web3();
     const BigNumber = web3.BigNumber;
@@ -53,7 +53,7 @@
             }
         },
         methods: {
-            decimals (value) {
+            decimals(value) {
                 const d = this.data.tokenDecimals;
                 const base = new BigNumber(10);
 

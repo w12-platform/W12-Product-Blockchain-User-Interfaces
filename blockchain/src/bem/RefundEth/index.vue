@@ -1,6 +1,6 @@
 <template>
     <div class="RefundEth byefy" v-if="currentToken">
-        <h2>REFUND. Вернуть: {{ currentToken.symbol }}, получить: ETH</h2>
+        <h2>{{ $t('InvestorDashboardRefundEth', { WToken: currentToken.symbol }) }}</h2>
         <RefundInformation v-if="refundInformation" :data="refundInformation"></RefundInformation>
         <div v-if="refundInformation">
             <RefundCalculator v-if="refundInformation.currentWalletBalanceInRefundAmount"
@@ -13,23 +13,25 @@
             </RefundCalculator>
             <div class="py-2">
                 <button class="btn btn-primary py-2"
-                        @click="approveTheFundToSpend"
-                >Разрешить возврат
+                        @click="approveTheFundToSpend">{{ $t('InvestorDashboardRefundEthApprove') }}
                 </button>
             </div>
-            <div v-if="this.currentAccountData.allowanceForTheFund !== '0'" class="py-2">Обменять {{
-                currentAccountData.allowanceForTheFund | toEth }} {{ currentToken.symbol }} на {{
-                currentAccountData.allowanceForTheFundInRefundAmount | toEth }} ETH?
+            <div v-if="this.currentAccountData.allowanceForTheFund !== '0'" class="py-2">
+                {{ $t('InvestorDashboardRefundEthMessagesBeforeRefund', {
+                    allowance: currentAccountData.allowanceForTheFund | toEth,
+                    WToken: currentToken.symbol,
+                    refundAmount: currentAccountData.allowanceForTheFundInRefundAmount | toEth
+                }) }}
             </div>
             <div v-if="this.currentAccountData.allowanceForTheFund !== '0'" class="row pl-3 pr-3">
 
                 <button
                         class="btn btn-primary py-2"
-                        @click="decreaseTheFundApprovalToSpend">Отменить
+                        @click="decreaseTheFundApprovalToSpend">{{ $t('InvestorDashboardRefundEthDecreaseRefund') }}
                 </button>
                 <button
                         class="btn btn-primary py-2 ml-3"
-                        @click="refund">Обменять
+                        @click="refund">{{ $t('InvestorDashboardRefundEthTokensRefund') }}
                 </button>
             </div>
         </div>

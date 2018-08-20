@@ -1,9 +1,9 @@
 <template>
     <div class="RefundCalculator buefy">
-            <label for="Amount">Укажите количество {{ tokenSymbol }}:</label>
+            <label for="Amount">{{ $t('InvestorDashboardRefundEthCalculator', {WToken: tokenSymbol}) }}</label>
             <b-field id="Amount">
                 <b-input
-                        placeholder="Token amount"
+                        :placeholder="$('InvestorDashboardRefundEthCalculatorTokenAmountPlaceholder')"
                         type="number"
                         min="0"
                         :step="1"
@@ -15,7 +15,7 @@
             </b-field>
         <div class="row">
             <div class="col">
-                Данное колличество позволит вернуть:
+                {{ $t('InvestorDashboardRefundEthCalculatorMessage') }}
             </div>
             <div class="col">
                 {{ refundAmount | ETH }} ETH

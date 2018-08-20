@@ -3,15 +3,15 @@
         <table class="table table-striped table-bordered table-hover table-responsive-sm">
             <tbody>
                 <tr>
-                    <td>Баланс фонда хранения средств</td>
+                    <td>{{ $t('trancheInformationFundBalance') }}</td>
                     <td>{{ data.fundBalanceInWei | weiToEth }} ETH | __</td>
                 </tr>
                 <tr>
-                    <td>Дата и время получения следующего транша</td>
+                    <td>{{ $t('trancheInformationDateNextTranche') }}</td>
                     <td>{{ nextTrancheDate | formatDate }}</td>
                 </tr>
                 <tr>
-                    <td>Средства, доступные для получения на данный момент</td>
+                    <td>{{ $t('trancheInformationFundsMoment') }}</td>
                     <td>{{ data.trancheAmountInWei | weiToEth }} ETH</td>
                 </tr>
             </tbody>

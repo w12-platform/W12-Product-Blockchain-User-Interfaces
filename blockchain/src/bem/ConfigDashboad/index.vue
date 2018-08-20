@@ -1,12 +1,12 @@
 <template>
     <div class="ConfigDashboad">
         <section class="container">
-            <h2>Config Dashboard</h2>
+            <h2>{{ $t('ConfigDashboardTitle') }}</h2>
             <div>
                 <div class="form-group">
                     <label for="W12ListerAddress">W12Lister<span class="ConfigDashboad__address" v-if="W12Lister.address"> - {{ W12Lister.address }}</span></label>
                     <input
-                            placeholder="Address of the W12Lister"
+                            :placeholder="$t('ConfigDashboardPlaceholder')"
                             type="text"
                             class="form-control"
                             id="W12ListerAddress"
@@ -14,7 +14,7 @@
                             v-model="address">
                 </div>
                 <div>
-                    <button class="btn btn-primary" @click="saveConfig">Save</button>
+                    <button class="btn btn-primary" @click="saveConfig">{{ $t('ConfigDashboardSave') }}</button>
                 </div>
             </div>
         </section>

@@ -1,5 +1,6 @@
 import Vue from 'vue';
-import Buefy from 'buefy'
+import Buefy from 'buefy';
+import vuexI18n from 'vuex-i18n';
 
 import 'bem/buefy/default.scss';
 import ConfigDashboad from 'bem/ConfigDashboad';
@@ -9,6 +10,28 @@ import InvestorDashboard from 'bem/InvestorDashboard';
 import store from "store";
 
 Vue.use(Buefy);
+
+Vue.use(vuexI18n.plugin, store, {
+    translateFilterName: 't'
+});
+Vue.i18n.set(translationsDef);
+
+let arrayTranslations = {};
+for (const label in translations) {
+    for (const language in translations[label]) {
+        if (translations[label].hasOwnProperty(language)) {
+            if (!arrayTranslations.hasOwnProperty(language)) {
+                arrayTranslations[language] = {};
+            }
+            arrayTranslations[language][label] = translations[label][language];
+        }
+    }
+}
+for (const language in arrayTranslations) {
+    if (arrayTranslations.hasOwnProperty(language)) {
+        Vue.i18n.add(language, arrayTranslations[language]);
+    }
+}
 
 const appConfigDashboad = new Vue({
     store,

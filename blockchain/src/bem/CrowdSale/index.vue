@@ -4,22 +4,22 @@
                class="CrowdSale__table table table-striped table-bordered table-hover table-responsive-sm">
             <tbody>
             <tr>
-                <td>Краткое название токена</td>
+                <td>{{ $t('InvestorDashboardShortName') }}</td>
                 <td>{{ currentToken.tokenInformation.symbol }}</td>
             </tr>
             <tr>
-                <td>Полное название токена</td>
+                <td>{{ $t('InvestorDashboardFullName') }}</td>
                 <td>
                     <a :href="'https://etherscan.io/token/' + currentToken.tokenAddress" target="_blank">
                         {{ currentToken.tokenInformation.name }}</a>
                 </td>
             </tr>
             <tr>
-                <td>Краткое название защищённого токена</td>
+                <td>{{ $t('InvestorDashboardShortWName') }}</td>
                 <td>{{ currentToken.symbol }}</td>
             </tr>
             <tr>
-                <td>Полное название защищённого токена</td>
+                <td>{{ $t('InvestorDashboardFullWName') }}</td>
                 <td>
                     <a :href="'https://etherscan.io/token/' + currentToken.crowdSaleInformation.WTokenAddress"
                        target="_blank">
@@ -27,46 +27,46 @@
                 </td>
             </tr>
             <tr>
-                <td>Статус</td>
+                <td>{{ $t('InvestorDashboardStatus') }}</td>
                 <td>
                     <span v-if="currentToken.crowdSaleInformation.status" class="tag is-success">Active</span>
                     <span v-else class="">Inactive</span>
                 </td>
             </tr>
             <tr>
-                <td>Дата и время начала продажи токенов</td>
+                <td>{{ $t('InvestorDashboardStartDate') }}</td>
                 <td>
                     <span class="tag is-success">{{ currentToken.crowdSaleInformation.startDate|dateFormat }} UTC</span>
                 </td>
             </tr>
             <tr>
-                <td>Дата и время окончания продажи токенов</td>
+                <td>{{ $t('InvestorDashboardEndDate') }}</td>
                 <td>
                     <span class="tag is-danger">{{ currentToken.crowdSaleInformation.endDate|dateFormat }} UTC</span>
                 </td>
             </tr>
             <tr>
-                <td>Общее количество защищённых токенов</td>
+                <td>{{ $t('InvestorDashboardTotalTokens') }}</td>
                 <td>{{ currentToken.crowdSaleInformation.WTokenTotal|decimals }}</td>
             </tr>
             <tr>
-                <td>Кол-во проданных защищенных токенов</td>
+                <td>{{ $t('InvestorDashboardTokensSold') }}</td>
                 <td>{{ currentToken.crowdSaleInformation.saleAmount }}</td>
             </tr>
             <tr>
-                <td>Доля проданных защищённых токенов</td>
+                <td>{{ $t('InvestorDashboardShareSoldTokens') }}</td>
                 <td>{{ currentToken.crowdSaleInformation.salePercent }}%</td>
             </tr>
             <tr>
-                <td>Кол-во защищенных токенов, которое осталось в продаже</td>
+                <td>{{ $t('InvestorDashboardTokensOnSale') }}</td>
                 <td>{{ currentToken.crowdSaleInformation.tokensOnSale|decimals }}</td>
             </tr>
             <tr>
-                <td>Стоимость одного токена {{ currentToken.symbol }}</td>
+                <td>{{ $t('InvestorDashboardPrice', {'WToken': currentToken.symbol }) }}</td>
                 <td>{{ currentToken.crowdSaleInformation.tokenPrice }} <span class="CrowdSale__eth">ETH</span></td>
             </tr>
             <tr v-if="currentToken.crowdSaleInformation.status && currentToken.crowdSaleInformation.stageDiscount !== '0'">
-                <td>Скидка на {{ currentToken.symbol }} в %</td>
+                <td>{{ $t('InvestorDashboardDiscountPercent', {'WToken': currentToken.symbol }) }}</td>
                 <td>
                     <span v-if="currentToken.crowdSaleInformation.status" class="tag is-success">
                         {{ currentToken.crowdSaleInformation.stageDiscount }}%
@@ -75,7 +75,7 @@
                 </td>
             </tr>
             <tr v-if="currentToken.crowdSaleInformation.stageDiscount !== '0' && currentToken.crowdSaleInformation.status">
-                <td>Стоимость одного токена {{ currentToken.symbol }} с учетом текущей скидки</td>
+                <td>{{ $t('InvestorDashboardPriceOneDiscount', {'WToken': currentToken.symbol }) }}</td>
                 <td>
                     <span v-if="currentToken.crowdSaleInformation.status">{{ currentToken.crowdSaleInformation.price }}
                         <span class="CrowdSale__eth">ETH</span>
@@ -83,7 +83,7 @@
                 </td>
             </tr>
             <tr v-if="currentToken.crowdSaleInformation.status && countdown">
-                <td>Кол-во дней, часов, минут до окончания действия текущей скидки</td>
+                <td>{{ $t('InvestorDashboardCountdown') }}</td>
                 <td>{{ countdown }}</td>
             </tr>
             </tbody>

@@ -4,14 +4,14 @@
             <div class="col-sm-6">
                 <b-field
                         id="MilestoneCard__name"
-                        label="Название milestone">
+                        :label="$t('MilestonesName')">
                     <b-input
                             :value="viewData.name"
                             @input="onInput('name', $event)"></b-input>
                 </b-field>
                 <b-field
                         id="MilestoneCard__description"
-                        label="Описание milestone">
+                        :label="$t('MilestonesDescription')">
                     <b-input
                             type="textarea"
                             :value="viewData.description"
@@ -19,51 +19,30 @@
                 </b-field>
                 <b-field
                         id="MilestoneCard__tranche"
-                        label="Количество средств, выделяемых проекту по окончании milestone в случае позитивного голосования">
+                        :label="$t('MilestonesTranche')">
                     <b-input
                             :value="viewData.tranchePercent"
                             @input="onInput('tranchePercent', $event)"
                             type="number"></b-input>
                 </b-field>
-                <p>% относительно общего количества</p>
-                <button class="btn btn-sm btn-primary mt-4" @click="onDelete">Удалить Milestone</button>
+                <p>{{ $t('MilestonesRelativeTotal') }}</p>
+                <button class="btn btn-sm btn-primary mt-4" @click="onDelete">{{ $t('MilestonesDelete') }}</button>
             </div>
             <div class="col-sm-6">
                 <b-field
                         id="MilestoneCard__end"
-                        label="Дата достижение milestone">
+                        :label="$t('MilestonesDate')">
                     <date-picker v-model="viewData.endDate" type="datetime" @input="onInput('endDate', $event)" lang="en" format="YYYY-MM-DD hh:mm:ss" confirm></date-picker>
-
-                    <!--<b-datepicker-->
-                            <!--:value="viewData.endDate"-->
-                            <!--@input="onInput('endDate', $event)"-->
-                            <!--placeholder="Click to select..."-->
-                            <!--icon="calendar-today">-->
-                    <!--</b-datepicker>-->
                 </b-field>
                 <b-field
                         id="MilestoneCard__voteEnd"
-                        label="Дата окончания голосования о достижении milestone">
+                        :label="$t('MilestonesDateEndVoting')">
                     <date-picker v-model="viewData.voteEndDate" type="datetime" @input="onInput('voteEndDate', $event)" lang="en" format="YYYY-MM-DD hh:mm:ss" confirm></date-picker>
-
-                    <!--<b-datepicker-->
-                            <!--:value="viewData.voteEndDate"-->
-                            <!--@input="onInput('voteEndDate', $event)"-->
-                            <!--placeholder="Click to select..."-->
-                            <!--icon="calendar-today">-->
-                    <!--</b-datepicker>-->
                 </b-field>
                 <b-field
                         id="MilestoneCard__withdrawalEnd"
-                        label="Дата окончания вывода средств в случае негативного голосования">
+                        :label="$t('MilestonesDateEndWithdrawal')">
                     <date-picker v-model="viewData.withdrawalEndDate" @input="onInput('withdrawalEndDate', $event)" type="datetime" lang="en" format="YYYY-MM-DD hh:mm:ss" confirm></date-picker>
-
-                    <!--<b-datepicker-->
-                            <!--:value="viewData.withdrawalEndDate"-->
-                            <!--@input="onInput('withdrawalEndDate', $event)"-->
-                            <!--placeholder="Click to select..."-->
-                            <!--icon="calendar-today">-->
-                    <!--</b-datepicker>-->
                 </b-field>
             </div>
         </div>

@@ -6,7 +6,7 @@
                 @delete="onDelete"
                 :key="idx"
         ></MilestoneCard>
-        <button class="btn btn-sm btn-primary btn-block" @click="onAdd">Добавить Milestone</button>
+        <button class="btn btn-sm btn-primary btn-block" @click="onAdd">{{ $t('MilestonesAdd') }}</button>
     </div>
 </template>
 <script>

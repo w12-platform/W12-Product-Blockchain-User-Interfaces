@@ -1,14 +1,14 @@
 <template>
     <div class="Calculator byefy" v-if="currentToken.crowdSaleInformation.status">
-        <h2>Купить токены {{ currentToken.symbol }}</h2>
+        <h2>{{ $t('InvestorDashboardCalculator', {WToken:currentToken.symbol}) }}</h2>
 
         <div class="Calculator__content">
             <div class="Calculator__infoToken">
-                <p>Token address:
+                <p>{{ $t('InvestorDashboardCalculatorTokenAddress') }}
                     <b-tag type="is-success">{{ currentToken.crowdSaleInformation.WTokenAddress }}</b-tag>
                 </p>
-                <p>Token name: {{ currentToken.name }}</p>
-                <p>Token symbol: {{ currentToken.symbol }}</p>
+                <p>{{ $t('InvestorDashboardCalculatorTokenName') }} {{ currentToken.name }}</p>
+                <p>{{ $t('InvestorDashboardCalculatorTokenSymbol') }} {{ currentToken.symbol }}</p>
             </div>
 
             <div class="Calculator__inputs row">
@@ -16,7 +16,7 @@
                     <label for="Tokens">{{ currentToken.symbol }}</label>
                     <b-field id="Tokens">
                         <b-input
-                                placeholder="Token amount"
+                                :placeholder="$t('InvestorDashboardCalculatorTokenAmountPlaceholder')"
                                 type="number"
                                 min="0"
                                 :step="0.000001"
@@ -41,20 +41,20 @@
             </div>
 
             <div class="Calculator__info">
-                <p v-if="currentToken.crowdSaleInformation.stageDiscount !== '0'">Discount:
+                <p v-if="currentToken.crowdSaleInformation.stageDiscount !== '0'">{{$t('InvestorDashboardCalculatorDiscount')}}
                     <b-tag type="is-success">{{ currentToken.crowdSaleInformation.stageDiscount }}%</b-tag>
                     {{ profitInEth }} ETH
                 </p>
-                <p v-if="bonusVolume !== '0.00'">Bonus:
+                <p v-if="bonusVolume !== '0.00'">{{$t('InvestorDashboardCalculatorBonus')}}
                     <b-tag type="is-success">+{{ bonusVolume }} {{ currentToken.symbol }}</b-tag>
                 </p>
 
-                <div class="Calculator__total">Total buy: {{ totalToken }} {{ currentToken.symbol }} - {{ total }} ETH
+                <div class="Calculator__total">{{$t('InvestorDashboardCalculatorTotalBuy')}} {{ totalToken }} {{ currentToken.symbol }} - {{ total }} ETH
                 </div>
             </div>
 
             <div class="Calculator__buy">
-                <button class="btn btn-danger" @click="buy">Buy</button>
+                <button class="btn btn-danger" @click="buy">{{$t('InvestorDashboardCalculatorBuy')}}</button>
             </div>
         </div>
     </div>
@@ -287,7 +287,7 @@
                     const W12Crowdsale = W12CrowdsaleFactory.at(this.currentToken.crowdSaleInformation.crowdsaleAddress);
                     const tx = await W12Crowdsale.methods.buyTokens({value: web3.toWei(amount.toFixed(6), 'ether')});
                     await waitTransactionReceipt(tx, connectedWeb3);
-                    setTimeout(async ()=>{
+                    setTimeout(async () => {
                         await this.updateAccountData();
                         await this.tokensListUpdate({Index: this.currentToken.index});
                     }, 5000);
@@ -303,5 +303,4 @@
             }
         },
     };
-
 </script>

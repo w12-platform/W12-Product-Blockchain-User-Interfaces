@@ -1,26 +1,29 @@
 <template>
     <div class="ExchangeTokens buefy" v-if="balance !== '0'">
-        <h2>Обмен {{ balance }} {{ currentToken.symbol }} на {{ balance }} {{ currentToken.tokenInformation.symbol }}</h2>
+        <h2>{{ $t('ExchangeTokensProjects', {Balance: balance, WToken: currentToken.symbol, Token: currentToken.tokenInformation.symbol})}}</h2>
         <div class="ExchangeTokens__content">
             <div class="ExchangeTokens__form">
                 <div class="ExchangeTokens__exchange py-2">
-                    <button class="btn btn-primary py-2" @click="approveSwapToSpend">Разрешить обмен</button>
+                    <button class="btn btn-primary py-2" @click="approveSwapToSpend">{{ $t('ExchangeTokensProjectsApprove') }}</button>
 
-                    <div v-if="this.currentAccountData.allowanceForSwap !== '0'" class="py-2">Обменять {{
-                        currentAccountData.allowanceForSwap | toEth }} {{ currentToken.symbol }} на {{
-                        currentAccountData.allowanceForSwap | toEth }} {{ currentToken.tokenInformation.symbol }}?
+                    <div v-if="this.currentAccountData.allowanceForSwap !== '0'" class="py-2">
+                        {{ $t('ExchangeTokensProjectsMessagesBeforeSwap', {
+                            allowance: currentAccountData.allowanceForSwap | toEth,
+                            WToken: currentToken.symbol,
+                            Token: currentToken.tokenInformation.symbol,
+                        })}}
                     </div>
                     <div v-if="this.currentAccountData.allowanceForSwap !== '0'" class="row pl-3 pr-3">
 
                         <button
                                 class="btn btn-primary py-2"
                                 :disabled="this.currentAccountData.allowanceForSwap === '0'"
-                                @click="decreaseSwapApprovalToSpend">Отменить
+                                @click="decreaseSwapApprovalToSpend">{{ $t('ExchangeTokensProjectsDecrease')}}
                         </button>
                         <button
                                 class="btn btn-primary py-2 ml-3"
                                 :disabled="this.currentAccountData.allowanceForSwap === '0'"
-                                @click="exchange">Обменять
+                                @click="exchange">{{ $t('ExchangeTokensProjectsExchange')}}
                         </button>
                     </div>
                 </div>

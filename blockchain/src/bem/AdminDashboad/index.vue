@@ -1,39 +1,39 @@
 <template>
     <div class="AdminDashboad">
         <section class=" container">
-            <h2>Admin Dashboard</h2>
+            <h2>{{ $t('AdminDashboard') }}</h2>
             <div v-if="isLoading" class="alert alert-info" role="alert">
-                <span v-if="loadingLedger">Загрузка смарт-контрактов...<br></span>
-                <span v-if="fetchTokens">Загрузка списка токенов...<br></span>
-                <span v-if="whitelistingToken">Добавление токена в whitelist...</span>
-                <span v-if="checkingToken">Проверка токена...</span>
+                <span v-if="loadingLedger">{{ $t('AdminDashboardLoadLedger') }}<br></span>
+                <span v-if="fetchTokens">{{ $t('AdminDashboardLoadTokens') }}<br></span>
+                <span v-if="whitelistingToken">{{ $t('AdminDashboardListingToken') }}</span>
+                <span v-if="checkingToken">{{ $t('AdminDashboardCheckingToken') }}</span>
             </div>
             <div v-if="errorMessage" class="alert alert-danger" role="alert">
                 <span>{{ errorMessage }}</span>
             </div>
             <div v-if="!isLoading">
                 <div class="form-group">
-                    <label for="TokenAddress">Token Address</label>
+                    <label for="TokenAddress">{{ $t('AdminDashboardFieldTokenLabel') }}</label>
                     <input
-                            placeholder="Token address with checksum"
+                            :placeholder="$t('AdminDashboardFieldTokenPlaceholder')"
                             type="text"
                             class="form-control"
                             id="TokenAddress"
                             v-model="whiteListForm.tokenAddress">
                 </div>
                 <div class="form-group">
-                    <label for="OwnerAddress">Owner Address</label>
+                    <label for="OwnerAddress">{{ $t('AdminDashboardFieldOwnerLabel') }}</label>
                     <input
-                            placeholder="Token owner address"
+                            :placeholder="$t('AdminDashboardFieldOwnerPlaceholder')"
                             type="text"
                             class="form-control"
                             id="OwnerAddress"
                             v-model="whiteListForm.ownerAddress">
                 </div>
                 <div class="form-group">
-                    <label for="Symbol">Symbol</label>
+                    <label for="Symbol">{{ $t('AdminDashboardFieldSymbolLabel') }}</label>
                     <input
-                            placeholder="3-4 letter abbreviation"
+                            :placeholder="$t('AdminDashboardFieldSymbolPlaceholder')"
                             minlength="1"
                             maxlength="4"
                             type="text"
@@ -42,9 +42,9 @@
                             v-model="whiteListForm.symbol">
                 </div>
                 <div class="form-group">
-                    <label for="Decimals">Decimals</label>
+                    <label for="Decimals">{{ $t('AdminDashboardFieldDecimalsLabel') }}</label>
                     <input
-                            placeholder="Default: 18"
+                            :placeholder="$t('AdminDashboardFieldDecimalsPlaceholder')"
                             type="number"
                             minlength="1"
                             maxlength="2"
@@ -53,18 +53,18 @@
                             v-model="whiteListForm.decimals">
                 </div>
                 <div class="form-group">
-                    <label for="Name">Name</label>
+                    <label for="Name">{{ $t('AdminDashboardFieldNameLabel') }}</label>
                     <input
-                            placeholder="Descriptive name of the token"
+                            :placeholder="$t('AdminDashboardFieldNamePlaceholder')"
                             type="text"
                             class="form-control"
                             id="Name"
                             v-model="whiteListForm.name">
                 </div>
                 <div class="form-group">
-                    <label for="FeeTokens">Fee (tokens)</label>
+                    <label for="FeeTokens">{{ $t('AdminDashboardFieldFeeTokensLabel') }}</label>
                     <input
-                            placeholder="0 .. 100 percent"
+                            :placeholder="$t('AdminDashboardFieldFeeTokensLabel')"
                             type="text"
                             minlength="1"
                             maxlength="3"
@@ -73,9 +73,9 @@
                             v-model="whiteListForm.feePercent">
                 </div>
                 <div class="form-group">
-                    <label for="FeeETH">Fee (ETH)</label>
+                    <label for="FeeETH">{{ $t('AdminDashboardFieldFeeEthLabel') }}</label>
                     <input
-                            placeholder="0 .. 100 percent"
+                            :placeholder="$t('AdminDashboardFieldFeeEthPlaceholder')"
                             type="text"
                             minlength="1"
                             maxlength="3"
@@ -84,22 +84,20 @@
                             v-model="whiteListForm.feeETHPercent">
                 </div>
                 <div>
-                    <p v-if="disableWhiteListButton" class="alert alert-warning">
-                        Проверте корректность всех полей, корректность адреса токена и отсутствие токена в таблице уже добавленных в WhiteList токенов
-                    </p>
-                    <button class="btn btn-primary" @click="tryWhiteListToken" :disabled="disableWhiteListButton">Whitelist</button>
+                    <p v-if="disableWhiteListButton" class="alert alert-warning">{{ $t('AdminDashboardWarning') }}</p>
+                    <button class="btn btn-primary" @click="tryWhiteListToken" :disabled="disableWhiteListButton">{{ $t('AdminDashboardWhitelist') }}</button>
                 </div>
                 <div class="AdminDashboard__tokens-table" v-if="tokensListTableData.length">
                     <table class="table table-striped table-bordered table-hover table-responsive-sm">
                         <thead class="thead-dark">
                         <tr>
-                            <th scope="col">Token</th>
-                            <th scope="col">Owner</th>
-                            <th scope="col">Symbol</th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Decimals</th>
-                            <th scope="col">Fee (tokens)</th>
-                            <th scope="col">Fee (ETH)</th>
+                            <th scope="col">{{ $t('AdminDashboardTableToken') }}</th>
+                            <th scope="col">{{ $t('AdminDashboardTableOwner') }}</th>
+                            <th scope="col">{{ $t('AdminDashboardTableSymbol') }}</th>
+                            <th scope="col">{{ $t('AdminDashboardTableName') }}</th>
+                            <th scope="col">{{ $t('AdminDashboardTableDecimals') }}</th>
+                            <th scope="col">{{ $t('AdminDashboardTableFeeTokens') }}</th>
+                            <th scope="col">{{ $t('AdminDashboardTableFeeEth') }}</th>
                         </tr>
                         </thead>
                         <tbody>
