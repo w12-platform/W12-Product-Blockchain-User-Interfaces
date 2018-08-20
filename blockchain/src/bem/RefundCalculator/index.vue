@@ -3,7 +3,7 @@
             <label for="Amount">{{ $t('InvestorDashboardRefundEthCalculator', {WToken: tokenSymbol}) }}</label>
             <b-field id="Amount">
                 <b-input
-                        :placeholder="$('InvestorDashboardRefundEthCalculatorTokenAmountPlaceholder')"
+                        :placeholder="$t('InvestorDashboardRefundEthCalculatorTokenAmountPlaceholder')"
                         type="number"
                         min="0"
                         :step="1"
