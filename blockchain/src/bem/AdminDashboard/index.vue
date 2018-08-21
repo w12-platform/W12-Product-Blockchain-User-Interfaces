@@ -1,0 +1,80 @@
+<template>
+    <div class="AdminDashboard buefy">
+        <section class="container">
+            <h2>{{ $t('AdminDashboard') }}</h2>
+
+            <b-notification class="AdminDashboard__error" v-if="isError" type="is-danger" has-icon>
+                <span v-if="ledgerMeta.loadingError">{{ ledgerMeta.loadingError }}</span>
+                <span v-if="tokensListMeta.loadingError">{{ tokensListMeta.loadingError }}</span>
+            </b-notification>
+
+            <b-notification v-if="isLoading" :closable="false" class="AdminDashboard__loader">
+                <span v-if="ledgerMeta.loading">{{ $t('AdminDashboardLoadLedger') }}<br></span>
+                <span v-if="tokensListMeta.loading">{{ $t('AdminDashboardLoadTokens') }}<br></span>
+
+                <b-loading :is-full-page="false" :active.sync="isLoading" :can-cancel="true"></b-loading>
+            </b-notification>
+
+            <div v-if="!isLoading">
+                <WhiteListTable></WhiteListTable>
+                <WhiteListForm></WhiteListForm>
+            </div>
+        </section>
+    </div>
+</template>
+
+<script>
+    import './default.scss';
+
+    import WhiteListTable from 'bem/WhiteListTable';
+    import WhiteListForm from 'bem/WhiteListForm';
+
+    import {createNamespacedHelpers} from "vuex";
+
+    const LedgerNS = createNamespacedHelpers("Ledger");
+    const WhitelistNS = createNamespacedHelpers("Whitelist");
+
+    export default {
+        name: 'AdminDashboard',
+        template: '#AdminDashboardTemplate',
+        components: {
+            WhiteListTable,
+            WhiteListForm
+        },
+        data() {
+            return {
+                meta: {
+                    loading: false,
+                }
+            };
+        },
+        computed: {
+            ...LedgerNS.mapState({
+                ledgerMeta: 'meta',
+            }),
+            ...WhitelistNS.mapState({
+                tokensListMeta: 'meta',
+                tokensList: "list"
+            }),
+
+            isLoading() {
+                return this.tokensListMeta.loading && this.meta.loading;
+            },
+            isError() {
+                return this.ledgerMeta.loadingError || this.tokensListMeta.loadingError;
+            },
+        },
+        methods: {
+            ...WhitelistNS.mapActions({
+                whitelistFetch: "fetch",
+            })
+        },
+        async created() {
+            this.meta.loading = true;
+
+            await this.whitelistFetch();
+
+            this.meta.loading = false;
+        },
+    };
+</script>

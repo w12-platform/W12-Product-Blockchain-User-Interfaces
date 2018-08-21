@@ -460,7 +460,7 @@
             }),
 
             W12ListerForCurrentAccount(){
-                return this.W12Lister.filter((obj)=>obj.tokenOwner === this.currentAccount);
+                return this.W12Lister.filter((obj)=>obj.tokenOwners.indexOf(this.currentAccount) !== -1);
             },
             minStartDate() {
                 const today = new Date();

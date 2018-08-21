@@ -4,7 +4,7 @@ import vuexI18n from 'vuex-i18n';
 
 import 'bem/buefy/default.scss';
 import ConfigDashboad from 'bem/ConfigDashboad';
-import AdminDashboard from 'bem/AdminDashboad';
+import AdminDashboard from 'bem/AdminDashboard';
 import ProjectDashboard from 'bem/ProjectDashboard';
 import InvestorDashboard from 'bem/InvestorDashboard';
 import store from "store";

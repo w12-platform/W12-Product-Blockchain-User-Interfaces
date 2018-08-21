@@ -20,6 +20,10 @@ const translations = {
         "en": "Admin Dashboard",
         "ru": "Панель управления администратора"
     },
+    "AdminDashboardWhiteListForm": {
+        "en": "Add to whitelist",
+        "ru": "Добавить в белый список"
+    },
     "AdminDashboardLoadLedger": {
         "en": "Loading smart contracts...",
         "ru": "Загрузка смарт-контрактов..."
@@ -45,20 +49,20 @@ const translations = {
         "ru": "Адрес токена с контрольной суммой"
     },
     "AdminDashboardFieldOwnerLabel": {
-        "en": "Owner Address",
-        "ru": "Адрес владельца"
+        "en": "Address of representative of the owner",
+        "ru": "Адрес представителя владельца"
     },
     "AdminDashboardFieldOwnerPlaceholder": {
-        "en": "Token owner address",
-        "ru": "Адрес владельца токена"
+        "en": "Address of the token owner",
+        "ru": "Адрес представителя владельца токена"
     },
     "AdminDashboardFieldSymbolLabel": {
         "en": "Symbol",
         "ru": "Символ"
     },
     "AdminDashboardFieldSymbolPlaceholder": {
-        "en": "3-4 letter abbreviation",
-        "ru": "Сокращение 3-4 аббревиатуры"
+        "en": "Abbreviated",
+        "ru": "Аббревиатура"
     },
     "AdminDashboardFieldDecimalsLabel": {
         "en": "Decimals",
@@ -105,8 +109,8 @@ const translations = {
         "ru": "Токен"
     },
     "AdminDashboardTableOwner": {
-        "en": "Owner",
-        "ru": "Владелец"
+        "en": "Representative Owner",
+        "ru": "Представитель владельца"
     },
     "AdminDashboardTableSymbol": {
         "en": "Symbol",
@@ -122,11 +126,11 @@ const translations = {
     },
     "AdminDashboardTableFeeTokens": {
         "en": "Fee (tokens)",
-        "ru": "Сбор (в токенах)"
+        "ru": "Сбор в токенах"
     },
     "AdminDashboardTableFeeEth": {
         "en": "Fee (ETH)",
-        "ru": "Сбор (в эфире)"
+        "ru": "Сбор в эфире"
     },
 
     /* Investor Dashboard */

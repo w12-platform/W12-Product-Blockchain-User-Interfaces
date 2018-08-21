@@ -34,14 +34,15 @@ export class W12ListerWrapper extends BaseWrapper {
             if (tokenIndex > 0) {
                 const eventRecord = await getEventRecord();
 
+
                 if (eventRecord.length > 0) {
                     const {
                         name,
                         symbol,
                         tokenAddress,
-                        tokenOwner
                     } = eventRecord[0].args; // take first record by default
 
+                    let tokenOwners = eventRecord.map((event)=>event.args.tokenOwner);
 
                     const listedToken = await this.methods.approvedTokens(tokenIndex);
                     const ledgerAddress = await this.methods.ledger();
@@ -69,7 +70,7 @@ export class W12ListerWrapper extends BaseWrapper {
                             name,
                             symbol,
                             tokenAddress,
-                            tokenOwner,
+                            tokenOwners,
                             decimals,
                             feePercent,
                             feeETHPercent,
@@ -121,11 +122,15 @@ export class W12ListerWrapper extends BaseWrapper {
     async fetchAllTokensComposedInformation() {
         const list = await this.fetchAllApprovedTokensByEvents();
         const result = [];
+        const RecentAddresses = [];
 
         for (let item of list) {
-            const composedInfo = await this.fetchComposedTokenInformationByTokenAddress(item.tokenAddress);
+            if(RecentAddresses.indexOf(item.tokenAddress) === -1){
+                const composedInfo = await this.fetchComposedTokenInformationByTokenAddress(item.tokenAddress);
 
-            result.push(composedInfo);
+                RecentAddresses.push(item.tokenAddress);
+                result.push(composedInfo);
+            }
         }
 
         return result;
