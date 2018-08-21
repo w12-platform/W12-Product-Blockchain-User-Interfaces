@@ -17,11 +17,11 @@
                         <b-select
                                 v-model="tokenAddress"
                                 @input="tokenSelected"
-                                v-if="W12Lister"
+                                v-if="W12ListerForCurrentAccount"
                                 :placeholder="$t('ProjectDashboardSelectToken')"
                                 expanded>
                             <option
-                                    v-for="(token, idx) in W12Lister"
+                                    v-for="(token, idx) in W12ListerForCurrentAccount"
                                     :key="idx"
                                     :value="token.tokenAddress">{{ token.symbol }} - {{ token.tokenAddress }}
                             </option>
@@ -379,6 +379,7 @@
 
     const ConfigNS = createNamespacedHelpers('Config');
     const W12ListerNS = createNamespacedHelpers('W12Lister');
+    const AccountNS = createNamespacedHelpers("Account");
     const moment = window.moment;
 
     // as utils
@@ -453,6 +454,14 @@
             ...W12ListerNS.mapState({
                 W12Lister: state => state.list
             }),
+            ...AccountNS.mapState({
+                currentAccount: "currentAccount",
+                currentAccountData: "currentAccountData",
+            }),
+
+            W12ListerForCurrentAccount(){
+                return this.W12Lister.filter((obj)=>obj.tokenOwner === this.currentAccount);
+            },
             minStartDate() {
                 const today = new Date();
                 return new Date(today.getFullYear(), today.getMonth(), today.getDate());
@@ -561,6 +570,10 @@
             }
         },
         methods: {
+            ...AccountNS.mapActions({
+                watchCurrentAccount: 'watch',
+                updateAccountData: 'updateAccountData',
+            }),
             clearErrorMessage() {
                 this.errorMessage = '';
             },
@@ -761,8 +774,6 @@
                     }
 
                     try {
-
-                        console.log(tokenAddress);
                         const address = await W12ListerInstance.methods.getTokenCrowdsale(tokenAddress);
                         if (
                             address
@@ -1301,7 +1312,8 @@
         errorCaptured(error, vm, info) {
             this.errorMessage = info || error.message;
         },
-        created() {
+        async created() {
+            await this.watchCurrentAccount();
             this.fetchTokensList();
             this.watchCurrentAccountAddress();
         },
