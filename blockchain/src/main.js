@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Buefy from 'buefy';
 import vuexI18n from 'vuex-i18n';
+import VueMask from 'v-mask';
 
 import 'bem/buefy/default.scss';
 import ConfigDashboad from 'bem/ConfigDashboad';
@@ -9,6 +10,7 @@ import ProjectDashboard from 'bem/ProjectDashboard';
 import InvestorDashboard from 'bem/InvestorDashboard';
 import store from "store";
 
+Vue.use(VueMask);
 Vue.use(Buefy);
 
 Vue.use(vuexI18n.plugin, store, {

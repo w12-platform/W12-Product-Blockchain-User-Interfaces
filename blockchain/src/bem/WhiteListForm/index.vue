@@ -34,8 +34,10 @@
                         :placeholder="$t('AdminDashboardFieldSymbolPlaceholder')"
                         minlength="1"
                         type="text"
+                        @blur="onSymbolBlur"
                         class="form-control"
                         id="Symbol"
+                        :disabled="whitelistingReadOnly"
                         v-model="whiteListForm.symbol"
                 >
             </div>
@@ -48,6 +50,7 @@
                         maxlength="2"
                         class="form-control"
                         id="Decimals"
+                        :disabled="whitelistingReadOnly"
                         v-model="whiteListForm.decimals">
             </div>
             <div class="form-group">
@@ -57,29 +60,38 @@
                         type="text"
                         class="form-control"
                         id="Name"
+                        :disabled="whitelistingReadOnly"
                         v-model="whiteListForm.name">
             </div>
             <div class="form-group">
                 <label for="FeeTokens">{{ $t('AdminDashboardFieldFeeTokensLabel') }}</label>
-                <input
-                        :placeholder="$t('AdminDashboardFieldFeeTokensLabel')"
-                        type="text"
-                        minlength="1"
-                        maxlength="3"
-                        class="form-control"
-                        id="FeeTokens"
-                        v-model="whiteListForm.feePercent">
+                <b-field id="FeeTokens">
+                    <input
+                            :placeholder="$t('AdminDashboardFieldFeeTokensPlaceholder')"
+                            type="text"
+                            min="0"
+                            class="form-control"
+                            max="99.99"
+                            step="0.01"
+                            v-model="whiteListForm.feePercent"
+                            v-mask="'##.##'"
+                    />
+                </b-field>
             </div>
             <div class="form-group">
                 <label for="FeeETH">{{ $t('AdminDashboardFieldFeeEthLabel') }}</label>
-                <input
-                        :placeholder="$t('AdminDashboardFieldFeeEthPlaceholder')"
-                        type="text"
-                        minlength="1"
-                        maxlength="3"
-                        class="form-control"
-                        id="FeeETH"
-                        v-model="whiteListForm.feeETHPercent">
+                <b-field id="FeeETH">
+                    <input
+                            :placeholder="$t('AdminDashboardFieldFeeEthPlaceholder')"
+                            type="text"
+                            min="0"
+                            class="form-control"
+                            max="99.99"
+                            step="0.01"
+                            v-model="whiteListForm.feeETHPercent"
+                            v-mask="'##.##'"
+                    />
+                </b-field>
             </div>
 
             <b-notification :closable="false" v-if="disableWhiteListButton">
@@ -88,6 +100,7 @@
             <button class="btn btn-primary py-2 my-2" @click="tryWhiteListToken" :disabled="disableWhiteListButton">{{
                 $t('AdminDashboardWhitelist') }}
             </button>
+            <b-loading :is-full-page="false" :active.sync="checkingToken" :can-cancel="true"></b-loading>
         </div>
     </div>
 </template>
@@ -96,7 +109,6 @@
     import './default.scss';
     import Connector from 'lib/Blockchain/DefaultConnector.js';
     import {promisify} from 'lib/utils.js';
-    import MaskedInput from 'vue-text-mask'
 
     import {createNamespacedHelpers} from "vuex";
 
@@ -104,12 +116,11 @@
     const WhitelistNS = createNamespacedHelpers("Whitelist");
     const ConfigNS = createNamespacedHelpers('Config');
 
+    const EndOfSymbol = "-W";
+
     export default {
         name: 'WhiteListForm',
         template: '#WhiteListFormTemplate',
-        components: {
-            MaskedInput
-        },
         data() {
             return {
                 meta: {
@@ -118,19 +129,17 @@
                 whiteListForm: {
                     tokenAddress: '',
                     ownerAddress: '',
-                    symbol: 'TN',
+                    symbol: 'TN' + EndOfSymbol,
                     decimals: '18',
                     name: 'Token Name',
-                    feePercent: '10',
-                    feeETHPercent: '10'
+                    feePercent: '10.50',
+                    feeETHPercent: '01.00'
                 },
-
+                whitelistingReadOnly: false,
                 whitelistingToken: false,
                 checkingToken: false,
                 isTokenExists: false,
                 errorMessage: '',
-
-
             };
         },
         computed: {
@@ -164,13 +173,10 @@
                 )
             },
             isLoading() {
-                return this.whitelistingToken || this.checkingToken;
+                return this.whitelistingToken;
             },
         },
         watch: {
-            'whiteListForm.symbol': {
-                handler: 'onSymbolChange'
-            },
             'whiteListForm.tokenAddress': {
                 handler: 'onTokenAddressChange'
             },
@@ -207,32 +213,21 @@
             },
             async whiteListToken(data) {
                 this.whitelistingToken = true;
-
                 const {W12ListerFactory} = await this.ledgerFetch();
 
                 if (W12ListerFactory) {
                     try {
                         const W12Lister = W12ListerFactory.at(this.W12Lister.address);
                         const connectedWeb3 = (await Connector.connect()).web3;
-
-                        console.log(data.ownerAddress,
-                            data.tokenAddress,
-                            data.name,
-                            data.symbol,
-                            data.decimals,
-                            data.feePercent,
-                            data.feeETHPercent);
-
                         const tx = await W12Lister.methods.whitelistToken(
                             data.ownerAddress,
                             data.tokenAddress,
                             data.name,
                             data.symbol,
                             data.decimals,
-                            data.feePercent,
-                            data.feeETHPercent
+                            parseInt((parseFloat(data.feePercent).toFixed(2) * 100)),
+                            parseInt((parseFloat(data.feeETHPercent).toFixed(2) * 100)),
                         );
-
                         await waitTransactionReceipt(tx, connectedWeb3);
                         this.endTokenWhiteListOperation();
                     } catch (e) {
@@ -270,10 +265,14 @@
 
                     Object.assign(this.whiteListForm, {
                         name,
-                        symbol,
+                        symbol: symbol + EndOfSymbol,
                         ownerAddress: currentAccount,
                         decimals: decimals.toString()
                     });
+
+                    this.whitelistingReadOnly = true;
+                } else {
+                    this.whitelistingReadOnly = false;
                 }
             },
             async createEventsHelpers() {
@@ -308,8 +307,12 @@
                     delete this.EventHelpers;
                 }
             },
-            onSymbolChange(){
-              console.log("test");
+            async onSymbolBlur(){
+                const length = this.whiteListForm.symbol.length;
+                const end = this.whiteListForm.symbol.slice(length - EndOfSymbol.length, length);
+                if(end !== EndOfSymbol){
+                    this.whiteListForm.symbol += EndOfSymbol;
+                }
             },
             async onTokenAddressChange(value) {
                 if (value) {

@@ -85,16 +85,16 @@ const translations = {
         "ru": "Сбор (в токенах)"
     },
     "AdminDashboardFieldFeeTokensPlaceholder": {
-        "en": "0 .. 100 percent",
-        "ru": "0 .. 100 процентов"
+        "en": "0 .. 99.99 percent",
+        "ru": "0 .. 99.99 процентов"
     },
     "AdminDashboardFieldFeeEthLabel": {
         "en": "Fee (ETH)",
         "ru": "Сбор (в эфире)"
     },
     "AdminDashboardFieldFeeEthPlaceholder": {
-        "en": "0 .. 100 percent",
-        "ru": "0 .. 100 процентов"
+        "en": "0 .. 99.99 percent",
+        "ru": "0 .. 99.99 процентов"
     },
     "AdminDashboardWarning": {
         "en": "Check the correctness of all fields, the correctness of the address of the token and the absence of a token in the table of the already added to WhiteList tokens",

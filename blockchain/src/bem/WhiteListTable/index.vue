@@ -35,11 +35,11 @@
                 <!--</b-table-column>-->
 
                 <b-table-column field="date" :label="$t('AdminDashboardTableFeeTokens')" centered>
-                    {{ props.row.feePercent }}%
+                    {{ props.row.feePercent | percentFractional }}%
                 </b-table-column>
 
                 <b-table-column field="date" :label="$t('AdminDashboardTableFeeEth')" centered>
-                    {{ props.row.feeETHPercent }}%
+                    {{ props.row.feeETHPercent | percentFractional }}%
                 </b-table-column>
             </template>
 
@@ -83,6 +83,9 @@
             shortAddress(value) {
                 const length = value.length;
                 return value.slice(0, 4) + ".." + value.slice(length - 2, length);
+            },
+            percentFractional(value) {
+                return value/100;
             },
         },
         computed: {
