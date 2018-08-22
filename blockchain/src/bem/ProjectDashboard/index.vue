@@ -174,6 +174,7 @@
                                             <b-input :placeholder="`${tokensForSaleAmountToNumber}`"
                                                      type="number"
                                                      min="0"
+                                                     :step="0.01"
                                                      v-model="crowdsaleInitForm.amountForSale"
                                                      icon="shopping">
                                             </b-input>
@@ -771,7 +772,7 @@
                     }
 
                     try {
-                        const address = await W12ListerInstance.methods.getTokenCrowdsale(tokenAddress);
+                        const address = await W12ListerInstance.methods.getTokenCrowdsale(tokenAddress, this.currentAccount);
                         if (
                             address
                             && !isZeroAddress(address)
