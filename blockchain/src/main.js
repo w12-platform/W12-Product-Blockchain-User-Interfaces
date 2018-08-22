@@ -71,3 +71,7 @@ const appInvestorDashboard = new Vue({
     }
 });
 
+new Vue({
+    el: '#appTitle',
+    template: "<h1 class='text-center purchase-heading'>{{ $t('GeneralTitle') }}</h1>",
+});

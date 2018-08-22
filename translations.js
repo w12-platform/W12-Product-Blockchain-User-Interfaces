@@ -691,4 +691,10 @@ const translations = {
         "en": "Exchange",
         "ru": "Обменять"
     },
+
+    "GeneralTitle": {
+        "en": "W12 Product v.1.0 in Rinkeby Test Network with Blockchain UI",
+        "ru": "W12 Product v.1.0 в тестовой сети Rinkeby с пользовательским Blockchain UI"
+    },
+
 };
