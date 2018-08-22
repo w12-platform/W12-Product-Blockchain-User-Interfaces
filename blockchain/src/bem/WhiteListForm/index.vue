@@ -97,6 +97,9 @@
             <b-notification :closable="false" v-if="disableWhiteListButton">
                 {{ $t('AdminDashboardWarning') }}
             </b-notification>
+            <b-notification v-if="errorMessage !== ''" type="is-danger" has-icon>
+                {{ errorMessage }}
+            </b-notification>
             <button class="btn btn-primary py-2 my-2" @click="tryWhiteListToken" :disabled="disableWhiteListButton">{{
                 $t('AdminDashboardWhitelist') }}
             </button>
@@ -133,7 +136,7 @@
                     decimals: '18',
                     name: 'Token Name',
                     feePercent: '10.50',
-                    feeETHPercent: '01.00'
+                    feeETHPercent: '10.00'
                 },
                 whitelistingReadOnly: false,
                 whitelistingToken: false,
@@ -231,7 +234,7 @@
                         await waitTransactionReceipt(tx, connectedWeb3);
                         this.endTokenWhiteListOperation();
                     } catch (e) {
-                        this.setErrorMessage(e.message || UNKNOWN_ERROR_WHILE_WHITELISTING_TOKEN);
+                        this.setErrorMessage(e.message);
                     }
                 }
 
