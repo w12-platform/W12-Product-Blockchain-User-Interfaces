@@ -31,14 +31,14 @@
     "absolutePath": "/Projects/w12-new/contracts/interfaces/IW12FundFactory.sol",
     "exportedSymbols": {
       "IW12FundFactory": [
-        4342
+        4422
       ]
     },
-    "id": 4343,
+    "id": 4423,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 4333,
+        "id": 4413,
         "literals": [
           "solidity",
           "^",
@@ -51,10 +51,10 @@
       {
         "absolutePath": "/Projects/w12-new/contracts/interfaces/IW12Fund.sol",
         "file": "./IW12Fund.sol",
-        "id": 4334,
+        "id": 4414,
         "nodeType": "ImportDirective",
-        "scope": 4343,
-        "sourceUnit": 4332,
+        "scope": 4423,
+        "sourceUnit": 4412,
         "src": "26:24:16",
         "symbolAliases": [],
         "unitAlias": ""
@@ -65,9 +65,9 @@
         "contractKind": "interface",
         "documentation": null,
         "fullyImplemented": false,
-        "id": 4342,
+        "id": 4422,
         "linearizedBaseContracts": [
-          4342
+          4422
         ],
         "name": "IW12FundFactory",
         "nodeType": "ContractDefinition",
@@ -75,7 +75,7 @@
           {
             "body": null,
             "documentation": null,
-            "id": 4341,
+            "id": 4421,
             "implemented": false,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -83,15 +83,15 @@
             "name": "createFund",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 4337,
+              "id": 4417,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 4336,
+                  "id": 4416,
                   "name": "swap",
                   "nodeType": "VariableDeclaration",
-                  "scope": 4341,
+                  "scope": 4421,
                   "src": "105:12:16",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -100,7 +100,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 4335,
+                    "id": 4415,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "105:7:16",
@@ -117,31 +117,31 @@
             },
             "payable": false,
             "returnParameters": {
-              "id": 4340,
+              "id": 4420,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 4339,
+                  "id": 4419,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 4341,
+                  "scope": 4421,
                   "src": "137:8:16",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_contract$_IW12Fund_$4331",
+                    "typeIdentifier": "t_contract$_IW12Fund_$4411",
                     "typeString": "contract IW12Fund"
                   },
                   "typeName": {
                     "contractScope": null,
-                    "id": 4338,
+                    "id": 4418,
                     "name": "IW12Fund",
                     "nodeType": "UserDefinedTypeName",
-                    "referencedDeclaration": 4331,
+                    "referencedDeclaration": 4411,
                     "src": "137:8:16",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_IW12Fund_$4331",
+                      "typeIdentifier": "t_contract$_IW12Fund_$4411",
                       "typeString": "contract IW12Fund"
                     }
                   },
@@ -151,14 +151,14 @@
               ],
               "src": "136:10:16"
             },
-            "scope": 4342,
+            "scope": 4422,
             "src": "85:62:16",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
           }
         ],
-        "scope": 4343,
+        "scope": 4423,
         "src": "53:96:16"
       }
     ],
@@ -168,14 +168,14 @@
     "absolutePath": "/Projects/w12-new/contracts/interfaces/IW12FundFactory.sol",
     "exportedSymbols": {
       "IW12FundFactory": [
-        4342
+        4422
       ]
     },
-    "id": 4343,
+    "id": 4423,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 4333,
+        "id": 4413,
         "literals": [
           "solidity",
           "^",
@@ -188,10 +188,10 @@
       {
         "absolutePath": "/Projects/w12-new/contracts/interfaces/IW12Fund.sol",
         "file": "./IW12Fund.sol",
-        "id": 4334,
+        "id": 4414,
         "nodeType": "ImportDirective",
-        "scope": 4343,
-        "sourceUnit": 4332,
+        "scope": 4423,
+        "sourceUnit": 4412,
         "src": "26:24:16",
         "symbolAliases": [],
         "unitAlias": ""
@@ -202,9 +202,9 @@
         "contractKind": "interface",
         "documentation": null,
         "fullyImplemented": false,
-        "id": 4342,
+        "id": 4422,
         "linearizedBaseContracts": [
-          4342
+          4422
         ],
         "name": "IW12FundFactory",
         "nodeType": "ContractDefinition",
@@ -212,7 +212,7 @@
           {
             "body": null,
             "documentation": null,
-            "id": 4341,
+            "id": 4421,
             "implemented": false,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -220,15 +220,15 @@
             "name": "createFund",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 4337,
+              "id": 4417,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 4336,
+                  "id": 4416,
                   "name": "swap",
                   "nodeType": "VariableDeclaration",
-                  "scope": 4341,
+                  "scope": 4421,
                   "src": "105:12:16",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -237,7 +237,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 4335,
+                    "id": 4415,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "105:7:16",
@@ -254,31 +254,31 @@
             },
             "payable": false,
             "returnParameters": {
-              "id": 4340,
+              "id": 4420,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 4339,
+                  "id": 4419,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 4341,
+                  "scope": 4421,
                   "src": "137:8:16",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_contract$_IW12Fund_$4331",
+                    "typeIdentifier": "t_contract$_IW12Fund_$4411",
                     "typeString": "contract IW12Fund"
                   },
                   "typeName": {
                     "contractScope": null,
-                    "id": 4338,
+                    "id": 4418,
                     "name": "IW12Fund",
                     "nodeType": "UserDefinedTypeName",
-                    "referencedDeclaration": 4331,
+                    "referencedDeclaration": 4411,
                     "src": "137:8:16",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_IW12Fund_$4331",
+                      "typeIdentifier": "t_contract$_IW12Fund_$4411",
                       "typeString": "contract IW12Fund"
                     }
                   },
@@ -288,14 +288,14 @@
               ],
               "src": "136:10:16"
             },
-            "scope": 4342,
+            "scope": 4422,
             "src": "85:62:16",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
           }
         ],
-        "scope": 4343,
+        "scope": 4423,
         "src": "53:96:16"
       }
     ],
@@ -307,5 +307,5 @@
   },
   "networks": {},
   "schemaVersion": "2.0.1",
-  "updatedAt": "2018-08-22T09:36:58.716Z"
+  "updatedAt": "2018-08-22T13:13:40.964Z"
 }

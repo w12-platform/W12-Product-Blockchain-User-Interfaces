@@ -33,8 +33,8 @@
                      class="ProjectDashboard__tokenInfo row align-items-center justify-content-around py-4">
                     <div>{{ $t('ProjectDashboardSymbol') }} {{ token.symbol }}</div>
                     <div>{{ $t('ProjectDashboardDecimals') }} {{ token.decimals }}</div>
-                    <div>{{ $t('ProjectDashboardFeeTokens') }} {{ token.feePercent }}%</div>
-                    <div>{{ $t('ProjectDashboardFeeEth') }} {{ token.feeETHPercent }}%</div>
+                    <div>{{ $t('ProjectDashboardFeeTokens') }} {{ token.feePercent | percentFractional }}%</div>
+                    <div>{{ $t('ProjectDashboardFeeEth') }} {{ token.feeETHPercent | percentFractional }}%</div>
                 </div>
 
                 <div class="ProjectDashboard__stages">
@@ -364,7 +364,6 @@
     import 'bem/ProjectDashboard/default.scss';
     import DatePicker from 'vue2-datepicker';
 
-    import Ledger from 'lib/Blockchain/ContractsLedger.js';
     import Connector from 'lib/Blockchain/DefaultConnector.js';
     import { promisify, wait } from '../../lib/utils.js';
     import { isZeroAddress, waitTransactionReceipt } from 'lib/utils.js';
@@ -378,6 +377,7 @@
     import {W12LISTER_UPDATE} from "store/modules/W12Lister";
 
     const ConfigNS = createNamespacedHelpers('Config');
+    const LedgerNS = createNamespacedHelpers("Ledger");
     const W12ListerNS = createNamespacedHelpers('W12Lister');
     const AccountNS = createNamespacedHelpers("Account");
     const moment = window.moment;
@@ -393,6 +393,11 @@
             MilestoneList,
             Receiving,
             DatePicker
+        },
+        filters: {
+            percentFractional(value) {
+                return value/100;
+            },
         },
         data() {
             return {
@@ -457,6 +462,9 @@
             ...AccountNS.mapState({
                 currentAccount: "currentAccount",
                 currentAccountData: "currentAccountData",
+            }),
+            ...LedgerNS.mapState({
+                ledgerMeta: 'meta',
             }),
 
             W12ListerForCurrentAccount(){
@@ -574,6 +582,10 @@
                 watchCurrentAccount: 'watch',
                 updateAccountData: 'updateAccountData',
             }),
+            ...LedgerNS.mapActions({
+                ledgerFetch: "fetch"
+            }),
+
             clearErrorMessage() {
                 this.errorMessage = '';
             },
@@ -617,25 +629,10 @@
                     await this.updateReceivingInformation();
                 }
             },
-            async loadLedger() {
-                let ledger
-
-                this.loadingLedger = true;
-
-                try {
-                    ledger = await Ledger;
-                } catch (e) {
-                    this.setErrorMessage(e.message);
-                }
-
-                this.loadingLedger = false;
-
-                return ledger;
-            },
             async fetchTokensList() {
                 this.fetchTokens = true;
 
-                const {W12ListerFactory} = await this.loadLedger();
+                const {W12ListerFactory} = await this.ledgerFetch();
 
                 if (W12ListerFactory) {
                     try {
@@ -656,7 +653,7 @@
                 this.fetchingToken = true;
 
                 const tokenAddress = this.tokenAddress;
-                const {W12ListerFactory} = await this.loadLedger();
+                const {W12ListerFactory} = await this.ledgerFetch();
 
                 if (
                     !W12ListerFactory
@@ -667,7 +664,7 @@
                 if (tokenAddress) {
                     try {
                         const W12Lister = W12ListerFactory.at(config.contracts.W12Lister.address);
-                        const data = await W12Lister.fetchComposedTokenInformationByTokenAddress(tokenAddress);
+                        const data = await W12Lister.fetchComposedTokenInformationByTokenAddress(tokenAddress, this.currentAccount);
 
                         if (data) {
                             this.ContractInstances = {
@@ -779,7 +776,7 @@
                             address
                             && !isZeroAddress(address)
                         ) {
-                            const {W12CrowdsaleFactory} = await this.loadLedger();
+                            const {W12CrowdsaleFactory} = await this.ledgerFetch();
                             const W12CrowdsaleInstance = W12CrowdsaleFactory.at(address);
 
                             this.ContractInstances.W12CrowdsaleInstance = W12CrowdsaleInstance;
@@ -1109,7 +1106,7 @@
                 if (!this.token || !this.tokenCrowdsaleAddress) return;
 
                 try {
-                    const { W12TokenFactory, W12CrowdsaleFactory, DetailedERC20Factory } = await this.loadLedger();
+                    const { W12TokenFactory, W12CrowdsaleFactory, DetailedERC20Factory } = await this.ledgerFetch();
                     const {W12TokenLedgerInstance} = this.ContractInstances;
                     const W12Crowdsale = W12CrowdsaleFactory.at(this.tokenCrowdsaleAddress);
                     const wTokenAddress = await W12Crowdsale.methods.getWToken();
@@ -1136,7 +1133,7 @@
 
                 try {
                     const crowdsaleAddress = this.tokenCrowdsaleAddress;
-                    const { W12CrowdsaleFactory, W12FundFactory } = await this.loadLedger();
+                    const { W12CrowdsaleFactory, W12FundFactory } = await this.ledgerFetch();
                     const {web3} = await Connector.connect();
                     const W12Crowdsale = W12CrowdsaleFactory.at(crowdsaleAddress);
                     const fundAddress = await W12Crowdsale.methods.fund();
@@ -1166,7 +1163,7 @@
 
                 try {
                     const fundAddress = this.fundData.address;
-                    const { W12FundFactory} = await this.loadLedger();
+                    const { W12FundFactory} = await this.ledgerFetch();
                     const {web3} = await Connector.connect();
                     const W12Fund = W12FundFactory.at(fundAddress);
 
@@ -1188,7 +1185,7 @@
 
                 try {
                     const crowdsaleAddress = this.tokenCrowdsaleAddress;
-                    const { W12CrowdsaleFactory } = await this.loadLedger();
+                    const { W12CrowdsaleFactory } = await this.ledgerFetch();
                     const {web3} = await Connector.connect();
 
                     const W12Crowdsale = W12CrowdsaleFactory.at(crowdsaleAddress);

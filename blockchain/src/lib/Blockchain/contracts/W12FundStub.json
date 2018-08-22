@@ -525,7 +525,7 @@
         "id": 2334,
         "nodeType": "ImportDirective",
         "scope": 2396,
-        "sourceUnit": 3972,
+        "sourceUnit": 4018,
         "src": "50:22:6",
         "symbolAliases": [],
         "unitAlias": ""
@@ -553,9 +553,9 @@
         ],
         "contractDependencies": [
           2288,
-          4331,
-          4516,
-          4686
+          4411,
+          4596,
+          4766
         ],
         "contractKind": "contract",
         "documentation": null,
@@ -564,9 +564,9 @@
         "linearizedBaseContracts": [
           2395,
           2288,
-          4516,
-          4686,
-          4331
+          4596,
+          4766,
+          4411
         ],
         "name": "W12FundStub",
         "nodeType": "ContractDefinition",
@@ -594,7 +594,7 @@
                       "referencedDeclaration": 1545,
                       "src": "213:9:6",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_IW12Crowdsale_$4282",
+                        "typeIdentifier": "t_contract$_IW12Crowdsale_$4362",
                         "typeString": "contract IW12Crowdsale"
                       }
                     },
@@ -628,10 +628,10 @@
                         "name": "IW12Crowdsale",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 4282,
+                        "referencedDeclaration": 4362,
                         "src": "225:13:6",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_type$_t_contract$_IW12Crowdsale_$4282_$",
+                          "typeIdentifier": "t_type$_t_contract$_IW12Crowdsale_$4362_$",
                           "typeString": "type(contract IW12Crowdsale)"
                         }
                       },
@@ -645,13 +645,13 @@
                       "nodeType": "FunctionCall",
                       "src": "225:31:6",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_IW12Crowdsale_$4282",
+                        "typeIdentifier": "t_contract$_IW12Crowdsale_$4362",
                         "typeString": "contract IW12Crowdsale"
                       }
                     },
                     "src": "213:43:6",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_IW12Crowdsale_$4282",
+                      "typeIdentifier": "t_contract$_IW12Crowdsale_$4362",
                       "typeString": "contract IW12Crowdsale"
                     }
                   },
@@ -722,7 +722,7 @@
                       "referencedDeclaration": 1549,
                       "src": "294:6:6",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_WToken_$3971",
+                        "typeIdentifier": "t_contract$_WToken_$4017",
                         "typeString": "contract WToken"
                       }
                     },
@@ -756,10 +756,10 @@
                         "name": "WToken",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 3971,
+                        "referencedDeclaration": 4017,
                         "src": "303:6:6",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_type$_t_contract$_WToken_$3971_$",
+                          "typeIdentifier": "t_type$_t_contract$_WToken_$4017_$",
                           "typeString": "type(contract WToken)"
                         }
                       },
@@ -773,13 +773,13 @@
                       "nodeType": "FunctionCall",
                       "src": "303:21:6",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_WToken_$3971",
+                        "typeIdentifier": "t_contract$_WToken_$4017",
                         "typeString": "contract WToken"
                       }
                     },
                     "src": "294:30:6",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_WToken_$3971",
+                      "typeIdentifier": "t_contract$_WToken_$4017",
                       "typeString": "contract WToken"
                     }
                   },
@@ -824,7 +824,7 @@
                           "referencedDeclaration": 1549,
                           "src": "350:6:6",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_contract$_WToken_$3971",
+                            "typeIdentifier": "t_contract$_WToken_$4017",
                             "typeString": "contract WToken"
                           }
                         },
@@ -835,7 +835,7 @@
                         "lValueRequested": false,
                         "memberName": "decimals",
                         "nodeType": "MemberAccess",
-                        "referencedDeclaration": 4697,
+                        "referencedDeclaration": 4777,
                         "src": "350:15:6",
                         "typeDescriptions": {
                           "typeIdentifier": "t_function_external_view$__$returns$_t_uint8_$",
@@ -1288,7 +1288,7 @@
         "id": 2334,
         "nodeType": "ImportDirective",
         "scope": 2396,
-        "sourceUnit": 3972,
+        "sourceUnit": 4018,
         "src": "50:22:6",
         "symbolAliases": [],
         "unitAlias": ""
@@ -1316,9 +1316,9 @@
         ],
         "contractDependencies": [
           2288,
-          4331,
-          4516,
-          4686
+          4411,
+          4596,
+          4766
         ],
         "contractKind": "contract",
         "documentation": null,
@@ -1327,9 +1327,9 @@
         "linearizedBaseContracts": [
           2395,
           2288,
-          4516,
-          4686,
-          4331
+          4596,
+          4766,
+          4411
         ],
         "name": "W12FundStub",
         "nodeType": "ContractDefinition",
@@ -1357,7 +1357,7 @@
                       "referencedDeclaration": 1545,
                       "src": "213:9:6",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_IW12Crowdsale_$4282",
+                        "typeIdentifier": "t_contract$_IW12Crowdsale_$4362",
                         "typeString": "contract IW12Crowdsale"
                       }
                     },
@@ -1391,10 +1391,10 @@
                         "name": "IW12Crowdsale",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 4282,
+                        "referencedDeclaration": 4362,
                         "src": "225:13:6",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_type$_t_contract$_IW12Crowdsale_$4282_$",
+                          "typeIdentifier": "t_type$_t_contract$_IW12Crowdsale_$4362_$",
                           "typeString": "type(contract IW12Crowdsale)"
                         }
                       },
@@ -1408,13 +1408,13 @@
                       "nodeType": "FunctionCall",
                       "src": "225:31:6",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_IW12Crowdsale_$4282",
+                        "typeIdentifier": "t_contract$_IW12Crowdsale_$4362",
                         "typeString": "contract IW12Crowdsale"
                       }
                     },
                     "src": "213:43:6",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_IW12Crowdsale_$4282",
+                      "typeIdentifier": "t_contract$_IW12Crowdsale_$4362",
                       "typeString": "contract IW12Crowdsale"
                     }
                   },
@@ -1485,7 +1485,7 @@
                       "referencedDeclaration": 1549,
                       "src": "294:6:6",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_WToken_$3971",
+                        "typeIdentifier": "t_contract$_WToken_$4017",
                         "typeString": "contract WToken"
                       }
                     },
@@ -1519,10 +1519,10 @@
                         "name": "WToken",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 3971,
+                        "referencedDeclaration": 4017,
                         "src": "303:6:6",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_type$_t_contract$_WToken_$3971_$",
+                          "typeIdentifier": "t_type$_t_contract$_WToken_$4017_$",
                           "typeString": "type(contract WToken)"
                         }
                       },
@@ -1536,13 +1536,13 @@
                       "nodeType": "FunctionCall",
                       "src": "303:21:6",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_WToken_$3971",
+                        "typeIdentifier": "t_contract$_WToken_$4017",
                         "typeString": "contract WToken"
                       }
                     },
                     "src": "294:30:6",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_WToken_$3971",
+                      "typeIdentifier": "t_contract$_WToken_$4017",
                       "typeString": "contract WToken"
                     }
                   },
@@ -1587,7 +1587,7 @@
                           "referencedDeclaration": 1549,
                           "src": "350:6:6",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_contract$_WToken_$3971",
+                            "typeIdentifier": "t_contract$_WToken_$4017",
                             "typeString": "contract WToken"
                           }
                         },
@@ -1598,7 +1598,7 @@
                         "lValueRequested": false,
                         "memberName": "decimals",
                         "nodeType": "MemberAccess",
-                        "referencedDeclaration": 4697,
+                        "referencedDeclaration": 4777,
                         "src": "350:15:6",
                         "typeDescriptions": {
                           "typeIdentifier": "t_function_external_view$__$returns$_t_uint8_$",
@@ -2019,5 +2019,5 @@
   },
   "networks": {},
   "schemaVersion": "2.0.1",
-  "updatedAt": "2018-08-22T09:36:58.701Z"
+  "updatedAt": "2018-08-22T13:13:40.938Z"
 }

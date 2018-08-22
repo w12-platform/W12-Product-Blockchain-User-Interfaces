@@ -21,7 +21,7 @@ export class W12ListerWrapper extends BaseWrapper {
         this.DetailedERC20Factory = DetailedERC20Factory;
     }
 
-    async fetchComposedTokenInformationByTokenAddress(tokenAddress) {
+    async fetchComposedTokenInformationByTokenAddress(tokenAddress, tokenOwner) {
         const {ERC20Factory, W12CrowdsaleFactory, W12TokenLedgerFactory} = this;
 
         if (tokenAddress) {
@@ -29,11 +29,9 @@ export class W12ListerWrapper extends BaseWrapper {
 
             const getEventRecord = promisify(whiteListEvent.get.bind(whiteListEvent));
 
-            const tokenIndex = (await this.methods.approvedTokensIndex(tokenAddress)).toNumber();
-
+            const tokenIndex = (await this.methods.approvedTokensIndex(tokenAddress, tokenOwner)).toNumber();
             if (tokenIndex > 0) {
                 const eventRecord = await getEventRecord();
-
 
                 if (eventRecord.length > 0) {
                     const {
@@ -126,7 +124,7 @@ export class W12ListerWrapper extends BaseWrapper {
 
         for (let item of list) {
             if(RecentAddresses.indexOf(item.tokenAddress) === -1){
-                const composedInfo = await this.fetchComposedTokenInformationByTokenAddress(item.tokenAddress);
+                const composedInfo = await this.fetchComposedTokenInformationByTokenAddress(item.tokenAddress, item.tokenOwner);
 
                 RecentAddresses.push(item.tokenAddress);
                 result.push(composedInfo);

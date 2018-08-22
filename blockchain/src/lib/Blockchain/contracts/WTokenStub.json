@@ -533,14 +533,14 @@
     "absolutePath": "/Projects/w12-new/contracts/WTokenStub.sol",
     "exportedSymbols": {
       "WTokenStub": [
-        4002
+        4048
       ]
     },
-    "id": 4003,
+    "id": 4049,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 3973,
+        "id": 4019,
         "literals": [
           "solidity",
           "^",
@@ -553,10 +553,10 @@
       {
         "absolutePath": "/Projects/w12-new/contracts/WToken.sol",
         "file": "./WToken.sol",
-        "id": 3974,
+        "id": 4020,
         "nodeType": "ImportDirective",
-        "scope": 4003,
-        "sourceUnit": 3972,
+        "scope": 4049,
+        "sourceUnit": 4018,
         "src": "26:22:11",
         "symbolAliases": [],
         "unitAlias": ""
@@ -567,62 +567,62 @@
             "arguments": null,
             "baseName": {
               "contractScope": null,
-              "id": 3975,
+              "id": 4021,
               "name": "WToken",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 3971,
+              "referencedDeclaration": 4017,
               "src": "74:6:11",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_WToken_$3971",
+                "typeIdentifier": "t_contract$_WToken_$4017",
                 "typeString": "contract WToken"
               }
             },
-            "id": 3976,
+            "id": 4022,
             "nodeType": "InheritanceSpecifier",
             "src": "74:6:11"
           }
         ],
         "contractDependencies": [
-          3971,
-          4686,
-          4720,
-          4763,
-          4795
+          4017,
+          4766,
+          4800,
+          4843,
+          4875
         ],
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 4002,
+        "id": 4048,
         "linearizedBaseContracts": [
-          4002,
-          3971,
-          4686,
-          4720,
-          4763,
-          4795
+          4048,
+          4017,
+          4766,
+          4800,
+          4843,
+          4875
         ],
         "name": "WTokenStub",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "body": {
-              "id": 3979,
+              "id": 4025,
               "nodeType": "Block",
               "src": "177:18:11",
               "statements": [
                 {
-                  "id": 3978,
+                  "id": 4024,
                   "nodeType": "PlaceholderStatement",
                   "src": "187:1:11"
                 }
               ]
             },
             "documentation": "@dev Allows for any account besides the owner.",
-            "id": 3980,
+            "id": 4026,
             "name": "onlyOwner",
             "nodeType": "ModifierDefinition",
             "parameters": {
-              "id": 3977,
+              "id": 4023,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "174:2:11"
@@ -632,31 +632,31 @@
           },
           {
             "body": {
-              "id": 3985,
+              "id": 4031,
               "nodeType": "Block",
               "src": "238:18:11",
               "statements": [
                 {
-                  "id": 3984,
+                  "id": 4030,
                   "nodeType": "PlaceholderStatement",
                   "src": "248:1:11"
                 }
               ]
             },
             "documentation": null,
-            "id": 3986,
+            "id": 4032,
             "name": "onlyTrusted",
             "nodeType": "ModifierDefinition",
             "parameters": {
-              "id": 3983,
+              "id": 4029,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3982,
+                  "id": 4028,
                   "name": "caller",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3986,
+                  "scope": 4032,
                   "src": "222:14:11",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -665,7 +665,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 3981,
+                    "id": 4027,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "222:7:11",
@@ -685,13 +685,13 @@
           },
           {
             "body": {
-              "id": 4000,
+              "id": 4046,
               "nodeType": "Block",
               "src": "362:3:11",
               "statements": []
             },
             "documentation": null,
-            "id": 4001,
+            "id": 4047,
             "implemented": true,
             "isConstructor": true,
             "isDeclaredConst": false,
@@ -700,11 +700,11 @@
                 "arguments": [
                   {
                     "argumentTypes": null,
-                    "id": 3995,
+                    "id": 4041,
                     "name": "_name",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 3988,
+                    "referencedDeclaration": 4034,
                     "src": "328:5:11",
                     "typeDescriptions": {
                       "typeIdentifier": "t_string_memory_ptr",
@@ -713,11 +713,11 @@
                   },
                   {
                     "argumentTypes": null,
-                    "id": 3996,
+                    "id": 4042,
                     "name": "_symbol",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 3990,
+                    "referencedDeclaration": 4036,
                     "src": "335:7:11",
                     "typeDescriptions": {
                       "typeIdentifier": "t_string_memory_ptr",
@@ -726,11 +726,11 @@
                   },
                   {
                     "argumentTypes": null,
-                    "id": 3997,
+                    "id": 4043,
                     "name": "_decimals",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 3992,
+                    "referencedDeclaration": 4038,
                     "src": "344:9:11",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint8",
@@ -738,17 +738,17 @@
                     }
                   }
                 ],
-                "id": 3998,
+                "id": 4044,
                 "modifierName": {
                   "argumentTypes": null,
-                  "id": 3994,
+                  "id": 4040,
                   "name": "WToken",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 3971,
+                  "referencedDeclaration": 4017,
                   "src": "321:6:11",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_type$_t_contract$_WToken_$3971_$",
+                    "typeIdentifier": "t_type$_t_contract$_WToken_$4017_$",
                     "typeString": "type(contract WToken)"
                   }
                 },
@@ -759,15 +759,15 @@
             "name": "",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 3993,
+              "id": 4039,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3988,
+                  "id": 4034,
                   "name": "_name",
                   "nodeType": "VariableDeclaration",
-                  "scope": 4001,
+                  "scope": 4047,
                   "src": "274:12:11",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -776,7 +776,7 @@
                     "typeString": "string"
                   },
                   "typeName": {
-                    "id": 3987,
+                    "id": 4033,
                     "name": "string",
                     "nodeType": "ElementaryTypeName",
                     "src": "274:6:11",
@@ -790,10 +790,10 @@
                 },
                 {
                   "constant": false,
-                  "id": 3990,
+                  "id": 4036,
                   "name": "_symbol",
                   "nodeType": "VariableDeclaration",
-                  "scope": 4001,
+                  "scope": 4047,
                   "src": "288:14:11",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -802,7 +802,7 @@
                     "typeString": "string"
                   },
                   "typeName": {
-                    "id": 3989,
+                    "id": 4035,
                     "name": "string",
                     "nodeType": "ElementaryTypeName",
                     "src": "288:6:11",
@@ -816,10 +816,10 @@
                 },
                 {
                   "constant": false,
-                  "id": 3992,
+                  "id": 4038,
                   "name": "_decimals",
                   "nodeType": "VariableDeclaration",
-                  "scope": 4001,
+                  "scope": 4047,
                   "src": "304:15:11",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -828,7 +828,7 @@
                     "typeString": "uint8"
                   },
                   "typeName": {
-                    "id": 3991,
+                    "id": 4037,
                     "name": "uint8",
                     "nodeType": "ElementaryTypeName",
                     "src": "304:5:11",
@@ -845,19 +845,19 @@
             },
             "payable": false,
             "returnParameters": {
-              "id": 3999,
+              "id": 4045,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "362:0:11"
             },
-            "scope": 4002,
+            "scope": 4048,
             "src": "262:103:11",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 4003,
+        "scope": 4049,
         "src": "51:316:11"
       }
     ],
@@ -867,14 +867,14 @@
     "absolutePath": "/Projects/w12-new/contracts/WTokenStub.sol",
     "exportedSymbols": {
       "WTokenStub": [
-        4002
+        4048
       ]
     },
-    "id": 4003,
+    "id": 4049,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 3973,
+        "id": 4019,
         "literals": [
           "solidity",
           "^",
@@ -887,10 +887,10 @@
       {
         "absolutePath": "/Projects/w12-new/contracts/WToken.sol",
         "file": "./WToken.sol",
-        "id": 3974,
+        "id": 4020,
         "nodeType": "ImportDirective",
-        "scope": 4003,
-        "sourceUnit": 3972,
+        "scope": 4049,
+        "sourceUnit": 4018,
         "src": "26:22:11",
         "symbolAliases": [],
         "unitAlias": ""
@@ -901,62 +901,62 @@
             "arguments": null,
             "baseName": {
               "contractScope": null,
-              "id": 3975,
+              "id": 4021,
               "name": "WToken",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 3971,
+              "referencedDeclaration": 4017,
               "src": "74:6:11",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_WToken_$3971",
+                "typeIdentifier": "t_contract$_WToken_$4017",
                 "typeString": "contract WToken"
               }
             },
-            "id": 3976,
+            "id": 4022,
             "nodeType": "InheritanceSpecifier",
             "src": "74:6:11"
           }
         ],
         "contractDependencies": [
-          3971,
-          4686,
-          4720,
-          4763,
-          4795
+          4017,
+          4766,
+          4800,
+          4843,
+          4875
         ],
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 4002,
+        "id": 4048,
         "linearizedBaseContracts": [
-          4002,
-          3971,
-          4686,
-          4720,
-          4763,
-          4795
+          4048,
+          4017,
+          4766,
+          4800,
+          4843,
+          4875
         ],
         "name": "WTokenStub",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "body": {
-              "id": 3979,
+              "id": 4025,
               "nodeType": "Block",
               "src": "177:18:11",
               "statements": [
                 {
-                  "id": 3978,
+                  "id": 4024,
                   "nodeType": "PlaceholderStatement",
                   "src": "187:1:11"
                 }
               ]
             },
             "documentation": "@dev Allows for any account besides the owner.",
-            "id": 3980,
+            "id": 4026,
             "name": "onlyOwner",
             "nodeType": "ModifierDefinition",
             "parameters": {
-              "id": 3977,
+              "id": 4023,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "174:2:11"
@@ -966,31 +966,31 @@
           },
           {
             "body": {
-              "id": 3985,
+              "id": 4031,
               "nodeType": "Block",
               "src": "238:18:11",
               "statements": [
                 {
-                  "id": 3984,
+                  "id": 4030,
                   "nodeType": "PlaceholderStatement",
                   "src": "248:1:11"
                 }
               ]
             },
             "documentation": null,
-            "id": 3986,
+            "id": 4032,
             "name": "onlyTrusted",
             "nodeType": "ModifierDefinition",
             "parameters": {
-              "id": 3983,
+              "id": 4029,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3982,
+                  "id": 4028,
                   "name": "caller",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3986,
+                  "scope": 4032,
                   "src": "222:14:11",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -999,7 +999,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 3981,
+                    "id": 4027,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "222:7:11",
@@ -1019,13 +1019,13 @@
           },
           {
             "body": {
-              "id": 4000,
+              "id": 4046,
               "nodeType": "Block",
               "src": "362:3:11",
               "statements": []
             },
             "documentation": null,
-            "id": 4001,
+            "id": 4047,
             "implemented": true,
             "isConstructor": true,
             "isDeclaredConst": false,
@@ -1034,11 +1034,11 @@
                 "arguments": [
                   {
                     "argumentTypes": null,
-                    "id": 3995,
+                    "id": 4041,
                     "name": "_name",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 3988,
+                    "referencedDeclaration": 4034,
                     "src": "328:5:11",
                     "typeDescriptions": {
                       "typeIdentifier": "t_string_memory_ptr",
@@ -1047,11 +1047,11 @@
                   },
                   {
                     "argumentTypes": null,
-                    "id": 3996,
+                    "id": 4042,
                     "name": "_symbol",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 3990,
+                    "referencedDeclaration": 4036,
                     "src": "335:7:11",
                     "typeDescriptions": {
                       "typeIdentifier": "t_string_memory_ptr",
@@ -1060,11 +1060,11 @@
                   },
                   {
                     "argumentTypes": null,
-                    "id": 3997,
+                    "id": 4043,
                     "name": "_decimals",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 3992,
+                    "referencedDeclaration": 4038,
                     "src": "344:9:11",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint8",
@@ -1072,17 +1072,17 @@
                     }
                   }
                 ],
-                "id": 3998,
+                "id": 4044,
                 "modifierName": {
                   "argumentTypes": null,
-                  "id": 3994,
+                  "id": 4040,
                   "name": "WToken",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 3971,
+                  "referencedDeclaration": 4017,
                   "src": "321:6:11",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_type$_t_contract$_WToken_$3971_$",
+                    "typeIdentifier": "t_type$_t_contract$_WToken_$4017_$",
                     "typeString": "type(contract WToken)"
                   }
                 },
@@ -1093,15 +1093,15 @@
             "name": "",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 3993,
+              "id": 4039,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3988,
+                  "id": 4034,
                   "name": "_name",
                   "nodeType": "VariableDeclaration",
-                  "scope": 4001,
+                  "scope": 4047,
                   "src": "274:12:11",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1110,7 +1110,7 @@
                     "typeString": "string"
                   },
                   "typeName": {
-                    "id": 3987,
+                    "id": 4033,
                     "name": "string",
                     "nodeType": "ElementaryTypeName",
                     "src": "274:6:11",
@@ -1124,10 +1124,10 @@
                 },
                 {
                   "constant": false,
-                  "id": 3990,
+                  "id": 4036,
                   "name": "_symbol",
                   "nodeType": "VariableDeclaration",
-                  "scope": 4001,
+                  "scope": 4047,
                   "src": "288:14:11",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1136,7 +1136,7 @@
                     "typeString": "string"
                   },
                   "typeName": {
-                    "id": 3989,
+                    "id": 4035,
                     "name": "string",
                     "nodeType": "ElementaryTypeName",
                     "src": "288:6:11",
@@ -1150,10 +1150,10 @@
                 },
                 {
                   "constant": false,
-                  "id": 3992,
+                  "id": 4038,
                   "name": "_decimals",
                   "nodeType": "VariableDeclaration",
-                  "scope": 4001,
+                  "scope": 4047,
                   "src": "304:15:11",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1162,7 +1162,7 @@
                     "typeString": "uint8"
                   },
                   "typeName": {
-                    "id": 3991,
+                    "id": 4037,
                     "name": "uint8",
                     "nodeType": "ElementaryTypeName",
                     "src": "304:5:11",
@@ -1179,19 +1179,19 @@
             },
             "payable": false,
             "returnParameters": {
-              "id": 3999,
+              "id": 4045,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "362:0:11"
             },
-            "scope": 4002,
+            "scope": 4048,
             "src": "262:103:11",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 4003,
+        "scope": 4049,
         "src": "51:316:11"
       }
     ],
@@ -1203,5 +1203,5 @@
   },
   "networks": {},
   "schemaVersion": "2.0.1",
-  "updatedAt": "2018-08-22T09:36:58.714Z"
+  "updatedAt": "2018-08-22T13:13:40.957Z"
 }
