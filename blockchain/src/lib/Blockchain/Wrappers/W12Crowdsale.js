@@ -9,20 +9,17 @@ export class W12CrowdsaleWrapper extends BaseWrapper {
     async getStagesList() {
         const stagesLength = (await this.methods.stagesLength()).toNumber();
         const list = [];
-        const startDate = (await this.methods.startDate()).toNumber();
 
         if (stagesLength > 0) {
-            for(let i = stagesLength-1; i>=0; i--) {
+            for(let i = 0; i<stagesLength; i++) {
                 const stage = await this.methods.stages(i);
-                const stagePrev = (i === stagesLength-1) ? false : await this.methods.stages(i+1);
                 const bonusVolumes = await this.getBonusVolumesAtStage(i);
-                const startDateStage = stagePrev ? stagePrev[0].toNumber()+1 : startDate;
 
                 const internalStageStructure = {
-                    startDate: startDateStage,
-                    endDate: stage[0].toNumber(),
-                    discount: stage[1].toString(),
-                    vestingDate: stage[2].toNumber(),
+                    startDate: stage[0].toNumber(),
+                    endDate: stage[1].toNumber(),
+                    discount: stage[2].toNumber(),
+                    vestingDate: stage[3].toNumber(),
                     bonusVolumes,
                     wasCreated: true
                 };
@@ -71,22 +68,22 @@ export class W12CrowdsaleWrapper extends BaseWrapper {
     }
 
     async setStages(stages) {
-        const endDates = [];
+        const dates = [];
         const discounts = [];
         const vestings = [];
         const format = (date) => moment(date).isValid() ? undefined : 'YYYY-MM-DD';
 
         for(let stage of stages) {
-            endDates.push(
-                moment(stage.endDate, format(stage.endDate)).utc().unix()
+            dates.push(
+                [moment(stage.startDate, format(stage.startDate)).utc().unix(), moment(stage.endDate, format(stage.endDate)).utc().unix()]
             );
             discounts.push(stage.discount);
             vestings.push(
-                moment(stage.vestingDate, format(stage.endDate)).utc().unix()
+                moment(stage.vestingDate, format(stage.vestingDate)).utc().unix()
             );
         }
 
-        return await this.methods.setStages(endDates, discounts, vestings);
+        return await this.methods.setStages(dates, discounts, vestings);
     }
 
     async setMilestones(milestones) {
