@@ -56,14 +56,29 @@ export default {
             const watcher = async () => {
                 try {
                     const connectedWeb3 = (await Connector.connect()).web3;
-                    const getAccounts = promisify(connectedWeb3.eth.getAccounts.bind(connectedWeb3.eth.getAccounts));
-                    const currentAccount = (await getAccounts())[0];
-
-                    if (this.state.Account.currentAccount !== currentAccount) {
-                        commit(UPDATE, {currentAccount});
-                        commit(UPDATE_META, {loading: false, loadingError: false});
+                    if (connectedWeb3.currentProvider.constructor.name === 'MetamaskInpageProvider') {
+                        const getAccounts = promisify(connectedWeb3.eth.getAccounts.bind(connectedWeb3.eth.getAccounts));
+                        const currentAccount = (await getAccounts())[0];
+                        if (!currentAccount) {
+                            commit(UPDATE, {});
+                            commit(UPDATE_DATA, {});
+                            commit(UPDATE_META, {
+                                loading: false,
+                                loadingError: this._vm.$t('ERROR_METAMASK_IS_BLOCKED')
+                            });
+                        } else {
+                            if (this.state.Account.currentAccount !== currentAccount) {
+                                commit(UPDATE, {currentAccount});
+                                commit(UPDATE_META, {loading: false, loadingError: false});
+                                await this.dispatch('Account/updateAccountData');
+                            }
+                        }
+                    } else {
+                        commit(UPDATE_META, {
+                            loading: false,
+                            loadingError: this._vm.$t('ERROR_METAMASK_NOT_INSTALLED')
+                        });
                     }
-
                 } catch (e) {
                     commit(UPDATE_META, {loading: false, loadingError: e.message || ERROR_FETCH_ACCOUNT});
                 }
@@ -82,7 +97,7 @@ export default {
         async unWatch({commit}) {
             commit(UPDATE_TIMER_ID);
         },
-        async updateAccountData ({commit}) {
+        async updateAccountData({commit}) {
             const selectedToken = this.state.TokensList.currentToken;
             if (!selectedToken) return;
 
@@ -133,6 +148,3 @@ export default {
         },
     }
 };
-
-
-

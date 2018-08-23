@@ -3,12 +3,13 @@
         <section class="container">
             <h2>{{ $t('InvestorDashboard') }}</h2>
 
-            <b-notification class="InvestorDashboard__error" v-if="isError" type="is-danger" has-icon>
+            <b-notification class="InvestorDashboard__error" v-if="isError && !isLoading" type="is-danger" has-icon>
                 <span v-if="ledgerMeta.loadingError">{{ ledgerMeta.loadingError }}</span>
                 <span v-if="tokensListMeta.loadingError">{{ tokensListMeta.loadingError }}</span>
+                <span v-if="accountMeta.loadingError">{{ accountMeta.loadingError }}</span>
             </b-notification>
 
-            <b-notification v-if="isLoading" :closable="false" class="InvestorDashboard__loader">
+            <b-notification v-if="isLoading && !currentToken && !currentAccountData" :closable="false" class="InvestorDashboard__loader">
                 <span v-if="ledgerMeta.loading">{{ $t('InvestorDashboardLoadLedger') }}<br></span>
                 <span v-if="tokensListMeta.loading">{{ $t('InvestorDashboardLoadTokens') }}<br></span>
 
@@ -87,13 +88,14 @@
             ...AccountNS.mapState({
                 currentAccount: "currentAccount",
                 currentAccountData: "currentAccountData",
+                accountMeta: "meta",
             }),
 
             isLoading() {
                 return this.tokensListMeta.loading && this.meta.loading;
             },
             isError() {
-                return this.ledgerMeta.loadingError || this.tokensListMeta.loadingError;
+                return this.ledgerMeta.loadingError || this.tokensListMeta.loadingError || this.accountMeta.loadingError;
             },
         },
         methods: {
@@ -108,13 +110,24 @@
                 watchCurrentAccount: 'watch',
                 updateAccountData: 'updateAccountData',
             }),
+
+            async handleCurrentAccountChange(currentAccount) {
+                if(currentAccount){
+                    await this.tokensListFetch();
+                    await this.updateAccountData();
+                }
+            }
+        },
+        watch: {
+            'currentAccount': {
+                handler: 'handleCurrentAccountChange',
+                immediate: true
+            },
         },
         async created() {
             this.meta.loading = true;
 
-            await this.tokensListFetch();
             await this.watchCurrentAccount();
-            await this.updateAccountData();
 
             this.meta.loading = false;
         }

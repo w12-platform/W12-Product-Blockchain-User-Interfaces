@@ -1,4 +1,4 @@
-const translationsDef = "en"; // en, ru
+const translationsDef = "ru"; // en, ru
 
 const translations = {
     /* Config Dashboard */
@@ -695,6 +695,15 @@ const translations = {
     "GeneralTitle": {
         "en": "W12 Product v.1.0 in Rinkeby Test Network with Blockchain UI",
         "ru": "W12 Product v.1.0 в тестовой сети Rinkeby с пользовательским Blockchain UI"
+    },
+
+    "ERROR_METAMASK_NOT_INSTALLED": {
+        "en": "Please install Metamask to your browser",
+        "ru": "Установите Метамаск в свой браузер"
+    },
+    "ERROR_METAMASK_IS_BLOCKED": {
+        "en": "Metamask is locked  please, unlock Metamask",
+        "ru": "Метамаск заблокирован, пожалуйста разблокируйте метамаск"
     },
 
 };
