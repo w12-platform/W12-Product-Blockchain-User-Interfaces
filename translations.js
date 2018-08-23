@@ -96,6 +96,22 @@ const translations = {
         "en": "0 .. 99.99 percent",
         "ru": "0 .. 99.99 процентов"
     },
+    "AdminDashboardFieldWTokenSaleFeePercentLabel": {
+        "en": "Commission from the sale of tokens",
+        "ru": "Комиссия с продажи токенов"
+    },
+    "AdminDashboardFieldWTokenSaleFeePercentPlaceholder": {
+        "en": "0 .. 99.99 percent",
+        "ru": "0 .. 99.99 процентов"
+    },
+    "AdminDashboardFieldTrancheFeePercentLabel": {
+        "en": "Commission for the withdrawal of project funds from the fund",
+        "ru": "Комиссия при выводе средств проектом из фонда"
+    },
+    "AdminDashboardFieldTrancheFeePercentPlaceholder": {
+        "en": "0 .. 99.99 percent",
+        "ru": "0 .. 99.99 процентов"
+    },
     "AdminDashboardWarning": {
         "en": "Check the correctness of all fields, the correctness of the address of the token and the absence of a token in the table of the already added to WhiteList tokens",
         "ru": "Проверте корректность всех полей, корректность адреса токена и отсутствие токена в таблице уже добавленных в WhiteList токенов"
@@ -131,6 +147,14 @@ const translations = {
     "AdminDashboardTableFeeEth": {
         "en": "Fee (ETH)",
         "ru": "Сбор в эфире"
+    },
+    "AdminDashboardTableWTokenSaleFeePercent": {
+        "en": "Commission from the sale of tokens",
+        "ru": "Комиссия с продажи токенов"
+    },
+    "AdminDashboardTableTrancheFeePercent": {
+        "en": "Commission for the withdrawal of project funds from the fund",
+        "ru": "Комиссия при выводе средств проектом из фонда"
     },
 
     /* Investor Dashboard */

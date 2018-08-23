@@ -47,9 +47,11 @@ export class W12ListerWrapper extends BaseWrapper {
                     const decimals = listedToken[2].toString();
                     const feePercent = listedToken[3].toString();
                     const feeETHPercent = listedToken[4].toString();
-                    let crowdsaleAddress = listedToken[5].toString();
-                    const tokensForSaleAmount = listedToken[6].toString();
-                    const wTokensIssuedAmount = listedToken[7].toString();
+                    const WTokenSaleFeePercent = listedToken[5].toString();
+                    const trancheFeePercent = listedToken[6].toString();
+                    let crowdsaleAddress = listedToken[7].toString();
+                    const tokensForSaleAmount = listedToken[8].toString();
+                    const wTokensIssuedAmount = listedToken[9].toString();
                     const ERC20 = ERC20Factory.at(tokenAddress);
                     const W12TokenLedger = W12TokenLedgerFactory.at(ledgerAddress);
 
@@ -72,6 +74,8 @@ export class W12ListerWrapper extends BaseWrapper {
                             decimals,
                             feePercent,
                             feeETHPercent,
+                            WTokenSaleFeePercent,
+                            trancheFeePercent,
                             crowdsaleAddress,
                             tokensForSaleAmount,
                             wTokensIssuedAmount,

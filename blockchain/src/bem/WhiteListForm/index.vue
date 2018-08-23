@@ -93,6 +93,36 @@
                     />
                 </b-field>
             </div>
+            <div class="form-group">
+                <label for="WTokenSaleFeePercent">{{ $t('AdminDashboardFieldWTokenSaleFeePercentLabel') }}</label>
+                <b-field id="WTokenSaleFeePercent">
+                    <input
+                            :placeholder="$t('AdminDashboardFieldWTokenSaleFeePercentPlaceholder')"
+                            type="text"
+                            min="0"
+                            class="form-control"
+                            max="99.99"
+                            step="0.01"
+                            v-model="whiteListForm.WTokenSaleFeePercent"
+                            v-mask="'##.##'"
+                    />
+                </b-field>
+            </div>
+            <div class="form-group">
+                <label for="trancheFeePercent">{{ $t('AdminDashboardFieldTrancheFeePercentLabel') }}</label>
+                <b-field id="trancheFeePercent">
+                    <input
+                            :placeholder="$t('AdminDashboardFieldTrancheFeePercentPlaceholder')"
+                            type="text"
+                            min="0"
+                            class="form-control"
+                            max="99.99"
+                            step="0.01"
+                            v-model="whiteListForm.trancheFeePercent"
+                            v-mask="'##.##'"
+                    />
+                </b-field>
+            </div>
 
             <b-notification :closable="false" v-if="disableWhiteListButton">
                 {{ $t('AdminDashboardWarning') }}
@@ -136,7 +166,9 @@
                     decimals: '18',
                     name: 'Token Name',
                     feePercent: '10.50',
-                    feeETHPercent: '10.00'
+                    feeETHPercent: '10.00',
+                    WTokenSaleFeePercent: '10.50',
+                    trancheFeePercent: '10.00',
                 },
                 whitelistingReadOnly: false,
                 whitelistingToken: false,
@@ -230,6 +262,8 @@
                             data.decimals,
                             parseInt((parseFloat(data.feePercent).toFixed(2) * 100)),
                             parseInt((parseFloat(data.feeETHPercent).toFixed(2) * 100)),
+                            parseInt((parseFloat(data.WTokenSaleFeePercent).toFixed(2) * 100)),
+                            parseInt((parseFloat(data.trancheFeePercent).toFixed(2) * 100))
                         );
                         await waitTransactionReceipt(tx, connectedWeb3);
                         this.endTokenWhiteListOperation();

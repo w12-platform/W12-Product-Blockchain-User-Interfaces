@@ -63,6 +63,18 @@
                             <span>{{ props.row.decimals }}</span>
                         </div>
                     </div>
+                    <div class="WhiteListTable__detailField">
+                        {{ $t('AdminDashboardTableWTokenSaleFeePercent') }} :
+                        <div class="WhiteListTable__detailDecimals">
+                            <span>{{ props.row.WTokenSaleFeePercent | percentFractional }}%</span>
+                        </div>
+                    </div>
+                    <div class="WhiteListTable__detailField">
+                        {{ $t('AdminDashboardTableTrancheFeePercent') }} :
+                        <div class="WhiteListTable__detailDecimals">
+                            <span>{{ props.row.trancheFeePercent | percentFractional }}%</span>
+                        </div>
+                    </div>
                 </div>
             </template>
         </b-table>
