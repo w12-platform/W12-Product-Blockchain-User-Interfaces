@@ -56,7 +56,8 @@ export default {
             const watcher = async () => {
                 try {
                     const connectedWeb3 = (await Connector.connect()).web3;
-                    if (connectedWeb3.currentProvider.constructor.name === 'MetamaskInpageProvider') {
+
+                    if (Connector.isProvider('metamask')) {
                         const getAccounts = promisify(connectedWeb3.eth.getAccounts.bind(connectedWeb3.eth.getAccounts));
                         const currentAccount = (await getAccounts())[0];
                         if (!currentAccount) {

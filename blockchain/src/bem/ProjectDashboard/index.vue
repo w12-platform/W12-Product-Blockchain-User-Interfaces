@@ -2,360 +2,369 @@
     <div class="ProjectDashboard buefy">
         <section class="container">
             <h2>{{ $t('ProjectDashboard') }}</h2>
-            <div v-if="isLoading" class="alert alert-info" role="alert">
+
+            <b-notification class="ProjectDashboard__error" v-if="isError && !isLoading" type="is-danger" has-icon>
+                <span v-if="ledgerMeta.loadingError">{{ ledgerMeta.loadingError }}</span>
+                <span v-if="tokensListMeta.loadingError">{{ tokensListMeta.loadingError }}</span>
+                <span v-if="accountMeta.loadingError">{{ accountMeta.loadingError }}</span>
+                <span v-if="errorMessage">{{ errorMessage }}</span>
+            </b-notification>
+
+            <b-notification v-if="isLoading && !isError && !currentAccount" :closable="false" class="AdminDashboard__loader">
                 <span v-if="loadingLedger">{{ $t('ProjectDashboardLoadLedger') }}<br></span>
                 <span v-if="fetchingToken">{{ $t('ProjectDashboardLoadSearchToken') }}<br></span>
                 <span v-else="!loadingLedger && !fetchingToken">{{ $t('ProjectDashboardLoadExpect') }}<br></span>
-            </div>
-            <div v-if="errorMessage" class="alert alert-danger" role="alert">
-                <span>{{ errorMessage }}</span>
-            </div>
-            <div v-if="!isLoading">
 
-                <b-field class="ProjectDashboard__select">
-                    <b-field>
-                        <b-select
-                                v-model="tokenAddress"
-                                @input="tokenSelected"
-                                v-if="W12ListerForCurrentAccount"
-                                :placeholder="$t('ProjectDashboardSelectToken')"
-                                expanded>
-                            <option
-                                    v-for="(token, idx) in W12ListerForCurrentAccount"
-                                    :key="idx"
-                                    :value="token.tokenAddress">{{ token.symbol }} - {{ token.tokenAddress }}
-                            </option>
-                        </b-select>
+                <b-loading :is-full-page="false" :active.sync="isLoading" :can-cancel="true"></b-loading>
+            </b-notification>
+
+            <div v-if="!isLoading && currentAccount">
+                <div v-if="!isLoading">
+
+                    <b-field class="ProjectDashboard__select">
+                        <b-field>
+                            <b-select
+                                    v-model="tokenAddress"
+                                    @input="tokenSelected"
+                                    v-if="W12ListerForCurrentAccount"
+                                    :placeholder="$t('ProjectDashboardSelectToken')"
+                                    expanded>
+                                <option
+                                        v-for="(token, idx) in W12ListerForCurrentAccount"
+                                        :key="idx"
+                                        :value="token.tokenAddress">{{ token.symbol }} - {{ token.tokenAddress }}
+                                </option>
+                            </b-select>
+                        </b-field>
                     </b-field>
-                </b-field>
 
-                <div v-if="token"
-                     class="ProjectDashboard__tokenInfo row align-items-center justify-content-around py-4">
-                    <div>{{ $t('ProjectDashboardSymbol') }} {{ token.symbol }}</div>
-                    <div>{{ $t('ProjectDashboardDecimals') }} {{ token.decimals }}</div>
-                    <div>{{ $t('ProjectDashboardFeeTokens') }} {{ token.feePercent | percentFractional }}%</div>
-                    <div>{{ $t('ProjectDashboardFeeEth') }} {{ token.feeETHPercent | percentFractional }}%</div>
-                </div>
-
-                <div class="ProjectDashboard__stages">
-                    <div class="ProjectDashboard__stage">
-                        <div class="row align-items-center justify-content-center">
-                            <div class="col-auto">
-                                <span class="ProjectDashboard__step-badge step-badge badge badge-pill badge-light">1</span>
-                            </div>
-                            <div class="col-sm-4">
-                                {{ $t('ProjectDashboardStageWhitelist') }}
-                            </div>
-                            <div class="col-sm-2 text-center">
-                                <b-tag v-if="isWhiteListed" type="is-success">{{ $t('ProjectDashboardStageWhitelistStatusWhitelisted') }}</b-tag>
-                                <b-tag v-else type="is-info">{{ $t('ProjectDashboardStageWhitelistStatusNotWhitelisted') }}</b-tag>
-                            </div>
-                            <div class="col-sm text-right"></div>
-                        </div>
+                    <div v-if="token"
+                         class="ProjectDashboard__tokenInfo row align-items-center justify-content-around py-4">
+                        <div>{{ $t('ProjectDashboardSymbol') }} {{ token.symbol }}</div>
+                        <div>{{ $t('ProjectDashboardDecimals') }} {{ token.decimals }}</div>
+                        <div>{{ $t('ProjectDashboardFeeTokens') }} {{ token.feePercent | percentFractional }}%</div>
+                        <div>{{ $t('ProjectDashboardFeeEth') }} {{ token.feeETHPercent | percentFractional }}%</div>
                     </div>
-                    <div class="ProjectDashboard__stage">
-                        <div class="row align-items-center justify-content-left">
-                            <div class="col-auto">
-                                <span class="ProjectDashboard__step-badge step-badge badge badge-pill badge-light">2</span>
+
+                    <div class="ProjectDashboard__stages">
+                        <div class="ProjectDashboard__stage">
+                            <div class="row align-items-center justify-content-center">
+                                <div class="col-auto">
+                                    <span class="ProjectDashboard__step-badge step-badge badge badge-pill badge-light">1</span>
+                                </div>
+                                <div class="col-sm-4">
+                                    {{ $t('ProjectDashboardStageWhitelist') }}
+                                </div>
+                                <div class="col-sm-2 text-center">
+                                    <b-tag v-if="isWhiteListed" type="is-success">{{ $t('ProjectDashboardStageWhitelistStatusWhitelisted') }}</b-tag>
+                                    <b-tag v-else type="is-info">{{ $t('ProjectDashboardStageWhitelistStatusNotWhitelisted') }}</b-tag>
+                                </div>
+                                <div class="col-sm text-right"></div>
                             </div>
-                            <div class="col-sm-4">
-                                {{ $t('ProjectDashboardStageApprove') }}
-                            </div>
-                            <div class="col-sm-2 text-center">
-                                <b-tag v-if="!(hasAllowance || hasPlacedWTokenAddress) || !isWhiteListed"
-                                       type="is-success">{{ $t('ProjectDashboardStageApproveStatusPending') }}
-                                </b-tag>
-                                <b-tag v-else type="is-success">{{ $t('ProjectDashboardStageApproveStatusApproved') }}</b-tag>
-                            </div>
-                            <div class="col-sm text-right">
-                                <span v-if="hasAllowance">{{ tokensAmountThatApprovedToPlaceByTokenOwnerToNumber }}</span>
-                                <div v-else-if="isWhiteListed" class="text-left">
-                                    <b-tag class="ProjectDashboard__approveInfo" type="is-info">{{ $t('ProjectDashboardStageApproveSpendFrom') }} {{
-                                        ownerAddress }}
+                        </div>
+                        <div class="ProjectDashboard__stage">
+                            <div class="row align-items-center justify-content-left">
+                                <div class="col-auto">
+                                    <span class="ProjectDashboard__step-badge step-badge badge badge-pill badge-light">2</span>
+                                </div>
+                                <div class="col-sm-4">
+                                    {{ $t('ProjectDashboardStageApprove') }}
+                                </div>
+                                <div class="col-sm-2 text-center">
+                                    <b-tag v-if="!(hasAllowance || hasPlacedWTokenAddress) || !isWhiteListed"
+                                           type="is-success">{{ $t('ProjectDashboardStageApproveStatusPending') }}
                                     </b-tag>
-                                    <div class="form-group">
-                                        <label for="SpendFrom">{{ $t('ProjectDashboardStageApproveAmountLabel') }}</label>
-                                        <input
-                                                :placeholder="$t('ProjectDashboardStageApproveAmountPlaceholder', {ownerBalanceToNumber})"
-                                                type="number"
-                                                min="0"
-                                                :max="ownerBalanceToNumber"
-                                                class="form-control"
-                                                id="SpendFrom"
-                                                v-model="approveForm.value">
-                                    </div>
-                                    <div class="text-right">
-                                        <button class="btn btn-primary btn-sm" @click="approveTokensToSpend">{{ $t('ProjectDashboardStageApproveButton') }}</button>
+                                    <b-tag v-else type="is-success">{{ $t('ProjectDashboardStageApproveStatusApproved') }}</b-tag>
+                                </div>
+                                <div class="col-sm text-right">
+                                    <span v-if="hasAllowance">{{ tokensAmountThatApprovedToPlaceByTokenOwnerToNumber }}</span>
+                                    <div v-else-if="isWhiteListed" class="text-left">
+                                        <b-tag class="ProjectDashboard__approveInfo" type="is-info">
+                                            {{ $t('ProjectDashboardStageApproveSpendFrom') }} {{ currentAccount }}
+                                        </b-tag>
+                                        <div class="form-group">
+                                            <label for="SpendFrom">{{ $t('ProjectDashboardStageApproveAmountLabel') }}</label>
+                                            <input
+                                                    :placeholder="$t('ProjectDashboardStageApproveAmountPlaceholder', {ownerBalanceToNumber})"
+                                                    type="number"
+                                                    min="0"
+                                                    :max="ownerBalanceToNumber"
+                                                    class="form-control"
+                                                    id="SpendFrom"
+                                                    v-model="approveForm.value">
+                                        </div>
+                                        <div class="text-right">
+                                            <button class="btn btn-primary btn-sm" @click="approveTokensToSpend">{{ $t('ProjectDashboardStageApproveButton') }}</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="ProjectDashboard__stage">
-                        <div class="row align-items-center justify-content-left">
-                            <div class="col-auto">
-                                <span class="ProjectDashboard__step-badge step-badge badge badge-pill badge-light">3</span>
-                            </div>
-                            <div class="col-sm-4">
-                                {{ $t('ProjectDashboardStagePlace') }}
-                            </div>
-                            <div class="col-sm-2 text-center">
-                                <b-tag v-if="!hasPlacedWTokenAddress && (!hasAllowance || !isWhiteListed)"
-                                       type="is-success">{{ $t('ProjectDashboardStagePlaceStatusPending') }}
-                                </b-tag>
-                                <b-tag v-else type="is-success">{{ $t('ProjectDashboardStagePlaceStatusPlaced') }}</b-tag>
-                            </div>
-                            <div class="col-12 text-left">
-                                <b-tag class="ProjectDashboard__placedWTokenAddress" v-if="hasPlacedWTokenAddress"
-                                       type="is-info">{{ placedTokenAddress }}
-                                </b-tag>
-                            </div>
-                            <div class="ProjectDashboard__placeForm col-12 text-right">
-                                <div v-if="isWhiteListed && hasAllowance" class="text-left">
-                                    <div class="form-group">
-                                        <label for="PlaceAmount">{{ $t('ProjectDashboardStagePlaceAmountLabel') }}</label>
-                                        <input
-                                                :placeholder="$t('ProjectDashboardStagePlaceAmountPlaceholder', {tokensAmount: tokensAmountThatApprovedToPlaceByTokenOwnerToNumber})"
-                                                type="number"
-                                                min="0"
-                                                :max="tokensAmountThatApprovedToPlaceByTokenOwnerToNumber"
-                                                class="form-control"
-                                                id="PlaceAmount"
-                                                v-model="placeTokensForm.value">
-                                    </div>
-                                    <div class="text-right">
-                                        <button class="btn btn-primary btn-sm" @click="placeTokens">{{ $t('ProjectDashboardStagePlaceButton') }}</button>
+                        <div class="ProjectDashboard__stage">
+                            <div class="row align-items-center justify-content-left">
+                                <div class="col-auto">
+                                    <span class="ProjectDashboard__step-badge step-badge badge badge-pill badge-light">3</span>
+                                </div>
+                                <div class="col-sm-4">
+                                    {{ $t('ProjectDashboardStagePlace') }}
+                                </div>
+                                <div class="col-sm-2 text-center">
+                                    <b-tag v-if="!hasPlacedWTokenAddress && (!hasAllowance || !isWhiteListed)"
+                                           type="is-success">{{ $t('ProjectDashboardStagePlaceStatusPending') }}
+                                    </b-tag>
+                                    <b-tag v-else type="is-success">{{ $t('ProjectDashboardStagePlaceStatusPlaced') }}</b-tag>
+                                </div>
+                                <div class="col-12 text-left">
+                                    <b-tag class="ProjectDashboard__placedWTokenAddress" v-if="hasPlacedWTokenAddress"
+                                           type="is-info">{{ placedTokenAddress }}
+                                    </b-tag>
+                                </div>
+                                <div class="ProjectDashboard__placeForm col-12 text-right">
+                                    <div v-if="isWhiteListed && hasAllowance" class="text-left">
+                                        <div class="form-group">
+                                            <label for="PlaceAmount">{{ $t('ProjectDashboardStagePlaceAmountLabel') }}</label>
+                                            <input
+                                                    :placeholder="$t('ProjectDashboardStagePlaceAmountPlaceholder', {tokensAmount: tokensAmountThatApprovedToPlaceByTokenOwnerToNumber})"
+                                                    type="number"
+                                                    min="0"
+                                                    :max="tokensAmountThatApprovedToPlaceByTokenOwnerToNumber"
+                                                    class="form-control"
+                                                    id="PlaceAmount"
+                                                    v-model="placeTokensForm.value">
+                                        </div>
+                                        <div class="text-right">
+                                            <button class="btn btn-primary btn-sm" @click="placeTokens">{{ $t('ProjectDashboardStagePlaceButton') }}</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="ProjectDashboard__stage">
-                        <div class="row align-items-center justify-content-left">
-                            <div class="col-auto">
-                                <span class="ProjectDashboard__step-badge step-badge badge badge-pill badge-light">4</span>
-                            </div>
-                            <div class="col-sm-4">
-                                {{ $t('ProjectDashboardStageConfigureCrowdsale') }}
-                            </div>
-                            <div class="col-sm-2 text-center">
-                                <b-tag v-if="!isCrowdsaleInited && (!hasPlacedWTokenAddress && (!hasAllowance || !isWhiteListed))"
-                                       type="is-success">{{ $t('ProjectDashboardStageConfigureCrowdsaleStatusPending') }}
-                                </b-tag>
-                                <b-tag v-else type="is-success">{{ $t('ProjectDashboardStageConfigureCrowdsaleStatusInitialized') }}</b-tag>
-                            </div>
-                            <div class="ProjectDashboard__configureCrowdsale col-12 text-left">
-                                <b-tag class="ProjectDashboard__initCrowdsaleAddress" v-if="isCrowdsaleInited"
-                                       type="is-info">{{ tokenCrowdsaleAddress }}
-                                </b-tag>
+                        <div class="ProjectDashboard__stage">
+                            <div class="row align-items-center justify-content-left">
+                                <div class="col-auto">
+                                    <span class="ProjectDashboard__step-badge step-badge badge badge-pill badge-light">4</span>
+                                </div>
+                                <div class="col-sm-4">
+                                    {{ $t('ProjectDashboardStageConfigureCrowdsale') }}
+                                </div>
+                                <div class="col-sm-2 text-center">
+                                    <b-tag v-if="!isCrowdsaleInited && (!hasPlacedWTokenAddress && (!hasAllowance || !isWhiteListed))"
+                                           type="is-success">{{ $t('ProjectDashboardStageConfigureCrowdsaleStatusPending') }}
+                                    </b-tag>
+                                    <b-tag v-else type="is-success">{{ $t('ProjectDashboardStageConfigureCrowdsaleStatusInitialized') }}</b-tag>
+                                </div>
+                                <div class="ProjectDashboard__configureCrowdsale col-12 text-left">
+                                    <b-tag class="ProjectDashboard__initCrowdsaleAddress" v-if="isCrowdsaleInited"
+                                           type="is-info">{{ tokenCrowdsaleAddress }}
+                                    </b-tag>
 
-                                <div v-else-if="isWhiteListed && hasPlacedWTokenAddress" class="text-left">
-                                    <div class="form-group">
-                                        <label for="StartDate">{{ $t('ProjectDashboardStageConfigureCrowdsaleStartDateLabel') }}</label>
-                                        <b-field id="StartDate" class="ProjectDashboard__dateSelect bootstrap">
-                                            <date-picker :min-date="minStartDate" v-model="crowdsaleInitForm.date" type="datetime" lang="en" format="YYYY-MM-DD hh:mm:ss" confirm></date-picker>
-                                        </b-field>
+                                    <div v-else-if="isWhiteListed && hasPlacedWTokenAddress" class="text-left">
+                                        <div class="form-group">
+                                            <label for="StartDate">{{ $t('ProjectDashboardStageConfigureCrowdsaleStartDateLabel') }}</label>
+                                            <b-field id="StartDate" class="ProjectDashboard__dateSelect bootstrap">
+                                                <date-picker :min-date="minStartDate" v-model="crowdsaleInitForm.date" type="datetime" lang="en" format="YYYY-MM-DD hh:mm:ss" confirm></date-picker>
+                                            </b-field>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="BaseTokenPrice">{{ $t('ProjectDashboardStageConfigureCrowdsalePrice') }}</label>
+                                            <b-field id="BaseTokenPrice">
+                                                <b-input placeholder="ETH"
+                                                         type="number"
+                                                         :step="0.0001"
+                                                         min="0"
+                                                         v-model="crowdsaleInitForm.price"
+                                                         icon="ethereum">
+                                                </b-input>
+                                            </b-field>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="AmountForSale">{{ $t('ProjectDashboardStageConfigureCrowdsaleAmountForSaleLabel') }}</label>
+                                            <b-field id="AmountForSale">
+                                                <b-input :placeholder="`${tokensForSaleAmountToNumber}`"
+                                                         type="number"
+                                                         min="0"
+                                                         :step="0.01"
+                                                         v-model="crowdsaleInitForm.amountForSale"
+                                                         icon="shopping">
+                                                </b-input>
+                                            </b-field>
+                                        </div>
+                                        <div class="text-right">
+                                            <button class="btn btn-primary btn-sm" @click="initCrawdsale">{{ $t('ProjectDashboardStageConfigureCrowdsaleInitButton') }}
+                                            </button>
+                                        </div>
                                     </div>
-                                    <div class="form-group">
-                                        <label for="BaseTokenPrice">{{ $t('ProjectDashboardStageConfigureCrowdsalePrice') }}</label>
-                                        <b-field id="BaseTokenPrice">
-                                            <b-input placeholder="ETH"
-                                                     type="number"
-                                                     :step="0.0001"
-                                                     min="0"
-                                                     v-model="crowdsaleInitForm.price"
-                                                     icon="ethereum">
-                                            </b-input>
-                                        </b-field>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="AmountForSale">{{ $t('ProjectDashboardStageConfigureCrowdsaleAmountForSaleLabel') }}</label>
-                                        <b-field id="AmountForSale">
-                                            <b-input :placeholder="`${tokensForSaleAmountToNumber}`"
-                                                     type="number"
-                                                     min="0"
-                                                     :step="0.01"
-                                                     v-model="crowdsaleInitForm.amountForSale"
-                                                     icon="shopping">
-                                            </b-input>
-                                        </b-field>
-                                    </div>
-                                    <div class="text-right">
-                                        <button class="btn btn-primary btn-sm" @click="initCrawdsale">{{ $t('ProjectDashboardStageConfigureCrowdsaleInitButton') }}
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="pt-2" v-if="isCrowdsaleInited && isWhiteListed && hasPlacedWTokenAddress && tokensForAddCrowdsale !== '0'">
-                                    <div class="form-group">
-                                        <label for="AmountForSale">{{ $t('ProjectDashboardStageConfigureCrowdsaleAddTokensLabel') }}</label>
-                                        <b-field id="AmountForSale">
-                                            <b-input :placeholder="`${tokensForAddCrowdsale}`"
-                                                     type="number"
-                                                     min="0"
-                                                     v-model="crowdsaleInitForm.amountForSale"
-                                                     icon="shopping">
-                                            </b-input>
-                                        </b-field>
-                                    </div>
-                                    <div class="text-right">
-                                        <button class="btn btn-primary btn-sm" @click="addTokensToCrowdsale">{{ $t('ProjectDashboardStageConfigureCrowdsaleAddButton') }}
-                                        </button>
+                                    <div class="pt-2" v-if="isCrowdsaleInited && isWhiteListed && hasPlacedWTokenAddress && tokensForAddCrowdsale !== '0'">
+                                        <div class="form-group">
+                                            <label for="AmountForSale">{{ $t('ProjectDashboardStageConfigureCrowdsaleAddTokensLabel') }}</label>
+                                            <b-field id="AmountForSale">
+                                                <b-input :placeholder="`${tokensForAddCrowdsale}`"
+                                                         type="number"
+                                                         min="0"
+                                                         v-model="crowdsaleInitForm.amountForSale"
+                                                         icon="shopping">
+                                                </b-input>
+                                            </b-field>
+                                        </div>
+                                        <div class="text-right">
+                                            <button class="btn btn-primary btn-sm" @click="addTokensToCrowdsale">{{ $t('ProjectDashboardStageConfigureCrowdsaleAddButton') }}
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="ProjectDashboard__stage">
-                        <div class="row align-items-center justify-content-left">
-                            <div class="col-auto">
-                                <span class="ProjectDashboard__step-badge step-badge badge badge-pill badge-light">5</span>
-                            </div>
-                            <div class="col-sm-5">
-                               {{ $t('ProjectDashboardStageBonuses') }}
-                            </div>
-                            <div class="col-12">
-                                <div v-if="isCrowdsaleInited && hasPlacedWTokenAddress" class="text-left">
-                                    <b-collapse class="ProjectDashboard__bonuses card">
-                                        <div class="card-content">
-                                            <div class="content" v-if="tokenCrowdsaleStages.length">
-                                                <b-collapse class="ProjectDashboard__stageBonus card" v-for="(stage, stageIndex) in tokenCrowdsaleStages" :key="stageIndex">
-                                                    <div class="col-12 pb-4">
-                                                        <div class="p-3 row align-items-center justify-content-between">
-                                                            <span class="ProjectDashboard__stageTitle">{{ $t('ProjectDashboardStageBonusesStage') }} #{{ stageIndex+1 }}</span>
-                                                            <button class="btn btn-primary btn-sm" @click="deleteStageAt(stageIndex)">{{ $t('ProjectDashboardStageBonusesRemove') }}</button>
-                                                        </div>
-                                                        <div class="ProjectDashboard__stageBonus col-sm py-2">
-                                                            <div class="row justify-content-between">
-                                                                <div class="col-sm py-2">
-                                                                    <label>{{ $t('ProjectDashboardStageBonusesStartDateLabel') }}</label>
-                                                                    <b-field class="ProjectDashboard__dateSelect">
-                                                                        <date-picker v-model="tokenCrowdsaleStages[stageIndex].startDate" type="datetime" lang="en" format="YYYY-MM-DD hh:mm:ss" confirm></date-picker>
-                                                                    </b-field>
-                                                                </div>
-                                                                <div class="col-sm py-2">
-                                                                    <label>{{ $t('ProjectDashboardStageBonusesEndDateLabel') }}</label>
-                                                                    <b-field class="ProjectDashboard__dateSelect">
-                                                                        <date-picker v-model="tokenCrowdsaleStages[stageIndex].endDate" type="datetime" lang="en" format="YYYY-MM-DD hh:mm:ss" confirm></date-picker>
-                                                                    </b-field>
-                                                                </div>
+                        <div class="ProjectDashboard__stage">
+                            <div class="row align-items-center justify-content-left">
+                                <div class="col-auto">
+                                    <span class="ProjectDashboard__step-badge step-badge badge badge-pill badge-light">5</span>
+                                </div>
+                                <div class="col-sm-5">
+                                    {{ $t('ProjectDashboardStageBonuses') }}
+                                </div>
+                                <div class="col-12">
+                                    <div v-if="isCrowdsaleInited && hasPlacedWTokenAddress" class="text-left">
+                                        <b-collapse class="ProjectDashboard__bonuses card">
+                                            <div class="card-content">
+                                                <div class="content" v-if="tokenCrowdsaleStages.length">
+                                                    <b-collapse class="ProjectDashboard__stageBonus card" v-for="(stage, stageIndex) in tokenCrowdsaleStages" :key="stageIndex">
+                                                        <div class="col-12 pb-4">
+                                                            <div class="p-3 row align-items-center justify-content-between">
+                                                                <span class="ProjectDashboard__stageTitle">{{ $t('ProjectDashboardStageBonusesStage') }} #{{ stageIndex+1 }}</span>
+                                                                <button class="btn btn-primary btn-sm" @click="deleteStageAt(stageIndex)">{{ $t('ProjectDashboardStageBonusesRemove') }}</button>
                                                             </div>
-                                                            <div class="row justify-content-between">
-                                                                <div class="col-sm py-2">
-                                                                    <label for="StageDiscount">{{ $t('ProjectDashboardStageBonusesDiscountLabel') }}</label>
-                                                                    <b-field id="StageDiscount">
-                                                                        <b-input
-                                                                                type="number"
-                                                                                min="0"
-                                                                                max="100"
-                                                                                v-model="tokenCrowdsaleStages[stageIndex].discount"
-                                                                                icon="sale">
-                                                                        </b-input>
-                                                                    </b-field>
-                                                                </div>
-                                                                <div class="col-sm py-2">
-                                                                    <label for="StageVestingDate">{{ $t('ProjectDashboardStageBonusesVestingDateLabel') }}</label>
-                                                                    <b-field id="StageVestingDate"
-                                                                             class="ProjectDashboard__dateSelect">
-                                                                        <date-picker v-model="tokenCrowdsaleStages[stageIndex].vestingDate" type="datetime" lang="en" format="YYYY-MM-DD hh:mm:ss" confirm></date-picker>
-                                                                    </b-field>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="p-3 row align-items-center justify-content-between">
-                                                            <span class="ProjectDashboard__stageTitle">{{ $t('ProjectDashboardStageBonusesVolume') }}</span>
-                                                        </div>
-                                                        <div class="col-sm py-2">
-                                                            <div v-for="(bonusVolume, bonusVolumeIndex) in stage.bonusVolumes" :key="bonusVolumeIndex">
+                                                            <div class="ProjectDashboard__stageBonus col-sm py-2">
                                                                 <div class="row justify-content-between">
                                                                     <div class="col-sm py-2">
-                                                                        <label v-if="bonusVolumeIndex === 0" for="bonusVolumeETH">{{ $t('ProjectDashboardStageBonusesFromEth') }}</label>
-                                                                        <b-field id="bonusVolumeETH">
+                                                                        <label>{{ $t('ProjectDashboardStageBonusesStartDateLabel') }}</label>
+                                                                        <b-field class="ProjectDashboard__dateSelect">
+                                                                            <date-picker v-model="tokenCrowdsaleStages[stageIndex].startDate" type="datetime" lang="en" format="YYYY-MM-DD hh:mm:ss" confirm></date-picker>
+                                                                        </b-field>
+                                                                    </div>
+                                                                    <div class="col-sm py-2">
+                                                                        <label>{{ $t('ProjectDashboardStageBonusesEndDateLabel') }}</label>
+                                                                        <b-field class="ProjectDashboard__dateSelect">
+                                                                            <date-picker v-model="tokenCrowdsaleStages[stageIndex].endDate" type="datetime" lang="en" format="YYYY-MM-DD hh:mm:ss" confirm></date-picker>
+                                                                        </b-field>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row justify-content-between">
+                                                                    <div class="col-sm py-2">
+                                                                        <label for="StageDiscount">{{ $t('ProjectDashboardStageBonusesDiscountLabel') }}</label>
+                                                                        <b-field id="StageDiscount">
                                                                             <b-input
-                                                                                    placeholder="ETH"
                                                                                     type="number"
                                                                                     min="0"
-                                                                                    :step="0.0001"
-                                                                                    v-model="tokenCrowdsaleStages[stageIndex].bonusVolumes[bonusVolumeIndex][0]"
-                                                                                    icon="ethereum">
+                                                                                    max="100"
+                                                                                    v-model="tokenCrowdsaleStages[stageIndex].discount"
+                                                                                    icon="sale">
                                                                             </b-input>
                                                                         </b-field>
                                                                     </div>
                                                                     <div class="col-sm py-2">
-                                                                        <div class="row">
-                                                                            <div class="col-md-8">
-                                                                                <label v-if="bonusVolumeIndex === 0" for="bonusVolumePercent">{{ $t('ProjectDashboardStageBonusesBonus') }}</label>
-                                                                                <b-field id="bonusVolumePercent">
-                                                                                    <b-input
-                                                                                            type="number"
-                                                                                            min="0"
-                                                                                            max="100"
-                                                                                            v-model="tokenCrowdsaleStages[stageIndex].bonusVolumes[bonusVolumeIndex][1]"
-                                                                                            icon="sale">
-                                                                                    </b-input>
-                                                                                </b-field>
-                                                                            </div>
-                                                                            <div class="ProjectDashboard__deleteContainer col-md-2">
-                                                                                <a class="delete is-large"
-                                                                                   @click="deleteBonusVolumesAt(stageIndex, bonusVolumeIndex)"></a>
+                                                                        <label for="StageVestingDate">{{ $t('ProjectDashboardStageBonusesVestingDateLabel') }}</label>
+                                                                        <b-field id="StageVestingDate"
+                                                                                 class="ProjectDashboard__dateSelect">
+                                                                            <date-picker v-model="tokenCrowdsaleStages[stageIndex].vestingDate" type="datetime" lang="en" format="YYYY-MM-DD hh:mm:ss" confirm></date-picker>
+                                                                        </b-field>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="p-3 row align-items-center justify-content-between">
+                                                                <span class="ProjectDashboard__stageTitle">{{ $t('ProjectDashboardStageBonusesVolume') }}</span>
+                                                            </div>
+                                                            <div class="col-sm py-2">
+                                                                <div v-for="(bonusVolume, bonusVolumeIndex) in stage.bonusVolumes" :key="bonusVolumeIndex">
+                                                                    <div class="row justify-content-between">
+                                                                        <div class="col-sm py-2">
+                                                                            <label v-if="bonusVolumeIndex === 0" for="bonusVolumeETH">{{ $t('ProjectDashboardStageBonusesFromEth') }}</label>
+                                                                            <b-field id="bonusVolumeETH">
+                                                                                <b-input
+                                                                                        placeholder="ETH"
+                                                                                        type="number"
+                                                                                        min="0"
+                                                                                        :step="0.0001"
+                                                                                        v-model="tokenCrowdsaleStages[stageIndex].bonusVolumes[bonusVolumeIndex][0]"
+                                                                                        icon="ethereum">
+                                                                                </b-input>
+                                                                            </b-field>
+                                                                        </div>
+                                                                        <div class="col-sm py-2">
+                                                                            <div class="row">
+                                                                                <div class="col-md-8">
+                                                                                    <label v-if="bonusVolumeIndex === 0" for="bonusVolumePercent">{{ $t('ProjectDashboardStageBonusesBonus') }}</label>
+                                                                                    <b-field id="bonusVolumePercent">
+                                                                                        <b-input
+                                                                                                type="number"
+                                                                                                min="0"
+                                                                                                max="100"
+                                                                                                v-model="tokenCrowdsaleStages[stageIndex].bonusVolumes[bonusVolumeIndex][1]"
+                                                                                                icon="sale">
+                                                                                        </b-input>
+                                                                                    </b-field>
+                                                                                </div>
+                                                                                <div class="ProjectDashboard__deleteContainer col-md-2">
+                                                                                    <a class="delete is-large"
+                                                                                       @click="deleteBonusVolumesAt(stageIndex, bonusVolumeIndex)"></a>
+                                                                                </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
 
-                                                            </div>
-                                                            <div class="text-left pt-2">
-                                                                <button class="btn btn-primary btn-sm"
-                                                                        :disabled="tokenCrowdsaleStagesChange"
-                                                                        @click="addBonusVolumesAt(stageIndex)">
-                                                                    {{ $t('ProjectDashboardStageBonusesAddButton') }}
-                                                                </button>
-                                                                <button v-if="stage.bonusVolumes.length"
-                                                                        :disabled="tokenCrowdsaleStagesChange"
-                                                                        class="btn btn-primary btn-sm"
-                                                                        @click="saveBonusVolumesAt(stageIndex)">
-                                                                    {{ $t('ProjectDashboardStageBonusesSaveButton') }}
-                                                                </button>
+                                                                </div>
+                                                                <div class="text-left pt-2">
+                                                                    <button class="btn btn-primary btn-sm"
+                                                                            :disabled="tokenCrowdsaleStagesChange"
+                                                                            @click="addBonusVolumesAt(stageIndex)">
+                                                                        {{ $t('ProjectDashboardStageBonusesAddButton') }}
+                                                                    </button>
+                                                                    <button v-if="stage.bonusVolumes.length"
+                                                                            :disabled="tokenCrowdsaleStagesChange"
+                                                                            class="btn btn-primary btn-sm"
+                                                                            @click="saveBonusVolumesAt(stageIndex)">
+                                                                        {{ $t('ProjectDashboardStageBonusesSaveButton') }}
+                                                                    </button>
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                </b-collapse>
+                                                    </b-collapse>
+                                                </div>
+
+                                                <footer class="card-footer">
+                                                    <a class="card-footer-item" @click="addStage">{{ $t('ProjectDashboardStageBonusesAddStageButton') }}</a>
+                                                    <a class="card-footer-item" v-if="tokenCrowdsaleStages.length"
+                                                       @click="saveStages">{{ $t('ProjectDashboardStageBonusesSaveStagesButton') }}</a>
+                                                </footer>
                                             </div>
 
-                                            <footer class="card-footer">
-                                                <a class="card-footer-item" @click="addStage">{{ $t('ProjectDashboardStageBonusesAddStageButton') }}</a>
-                                                <a class="card-footer-item" v-if="tokenCrowdsaleStages.length"
-                                                   @click="saveStages">{{ $t('ProjectDashboardStageBonusesSaveStagesButton') }}</a>
-                                            </footer>
-                                        </div>
+                                        </b-collapse>
 
-                                    </b-collapse>
-
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div v-if="token && isCrowdsaleInited">
-                <h2>{{ $t('Milestones') }}</h2>
-                <div class="box">
-                    <MilestoneList v-model="tokenCrowdsaleMilestones"></MilestoneList>
+                <Receiving
+                        v-if="receiving"
+                        :data="receiving"
+                        @claimRemainingTokens="claimRemainingTokens"
+                ></Receiving>
+                <div v-if="token && isCrowdsaleInited">
+                    <h2>{{ $t('Milestones') }}</h2>
+                    <div class="box">
+                        <MilestoneList v-model="tokenCrowdsaleMilestones"></MilestoneList>
+                    </div>
+                    <button class="btn btn-primary btn-sm btn-block" @click="saveMilestones">{{ $t('MilestonesSend') }}
+                    </button>
                 </div>
-                <button class="btn btn-primary btn-sm btn-block" @click="saveMilestones">{{ $t('MilestonesSend') }}
-                </button>
+                <div v-if="trancheInformationData">
+                    <h2>{{ $t('trancheInformation') }}</h2>
+                    <TrancheInformation :data="trancheInformationData"></TrancheInformation>
+                    <button class="btn btn-primary py-2 my-2" :disabled="!allowTranche" @click="tryTranche">{{ $t('trancheInformationReceive') }}</button>
+                </div>
             </div>
-            <div v-if="trancheInformationData">
-                <h2>{{ $t('trancheInformation') }}</h2>
-                <TrancheInformation :data="trancheInformationData"></TrancheInformation>
-                <button class="btn btn-primary py-2 my-2" :disabled="!allowTranche" @click="tryTranche">{{ $t('trancheInformationReceive') }}</button>
-            </div>
-
-            <Receiving
-                    v-if="receiving"
-                    :data="receiving"
-                    @claimRemainingTokens="claimRemainingTokens"
-            ></Receiving>
         </section>
     </div>
 </template>
@@ -379,6 +388,7 @@
 
     const ConfigNS = createNamespacedHelpers('Config');
     const LedgerNS = createNamespacedHelpers("Ledger");
+    const WhitelistNS = createNamespacedHelpers("Whitelist");
     const W12ListerNS = createNamespacedHelpers('W12Lister');
     const AccountNS = createNamespacedHelpers("Account");
     const moment = window.moment;
@@ -423,7 +433,6 @@
                 placedTokenAddress: null,
                 ownerBalance: '0',
                 tokenCrowdsaleAddress: null,
-                ownerAddress: '',
                 tokenCrowdsaleStagesChange: false,
                 tokenCrowdsaleStages: [],
                 tokenCrowdsaleMilestones: [],
@@ -463,11 +472,19 @@
             ...AccountNS.mapState({
                 currentAccount: "currentAccount",
                 currentAccountData: "currentAccountData",
+                accountMeta: "meta",
             }),
             ...LedgerNS.mapState({
                 ledgerMeta: 'meta',
             }),
+            ...WhitelistNS.mapState({
+                tokensListMeta: 'meta',
+                tokensList: "list"
+            }),
 
+            isError() {
+                return this.ledgerMeta.loadingError || this.tokensListMeta.loadingError || this.accountMeta.loadingError || this.errorMessage;
+            },
             W12ListerForCurrentAccount(){
                 return this.W12Lister.filter((obj)=>obj.tokenOwners.indexOf(this.currentAccount) !== -1);
             },
@@ -576,7 +593,11 @@
             },
             token: {
                 handler: 'handleTokenChange'
-            }
+            },
+            'currentAccount': {
+                handler: 'handleCurrentAccountChange',
+                immediate: true
+            },
         },
         methods: {
             ...AccountNS.mapActions({
@@ -587,6 +608,11 @@
                 ledgerFetch: "fetch"
             }),
 
+            async handleCurrentAccountChange(currentAccount) {
+                if(currentAccount){
+                    this.fetchTokensList();
+                }
+            },
             clearErrorMessage() {
                 this.errorMessage = '';
             },
@@ -1250,28 +1276,6 @@
                 this.subscribedEvents.TokenPlaced.stopWatching();
                 this.subscribedEvents = null;
             },
-            watchCurrentAccountAddress() {
-                this.unwatchCurrentAccountAddress();
-
-                const watcher = async () => {
-                    try {
-                        const connectedWeb3 = (await Connector.connect()).web3;
-                        const getAccounts = promisify(connectedWeb3.eth.getAccounts.bind(connectedWeb3.eth.getAccounts));
-
-                        const currentAccount = (await getAccounts())[0];
-
-                        this.ownerAddress = currentAccount;
-                    } catch (e) {
-                        console.log(e);
-                    }
-                }
-
-                watcher();
-                this.currentAccountWatcherTmId = setInterval(watcher, 5000);
-            },
-            unwatchCurrentAccountAddress() {
-                clearInterval(this.currentAccountWatcherTmId);
-            },
             addStage() {
                 this.tokenCrowdsaleStagesChange = true;
                 this.tokenCrowdsaleStages.push({
@@ -1312,11 +1316,8 @@
         },
         async created() {
             await this.watchCurrentAccount();
-            this.fetchTokensList();
-            this.watchCurrentAccountAddress();
         },
         beforeDestroy() {
-            this.unwatchCurrentAccountAddress();
             this.unsubscribeFromEvents();
         }
     };
