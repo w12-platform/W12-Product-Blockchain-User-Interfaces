@@ -170,8 +170,8 @@
                                             <b-field id="BaseTokenPrice">
                                                 <b-input placeholder="ETH"
                                                          type="number"
-                                                         :step="0.0001"
-                                                         min="0"
+                                                         min="0.000000000000000001"
+                                                         :step="0.000000000000000001"
                                                          v-model="crowdsaleInitForm.price"
                                                          icon="ethereum">
                                                 </b-input>
