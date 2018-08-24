@@ -141,7 +141,7 @@
 <script>
     import './default.scss';
     import Connector from 'lib/Blockchain/DefaultConnector.js';
-    import {promisify} from 'lib/utils.js';
+    import {promisify, waitTransactionReceipt} from 'lib/utils.js';
 
     import {createNamespacedHelpers} from "vuex";
 
