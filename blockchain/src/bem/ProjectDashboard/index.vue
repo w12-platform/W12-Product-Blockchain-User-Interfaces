@@ -914,7 +914,7 @@
                     || !amountForSale.greaterThan(0)
                     || !price.greaterThan(0)
                     || !price.lessThanOrEqualTo(amountForSale)
-                    || !tokensForSaleAmount.lessThanOrEqualTo(limit)
+                    || !tokensForSaleAmount.greaterThanOrEqualTo(limit)
                 ) {
                     return;
                 }
