@@ -878,6 +878,7 @@
                     } = this.ContractInstances;
 
                     const tokenAddress = this.tokenAddress;
+                    const connectedWeb3 = (await Connector.connect()).web3;
 
                     if (!tokenAddress) {
                         throw new Error('not enough information to do request');
