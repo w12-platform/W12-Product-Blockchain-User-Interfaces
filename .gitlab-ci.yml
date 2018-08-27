@@ -22,7 +22,7 @@ build:
     - stage
   script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
-    - docker build --pull  -t "$CI_REGISTRY_IMAGE" .
+    - docker build --pull  -t "$CI_REGISTRY_IMAGE":stage .
     - docker push "$CI_REGISTRY_IMAGE"
   services:
     - docker:dind
