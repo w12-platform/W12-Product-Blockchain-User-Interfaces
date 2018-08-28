@@ -1,5 +1,5 @@
 import Connector from "lib/Blockchain/DefaultConnector";
-import {promisify} from "lib/utils";
+import {promisify, isZeroAddress} from "lib/utils";
 import {map} from 'p-iteration';
 
 const moment = window.moment;
@@ -10,8 +10,10 @@ export const ERROR_FETCH_TOKENS_LIST = 'An unknown error while trying get tokens
 
 export const UPDATE_TIMER_ID = 'UPDATE_TIMER_ID';
 export const TOKEN_SELECTED = "TOKEN_SELECTED";
+export const PROJECT_SELECTED = "PROJECT_SELECTED";
 export const UPDATE_META = "UPDATE_META";
 export const UPDATE = "UPDATE";
+export const UPDATE_PROJECTS = "UPDATE_PROJECTS";
 export const RESET = "RESET";
 
 
@@ -28,7 +30,6 @@ export default {
         timerId: false,
     },
     modules: {},
-    getters: {},
     mutations: {
         [UPDATE_TIMER_ID](state, payload) {
             clearInterval(this.state.TokensList.timerId);
@@ -44,6 +45,13 @@ export default {
         [UPDATE](state, payload) {
             const list = payload.list || false;
             Object.assign(state, {list});
+        },
+        [UPDATE_PROJECTS](state, payload) {
+            const projects = payload.projects || false;
+            Object.assign(state, {projects});
+        },
+        [PROJECT_SELECTED](state, payload) {
+            Object.assign(state, payload);
         },
         [RESET](state) {
             state.list = false;
@@ -74,7 +82,7 @@ export default {
                     const tokensForSaleAmount = web3.fromWei(el.token.tokensForSaleAmount, 'ether').toString();
                     const tokenPrice = web3.fromWei(await W12Crowdsale.methods.price(), 'ether').toString();
                     const stages = (await W12Crowdsale.getStagesList());
-                    const startDate = (await W12Crowdsale.methods.startDate()).toNumber();
+                    const startDate = stages.length ? stages[0].startDate : null;
 
                     let endDate = false;
                     let stageEndDate = false;
@@ -82,7 +90,6 @@ export default {
                     let status = false;
                     let stageDiscount = 0;
                     let bonusVolumes = [];
-
                     if (stages.length) {
                         const ranges = [
                             {
@@ -184,7 +191,7 @@ export default {
                         const tokensOnSale = web3.fromWei((await W12Token.methods.balanceOf(token.crowdsaleAddress)).toString(), 'ether').toString();
                         const tokenPrice = web3.fromWei(await W12Crowdsale.methods.price(), 'ether').toString();
                         const stages = (await W12Crowdsale.getStagesList());
-                        const startDate = (await W12Crowdsale.methods.startDate()).toNumber();
+                        const startDate = stages.length ? stages[0].startDate : null;
 
                         let endDate = false;
                         let stageEndDate = false;

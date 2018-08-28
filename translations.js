@@ -433,16 +433,16 @@ const translations = {
         "ru": "Символ:"
     },
     "ProjectDashboardDecimals": {
-        "en": "Decimals",
-        "ru": "Десятичные"
+        "en": "Decimals:",
+        "ru": "Десятичные:"
     },
     "ProjectDashboardFeeTokens": {
-        "en": "Fee (tokens)",
-        "ru": "Сбор (в токенах)"
+        "en": "Fee (tokens):",
+        "ru": "Сбор (в токенах):"
     },
     "ProjectDashboardFeeEth": {
-        "en": "Fee (ETH)",
-        "ru": "Сбор (в эфире)"
+        "en": "Fee (ETH):",
+        "ru": "Сбор (в эфире):"
     },
     "ProjectDashboardStageWhitelist": {
         "en": "Contact W12 to whitelist your token",
@@ -477,14 +477,17 @@ const translations = {
         "ru": "Количество"
     },
     "ProjectDashboardStageApproveAmountPlaceholder": {
-        "en": "Max: {ownerBalanceToNumber}",
-        "ru": "Максимум: {ownerBalanceToNumber}"
+        "en": "Max: {ownerBalance}",
+        "ru": "Максимум: {ownerBalance}"
     },
     "ProjectDashboardStageApproveButton": {
         "en": "Approve",
         "ru": "Разрешить"
     },
-
+    "ProjectDashboardStageApproveNoTokens": {
+        "en": "No tokens on balance",
+        "ru": "Нет токенов на балансе"
+    },
     "ProjectDashboardStagePlace": {
         "en": "Place Tokens to Listing",
         "ru": "Добавить токены в список"
@@ -509,6 +512,16 @@ const translations = {
         "en": "Place",
         "ru": "Добавить"
     },
+    "ProjectDashboardStagePlaceCongratulations": {
+        "en": "Congratulations, {amount} {symbol} was successfully released, specify Crowdsale parameters for sale",
+        "ru": "Поздравляем, было успешно выпущено {amount} {symbol}, укажите параметры Crowdsale для продажи"
+    },
+    "ProjectDashboardStagePlaceErrorAmount": {
+        "en": "The specified amount, the higher the number of tokens allowed to write-off",
+        "ru": "Указанное количество, превышает количество токенов, разрешенных к списанию"
+    },
+
+
 
     "ProjectDashboardStageConfigureCrowdsale": {
         "en": "Configure Crowdsale",
@@ -540,7 +553,7 @@ const translations = {
     },
     "ProjectDashboardStageConfigureCrowdsaleAddTokensLabel": {
         "en": "Добавить токены в краудсейл",
-        "ru": "Add tokens to the crowdsdale"
+        "ru": "Add tokens to the crowdsale"
     },
     "ProjectDashboardStageConfigureCrowdsaleAddButton": {
         "en": "Add",
@@ -609,6 +622,10 @@ const translations = {
         "en": "Milestones",
         "ru": "Основные этапы"
     },
+    "MilestoneTitle": {
+        "en": "Stage",
+        "ru": "Этап"
+    },
     "MilestonesAdd": {
         "en": "Add Milestone",
         "ru": "Добавить Milestone"
@@ -642,8 +659,8 @@ const translations = {
         "ru": "Дата окончания голосования о достижении этапа"
     },
     "MilestonesDateEndWithdrawal": {
-        "en": "End date of withdrawal in case of a negative vote",
-        "ru": "Дата окончания вывода средств в случае негативного голосования"
+        "en": "End date of withdrawal",
+        "ru": "Дата окончания вывода средств"
     },
     "MilestonesSend": {
         "en": "Send Milestones to blockchain",
@@ -719,6 +736,11 @@ const translations = {
     "GeneralTitle": {
         "en": "W12 Product v.1.0 in Rinkeby Test Network with Blockchain UI",
         "ru": "W12 Product v.1.0 в тестовой сети Rinkeby с пользовательским Blockchain UI"
+    },
+
+    "WaitingConfirm": {
+        "en": "We are waiting for transaction confirmation",
+        "ru": "Ожидаем подтверждение транзакции"
     },
 
     "ERROR_METAMASK_NOT_INSTALLED": {

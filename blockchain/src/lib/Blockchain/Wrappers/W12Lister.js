@@ -54,6 +54,7 @@ export class W12ListerWrapper extends BaseWrapper {
                     const wTokensIssuedAmount = listedToken[9].toString();
                     const ERC20 = ERC20Factory.at(tokenAddress);
                     const W12TokenLedger = W12TokenLedgerFactory.at(ledgerAddress);
+                    const wTokenAddress = await W12TokenLedger.methods.getWTokenByToken(tokenAddress);
 
                     if (!crowdsaleAddress || parseInt(crowdsaleAddress, 16) === 0) {
                         crowdsaleAddress = null;
@@ -79,7 +80,8 @@ export class W12ListerWrapper extends BaseWrapper {
                             crowdsaleAddress,
                             tokensForSaleAmount,
                             wTokensIssuedAmount,
-                            listedToken
+                            listedToken,
+                            wTokenAddress
                         },
                         links: {
                             ERC20Instance: ERC20,

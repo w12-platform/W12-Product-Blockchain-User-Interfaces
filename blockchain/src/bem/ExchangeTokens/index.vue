@@ -41,7 +41,7 @@
 
                     <div v-if="this.currentAccountData.allowanceForSwap !== '0'" class="py-2">
                         {{ $t('InvestorDashboardExchangeTokensMessagesBeforeSwap', {
-                            allowance: currentAccountData.allowanceForSwap | toEth,
+                            allowance: toEth(currentAccountData.allowanceForSwap),
                             WToken: currentToken.symbol,
                             Token: currentToken.tokenInformation.symbol
                         })}}
@@ -134,7 +134,10 @@
             ...AccountNS.mapActions({
                 updateAccountData: 'updateAccountData',
             }),
-
+            toEth(value) {
+                value = value ? new BigNumber(value):0;
+                return web3.fromWei(value, 'ether').toString();
+            },
             async approveSwapToSpend() {
                 try {
                     const {W12TokenFactory, W12ListerFactory} = await this.ledgerFetch();

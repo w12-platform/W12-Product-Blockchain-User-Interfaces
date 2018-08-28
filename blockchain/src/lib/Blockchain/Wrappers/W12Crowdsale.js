@@ -93,9 +93,10 @@ export class W12CrowdsaleWrapper extends BaseWrapper {
         const namesAndDescriptions = [];
 
         for (let milestone of milestones) {
+            console.log(milestone);
             dates.push(
                 milestone.endDate,
-                milestone.voteEndDate,
+                milestone.endDate+1, //voteEndDate remove vote
                 milestone.withdrawalEndDate
             );
             tranchePercents.push(Number.parseInt(milestone.tranchePercent));
