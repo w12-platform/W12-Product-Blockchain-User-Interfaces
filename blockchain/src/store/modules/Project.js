@@ -385,7 +385,7 @@ export default {
                 };
                 commit(UPDATE_FUND_DATA, fundData);
             } catch (e) {
-                commit(UPDATE_META, {loadingProjectError: e.message});
+                //commit(UPDATE_META, {loadingProjectError: e.message});
             }
         },
     }

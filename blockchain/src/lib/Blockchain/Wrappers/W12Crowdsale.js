@@ -75,14 +75,15 @@ export class W12CrowdsaleWrapper extends BaseWrapper {
 
         for(let stage of stages) {
             dates.push(
-                [moment(stage.startDate, format(stage.startDate)).utc().unix(), moment(stage.endDate, format(stage.endDate)).utc().unix()]
+                [moment(stage.startDate, format(stage.endDate)).utc().unix(), moment(stage.endDate, format(stage.endDate)).utc().unix()]
             );
             discounts.push(stage.discount);
             vestings.push(
-                moment(stage.vestingDate, format(stage.vestingDate)).utc().unix()
+                moment(stage.vestingDate, format(stage.endDate)).utc().unix()
             );
         }
 
+        console.log(dates, discounts, vestings);
         return await this.methods.setStages(dates, discounts, vestings);
     }
 

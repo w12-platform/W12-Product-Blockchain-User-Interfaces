@@ -65,8 +65,8 @@ const translations = {
         "ru": "Аббревиатура"
     },
     "AdminDashboardFieldDecimalsLabel": {
-        "en": "Decimals",
-        "ru": "Десятичные"
+        "en": "The number of decimal places after the decimal point\n",
+        "ru": "Количество десятичных знаков после запятой"
     },
     "AdminDashboardFieldDecimalsPlaceholder": {
         "en": "Default: 18",
