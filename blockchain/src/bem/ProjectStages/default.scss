@@ -6,6 +6,12 @@
     position: relative;
     padding: 15px;
     border-bottom: 1px solid #b5b5b5;
+
+    .description {
+      font-size: 12px;
+      color: grey;
+      padding: 2px;
+    }
   }
   &__stageTitle {
     font-size: 20px;

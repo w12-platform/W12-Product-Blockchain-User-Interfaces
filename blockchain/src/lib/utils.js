@@ -76,3 +76,7 @@ export function isZeroAddress(address) {
     }
 }
 
+export function formatNumber(textNumber) {
+    console.log(textNumber);
+    return textNumber ? parseFloat(textNumber.replace(/\s+/g, '')):0;
+}

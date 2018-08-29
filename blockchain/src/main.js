@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Buefy from 'buefy';
 import vuexI18n from 'vuex-i18n';
 import VueMask from 'v-mask';
+import money from 'v-money';
 
 import 'bem/buefy/default.scss';
 import ConfigDashboad from 'bem/ConfigDashboad';
@@ -12,6 +13,12 @@ import store from "store";
 
 Vue.use(VueMask);
 Vue.use(Buefy);
+Vue.use(money, {
+    decimal: ',',
+    thousands: ' ',
+    precision: 2,
+    masked: false
+});
 
 Vue.use(vuexI18n.plugin, store, {
     translateFilterName: 't'

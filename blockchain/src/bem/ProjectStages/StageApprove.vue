@@ -33,14 +33,14 @@
                             <div class="form-group">
                                 <label for="SpendFrom">{{ $t('ProjectDashboardStageApproveAmountLabel') }}</label>
                                 <input
-                                        :placeholder="$t('ProjectDashboardStageApproveAmountPlaceholder', {ownerBalance})"
-                                        type="number"
                                         min="0"
                                         :max="currentProject.ownerBalance"
                                         class="form-control"
                                         id="SpendFrom"
                                         @keyup.enter="approveTokensToSpend"
-                                        v-model="approveForm.value">
+                                        v-model.lazy="approveForm.value"
+                                        v-money="{}">
+                                <div class="description">{{ $t('ProjectDashboardStageApproveAmountPlaceholder', {ownerBalance}) }}</div>
                             </div>
                             <b-notification class="ProjectStages__errorStage" v-if="error" @close="error = false"
                                             type="is-danger" has-icon>{{ error }}
@@ -66,7 +66,7 @@
     import './default.scss';
     import Connector from 'lib/Blockchain/DefaultConnector.js';
     import {UPDATE_TX} from "store/modules/Transactions.js";
-    import {waitTransactionReceipt} from 'lib/utils.js';
+    import {waitTransactionReceipt, formatNumber} from 'lib/utils.js';
 
     import {createNamespacedHelpers} from "vuex";
 
@@ -89,7 +89,7 @@
                     value: null
                 },
                 tx: null,
-                error: false
+                error: false,
             };
         },
         computed: {
@@ -113,8 +113,9 @@
             ...TransactionsNS.mapState({
                 TransactionsList: "list"
             }),
+
             disable() {
-                const value = parseFloat(this.approveForm.value) || null;
+                const value = formatNumber(this.approveForm.value) || null;
                 const balance = parseFloat(this.currentProject.ownerBalance) || null;
                 return this.approveForm.value && this.currentProject.ownerBalance
                     ? !(value > 0 && value <= balance)
@@ -144,7 +145,7 @@
             async approveTokensToSpend() {
                 if(this.disable) return;
 
-                const value = new BigNumber(this.approveForm.value);
+                const value = new BigNumber(formatNumber(this.approveForm.value));
 
                 this.approveTokensToSpendLoading = true;
 

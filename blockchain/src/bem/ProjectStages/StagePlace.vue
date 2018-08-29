@@ -27,14 +27,14 @@
                     <div class="form-group">
                         <label for="PlaceAmount">{{ $t('ProjectDashboardStagePlaceAmountLabel') }}</label>
                         <input
-                                :placeholder="$t('ProjectDashboardStagePlaceAmountPlaceholder', {tokensAmount: tokensAmountThatApprovedToPlaceByTokenOwnerToNumber})"
-                                type="number"
                                 min="0"
                                 :max="tokensAmountThatApprovedToPlaceByTokenOwnerToNumber"
                                 class="form-control"
                                 id="PlaceAmount"
                                 @keyup.enter="placeTokens"
-                                v-model="placeTokensForm.value">
+                                v-model.lazy="placeTokensForm.value"
+                                v-money="{}">
+                        <div class="description">{{ $t('ProjectDashboardStagePlaceAmountPlaceholder', {tokensAmount: tokensAmountThatApprovedToPlaceByTokenOwnerToNumber}) }}</div>
                     </div>
                     <b-notification class="ProjectStages__errorStage" v-if="error" @close="error = false" type="is-danger" has-icon>
                         {{ error }}
@@ -61,7 +61,7 @@
 <script>
     import './default.scss';
     import Connector from 'lib/Blockchain/DefaultConnector.js';
-    import { waitTransactionReceipt } from 'lib/utils.js';
+    import { waitTransactionReceipt, formatNumber } from 'lib/utils.js';
     import {UPDATE_TX} from "store/modules/Transactions.js";
 
     import {createNamespacedHelpers} from "vuex";
@@ -109,7 +109,7 @@
             }),
             amountError(){
                 if(this.placeTokensForm.value && this.currentProject.tokensAmountThatApprovedToPlaceByTokenOwner){
-                    const value = new BigNumber(web3.toWei(this.placeTokensForm.value, 'ether'));
+                    const value = new BigNumber(web3.toWei(formatNumber(this.placeTokensForm.value), 'ether'));
                     const limit = new BigNumber(this.currentProject.tokensAmountThatApprovedToPlaceByTokenOwner);
 
                     return !value.lessThanOrEqualTo(limit)
@@ -118,7 +118,7 @@
             },
             disable(){
                 if(this.placeTokensForm.value && this.currentProject.tokensAmountThatApprovedToPlaceByTokenOwner){
-                    const value = new BigNumber(web3.toWei(this.placeTokensForm.value, 'ether'));
+                    const value = new BigNumber(web3.toWei(formatNumber(this.placeTokensForm.value), 'ether'));
                     const limit = new BigNumber(this.currentProject.tokensAmountThatApprovedToPlaceByTokenOwner);
 
                     return !value.greaterThan(0) || !value.lessThanOrEqualTo(limit)
@@ -152,7 +152,7 @@
             async placeTokens() {
                 if(this.disable) return;
 
-                const value = new BigNumber(web3.toWei(this.placeTokensForm.value, 'ether'));
+                const value = new BigNumber(web3.toWei(formatNumber(this.placeTokensForm.value), 'ether'));
                 const limit = new BigNumber(this.currentProject.tokensAmountThatApprovedToPlaceByTokenOwner);
 
                 if (!value.greaterThan(0) || !value.lessThanOrEqualTo(limit)) {
