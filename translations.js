@@ -49,23 +49,23 @@ const translations = {
         "ru": "Адрес токена с контрольной суммой"
     },
     "AdminDashboardFieldOwnerLabel": {
-        "en": "Address of representative of the owner",
-        "ru": "Адрес представителя владельца"
+        "en": "Owner Address",
+        "ru": "Адрес владельца"
     },
     "AdminDashboardFieldOwnerPlaceholder": {
-        "en": "Address of the token owner",
-        "ru": "Адрес представителя владельца токена"
+        "en": "Token owner address",
+        "ru": "Адрес владельца токена"
     },
     "AdminDashboardFieldSymbolLabel": {
         "en": "Symbol",
         "ru": "Символ"
     },
     "AdminDashboardFieldSymbolPlaceholder": {
-        "en": "Abbreviated",
-        "ru": "Аббревиатура"
+        "en": "3-4 letter abbreviation",
+        "ru": "Аббревиатуры 3-4 буквы"
     },
     "AdminDashboardFieldDecimalsLabel": {
-        "en": "The number of decimal places after the decimal point\n",
+        "en": "The number of decimal places after the decimal point",
         "ru": "Количество десятичных знаков после запятой"
     },
     "AdminDashboardFieldDecimalsPlaceholder": {
@@ -81,32 +81,48 @@ const translations = {
         "ru": "Название токена"
     },
     "AdminDashboardFieldFeeTokensLabel": {
-        "en": "Fee (tokens)",
-        "ru": "Сбор (в токенах)"
+        "en": "Fee in tokens",
+        "ru": "Сбор в токенах"
+    },
+    "AdminDashboardFieldFeeTokensLabelMessage": {
+        "en": "It is charged at the time of the project's transfer of its tokens for sale through the blocking protocol W12",
+        "ru": "Взимается в момент перевода проектом своих токенов для продажи через блокчейн протокол W12"
     },
     "AdminDashboardFieldFeeTokensPlaceholder": {
-        "en": "0 .. 99.99 percent",
-        "ru": "0 .. 99.99 процентов"
+        "en": "0 .. 100 percent",
+        "ru": "0 .. 100 процентов"
     },
     "AdminDashboardFieldFeeEthLabel": {
-        "en": "Fee (ETH)",
-        "ru": "Сбор (в эфире)"
+        "en": "Fee in ETH",
+        "ru": "Сбор в эфире"
+    },
+    "AdminDashboardFieldFeeEthLabelMessage": {
+        "en": "Charged at the time of sale of the tokens",
+        "ru": "Взимается в момент продажи токенов"
     },
     "AdminDashboardFieldFeeEthPlaceholder": {
         "en": "0 .. 99.99 percent",
         "ru": "0 .. 99.99 процентов"
     },
     "AdminDashboardFieldWTokenSaleFeePercentLabel": {
-        "en": "Commission from the sale of tokens",
-        "ru": "Комиссия с продажи токенов"
+        "en": "Commission in project tokens",
+        "ru": "Комиссия в токенах проекта"
+    },
+    "AdminDashboardFieldWTokenSaleFeePercentLabelMessage": {
+        "en": "Charged at the time of sale of the tokens",
+        "ru": "Взимается в момент продажи токенов"
     },
     "AdminDashboardFieldWTokenSaleFeePercentPlaceholder": {
         "en": "0 .. 99.99 percent",
         "ru": "0 .. 99.99 процентов"
     },
     "AdminDashboardFieldTrancheFeePercentLabel": {
-        "en": "Commission for the withdrawal of project funds from the fund",
-        "ru": "Комиссия при выводе средств проектом из фонда"
+        "en": "Commission in ETH",
+        "ru": "Комиссия в ETH"
+    },
+    "AdminDashboardFieldTrancheFeePercentLabelMessage": {
+        "en": "It is charged at the time of receipt of funds after the completion of the road map phase",
+        "ru": "Взимается в момент получения средств проектом после окончания этапа дорожной карты"
     },
     "AdminDashboardFieldTrancheFeePercentPlaceholder": {
         "en": "0 .. 99.99 percent",
@@ -114,7 +130,7 @@ const translations = {
     },
     "AdminDashboardWarning": {
         "en": "Check the correctness of all fields, the correctness of the address of the token and the absence of a token in the table of the already added to WhiteList tokens",
-        "ru": "Проверте корректность всех полей, корректность адреса токена и отсутствие токена в таблице уже добавленных в WhiteList токенов"
+        "ru": "Проверьте корректность всех полей, корректность адреса токена и отсутствие токена в таблице уже добавленных в WhiteList токенов"
     },
     "AdminDashboardWhitelist": {
         "en": "Add to whitelist",
@@ -125,8 +141,8 @@ const translations = {
         "ru": "Токен"
     },
     "AdminDashboardTableOwner": {
-        "en": "Representative Owner",
-        "ru": "Представитель владельца"
+        "en": "Project’s wallet",
+        "ru": "Кошелек проекта"
     },
     "AdminDashboardTableSymbol": {
         "en": "Symbol",
@@ -156,8 +172,6 @@ const translations = {
         "en": "Commission for the withdrawal of project funds from the fund",
         "ru": "Комиссия при выводе средств проектом из фонда"
     },
-
-    /* Investor Dashboard */
     "InvestorDashboard": {
         "en": "Investor Dashboard",
         "ru": "Панель инструментов инвестора"
@@ -179,11 +193,11 @@ const translations = {
         "ru": "Полное название токена"
     },
     "InvestorDashboardShortWName": {
-        "en": "Short name of security token",
+        "en": "Short name of secure token",
         "ru": "Краткое название защищённого токена"
     },
     "InvestorDashboardFullWName": {
-        "en": "The full name of the secure token",
+        "en": "The full name of secure token",
         "ru": "Полное название защищённого токена"
     },
     "InvestorDashboardStatus": {
@@ -191,11 +205,11 @@ const translations = {
         "ru": "Статус"
     },
     "InvestorDashboardStartDate": {
-        "en": "Date and time of the sale of the tokens",
+        "en": "Date and time of the tokens sale start",
         "ru": "Дата и время начала продажи токенов"
     },
     "InvestorDashboardEndDate": {
-        "en": "Date and time of the end of the sale of the tokens",
+        "en": "Date and time of the tokens sale end",
         "ru": "Дата и время окончания продажи токенов"
     },
     "InvestorDashboardTotalTokens": {
@@ -203,15 +217,15 @@ const translations = {
         "ru": "Общее количество защищённых токенов"
     },
     "InvestorDashboardTokensSold": {
-        "en": "Number of Security Tokens Sold",
-        "ru": "Кол-во проданных защищенных токенов"
+        "en": "Number of secure tokens sold",
+        "ru": "Количество проданных защищенных токенов"
     },
     "InvestorDashboardShareSoldTokens": {
-        "en": "Share of sold secure tokens",
+        "en": "Share of secure tokens sold",
         "ru": "Доля проданных защищённых токенов"
     },
     "InvestorDashboardTokensOnSale": {
-        "en": "The number of protected tokens that is left on sale",
+        "en": "The number of protected tokens on sale",
         "ru": "Кол-во защищенных токенов, которое осталось в продаже"
     },
     "InvestorDashboardPrice": {
@@ -223,14 +237,13 @@ const translations = {
         "ru": "Скидка на {WToken} в %"
     },
     "InvestorDashboardPriceOneDiscount": {
-        "en": "The cost of one {WToken} token, taking into account the current discount",
+        "en": "The cost of one {WToken} token, including discount",
         "ru": "Стоимость одного токена {WToken} с учетом текущей скидки"
     },
     "InvestorDashboardCountdown": {
-        "en": "Number of days, hours, minutes before the end of the current discount",
+        "en": "Number of days, hours, minutes of the current discount validity",
         "ru": "Кол-во дней, часов, минут до окончания действия текущей скидки"
     },
-
     "InvestorDashboardDiscounts": {
         "en": "Discounts",
         "ru": "Скидки"
@@ -252,14 +265,13 @@ const translations = {
         "ru": "Бонус от объема"
     },
     "InvestorDashboardDiscountsTokenAmountVolumeBonus": {
-        "en": "Token amount with volume bonus",
+        "en": "Number of Token including volume bonus",
         "ru": "Количество токенов с бонусом объема"
     },
     "InvestorDashboardDiscountsGainTotalPercent": {
         "en": "W-tokens gain, total (%)",
         "ru": "Коэффициент усиления W-токенов, всего (%)"
     },
-
     "InvestorDashboardCalculator": {
         "en": "Buy tokens {WToken}",
         "ru": "Купить токены {WToken}"
@@ -296,9 +308,8 @@ const translations = {
         "en": "Buy",
         "ru": "Купить"
     },
-
     "InvestorDashboardExchangeTokens": {
-        "en": "Exchange {WToken} on {Token}",
+        "en": "Exchange {WToken} for {Token}",
         "ru": "Обмен {WToken} на {Token}"
     },
     "InvestorDashboardExchangeTokensCourse": {
@@ -310,7 +321,7 @@ const translations = {
         "ru": "Баланс {WToken}"
     },
     "InvestorDashboardExchangeTokensUnVestingBalance": {
-        "en": "Defrosted balance {WToken}",
+        "en": "Vested balance {WToken}",
         "ru": "Размороженный баланс {WToken}"
     },
     "InvestorDashboardExchangeTokensAmount": {
@@ -322,15 +333,15 @@ const translations = {
         "ru": "Количество токенов"
     },
     "InvestorDashboardExchangeTokensMessagesBeforeApprove": {
-        "en": "This number will return:",
-        "ru": "Данное колличество позволит вернуть:"
+        "en": "This amount will result in return of:",
+        "ru": "Данное количество позволит вернуть:"
     },
     "InvestorDashboardExchangeTokensApprove": {
         "en": "Approve",
         "ru": "Разрешить обмен"
     },
     "InvestorDashboardExchangeTokensMessagesBeforeSwap": {
-        "en": "Exchange {allowance} {WToken} to {allowance} {Token}?",
+        "en": "Exchange {allowance} {WToken} for {allowance} {Token}?",
         "ru": "Обменять {allowance} {WToken} на {allowance} {Token}?"
     },
     "InvestorDashboardExchangeTokensDecrease": {
@@ -341,7 +352,6 @@ const translations = {
         "en": "Exchange",
         "ru": "Обменять"
     },
-
     "InvestorDashboardRefundEth": {
         "en": "REFUND. Return: {WToken}, get: ETH",
         "ru": "REFUND. Вернуть: {WToken}, получить: ETH"
@@ -371,11 +381,11 @@ const translations = {
         "ru": "% возврата фонда"
     },
     "InvestorDashboardRefundEthInfoBalance": {
-        "en": "{WToken} balance on the currently selected account in Metamask",
+        "en": "{WToken} balance on the currently selected Metamask account",
         "ru": "Баланс {WToken} на текущем выбранном аккаунте в Metamask"
     },
     "InvestorDashboardRefundEthInfoAllSold": {
-        "en": "All {WToken} on the currently selected account in Metamask can be sold for:",
+        "en": "The cost of all {WToken} on the currently selected Metamask account:",
         "ru": "Все {WToken} на текущем выбранном аккаунте в Metamask можно продать за:"
     },
     "InvestorDashboardRefundEthCalculator": {
@@ -387,15 +397,15 @@ const translations = {
         "ru": "Token amount"
     },
     "InvestorDashboardRefundEthCalculatorMessage": {
-        "en": "This number will return:",
-        "ru": "Данное колличество позволит вернуть:"
+        "en": "This amount will allow to return:",
+        "ru": "Данное количество позволит вернуть:"
     },
     "InvestorDashboardRefundEthApprove": {
         "en": "Allow refund",
         "ru": "Разрешить возврат"
     },
     "InvestorDashboardRefundEthMessagesBeforeRefund": {
-        "en": "Exchange {allowance} {WToken} to {refundAmount} ETH?",
+        "en": "Exchange {allowance} {WToken} for {refundAmount} ETH?",
         "ru": "Обменять {allowance} {WToken} на {refundAmount} ETH?"
     },
     "InvestorDashboardRefundEthDecreaseRefund": {
@@ -406,8 +416,6 @@ const translations = {
         "en": "Exchange",
         "ru": "Обменять"
     },
-
-    /* ProjectDashboard */
     "ProjectDashboard": {
         "en": "Project Dashboard",
         "ru": "Панель инструментов проекта"
@@ -417,7 +425,7 @@ const translations = {
         "ru": "Загрузка смарт-контрактов..."
     },
     "ProjectDashboardLoadSearchToken": {
-        "en": "Searching for a token ...",
+        "en": "Search tokens ...",
         "ru": "Поиск токена..."
     },
     "ProjectDashboardLoadExpect": {
@@ -433,20 +441,20 @@ const translations = {
         "ru": "Символ:"
     },
     "ProjectDashboardDecimals": {
-        "en": "Decimals:",
-        "ru": "Десятичные:"
+        "en": "Decimals",
+        "ru": "Десятичные"
     },
     "ProjectDashboardFeeTokens": {
-        "en": "Fee (tokens):",
-        "ru": "Сбор (в токенах):"
+        "en": "Fee (tokens)",
+        "ru": "Сбор (в токенах)"
     },
     "ProjectDashboardFeeEth": {
-        "en": "Fee (ETH):",
-        "ru": "Сбор (в эфире):"
+        "en": "Fee (ETH)",
+        "ru": "Сбор (в эфире)"
     },
     "ProjectDashboardStageWhitelist": {
         "en": "Contact W12 to whitelist your token",
-        "ru": "Связаться с W12, чтобы белый список вашего токена"
+        "ru": "Связаться с W12, чтобы добавить токен в белый список"
     },
     "ProjectDashboardStageWhitelistStatusWhitelisted": {
         "en": "Whitelisted",
@@ -458,7 +466,7 @@ const translations = {
     },
     "ProjectDashboardStageApprove": {
         "en": "Approve tokens to place",
-        "ru": "Утвердить токены на место"
+        "ru": "Утвердить размещение токенов"
     },
     "ProjectDashboardStageApproveStatusPending": {
         "en": "Pending",
@@ -484,13 +492,9 @@ const translations = {
         "en": "Approve",
         "ru": "Разрешить"
     },
-    "ProjectDashboardStageApproveNoTokens": {
-        "en": "No tokens on balance",
-        "ru": "Нет токенов на балансе"
-    },
     "ProjectDashboardStagePlace": {
         "en": "Place Tokens to Listing",
-        "ru": "Добавить токены в список"
+        "ru": "Добавить токены в листинг"
     },
     "ProjectDashboardStagePlaceStatusPending": {
         "en": "Pending",
@@ -498,11 +502,11 @@ const translations = {
     },
     "ProjectDashboardStagePlaceStatusPlaced": {
         "en": "Placed",
-        "ru": "Добавлены"
+        "ru": "Размещены"
     },
     "ProjectDashboardStagePlaceAmountLabel": {
         "en": "Place Amount",
-        "ru": "Количество добавленных"
+        "ru": "Разместить токены"
     },
     "ProjectDashboardStagePlaceAmountPlaceholder": {
         "en": "Max: {tokensAmount}",
@@ -510,19 +514,8 @@ const translations = {
     },
     "ProjectDashboardStagePlaceButton": {
         "en": "Place",
-        "ru": "Добавить"
+        "ru": "Разместить"
     },
-    "ProjectDashboardStagePlaceCongratulations": {
-        "en": "Congratulations, {amount} {symbol} was successfully released, specify Crowdsale parameters for sale",
-        "ru": "Поздравляем, было успешно выпущено {amount} {symbol}, укажите параметры Crowdsale для продажи"
-    },
-    "ProjectDashboardStagePlaceErrorAmount": {
-        "en": "The specified amount, the higher the number of tokens allowed to write-off",
-        "ru": "Указанное количество, превышает количество токенов, разрешенных к списанию"
-    },
-
-
-
     "ProjectDashboardStageConfigureCrowdsale": {
         "en": "Configure Crowdsale",
         "ru": "Настройка Crowdsale"
@@ -544,7 +537,7 @@ const translations = {
         "ru": "Стоимость базового токена"
     },
     "ProjectDashboardStageConfigureCrowdsaleAmountForSaleLabel": {
-        "en": "Amount for sale",
+        "en": "On sale",
         "ru": "Количество для продажи"
     },
     "ProjectDashboardStageConfigureCrowdsaleInitButton": {
@@ -553,13 +546,12 @@ const translations = {
     },
     "ProjectDashboardStageConfigureCrowdsaleAddTokensLabel": {
         "en": "Добавить токены в краудсейл",
-        "ru": "Add tokens to the crowdsale"
+        "ru": "Add tokens to the crowdsdale"
     },
     "ProjectDashboardStageConfigureCrowdsaleAddButton": {
         "en": "Add",
         "ru": "Добавить"
     },
-
     "ProjectDashboardStageBonuses": {
         "en": "Configure Crowdsale Bonuses",
         "ru": "Настройка бонусов краудсейла"
@@ -586,11 +578,11 @@ const translations = {
     },
     "ProjectDashboardStageBonusesVestingDateLabel": {
         "en": "Vesting Date",
-        "ru": "Дата передачи"
+        "ru": "Дата разморозки"
     },
     "ProjectDashboardStageBonusesVolume": {
         "en": "Volume bonuses",
-        "ru": "Бонусы от обьема"
+        "ru": "Бонусы от объема"
     },
     "ProjectDashboardStageBonusesFromEth": {
         "en": "From (ETH)",
@@ -616,15 +608,9 @@ const translations = {
         "en": "Save stages",
         "ru": "Сохранить стадии"
     },
-
-    /* Milestones */
     "Milestones": {
         "en": "Milestones",
         "ru": "Основные этапы"
-    },
-    "MilestoneTitle": {
-        "en": "Stage",
-        "ru": "Этап"
     },
     "MilestonesAdd": {
         "en": "Add Milestone",
@@ -639,35 +625,35 @@ const translations = {
         "ru": "Описание этапа"
     },
     "MilestonesTranche": {
-        "en": "The amount of funds allocated to the project at the end of the stage in case of a positive vote",
+        "en": "The amount of funds allocated to the project at the end of the stage in case the majority votes pro",
         "ru": "Количество средств, выделяемых проекту по окончании этапа в случае позитивного голосования"
     },
     "MilestonesRelativeTotal": {
-        "en": "% relative to the total",
-        "ru": "% относительно общего количества"
+        "en": "% of total",
+        "ru": "% от общего количества"
     },
     "MilestonesDelete": {
         "en": "Delete stage",
         "ru": "Удалить этап"
     },
     "MilestonesDate": {
-        "en": "Date of achievement",
-        "ru": "Дата достижение этапа"
+        "en": "Date of completion",
+        "ru": "Дата завершения этапа"
     },
     "MilestonesDateEndVoting": {
-        "en": "The end date of the voting on reaching the stage",
-        "ru": "Дата окончания голосования о достижении этапа"
+        "en": "The date of the end of voting on stage completion",
+        "ru": "Дата окончания голосования о завершении этапа"
     },
     "MilestonesDateEndWithdrawal": {
-        "en": "End date of withdrawal",
-        "ru": "Дата окончания вывода средств"
+        "en": "End date of withdrawal in case majority votes contre",
+        "ru": "Дата окончания вывода средств в случае негативного голосования"
     },
     "MilestonesSend": {
-        "en": "Send Milestones to blockchain",
+        "en": "Save Milestones to blockchain",
         "ru": "Сохранить этапы"
     },
     "trancheInformation": {
-        "en": "Getting the ETH",
+        "en": "Get ETH",
         "ru": "Получение ETH"
     },
     "trancheInformationFundBalance": {
@@ -675,53 +661,51 @@ const translations = {
         "ru": "Баланс фонда хранения средств"
     },
     "trancheInformationDateNextTranche": {
-        "en": "Date and time of receipt of the next tranche",
+        "en": "Date and time of the next tranche",
         "ru": "Дата и время получения следующего транша"
     },
     "trancheInformationFundsMoment": {
-        "en": "Funds available to receive at the moment",
+        "en": "Currently available funds",
         "ru": "Средства, доступные для получения на данный момент"
     },
     "trancheInformationReceive": {
         "en": "Receive",
         "ru": "Получить"
     },
-
     "Receiving": {
-        "en": "Receiving {Token}",
+        "en": "Receive {Token}",
         "ru": "Получение {Token}"
     },
     "ReceivingUnsold": {
-        "en": "Unsold {Token} available for return at this time",
+        "en": "Unsold {Token} available for return",
         "ru": "Непроданные {Token}, доступные для возврата на данный момент"
     },
     "ReceivingRemaining": {
-        "en": "{Token} remaining in Token Changer after the buyers have returned the money {WToken} tokens available to return at the moment",
-        "ru": "{Token}, оставшиеся в Token Changer после возврата средств покупателями токенов {WToken}, доступные для возврата на данный момент"
+        "en": "{Token} backing {WToken}",
+        "ru": "{Token}, оставшиеся в обеспечение {WToken}"
     },
     "ReceivingAfterExchanging": {
-        "en": "{Token} tokens left after exchanging {WToken} to {Token} before the freeze period expires",
-        "ru": "{Token} токены, оставшиеся после обмена {WToken} на {Token} до истечения периода заморозки"
+        "en": "{Token} relieved after are fully backed {WToken}",
+        "ru": "{Token} токены, не участвующие в обеспечание {WToken}"
     },
     "ReceivingTotal": {
-        "en": "TOTAL {Token} is available to return to the moment:",
-        "ru": "ВСЕГО доступно {Token} для возврата на данный момент:"
+        "en": "TOTAL {Token} is available for return:",
+        "ru": "ВСЕГО доступно {Token} для возврата:"
     },
     "ReceivingGetUnsold": {
         "en": "Get unsold {WToken}",
         "ru": "Получить непроданные {WToken}"
     },
-
     "ExchangeTokensProjects": {
         "en": "Exchange {Balance} {WToken} to {Balance} {Token}",
         "ru": "Обмен {Balance} {WToken} на {Balance} {Token}"
     },
     "ExchangeTokensProjectsApprove": {
-        "en": "Approve",
+        "en": "Approve amount of tokens to exchange",
         "ru": "Разрешить обмен"
     },
     "ExchangeTokensProjectsMessagesBeforeSwap": {
-        "en": "Exchange {allowance} {WToken} to {allowance} {Token}?",
+        "en": "Exchange {allowance} {WToken} for {allowance} {Token}?",
         "ru": "Обменять {allowance} {WToken} на {allowance} {Token}?"
     },
     "ExchangeTokensProjectsDecrease": {
@@ -732,17 +716,30 @@ const translations = {
         "en": "Exchange",
         "ru": "Обменять"
     },
-
+    "ProjectDashboardStageApproveNoTokens": {
+        "en": "No tokens on balance",
+        "ru": "Нет токенов на балансе"
+    },
+    "ProjectDashboardStagePlaceCongratulations": {
+        "en": "Congratulations, {amount} {symbol} was successfully released, specify Crowdsale parameters for sale",
+        "ru": "Поздравляем, было успешно выпущено {amount} {symbol}, укажите параметры Crowdsale для продажи"
+    },
+    "ProjectDashboardStagePlaceErrorAmount": {
+        "en": "The specified amount, the higher the number of tokens allowed to write-off",
+        "ru": "Указанное количество, превышает количество токенов, разрешенных к списанию"
+    },
+    "MilestoneTitle": {
+        "en": "Stage",
+        "ru": "Этап"
+    },
     "GeneralTitle": {
         "en": "W12 Product v.1.0 in Rinkeby Test Network with Blockchain UI",
         "ru": "W12 Product v.1.0 в тестовой сети Rinkeby с пользовательским Blockchain UI"
     },
-
     "WaitingConfirm": {
         "en": "We are waiting for transaction confirmation",
         "ru": "Ожидаем подтверждение транзакции"
     },
-
     "ERROR_METAMASK_NOT_INSTALLED": {
         "en": "Please install Metamask to your browser",
         "ru": "Установите Метамаск в свой браузер"
@@ -752,4 +749,4 @@ const translations = {
         "ru": "Метамаск заблокирован, пожалуйста разблокируйте метамаск"
     },
 
-};
+}

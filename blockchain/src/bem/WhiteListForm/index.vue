@@ -64,8 +64,41 @@
                         v-model="whiteListForm.name">
             </div>
             <div class="form-group">
+                <label for="trancheFeePercent">{{ $t('AdminDashboardFieldTrancheFeePercentLabel') }}</label>
+                <b-field id="trancheFeePercent"
+                         :message="$t('AdminDashboardFieldTrancheFeePercentLabelMessage')">
+                    <input
+                            :placeholder="$t('AdminDashboardFieldTrancheFeePercentPlaceholder')"
+                            type="text"
+                            min="0"
+                            class="form-control"
+                            max="99.99"
+                            step="0.01"
+                            v-model="whiteListForm.trancheFeePercent"
+                            v-mask="'##.##'"
+                    />
+                </b-field>
+            </div>
+            <div class="form-group">
+                <label for="WTokenSaleFeePercent">{{ $t('AdminDashboardFieldWTokenSaleFeePercentLabel') }}</label>
+                <b-field id="WTokenSaleFeePercent"
+                         :message="$t('AdminDashboardFieldWTokenSaleFeePercentLabelMessage')">
+                    <input
+                            :placeholder="$t('AdminDashboardFieldWTokenSaleFeePercentPlaceholder')"
+                            type="text"
+                            min="0"
+                            class="form-control"
+                            max="99.99"
+                            step="0.01"
+                            v-model="whiteListForm.WTokenSaleFeePercent"
+                            v-mask="'##.##'"
+                    />
+                </b-field>
+            </div>
+            <div class="form-group">
                 <label for="FeeTokens">{{ $t('AdminDashboardFieldFeeTokensLabel') }}</label>
-                <b-field id="FeeTokens">
+                <b-field id="FeeTokens"
+                         :message="$t('AdminDashboardFieldFeeTokensLabelMessage')">
                     <input
                             :placeholder="$t('AdminDashboardFieldFeeTokensPlaceholder')"
                             type="text"
@@ -80,7 +113,8 @@
             </div>
             <div class="form-group">
                 <label for="FeeETH">{{ $t('AdminDashboardFieldFeeEthLabel') }}</label>
-                <b-field id="FeeETH">
+                <b-field id="FeeETH"
+                         :message="$t('AdminDashboardFieldFeeEthLabelMessage')">
                     <input
                             :placeholder="$t('AdminDashboardFieldFeeEthPlaceholder')"
                             type="text"
@@ -93,36 +127,8 @@
                     />
                 </b-field>
             </div>
-            <div class="form-group">
-                <label for="WTokenSaleFeePercent">{{ $t('AdminDashboardFieldWTokenSaleFeePercentLabel') }}</label>
-                <b-field id="WTokenSaleFeePercent">
-                    <input
-                            :placeholder="$t('AdminDashboardFieldWTokenSaleFeePercentPlaceholder')"
-                            type="text"
-                            min="0"
-                            class="form-control"
-                            max="99.99"
-                            step="0.01"
-                            v-model="whiteListForm.WTokenSaleFeePercent"
-                            v-mask="'##.##'"
-                    />
-                </b-field>
-            </div>
-            <div class="form-group">
-                <label for="trancheFeePercent">{{ $t('AdminDashboardFieldTrancheFeePercentLabel') }}</label>
-                <b-field id="trancheFeePercent">
-                    <input
-                            :placeholder="$t('AdminDashboardFieldTrancheFeePercentPlaceholder')"
-                            type="text"
-                            min="0"
-                            class="form-control"
-                            max="99.99"
-                            step="0.01"
-                            v-model="whiteListForm.trancheFeePercent"
-                            v-mask="'##.##'"
-                    />
-                </b-field>
-            </div>
+
+
 
             <b-notification :closable="false" v-if="disableWhiteListButton">
                 {{ $t('AdminDashboardWarning') }}
@@ -165,10 +171,10 @@
                     symbol: 'TN' + EndOfSymbol,
                     decimals: '18',
                     name: 'Token Name',
-                    feePercent: '10.50',
-                    feeETHPercent: '10.00',
-                    WTokenSaleFeePercent: '10.50',
-                    trancheFeePercent: '10.00',
+                    feePercent: '00.00',
+                    feeETHPercent: '00.00',
+                    WTokenSaleFeePercent: '05.00',
+                    trancheFeePercent: '05.00',
                 },
                 whitelistingReadOnly: false,
                 whitelistingToken: false,
