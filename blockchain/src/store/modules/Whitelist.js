@@ -41,7 +41,7 @@ export default {
         async fetch({commit}) {
             commit(UPDATE_META, {loading: true});
             try {
-                const {W12ListerFactory, DetailedERC20Factory, W12CrowdsaleFactory, W12TokenFactory, W12FundFactory} = await this.dispatch('Ledger/fetch');
+                const {W12ListerFactory} = await this.dispatch('Ledger/fetch');
                 const W12Lister = W12ListerFactory.at(this.state.Config.W12Lister.address);
                 let list = (await W12Lister.fetchAllTokensComposedInformation());
                 list = list.filter(({token}) => Boolean(token.tokenAddress));
