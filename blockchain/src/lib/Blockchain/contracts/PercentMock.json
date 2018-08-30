@@ -92,14 +92,14 @@
     "absolutePath": "/Projects/w12-new/contracts/libs/PercentMock.sol",
     "exportedSymbols": {
       "PercentMock": [
-        5204
+        5234
       ]
     },
-    "id": 5205,
+    "id": 5235,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 5140,
+        "id": 5170,
         "literals": [
           "solidity",
           "^",
@@ -112,10 +112,10 @@
       {
         "absolutePath": "/Projects/w12-new/contracts/libs/Percent.sol",
         "file": "./Percent.sol",
-        "id": 5141,
+        "id": 5171,
         "nodeType": "ImportDirective",
-        "scope": 5205,
-        "sourceUnit": 5139,
+        "scope": 5235,
+        "sourceUnit": 5169,
         "src": "26:23:20",
         "symbolAliases": [],
         "unitAlias": ""
@@ -123,10 +123,10 @@
       {
         "absolutePath": "/Projects/w12-new/openzeppelin-solidity/contracts/math/SafeMath.sol",
         "file": "../../openzeppelin-solidity/contracts/math/SafeMath.sol",
-        "id": 5142,
+        "id": 5172,
         "nodeType": "ImportDirective",
-        "scope": 5205,
-        "sourceUnit": 5322,
+        "scope": 5235,
+        "sourceUnit": 5352,
         "src": "50:65:20",
         "symbolAliases": [],
         "unitAlias": ""
@@ -137,31 +137,31 @@
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 5204,
+        "id": 5234,
         "linearizedBaseContracts": [
-          5204
+          5234
         ],
         "name": "PercentMock",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
-            "id": 5145,
+            "id": 5175,
             "libraryName": {
               "contractScope": null,
-              "id": 5143,
+              "id": 5173,
               "name": "SafeMath",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 5321,
+              "referencedDeclaration": 5351,
               "src": "150:8:20",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_SafeMath_$5321",
+                "typeIdentifier": "t_contract$_SafeMath_$5351",
                 "typeString": "library SafeMath"
               }
             },
             "nodeType": "UsingForDirective",
             "src": "144:24:20",
             "typeName": {
-              "id": 5144,
+              "id": 5174,
               "name": "uint",
               "nodeType": "ElementaryTypeName",
               "src": "163:4:20",
@@ -172,23 +172,23 @@
             }
           },
           {
-            "id": 5148,
+            "id": 5178,
             "libraryName": {
               "contractScope": null,
-              "id": 5146,
+              "id": 5176,
               "name": "Percent",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 5138,
+              "referencedDeclaration": 5168,
               "src": "179:7:20",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_Percent_$5138",
+                "typeIdentifier": "t_contract$_Percent_$5168",
                 "typeString": "library Percent"
               }
             },
             "nodeType": "UsingForDirective",
             "src": "173:23:20",
             "typeName": {
-              "id": 5147,
+              "id": 5177,
               "name": "uint",
               "nodeType": "ElementaryTypeName",
               "src": "191:4:20",
@@ -200,7 +200,7 @@
           },
           {
             "body": {
-              "id": 5163,
+              "id": 5193,
               "nodeType": "Block",
               "src": "265:47:20",
               "statements": [
@@ -210,11 +210,11 @@
                     "arguments": [
                       {
                         "argumentTypes": null,
-                        "id": 5159,
+                        "id": 5189,
                         "name": "_a",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 5150,
+                        "referencedDeclaration": 5180,
                         "src": "298:2:20",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
@@ -223,11 +223,11 @@
                       },
                       {
                         "argumentTypes": null,
-                        "id": 5160,
+                        "id": 5190,
                         "name": "_b",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 5152,
+                        "referencedDeclaration": 5182,
                         "src": "302:2:20",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
@@ -248,32 +248,32 @@
                       ],
                       "expression": {
                         "argumentTypes": null,
-                        "id": 5157,
+                        "id": 5187,
                         "name": "Percent",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 5138,
+                        "referencedDeclaration": 5168,
                         "src": "282:7:20",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_type$_t_contract$_Percent_$5138_$",
+                          "typeIdentifier": "t_type$_t_contract$_Percent_$5168_$",
                           "typeString": "type(library Percent)"
                         }
                       },
-                      "id": 5158,
+                      "id": 5188,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
                       "lValueRequested": false,
                       "memberName": "percent",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 5083,
+                      "referencedDeclaration": 5113,
                       "src": "282:15:20",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_internal_pure$_t_uint256_$_t_uint256_$returns$_t_uint256_$",
                         "typeString": "function (uint256,uint256) pure returns (uint256)"
                       }
                     },
-                    "id": 5161,
+                    "id": 5191,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -287,15 +287,15 @@
                       "typeString": "uint256"
                     }
                   },
-                  "functionReturnParameters": 5156,
-                  "id": 5162,
+                  "functionReturnParameters": 5186,
+                  "id": 5192,
                   "nodeType": "Return",
                   "src": "275:30:20"
                 }
               ]
             },
             "documentation": null,
-            "id": 5164,
+            "id": 5194,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": true,
@@ -303,15 +303,15 @@
             "name": "percent",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 5153,
+              "id": 5183,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 5150,
+                  "id": 5180,
                   "name": "_a",
                   "nodeType": "VariableDeclaration",
-                  "scope": 5164,
+                  "scope": 5194,
                   "src": "219:7:20",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -320,7 +320,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 5149,
+                    "id": 5179,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
                     "src": "219:4:20",
@@ -334,10 +334,10 @@
                 },
                 {
                   "constant": false,
-                  "id": 5152,
+                  "id": 5182,
                   "name": "_b",
                   "nodeType": "VariableDeclaration",
-                  "scope": 5164,
+                  "scope": 5194,
                   "src": "228:7:20",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -346,7 +346,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 5151,
+                    "id": 5181,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
                     "src": "228:4:20",
@@ -363,15 +363,15 @@
             },
             "payable": false,
             "returnParameters": {
-              "id": 5156,
+              "id": 5186,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 5155,
+                  "id": 5185,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 5164,
+                  "scope": 5194,
                   "src": "258:4:20",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -380,7 +380,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 5154,
+                    "id": 5184,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
                     "src": "258:4:20",
@@ -395,7 +395,7 @@
               ],
               "src": "257:6:20"
             },
-            "scope": 5204,
+            "scope": 5234,
             "src": "202:110:20",
             "stateMutability": "pure",
             "superFunction": null,
@@ -403,7 +403,7 @@
           },
           {
             "body": {
-              "id": 5176,
+              "id": 5206,
               "nodeType": "Block",
               "src": "373:45:20",
               "statements": [
@@ -413,11 +413,11 @@
                     "arguments": [
                       {
                         "argumentTypes": null,
-                        "id": 5173,
+                        "id": 5203,
                         "name": "_a",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 5166,
+                        "referencedDeclaration": 5196,
                         "src": "408:2:20",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
@@ -434,32 +434,32 @@
                       ],
                       "expression": {
                         "argumentTypes": null,
-                        "id": 5171,
+                        "id": 5201,
                         "name": "Percent",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 5138,
+                        "referencedDeclaration": 5168,
                         "src": "390:7:20",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_type$_t_contract$_Percent_$5138_$",
+                          "typeIdentifier": "t_type$_t_contract$_Percent_$5168_$",
                           "typeString": "type(library Percent)"
                         }
                       },
-                      "id": 5172,
+                      "id": 5202,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
                       "lValueRequested": false,
                       "memberName": "isPercent",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 5099,
+                      "referencedDeclaration": 5129,
                       "src": "390:17:20",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_internal_pure$_t_uint256_$returns$_t_bool_$",
                         "typeString": "function (uint256) pure returns (bool)"
                       }
                     },
-                    "id": 5174,
+                    "id": 5204,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -473,15 +473,15 @@
                       "typeString": "bool"
                     }
                   },
-                  "functionReturnParameters": 5170,
-                  "id": 5175,
+                  "functionReturnParameters": 5200,
+                  "id": 5205,
                   "nodeType": "Return",
                   "src": "383:28:20"
                 }
               ]
             },
             "documentation": null,
-            "id": 5177,
+            "id": 5207,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": true,
@@ -489,15 +489,15 @@
             "name": "isPercent",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 5167,
+              "id": 5197,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 5166,
+                  "id": 5196,
                   "name": "_a",
                   "nodeType": "VariableDeclaration",
-                  "scope": 5177,
+                  "scope": 5207,
                   "src": "337:7:20",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -506,7 +506,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 5165,
+                    "id": 5195,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
                     "src": "337:4:20",
@@ -523,15 +523,15 @@
             },
             "payable": false,
             "returnParameters": {
-              "id": 5170,
+              "id": 5200,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 5169,
+                  "id": 5199,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 5177,
+                  "scope": 5207,
                   "src": "367:4:20",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -540,7 +540,7 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 5168,
+                    "id": 5198,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
                     "src": "367:4:20",
@@ -555,7 +555,7 @@
               ],
               "src": "366:6:20"
             },
-            "scope": 5204,
+            "scope": 5234,
             "src": "318:100:20",
             "stateMutability": "pure",
             "superFunction": null,
@@ -563,7 +563,7 @@
           },
           {
             "body": {
-              "id": 5189,
+              "id": 5219,
               "nodeType": "Block",
               "src": "479:45:20",
               "statements": [
@@ -573,11 +573,11 @@
                     "arguments": [
                       {
                         "argumentTypes": null,
-                        "id": 5186,
+                        "id": 5216,
                         "name": "_a",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 5179,
+                        "referencedDeclaration": 5209,
                         "src": "514:2:20",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
@@ -594,32 +594,32 @@
                       ],
                       "expression": {
                         "argumentTypes": null,
-                        "id": 5184,
+                        "id": 5214,
                         "name": "Percent",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 5138,
+                        "referencedDeclaration": 5168,
                         "src": "496:7:20",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_type$_t_contract$_Percent_$5138_$",
+                          "typeIdentifier": "t_type$_t_contract$_Percent_$5168_$",
                           "typeString": "type(library Percent)"
                         }
                       },
-                      "id": 5185,
+                      "id": 5215,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
                       "lValueRequested": false,
                       "memberName": "toPercent",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 5118,
+                      "referencedDeclaration": 5148,
                       "src": "496:17:20",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_internal_pure$_t_uint256_$returns$_t_uint256_$",
                         "typeString": "function (uint256) pure returns (uint256)"
                       }
                     },
-                    "id": 5187,
+                    "id": 5217,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -633,15 +633,15 @@
                       "typeString": "uint256"
                     }
                   },
-                  "functionReturnParameters": 5183,
-                  "id": 5188,
+                  "functionReturnParameters": 5213,
+                  "id": 5218,
                   "nodeType": "Return",
                   "src": "489:28:20"
                 }
               ]
             },
             "documentation": null,
-            "id": 5190,
+            "id": 5220,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": true,
@@ -649,15 +649,15 @@
             "name": "toPercent",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 5180,
+              "id": 5210,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 5179,
+                  "id": 5209,
                   "name": "_a",
                   "nodeType": "VariableDeclaration",
-                  "scope": 5190,
+                  "scope": 5220,
                   "src": "443:7:20",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -666,7 +666,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 5178,
+                    "id": 5208,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
                     "src": "443:4:20",
@@ -683,15 +683,15 @@
             },
             "payable": false,
             "returnParameters": {
-              "id": 5183,
+              "id": 5213,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 5182,
+                  "id": 5212,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 5190,
+                  "scope": 5220,
                   "src": "473:4:20",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -700,7 +700,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 5181,
+                    "id": 5211,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
                     "src": "473:4:20",
@@ -715,7 +715,7 @@
               ],
               "src": "472:6:20"
             },
-            "scope": 5204,
+            "scope": 5234,
             "src": "424:100:20",
             "stateMutability": "pure",
             "superFunction": null,
@@ -723,7 +723,7 @@
           },
           {
             "body": {
-              "id": 5202,
+              "id": 5232,
               "nodeType": "Block",
               "src": "587:47:20",
               "statements": [
@@ -733,11 +733,11 @@
                     "arguments": [
                       {
                         "argumentTypes": null,
-                        "id": 5199,
+                        "id": 5229,
                         "name": "_a",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 5192,
+                        "referencedDeclaration": 5222,
                         "src": "624:2:20",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
@@ -754,32 +754,32 @@
                       ],
                       "expression": {
                         "argumentTypes": null,
-                        "id": 5197,
+                        "id": 5227,
                         "name": "Percent",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 5138,
+                        "referencedDeclaration": 5168,
                         "src": "604:7:20",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_type$_t_contract$_Percent_$5138_$",
+                          "typeIdentifier": "t_type$_t_contract$_Percent_$5168_$",
                           "typeString": "type(library Percent)"
                         }
                       },
-                      "id": 5198,
+                      "id": 5228,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
                       "lValueRequested": false,
                       "memberName": "fromPercent",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 5137,
+                      "referencedDeclaration": 5167,
                       "src": "604:19:20",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_internal_pure$_t_uint256_$returns$_t_uint256_$",
                         "typeString": "function (uint256) pure returns (uint256)"
                       }
                     },
-                    "id": 5200,
+                    "id": 5230,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -793,15 +793,15 @@
                       "typeString": "uint256"
                     }
                   },
-                  "functionReturnParameters": 5196,
-                  "id": 5201,
+                  "functionReturnParameters": 5226,
+                  "id": 5231,
                   "nodeType": "Return",
                   "src": "597:30:20"
                 }
               ]
             },
             "documentation": null,
-            "id": 5203,
+            "id": 5233,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": true,
@@ -809,15 +809,15 @@
             "name": "fromPercent",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 5193,
+              "id": 5223,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 5192,
+                  "id": 5222,
                   "name": "_a",
                   "nodeType": "VariableDeclaration",
-                  "scope": 5203,
+                  "scope": 5233,
                   "src": "551:7:20",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -826,7 +826,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 5191,
+                    "id": 5221,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
                     "src": "551:4:20",
@@ -843,15 +843,15 @@
             },
             "payable": false,
             "returnParameters": {
-              "id": 5196,
+              "id": 5226,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 5195,
+                  "id": 5225,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 5203,
+                  "scope": 5233,
                   "src": "581:4:20",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -860,7 +860,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 5194,
+                    "id": 5224,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
                     "src": "581:4:20",
@@ -875,14 +875,14 @@
               ],
               "src": "580:6:20"
             },
-            "scope": 5204,
+            "scope": 5234,
             "src": "530:104:20",
             "stateMutability": "pure",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 5205,
+        "scope": 5235,
         "src": "117:519:20"
       }
     ],
@@ -892,14 +892,14 @@
     "absolutePath": "/Projects/w12-new/contracts/libs/PercentMock.sol",
     "exportedSymbols": {
       "PercentMock": [
-        5204
+        5234
       ]
     },
-    "id": 5205,
+    "id": 5235,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 5140,
+        "id": 5170,
         "literals": [
           "solidity",
           "^",
@@ -912,10 +912,10 @@
       {
         "absolutePath": "/Projects/w12-new/contracts/libs/Percent.sol",
         "file": "./Percent.sol",
-        "id": 5141,
+        "id": 5171,
         "nodeType": "ImportDirective",
-        "scope": 5205,
-        "sourceUnit": 5139,
+        "scope": 5235,
+        "sourceUnit": 5169,
         "src": "26:23:20",
         "symbolAliases": [],
         "unitAlias": ""
@@ -923,10 +923,10 @@
       {
         "absolutePath": "/Projects/w12-new/openzeppelin-solidity/contracts/math/SafeMath.sol",
         "file": "../../openzeppelin-solidity/contracts/math/SafeMath.sol",
-        "id": 5142,
+        "id": 5172,
         "nodeType": "ImportDirective",
-        "scope": 5205,
-        "sourceUnit": 5322,
+        "scope": 5235,
+        "sourceUnit": 5352,
         "src": "50:65:20",
         "symbolAliases": [],
         "unitAlias": ""
@@ -937,31 +937,31 @@
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 5204,
+        "id": 5234,
         "linearizedBaseContracts": [
-          5204
+          5234
         ],
         "name": "PercentMock",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
-            "id": 5145,
+            "id": 5175,
             "libraryName": {
               "contractScope": null,
-              "id": 5143,
+              "id": 5173,
               "name": "SafeMath",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 5321,
+              "referencedDeclaration": 5351,
               "src": "150:8:20",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_SafeMath_$5321",
+                "typeIdentifier": "t_contract$_SafeMath_$5351",
                 "typeString": "library SafeMath"
               }
             },
             "nodeType": "UsingForDirective",
             "src": "144:24:20",
             "typeName": {
-              "id": 5144,
+              "id": 5174,
               "name": "uint",
               "nodeType": "ElementaryTypeName",
               "src": "163:4:20",
@@ -972,23 +972,23 @@
             }
           },
           {
-            "id": 5148,
+            "id": 5178,
             "libraryName": {
               "contractScope": null,
-              "id": 5146,
+              "id": 5176,
               "name": "Percent",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 5138,
+              "referencedDeclaration": 5168,
               "src": "179:7:20",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_Percent_$5138",
+                "typeIdentifier": "t_contract$_Percent_$5168",
                 "typeString": "library Percent"
               }
             },
             "nodeType": "UsingForDirective",
             "src": "173:23:20",
             "typeName": {
-              "id": 5147,
+              "id": 5177,
               "name": "uint",
               "nodeType": "ElementaryTypeName",
               "src": "191:4:20",
@@ -1000,7 +1000,7 @@
           },
           {
             "body": {
-              "id": 5163,
+              "id": 5193,
               "nodeType": "Block",
               "src": "265:47:20",
               "statements": [
@@ -1010,11 +1010,11 @@
                     "arguments": [
                       {
                         "argumentTypes": null,
-                        "id": 5159,
+                        "id": 5189,
                         "name": "_a",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 5150,
+                        "referencedDeclaration": 5180,
                         "src": "298:2:20",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
@@ -1023,11 +1023,11 @@
                       },
                       {
                         "argumentTypes": null,
-                        "id": 5160,
+                        "id": 5190,
                         "name": "_b",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 5152,
+                        "referencedDeclaration": 5182,
                         "src": "302:2:20",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
@@ -1048,32 +1048,32 @@
                       ],
                       "expression": {
                         "argumentTypes": null,
-                        "id": 5157,
+                        "id": 5187,
                         "name": "Percent",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 5138,
+                        "referencedDeclaration": 5168,
                         "src": "282:7:20",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_type$_t_contract$_Percent_$5138_$",
+                          "typeIdentifier": "t_type$_t_contract$_Percent_$5168_$",
                           "typeString": "type(library Percent)"
                         }
                       },
-                      "id": 5158,
+                      "id": 5188,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
                       "lValueRequested": false,
                       "memberName": "percent",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 5083,
+                      "referencedDeclaration": 5113,
                       "src": "282:15:20",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_internal_pure$_t_uint256_$_t_uint256_$returns$_t_uint256_$",
                         "typeString": "function (uint256,uint256) pure returns (uint256)"
                       }
                     },
-                    "id": 5161,
+                    "id": 5191,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -1087,15 +1087,15 @@
                       "typeString": "uint256"
                     }
                   },
-                  "functionReturnParameters": 5156,
-                  "id": 5162,
+                  "functionReturnParameters": 5186,
+                  "id": 5192,
                   "nodeType": "Return",
                   "src": "275:30:20"
                 }
               ]
             },
             "documentation": null,
-            "id": 5164,
+            "id": 5194,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": true,
@@ -1103,15 +1103,15 @@
             "name": "percent",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 5153,
+              "id": 5183,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 5150,
+                  "id": 5180,
                   "name": "_a",
                   "nodeType": "VariableDeclaration",
-                  "scope": 5164,
+                  "scope": 5194,
                   "src": "219:7:20",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1120,7 +1120,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 5149,
+                    "id": 5179,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
                     "src": "219:4:20",
@@ -1134,10 +1134,10 @@
                 },
                 {
                   "constant": false,
-                  "id": 5152,
+                  "id": 5182,
                   "name": "_b",
                   "nodeType": "VariableDeclaration",
-                  "scope": 5164,
+                  "scope": 5194,
                   "src": "228:7:20",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1146,7 +1146,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 5151,
+                    "id": 5181,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
                     "src": "228:4:20",
@@ -1163,15 +1163,15 @@
             },
             "payable": false,
             "returnParameters": {
-              "id": 5156,
+              "id": 5186,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 5155,
+                  "id": 5185,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 5164,
+                  "scope": 5194,
                   "src": "258:4:20",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1180,7 +1180,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 5154,
+                    "id": 5184,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
                     "src": "258:4:20",
@@ -1195,7 +1195,7 @@
               ],
               "src": "257:6:20"
             },
-            "scope": 5204,
+            "scope": 5234,
             "src": "202:110:20",
             "stateMutability": "pure",
             "superFunction": null,
@@ -1203,7 +1203,7 @@
           },
           {
             "body": {
-              "id": 5176,
+              "id": 5206,
               "nodeType": "Block",
               "src": "373:45:20",
               "statements": [
@@ -1213,11 +1213,11 @@
                     "arguments": [
                       {
                         "argumentTypes": null,
-                        "id": 5173,
+                        "id": 5203,
                         "name": "_a",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 5166,
+                        "referencedDeclaration": 5196,
                         "src": "408:2:20",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
@@ -1234,32 +1234,32 @@
                       ],
                       "expression": {
                         "argumentTypes": null,
-                        "id": 5171,
+                        "id": 5201,
                         "name": "Percent",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 5138,
+                        "referencedDeclaration": 5168,
                         "src": "390:7:20",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_type$_t_contract$_Percent_$5138_$",
+                          "typeIdentifier": "t_type$_t_contract$_Percent_$5168_$",
                           "typeString": "type(library Percent)"
                         }
                       },
-                      "id": 5172,
+                      "id": 5202,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
                       "lValueRequested": false,
                       "memberName": "isPercent",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 5099,
+                      "referencedDeclaration": 5129,
                       "src": "390:17:20",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_internal_pure$_t_uint256_$returns$_t_bool_$",
                         "typeString": "function (uint256) pure returns (bool)"
                       }
                     },
-                    "id": 5174,
+                    "id": 5204,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -1273,15 +1273,15 @@
                       "typeString": "bool"
                     }
                   },
-                  "functionReturnParameters": 5170,
-                  "id": 5175,
+                  "functionReturnParameters": 5200,
+                  "id": 5205,
                   "nodeType": "Return",
                   "src": "383:28:20"
                 }
               ]
             },
             "documentation": null,
-            "id": 5177,
+            "id": 5207,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": true,
@@ -1289,15 +1289,15 @@
             "name": "isPercent",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 5167,
+              "id": 5197,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 5166,
+                  "id": 5196,
                   "name": "_a",
                   "nodeType": "VariableDeclaration",
-                  "scope": 5177,
+                  "scope": 5207,
                   "src": "337:7:20",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1306,7 +1306,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 5165,
+                    "id": 5195,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
                     "src": "337:4:20",
@@ -1323,15 +1323,15 @@
             },
             "payable": false,
             "returnParameters": {
-              "id": 5170,
+              "id": 5200,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 5169,
+                  "id": 5199,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 5177,
+                  "scope": 5207,
                   "src": "367:4:20",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1340,7 +1340,7 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 5168,
+                    "id": 5198,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
                     "src": "367:4:20",
@@ -1355,7 +1355,7 @@
               ],
               "src": "366:6:20"
             },
-            "scope": 5204,
+            "scope": 5234,
             "src": "318:100:20",
             "stateMutability": "pure",
             "superFunction": null,
@@ -1363,7 +1363,7 @@
           },
           {
             "body": {
-              "id": 5189,
+              "id": 5219,
               "nodeType": "Block",
               "src": "479:45:20",
               "statements": [
@@ -1373,11 +1373,11 @@
                     "arguments": [
                       {
                         "argumentTypes": null,
-                        "id": 5186,
+                        "id": 5216,
                         "name": "_a",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 5179,
+                        "referencedDeclaration": 5209,
                         "src": "514:2:20",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
@@ -1394,32 +1394,32 @@
                       ],
                       "expression": {
                         "argumentTypes": null,
-                        "id": 5184,
+                        "id": 5214,
                         "name": "Percent",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 5138,
+                        "referencedDeclaration": 5168,
                         "src": "496:7:20",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_type$_t_contract$_Percent_$5138_$",
+                          "typeIdentifier": "t_type$_t_contract$_Percent_$5168_$",
                           "typeString": "type(library Percent)"
                         }
                       },
-                      "id": 5185,
+                      "id": 5215,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
                       "lValueRequested": false,
                       "memberName": "toPercent",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 5118,
+                      "referencedDeclaration": 5148,
                       "src": "496:17:20",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_internal_pure$_t_uint256_$returns$_t_uint256_$",
                         "typeString": "function (uint256) pure returns (uint256)"
                       }
                     },
-                    "id": 5187,
+                    "id": 5217,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -1433,15 +1433,15 @@
                       "typeString": "uint256"
                     }
                   },
-                  "functionReturnParameters": 5183,
-                  "id": 5188,
+                  "functionReturnParameters": 5213,
+                  "id": 5218,
                   "nodeType": "Return",
                   "src": "489:28:20"
                 }
               ]
             },
             "documentation": null,
-            "id": 5190,
+            "id": 5220,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": true,
@@ -1449,15 +1449,15 @@
             "name": "toPercent",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 5180,
+              "id": 5210,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 5179,
+                  "id": 5209,
                   "name": "_a",
                   "nodeType": "VariableDeclaration",
-                  "scope": 5190,
+                  "scope": 5220,
                   "src": "443:7:20",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1466,7 +1466,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 5178,
+                    "id": 5208,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
                     "src": "443:4:20",
@@ -1483,15 +1483,15 @@
             },
             "payable": false,
             "returnParameters": {
-              "id": 5183,
+              "id": 5213,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 5182,
+                  "id": 5212,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 5190,
+                  "scope": 5220,
                   "src": "473:4:20",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1500,7 +1500,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 5181,
+                    "id": 5211,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
                     "src": "473:4:20",
@@ -1515,7 +1515,7 @@
               ],
               "src": "472:6:20"
             },
-            "scope": 5204,
+            "scope": 5234,
             "src": "424:100:20",
             "stateMutability": "pure",
             "superFunction": null,
@@ -1523,7 +1523,7 @@
           },
           {
             "body": {
-              "id": 5202,
+              "id": 5232,
               "nodeType": "Block",
               "src": "587:47:20",
               "statements": [
@@ -1533,11 +1533,11 @@
                     "arguments": [
                       {
                         "argumentTypes": null,
-                        "id": 5199,
+                        "id": 5229,
                         "name": "_a",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 5192,
+                        "referencedDeclaration": 5222,
                         "src": "624:2:20",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
@@ -1554,32 +1554,32 @@
                       ],
                       "expression": {
                         "argumentTypes": null,
-                        "id": 5197,
+                        "id": 5227,
                         "name": "Percent",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 5138,
+                        "referencedDeclaration": 5168,
                         "src": "604:7:20",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_type$_t_contract$_Percent_$5138_$",
+                          "typeIdentifier": "t_type$_t_contract$_Percent_$5168_$",
                           "typeString": "type(library Percent)"
                         }
                       },
-                      "id": 5198,
+                      "id": 5228,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
                       "lValueRequested": false,
                       "memberName": "fromPercent",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 5137,
+                      "referencedDeclaration": 5167,
                       "src": "604:19:20",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_internal_pure$_t_uint256_$returns$_t_uint256_$",
                         "typeString": "function (uint256) pure returns (uint256)"
                       }
                     },
-                    "id": 5200,
+                    "id": 5230,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -1593,15 +1593,15 @@
                       "typeString": "uint256"
                     }
                   },
-                  "functionReturnParameters": 5196,
-                  "id": 5201,
+                  "functionReturnParameters": 5226,
+                  "id": 5231,
                   "nodeType": "Return",
                   "src": "597:30:20"
                 }
               ]
             },
             "documentation": null,
-            "id": 5203,
+            "id": 5233,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": true,
@@ -1609,15 +1609,15 @@
             "name": "fromPercent",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 5193,
+              "id": 5223,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 5192,
+                  "id": 5222,
                   "name": "_a",
                   "nodeType": "VariableDeclaration",
-                  "scope": 5203,
+                  "scope": 5233,
                   "src": "551:7:20",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1626,7 +1626,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 5191,
+                    "id": 5221,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
                     "src": "551:4:20",
@@ -1643,15 +1643,15 @@
             },
             "payable": false,
             "returnParameters": {
-              "id": 5196,
+              "id": 5226,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 5195,
+                  "id": 5225,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 5203,
+                  "scope": 5233,
                   "src": "581:4:20",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1660,7 +1660,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 5194,
+                    "id": 5224,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
                     "src": "581:4:20",
@@ -1675,14 +1675,14 @@
               ],
               "src": "580:6:20"
             },
-            "scope": 5204,
+            "scope": 5234,
             "src": "530:104:20",
             "stateMutability": "pure",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 5205,
+        "scope": 5235,
         "src": "117:519:20"
       }
     ],
@@ -1694,5 +1694,5 @@
   },
   "networks": {},
   "schemaVersion": "2.0.1",
-  "updatedAt": "2018-08-24T22:22:14.932Z"
+  "updatedAt": "2018-08-29T16:48:08.262Z"
 }
