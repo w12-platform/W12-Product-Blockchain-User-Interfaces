@@ -1,6 +1,6 @@
 <template>
     <b-field class="ProjectSwitch">
-        <b-select @input="projectSelected" :placeholder="$t('ProjectDashboardSelectToken')" expanded>
+        <b-select @input="FetchProject" :placeholder="$t('ProjectDashboardSelectToken')" expanded>
             <option v-for="(project, idx) in ProjectList" :key="idx" :value="project">
                 {{ project.symbol }} - {{ project.tokenAddress }}
             </option>
@@ -29,9 +29,6 @@
             ...ProjectNS.mapActions({
                 FetchProject: "fetchProject"
             }),
-            projectSelected(token) {
-                this.FetchProject({Token: token});
-            },
         },
     };
 </script>

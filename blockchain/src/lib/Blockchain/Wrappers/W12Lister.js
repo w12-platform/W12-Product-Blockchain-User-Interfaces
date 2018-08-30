@@ -21,119 +21,74 @@ export class W12ListerWrapper extends BaseWrapper {
         this.DetailedERC20Factory = DetailedERC20Factory;
     }
 
-    async fetchComposedTokenInformationByTokenAddress(tokenAddress, tokenOwner) {
-        const {ERC20Factory, W12CrowdsaleFactory, W12TokenLedgerFactory} = this;
-
-        if (tokenAddress) {
-            const whiteListEvent = this.events.OwnerWhitelisted({ tokenAddress }, { fromBlock: 0 });
-
-            const getEventRecord = promisify(whiteListEvent.get.bind(whiteListEvent));
-
-            const tokenIndex = (await this.methods.approvedTokensIndex(tokenAddress, tokenOwner)).toNumber();
-            if (tokenIndex > 0) {
-                const eventRecord = await getEventRecord();
-
-                if (eventRecord.length > 0) {
-                    const {
-                        name,
-                        symbol,
-                        tokenAddress,
-                    } = eventRecord[0].args; // take first record by default
-
-                    let tokenOwners = eventRecord.map((event)=>event.args.tokenOwner);
-
-                    const listedToken = await this.methods.approvedTokens(tokenIndex);
-                    const ledgerAddress = await this.methods.ledger();
-                    const decimals = listedToken[2].toString();
-                    const feePercent = listedToken[3].toString();
-                    const feeETHPercent = listedToken[4].toString();
-                    const WTokenSaleFeePercent = listedToken[5].toString();
-                    const trancheFeePercent = listedToken[6].toString();
-                    let crowdsaleAddress = listedToken[7].toString();
-                    const tokensForSaleAmount = listedToken[8].toString();
-                    const wTokensIssuedAmount = listedToken[9].toString();
-                    const ERC20 = ERC20Factory.at(tokenAddress);
-                    const W12TokenLedger = W12TokenLedgerFactory.at(ledgerAddress);
-                    const wTokenAddress = await W12TokenLedger.methods.getWTokenByToken(tokenAddress);
-
-                    if (!crowdsaleAddress || parseInt(crowdsaleAddress, 16) === 0) {
-                        crowdsaleAddress = null;
-                    }
-
-                    const W12Crowdsale = crowdsaleAddress
-                        ? W12CrowdsaleFactory.at(crowdsaleAddress)
-                        : null;
-
-                    return {
-                        token: {
-                            index: tokenIndex,
-                            ledgerAddress,
-                            name,
-                            symbol,
-                            tokenAddress,
-                            tokenOwners,
-                            decimals,
-                            feePercent,
-                            feeETHPercent,
-                            WTokenSaleFeePercent,
-                            trancheFeePercent,
-                            crowdsaleAddress,
-                            tokensForSaleAmount,
-                            wTokensIssuedAmount,
-                            listedToken,
-                            wTokenAddress
-                        },
-                        links: {
-                            ERC20Instance: ERC20,
-                            W12TokenLedgerInstance: W12TokenLedger,
-                            W12CrowdsaleInstance: W12Crowdsale
-                        }
-                    }
-                }
-            }
-        }
+    async fetchComposedTokenInformationByTokenAddress(tokenAddress, tokenOwner){
+        const {W12TokenLedgerFactory} = this;
+        const ledgerAddress = await this.methods.ledger();
+        const W12TokenLedger = W12TokenLedgerFactory.at(ledgerAddress);
+        const tokenIndex = (await this.methods.approvedTokensIndex(tokenAddress, tokenOwner)).toNumber();
+        const listedToken = (await this.methods.approvedTokens(tokenIndex));
+        const wTokenAddress = await W12TokenLedger.methods.getWTokenByToken(listedToken[10].toString());
+        return {
+            index: tokenIndex,
+            ledgerAddress,
+            wTokenAddress,
+            name: listedToken[0].toString(),
+            symbol: listedToken[1].toString(),
+            tokenAddress: listedToken[10].toString(),
+            decimals: listedToken[2].toString(),
+            feePercent: listedToken[3].toString(),
+            feeETHPercent: listedToken[4].toString(),
+            WTokenSaleFeePercent: listedToken[5].toString(),
+            trancheFeePercent: listedToken[6].toString(),
+            crowdsaleAddress: listedToken[7].toString(),
+            tokensForSaleAmount: listedToken[8].toString(),
+            wTokensIssuedAmount: listedToken[9].toString(),
+            tokenOwners: (await this.methods.getTokenOwners(listedToken[10])),
+        };
     }
 
-    async fetchAllApprovedTokensByEvents() {
-        const filter = this.events.OwnerWhitelisted(null, {
-            fromBlock: 0
-        });
-        const getRecords = promisify(filter.get.bind(filter));
+    async fetchAllTokensInWhiteList() {
+        const {W12TokenLedgerFactory} = this;
 
-        const records = await getRecords();
-        const list = [];
+        const ledgerAddress = await this.methods.ledger();
+        const W12TokenLedger = W12TokenLedgerFactory.at(ledgerAddress);
 
-        for (let idx in records) {
-            const record = records[idx];
-            const {
-                name,
-                symbol,
-                tokenAddress,
-                tokenOwner
-            } = record.args;
+        let list = [];
+        const length = (await this.methods.approvedTokensLength());
+        for(let i = 1; i <= length; i++){
+            const listedToken = (await this.methods.approvedTokens(i));
+            const wTokenAddress = await W12TokenLedger.methods.getWTokenByToken(listedToken[10].toString());
 
             list.push({
-                name,
-                symbol,
-                tokenAddress,
-                tokenOwner
+                index: i,
+                ledgerAddress,
+                wTokenAddress,
+                name: listedToken[0].toString(),
+                symbol: listedToken[1].toString(),
+                tokenAddress: listedToken[10].toString(),
+                decimals: listedToken[2].toString(),
+                feePercent: listedToken[3].toString(),
+                feeETHPercent: listedToken[4].toString(),
+                WTokenSaleFeePercent: listedToken[5].toString(),
+                trancheFeePercent: listedToken[6].toString(),
+                crowdsaleAddress: listedToken[7].toString(),
+                tokensForSaleAmount: listedToken[8].toString(),
+                wTokensIssuedAmount: listedToken[9].toString(),
+                tokenOwners: (await this.methods.getTokenOwners(listedToken[10])),
             });
         }
-
         return list;
     }
 
     async fetchAllTokensComposedInformation() {
-        const list = await this.fetchAllApprovedTokensByEvents();
+        const list = await this.fetchAllTokensInWhiteList();
         const result = [];
         const RecentAddresses = [];
 
         for (let item of list) {
             if(RecentAddresses.indexOf(item.tokenAddress) === -1){
-                const composedInfo = await this.fetchComposedTokenInformationByTokenAddress(item.tokenAddress, item.tokenOwner);
-
                 RecentAddresses.push(item.tokenAddress);
-                result.push(composedInfo);
+                result.push(item);
             }
         }
 

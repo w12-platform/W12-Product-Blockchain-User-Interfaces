@@ -191,17 +191,17 @@ export default {
             try {
                 const {W12ListerFactory} = await this.dispatch('Ledger/fetch');
                 const W12Lister = W12ListerFactory.at(this.state.Config.W12Lister.address);
-                const list = await W12Lister.fetchAllApprovedTokensByEvents();
+                const list = await W12Lister.fetchAllTokensInWhiteList();
                 commit(UPDATE, {list});
             } catch (e) {
                 commit(UPDATE_META, {loading: false, loadingError: e.message});
             }
             commit(UPDATE_META, {loading: false});
         },
-        async fetchProject({commit, getters, state}, {Token}) {
+        async fetchProject({commit, getters, state}, Token) {
             commit(UPDATE_META, {loadingProject: true});
             try {
-                if (Token.tokenAddress && Token.tokenOwner) {
+                if (Token.tokenAddress && Token.tokenOwners) {
 
                     await this.dispatch('Project/updateTokenInfo', {Token});
                     await this.dispatch('Transactions/updateStatusTx');
@@ -215,7 +215,6 @@ export default {
                         await this.dispatch('Project/fetchCrowdSaleMilestonesList', {Token: state.currentProject});
                         await this.dispatch('Project/updateReceivingInformation', {Token: state.currentProject});
                         await this.dispatch('Project/updateFundInformation', {Token: state.currentProject});
-
                     }
                 } else {
                     commit(UPDATE_META, {loadingProject: false, loadingProjectError: "ERROR_FETCH_PROJECT"});
@@ -231,12 +230,12 @@ export default {
                     const {W12ListerFactory} = await this.dispatch('Ledger/fetch');
                     const W12Lister = W12ListerFactory.at(this.state.Config.W12Lister.address);
 
-                    const composedInfo = await W12Lister.fetchComposedTokenInformationByTokenAddress(
+                    const token = await W12Lister.fetchComposedTokenInformationByTokenAddress(
                         Token.tokenAddress,
                         this.state.Account.currentAccount
                     );
 
-                    commit(UPDATE_PROJECT, {currentProject: composedInfo.token});
+                    commit(UPDATE_PROJECT, {currentProject: token});
                 } else {
                     commit(UPDATE_META, {loadingProject: false, loadingProjectError: "ERROR_FETCH_PROJECT"});
                 }

@@ -44,8 +44,7 @@ export default {
                 const {W12ListerFactory} = await this.dispatch('Ledger/fetch');
                 const W12Lister = W12ListerFactory.at(this.state.Config.W12Lister.address);
                 let list = (await W12Lister.fetchAllTokensComposedInformation());
-                list = list.filter(({token}) => Boolean(token.tokenAddress));
-                list = list.map(({token}) => token);
+                list = list.filter((token) => Boolean(token.tokenAddress));
                 commit(UPDATE, {list});
             } catch (e) {
                 commit(UPDATE_META, {loading: false, loadingError: e.message || ERROR_FETCH_TOKENS_LIST});
