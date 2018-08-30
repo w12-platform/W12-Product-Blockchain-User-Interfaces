@@ -36,29 +36,34 @@
                         <div class="form-group">
                             <label for="BaseTokenPrice">{{ $t('ProjectDashboardStageConfigureCrowdsalePrice') }}</label>
                             <b-field id="BaseTokenPrice">
-                                <b-input placeholder="ETH"
-                                         type="number"
-                                         min="0"
-                                         :step="0.000000000000000001"
-                                         @keyup.enter.native="initCrawdsale"
-                                         v-model="crowdsaleInitForm.price"
-                                         icon="ethereum">
-                                </b-input>
+                                <b-icon icon="ethereum"></b-icon>
+                                <cleave
+                                        placeholder="ETH"
+                                        v-model="crowdsaleInitForm.price"
+                                        :options="optionsNumber"
+                                        class="form-control"
+                                        name="BaseTokenPrice"
+                                        min="0"
+                                        :max="currentProject.ownerBalance"
+                                        @keyup.enter.native="initCrawdsale"
+                                ></cleave>
                             </b-field>
                         </div>
                         <div class="form-group">
                             <label for="AmountForSale">{{ $t('ProjectDashboardStageConfigureCrowdsaleAmountForSaleLabel')
                                 }}</label>
                             <b-field id="AmountForSale">
-                                <b-input :placeholder="$t('ProjectDashboardStagePlaceAmountPlaceholder', {tokensAmount: tokensForSaleAmountToNumber})"
-                                         type="number"
-                                         :max="tokensForSaleAmountToNumber"
-                                         min="0"
-                                         :step="0.000000000000000001"
-                                         @keyup.enter.native="initCrawdsale"
-                                         v-model="crowdsaleInitForm.amountForSale"
-                                         icon="shopping">
-                                </b-input>
+                                <b-icon icon="shopping"></b-icon>
+                                <cleave
+                                        :placeholder="$t('ProjectDashboardStagePlaceAmountPlaceholder', {tokensAmount: tokensForSaleAmountToNumber})"
+                                        v-model="crowdsaleInitForm.amountForSale"
+                                        :options="optionsNumber"
+                                        class="form-control"
+                                        name="BaseTokenPrice"
+                                        min="0"
+                                        :max="tokensForSaleAmountToNumber"
+                                        @keyup.enter.native="initCrawdsale"
+                                ></cleave>
                             </b-field>
                         </div>
                         <b-notification class="ProjectStages__errorStage" v-if="error" @close="error = false" type="is-danger" has-icon>
@@ -74,15 +79,17 @@
                         <div class="form-group">
                             <label for="AmountForSale">{{ $t('ProjectDashboardStageConfigureCrowdsaleAddTokensLabel') }}</label>
                             <b-field id="AmountForSale">
-                                <b-input :placeholder="$t('ProjectDashboardStagePlaceAmountPlaceholder', {tokensAmount: tokensForAddCrowdsale})"
-                                         type="number"
-                                         min="0"
-                                         :step="0.000000000000000001"
-                                         :max="tokensForAddCrowdsale"
-                                         v-model="crowdsaleInitForm.amountForSale"
-                                         @keyup.enter.native="addTokensToCrowdSale"
-                                         icon="shopping">
-                                </b-input>
+                                <b-icon icon="shopping"></b-icon>
+                                <cleave
+                                        :placeholder="$t('ProjectDashboardStagePlaceAmountPlaceholder', {tokensAmount: tokensForAddCrowdsale})"
+                                        v-model="crowdsaleInitForm.amountForSale"
+                                        :options="optionsNumber"
+                                        class="form-control"
+                                        min="0"
+                                        :max="tokensForAddCrowdsale"
+                                        @keyup.enter.native="addTokensToCrowdSale"
+                                        icon="shopping"
+                                ></cleave>
                             </b-field>
                         </div>
                         <b-notification class="ProjectStages__errorStage" v-if="error" @close="error = false" type="is-danger" has-icon>
@@ -137,6 +144,15 @@
                     price: null
                 },
                 error: false,
+                optionsNumber: {
+                    prefix: '',
+                    numeral: true,
+                    numeralPositiveOnly: true,
+                    noImmediatePrefix: true,
+                    rawValueTrimPrefix: true,
+                    numeralIntegerScale: 18,
+                    numeralDecimalScale: 18
+                }
             };
         },
         computed: {

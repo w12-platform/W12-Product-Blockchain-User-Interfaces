@@ -24,6 +24,7 @@
     "v-money": "git+https://github.com/vuejs-tips/v-money.git",
     "vue": "^2.5.16",
     "vue-bootstrap-datetimepicker": "^4.1.4",
+    "vue-cleave-component": "^2.1.1",
     "vue-masked-input": "^0.5.2",
     "vue-material-design-icons": "^1.6.0",
     "vue-numeric": "^2.3.0",

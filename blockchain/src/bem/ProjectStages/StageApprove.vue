@@ -32,17 +32,17 @@
                         <div v-else>
                             <div class="form-group">
                                 <label for="SpendFrom">{{ $t('ProjectDashboardStageApproveAmountLabel') }}</label>
-                                <input
+                                <cleave
                                         :placeholder="$t('ProjectDashboardStageApproveAmountPlaceholder', {ownerBalance})"
+                                        id="SpendFrom"
+                                        v-model="approveForm.value"
+                                        :options="optionsNumber"
+                                        class="form-control"
+                                        name="SpendFrom"
                                         min="0"
                                         :max="currentProject.ownerBalance"
-                                        class="form-control"
-                                        id="SpendFrom"
-                                        @keyup.enter="approveTokensToSpend"
-                                        v-model.lazy="approveForm.value"
-                                        @focus="onMoneyFormatFocus"
-                                        @blur="onMoneyFormatBlur"
-                                        v-money="approveMoneyFormat">
+                                        @keyup.enter.native="approveTokensToSpend"
+                                ></cleave>
                             </div>
                             <b-notification class="ProjectStages__errorStage" v-if="error" @close="error = false"
                                             type="is-danger" has-icon>{{ error }}
@@ -83,8 +83,6 @@
     const web3 = new Web3();
     const BigNumber = web3.BigNumber;
 
-    const placeMoneyFormatDefault = {};
-
     export default {
         name: 'StageApprove',
         template: '#StageApproveTemplate',
@@ -97,7 +95,15 @@
                 },
                 tx: null,
                 error: false,
-                approveMoneyFormat: false,
+                optionsNumber: {
+                    prefix: '',
+                    numeral: true,
+                    numeralPositiveOnly: true,
+                    noImmediatePrefix: true,
+                    rawValueTrimPrefix: true,
+                    numeralIntegerScale: 18,
+                    numeralDecimalScale: 18
+                }
             };
         },
         computed: {
@@ -181,16 +187,6 @@
                 }
 
                 this.approveTokensToSpendLoading = false;
-            },
-            onMoneyFormatFocus(){
-                this.approveMoneyFormat = placeMoneyFormatDefault;
-            },
-            onMoneyFormatBlur(){
-                this.approveMoneyFormat = this.approveForm.value ? placeMoneyFormatDefault : false;
-                if(formatNumber(this.approveForm.value) === 0){
-                    this.approveForm.value = null;
-                    this.approveMoneyFormat = false;
-                }
             },
         },
     };

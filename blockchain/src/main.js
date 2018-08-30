@@ -2,7 +2,7 @@ import Vue from 'vue';
 import Buefy from 'buefy';
 import vuexI18n from 'vuex-i18n';
 import VueMask from 'v-mask';
-import money from 'v-money';
+import Cleave from 'vue-cleave-component';
 
 import 'bem/buefy/default.scss';
 import ConfigDashboad from 'bem/ConfigDashboad';
@@ -13,12 +13,7 @@ import store from "store";
 
 Vue.use(VueMask);
 Vue.use(Buefy);
-Vue.use(money, {
-    decimal: '.',
-    thousands: ' ',
-    precision: 2,
-    masked: false
-});
+Vue.use(Cleave);
 
 Vue.use(vuexI18n.plugin, store, {
     translateFilterName: 't'
@@ -42,7 +37,9 @@ for (const language in arrayTranslations) {
     }
 }
 
-const appConfigDashboad = window.location.pathname === "/config" || "/config.html" ? new Vue({
+const patch = window.location.pathname;
+
+const appConfigDashboad = (patch === "/config") || (patch === "/config.html") ? new Vue({
     store,
     el: '#appConfigDashboad',
     template: "<config-dashboad></config-dashboad>",
@@ -51,7 +48,7 @@ const appConfigDashboad = window.location.pathname === "/config" || "/config.htm
     }
 }):null;
 
-const appAdminDashboard = window.location.pathname === "/listing" || "/listing.html" ? new Vue({
+const appAdminDashboard = (patch === "/listing") || (patch === "/listing.html") ? new Vue({
     store,
     el: '#appAdminDashboard',
     template: "<admin-dashboard></admin-dashboard>",
@@ -60,7 +57,7 @@ const appAdminDashboard = window.location.pathname === "/listing" || "/listing.h
     }
 }):null;
 
-const appProjectDashboard = window.location.pathname === "/project" || "/project.html" ? new Vue({
+const appProjectDashboard = (patch === "/project") || (patch === "/project.html") ? new Vue({
     store,
     el: '#appProjectDashboard',
     template: "<project-dashboard></project-dashboard>",
@@ -69,7 +66,7 @@ const appProjectDashboard = window.location.pathname === "/project" || "/project
     }
 }):null;
 
-const appInvestorDashboard = window.location.pathname === "/crowdsale" || "/crowdsale.html" ? new Vue({
+const appInvestorDashboard = (patch === "/crowdsale") || (patch === "/crowdsale.html") ? new Vue({
     store,
     el: '#appInvestorDashboard',
     template: "<investor-dashboard></investor-dashboard>",

@@ -21,15 +21,14 @@ export class W12ListerWrapper extends BaseWrapper {
         this.DetailedERC20Factory = DetailedERC20Factory;
     }
 
-    async fetchComposedTokenInformationByTokenAddress(tokenAddress, tokenOwner){
+    async fetchComposedTokenInformationByTokenAddress(Token){
         const {W12TokenLedgerFactory} = this;
         const ledgerAddress = await this.methods.ledger();
         const W12TokenLedger = W12TokenLedgerFactory.at(ledgerAddress);
-        const tokenIndex = (await this.methods.approvedTokensIndex(tokenAddress, tokenOwner)).toNumber();
-        const listedToken = (await this.methods.approvedTokens(tokenIndex));
+        const listedToken = (await this.methods.approvedTokens(Token.index));
         const wTokenAddress = await W12TokenLedger.methods.getWTokenByToken(listedToken[10].toString());
         return {
-            index: tokenIndex,
+            index: Token.index,
             ledgerAddress,
             wTokenAddress,
             name: listedToken[0].toString(),
@@ -93,18 +92,5 @@ export class W12ListerWrapper extends BaseWrapper {
         }
 
         return result;
-    }
-
-    async isTokenWhitelisted(tokenAddress) {
-        if (tokenAddress) {
-            try {
-                const tokenIndex = (await this.methods.approvedTokensIndex(tokenAddress)).toNumber();
-                return tokenIndex > 0;
-            } catch (e) {
-                console.log(e);
-            }
-        }
-
-        return false;
     }
 }

@@ -26,17 +26,17 @@
                 <div v-if="hasAllowance" class="text-left">
                     <div class="form-group">
                         <label for="PlaceAmount">{{ $t('ProjectDashboardStagePlaceAmountLabel') }}</label>
-                        <input
+                        <cleave
                                 :placeholder="$t('ProjectDashboardStagePlaceAmountPlaceholder', {tokensAmount: tokensAmountThatApprovedToPlaceByTokenOwnerToNumber})"
+                                id="SpendFrom"
+                                v-model="placeTokensForm.value"
+                                :options="optionsNumber"
+                                class="form-control"
+                                name="PlaceAmount"
                                 min="0"
                                 :max="tokensAmountThatApprovedToPlaceByTokenOwnerToNumber"
-                                class="form-control"
-                                id="PlaceAmount"
-                                @keyup.enter="placeTokens"
-                                v-model.lazy="placeTokensForm.value"
-                                @focus="onMoneyFormatFocus"
-                                @blur="onMoneyFormatBlur"
-                                v-money="placeMoneyFormat">
+                                @keyup.enter.native="placeTokens"
+                        ></cleave>
                     </div>
                     <b-notification class="ProjectStages__errorStage" v-if="error" @close="error = false" type="is-danger" has-icon>
                         {{ error }}
@@ -76,8 +76,6 @@
     const web3 = new Web3();
     const BigNumber = web3.BigNumber;
 
-    const placeMoneyFormatDefault = {};
-
     export default {
         name: 'StagePlace',
         template: '#StagePlaceTemplate',
@@ -89,7 +87,16 @@
                     value: null
                 },
                 error: false,
-                placeMoneyFormat: false,
+
+                optionsNumber: {
+                    prefix: '',
+                    numeral: true,
+                    numeralPositiveOnly: true,
+                    noImmediatePrefix: true,
+                    rawValueTrimPrefix: true,
+                    numeralIntegerScale: 18,
+                    numeralDecimalScale: 18
+                }
             };
         },
         computed: {
@@ -186,16 +193,6 @@
                 }
 
                 this.placeTokensLoading = false;
-            },
-            onMoneyFormatFocus(){
-                this.placeMoneyFormat = placeMoneyFormatDefault;
-            },
-            onMoneyFormatBlur(){
-                this.placeMoneyFormat = this.placeTokensForm.value ? placeMoneyFormatDefault : false;
-                if(formatNumber(this.placeTokensForm.value) === 0){
-                    this.placeTokensForm.value = null;
-                    this.placeMoneyFormat = false;
-                }
             },
         },
     };

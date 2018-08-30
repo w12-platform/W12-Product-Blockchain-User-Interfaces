@@ -4,7 +4,7 @@ export default {
     namespaced: true,
     state: {
         W12Lister: {
-            address: "0xc7e3090a8b777f2692dbafc023613e9931a56d16"
+            address: "0xc32fdbdd68847db9ffeb886105fbda80e6c5ceef"
         }
     },
     modules: {},

@@ -230,10 +230,7 @@ export default {
                     const {W12ListerFactory} = await this.dispatch('Ledger/fetch');
                     const W12Lister = W12ListerFactory.at(this.state.Config.W12Lister.address);
 
-                    const token = await W12Lister.fetchComposedTokenInformationByTokenAddress(
-                        Token.tokenAddress,
-                        this.state.Account.currentAccount
-                    );
+                    const token = await W12Lister.fetchComposedTokenInformationByTokenAddress(Token);
 
                     commit(UPDATE_PROJECT, {currentProject: token});
                 } else {
