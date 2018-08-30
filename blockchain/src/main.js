@@ -42,7 +42,7 @@ for (const language in arrayTranslations) {
     }
 }
 
-const appConfigDashboad = window.location.pathname === "/config.html" ? new Vue({
+const appConfigDashboad = window.location.pathname === "/config" || "/config.html" ? new Vue({
     store,
     el: '#appConfigDashboad',
     template: "<config-dashboad></config-dashboad>",
@@ -51,7 +51,7 @@ const appConfigDashboad = window.location.pathname === "/config.html" ? new Vue(
     }
 }):null;
 
-const appAdminDashboard = window.location.pathname === "/listing.html" ? new Vue({
+const appAdminDashboard = window.location.pathname === "/listing" || "/listing.html" ? new Vue({
     store,
     el: '#appAdminDashboard',
     template: "<admin-dashboard></admin-dashboard>",
@@ -60,7 +60,7 @@ const appAdminDashboard = window.location.pathname === "/listing.html" ? new Vue
     }
 }):null;
 
-const appProjectDashboard = window.location.pathname === "/project.html" ? new Vue({
+const appProjectDashboard = window.location.pathname === "/project" || "/project.html" ? new Vue({
     store,
     el: '#appProjectDashboard',
     template: "<project-dashboard></project-dashboard>",
@@ -69,7 +69,7 @@ const appProjectDashboard = window.location.pathname === "/project.html" ? new V
     }
 }):null;
 
-const appInvestorDashboard = window.location.pathname === "/crowdsale.html" ? new Vue({
+const appInvestorDashboard = window.location.pathname === "/crowdsale" || "/crowdsale.html" ? new Vue({
     store,
     el: '#appInvestorDashboard',
     template: "<investor-dashboard></investor-dashboard>",
