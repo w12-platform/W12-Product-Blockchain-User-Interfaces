@@ -6,7 +6,7 @@
             <tbody>
             <tr>
                 <td>{{ $t('trancheInformationFundBalance') }}</td>
-                <td>{{ trancheInformationData.fundBalanceInWei | weiToEth }} ETH | __</td>
+                <td>{{ trancheInformationData.fundBalanceInWei | weiToEth }} ETH</td>
             </tr>
             <tr>
                 <td>{{ $t('trancheInformationDateNextTranche') }}</td>
@@ -51,9 +51,6 @@
             ...ProjectNS.mapState({
                 currentProject: "currentProject",
             }),
-            ...ProjectNS.mapGetters([
-                'trancheInformationData'
-            ]),
 
             disable(){
                 return !(new BigNumber(this.currentProject.fundData.trancheAmount).gt(0));

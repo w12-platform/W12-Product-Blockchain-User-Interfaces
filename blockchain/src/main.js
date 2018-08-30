@@ -14,7 +14,7 @@ import store from "store";
 Vue.use(VueMask);
 Vue.use(Buefy);
 Vue.use(money, {
-    decimal: ',',
+    decimal: '.',
     thousands: ' ',
     precision: 2,
     masked: false
@@ -42,41 +42,41 @@ for (const language in arrayTranslations) {
     }
 }
 
-const appConfigDashboad = new Vue({
+const appConfigDashboad = window.location.pathname === "/config.html" ? new Vue({
     store,
     el: '#appConfigDashboad',
     template: "<config-dashboad></config-dashboad>",
     components: {
         ConfigDashboad
     }
-});
+}):null;
 
-const appAdminDashboard = new Vue({
+const appAdminDashboard = window.location.pathname === "/listing.html" ? new Vue({
     store,
     el: '#appAdminDashboard',
     template: "<admin-dashboard></admin-dashboard>",
     components: {
         AdminDashboard
     }
-});
+}):null;
 
-const appProjectDashboard = new Vue({
+const appProjectDashboard = window.location.pathname === "/project.html" ? new Vue({
     store,
     el: '#appProjectDashboard',
     template: "<project-dashboard></project-dashboard>",
     components: {
         ProjectDashboard
     }
-});
+}):null;
 
-const appInvestorDashboard = new Vue({
+const appInvestorDashboard = window.location.pathname === "/crowdsale.html" ? new Vue({
     store,
     el: '#appInvestorDashboard',
     template: "<investor-dashboard></investor-dashboard>",
     components: {
         InvestorDashboard
     }
-});
+}):null;
 
 new Vue({
     el: '#appTitle',

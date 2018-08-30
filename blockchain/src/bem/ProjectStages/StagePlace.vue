@@ -27,14 +27,16 @@
                     <div class="form-group">
                         <label for="PlaceAmount">{{ $t('ProjectDashboardStagePlaceAmountLabel') }}</label>
                         <input
+                                :placeholder="$t('ProjectDashboardStagePlaceAmountPlaceholder', {tokensAmount: tokensAmountThatApprovedToPlaceByTokenOwnerToNumber})"
                                 min="0"
                                 :max="tokensAmountThatApprovedToPlaceByTokenOwnerToNumber"
                                 class="form-control"
                                 id="PlaceAmount"
                                 @keyup.enter="placeTokens"
                                 v-model.lazy="placeTokensForm.value"
-                                v-money="{}">
-                        <div class="description">{{ $t('ProjectDashboardStagePlaceAmountPlaceholder', {tokensAmount: tokensAmountThatApprovedToPlaceByTokenOwnerToNumber}) }}</div>
+                                @focus="onMoneyFormatFocus"
+                                @blur="onMoneyFormatBlur"
+                                v-money="placeMoneyFormat">
                     </div>
                     <b-notification class="ProjectStages__errorStage" v-if="error" @close="error = false" type="is-danger" has-icon>
                         {{ error }}
@@ -74,6 +76,8 @@
     const web3 = new Web3();
     const BigNumber = web3.BigNumber;
 
+    const placeMoneyFormatDefault = {};
+
     export default {
         name: 'StagePlace',
         template: '#StagePlaceTemplate',
@@ -85,6 +89,7 @@
                     value: null
                 },
                 error: false,
+                placeMoneyFormat: false,
             };
         },
         computed: {
@@ -181,6 +186,16 @@
                 }
 
                 this.placeTokensLoading = false;
+            },
+            onMoneyFormatFocus(){
+                this.placeMoneyFormat = placeMoneyFormatDefault;
+            },
+            onMoneyFormatBlur(){
+                this.placeMoneyFormat = this.placeTokensForm.value ? placeMoneyFormatDefault : false;
+                if(formatNumber(this.placeTokensForm.value) === 0){
+                    this.placeTokensForm.value = null;
+                    this.placeMoneyFormat = false;
+                }
             },
         },
     };

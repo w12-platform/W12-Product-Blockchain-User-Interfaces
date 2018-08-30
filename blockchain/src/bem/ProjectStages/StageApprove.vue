@@ -33,17 +33,22 @@
                             <div class="form-group">
                                 <label for="SpendFrom">{{ $t('ProjectDashboardStageApproveAmountLabel') }}</label>
                                 <input
+                                        :placeholder="$t('ProjectDashboardStageApproveAmountPlaceholder', {ownerBalance})"
                                         min="0"
                                         :max="currentProject.ownerBalance"
                                         class="form-control"
                                         id="SpendFrom"
                                         @keyup.enter="approveTokensToSpend"
                                         v-model.lazy="approveForm.value"
-                                        v-money="{}">
-                                <div class="description">{{ $t('ProjectDashboardStageApproveAmountPlaceholder', {ownerBalance}) }}</div>
+                                        @focus="onMoneyFormatFocus"
+                                        @blur="onMoneyFormatBlur"
+                                        v-money="approveMoneyFormat">
                             </div>
                             <b-notification class="ProjectStages__errorStage" v-if="error" @close="error = false"
                                             type="is-danger" has-icon>{{ error }}
+                            </b-notification>
+                            <b-notification class="ProjectStages__errorStage" v-if="amountError" :closable="false" type="is-danger" has-icon>
+                                {{ $t('ProjectDashboardStageApproveInsufficientTokens') }}
                             </b-notification>
                             <div class="text-right">
                                 <button
@@ -78,6 +83,8 @@
     const web3 = new Web3();
     const BigNumber = web3.BigNumber;
 
+    const placeMoneyFormatDefault = {};
+
     export default {
         name: 'StageApprove',
         template: '#StageApproveTemplate',
@@ -90,6 +97,7 @@
                 },
                 tx: null,
                 error: false,
+                approveMoneyFormat: false,
             };
         },
         computed: {
@@ -114,6 +122,13 @@
                 TransactionsList: "list"
             }),
 
+            amountError(){
+                const value = formatNumber(this.approveForm.value) || null;
+                const balance = parseFloat(this.currentProject.ownerBalance) || null;
+                return this.approveForm.value && this.currentProject.ownerBalance
+                    ? !(value >= 0 && value <= balance)
+                    : false;
+            },
             disable() {
                 const value = formatNumber(this.approveForm.value) || null;
                 const balance = parseFloat(this.currentProject.ownerBalance) || null;
@@ -166,6 +181,16 @@
                 }
 
                 this.approveTokensToSpendLoading = false;
+            },
+            onMoneyFormatFocus(){
+                this.approveMoneyFormat = placeMoneyFormatDefault;
+            },
+            onMoneyFormatBlur(){
+                this.approveMoneyFormat = this.approveForm.value ? placeMoneyFormatDefault : false;
+                if(formatNumber(this.approveForm.value) === 0){
+                    this.approveForm.value = null;
+                    this.approveMoneyFormat = false;
+                }
             },
         },
     };

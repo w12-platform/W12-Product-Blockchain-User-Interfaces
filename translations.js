@@ -720,6 +720,10 @@ const translations = {
         "en": "No tokens on balance",
         "ru": "Нет токенов на балансе"
     },
+    "ProjectDashboardStageApproveInsufficientTokens": {
+        "en": "Insufficient tokens",
+        "ru": "Недостаточно токенов"
+    },
     "ProjectDashboardStagePlaceCongratulations": {
         "en": "Congratulations, {amount} {symbol} was successfully released, specify Crowdsale parameters for sale",
         "ru": "Поздравляем, было успешно выпущено {amount} {symbol}, укажите параметры Crowdsale для продажи"
