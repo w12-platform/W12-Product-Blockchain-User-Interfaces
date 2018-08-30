@@ -102,15 +102,14 @@
                     const TokenPlaced = W12Lister.events.TokenPlaced(null, null, this.onTokenPlacedEvent);
                     const CrowdsaleInitialized = W12Lister.events.CrowdsaleInitialized(null, null, this.onCrowdsaleInitializedEvent);
                     const StagesUpdated = W12Crowdsale.events.StagesUpdated(null, null, this.onStagesUpdatedEvent);
-                    //const onAddTokensToCrowdsaleEvent = W12Lister.events.CrowdsaleInitialized(null, null, this.onAddTokensToCrowdsaleEvent);
-
+                    const CrowdsaleTokenMinted = W12Lister.events.CrowdsaleTokenMinted(null, null, this.onCrowdsaleTokenMintedEvent);
 
                     this.subscribedEvents = {
                         ApprovalEvent,
                         TokenPlaced,
                         CrowdsaleInitialized,
                         StagesUpdated,
-                        //onAddTokensToCrowdsaleEvent
+                        CrowdsaleTokenMinted
                     };
                 } catch (e) {
                     this.error = e.message;
@@ -157,13 +156,13 @@
                     this.$store.commit(`Transactions/${CONFIRM_TX}`, tx);
                 }
             },
-            async onAddTokensToCrowdsaleEvent(error, result) {
+            async onCrowdsaleTokenMintedEvent(error, result) {
                 if (!error) {
                     const {tokenAddress} = result.args;
 
                     const tx = result.transactionHash;
                     if (tokenAddress.toString() === this.currentProject.tokenAddress) {
-                        await this.upTokenAfterEvent({Token : this.currentProject});
+                        await this.fetchProject(this.currentProject);
                     }
                     this.$store.commit(`Transactions/${CONFIRM_TX}`, tx);
                 }
