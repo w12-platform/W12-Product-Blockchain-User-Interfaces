@@ -32,7 +32,6 @@
                             class="form-control"
                             name="BaseTokenPrice"
                             min="0"
-                            :max="tokensForSaleAmountToNumber"
                             @keyup.enter.native="approveSwapToSpend"
                     ></cleave>
                 </b-field>
@@ -54,12 +53,12 @@
                         <button
                                 class="btn btn-primary py-2"
                                 :disabled="this.currentAccountData.allowanceForSwap === '0'"
-                                @click="decreaseSwapApprovalToSpend">{{ $t('InvestorDashboardExchangeTokensDecreaseSwap') }}
+                                @click="decreaseSwapApprovalToSpend">{{ $t('InvestorDashboardExchangeTokensDecrease') }}
                         </button>
                         <button
                                 class="btn btn-primary py-2 ml-3"
                                 :disabled="this.currentAccountData.allowanceForSwap === '0'"
-                                @click="exchange">{{ $t('InvestorDashboardExchangeTokensSwap') }}
+                                @click="exchange">{{ $t('InvestorDashboardExchangeTokensExchange') }}
                         </button>
                     </div>
                 </div>
