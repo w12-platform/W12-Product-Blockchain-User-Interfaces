@@ -21,7 +21,8 @@
                                     <div class="col-12 pb-4">
                                         <div class="p-3 row align-items-center justify-content-between">
                                             <span class="ProjectDashboard__stageTitle">{{ $t('ProjectDashboardStageBonusesStage') }} #{{ stageIndex+1 }}</span>
-                                            <button class="btn btn-primary btn-sm" :disabled="isStartCrowdSale" @click="deleteStageAt(stageIndex)">{{
+                                            <button class="btn btn-primary btn-sm" :disabled="isStartCrowdSale"
+                                                    @click="deleteStageAt(stageIndex)">{{
                                                 $t('ProjectDashboardStageBonusesRemove') }}
                                             </button>
                                         </div>
@@ -32,6 +33,8 @@
                                                         }}</label>
                                                     <b-field class="ProjectDashboard__dateSelect">
                                                         <date-picker
+                                                                :not-before="getNotBeforeStart(stageIndex)"
+                                                                :not-after="getNotAfterStart(stageIndex)"
                                                                 v-model="tokenCrowdSaleStages[stageIndex].startDate"
                                                                 type="datetime"
                                                                 :lang="translationsDef"
@@ -47,6 +50,8 @@
                                                     <label>{{ $t('ProjectDashboardStageBonusesEndDateLabel') }}</label>
                                                     <b-field class="ProjectDashboard__dateSelect">
                                                         <date-picker
+                                                                :not-before="getNotBeforeEnd(stageIndex)"
+                                                                :not-after="getNotAfterEnd(stageIndex)"
                                                                 v-model="tokenCrowdSaleStages[stageIndex].endDate"
                                                                 type="datetime"
                                                                 :lang="translationsDef"
@@ -201,6 +206,7 @@
     const TransactionsNS = createNamespacedHelpers("Transactions");
     const web3 = new Web3();
     const BigNumber = web3.BigNumber;
+    const moment = window.moment;
 
     export default {
         name: 'StageConfigureCrowdsaleBonuses',
@@ -274,7 +280,7 @@
                 LedgerFetch: 'fetch',
             }),
 
-            changeAnyInputsForBonuses(){
+            changeAnyInputsForBonuses() {
                 this.tokenCrowdSaleStagesChange = true;
             },
             minStartDate(stageIndex) {
@@ -354,6 +360,71 @@
                 }
 
                 this.setStagesLoading = false;
+            },
+            getNotBeforeStart(stageIndex) {
+                if (this.tokenCrowdSaleStages[stageIndex - 1]) {
+                    for (let i = stageIndex - 1; i >= 0; i--) {
+                        if (this.tokenCrowdSaleStages[i]) {
+                            if (this.tokenCrowdSaleStages[i].endDate) {
+                                return moment(this.tokenCrowdSaleStages[i].endDate).add(10, 'm').toDate();
+                            }
+                            if (this.tokenCrowdSaleStages[i].startDate) {
+                                return moment(this.tokenCrowdSaleStages[i].startDate).add(10, 'm').toDate();
+                            }
+                        }
+                    }
+                }
+                return new Date();
+            },
+            getNotAfterStart(stageIndex) {
+                if (this.tokenCrowdSaleStages[stageIndex].endDate) {
+                    return moment(this.tokenCrowdSaleStages[stageIndex].endDate).subtract(10, 'm').toDate();
+                } else {
+                    for (let i = stageIndex + 1; i <= this.tokenCrowdSaleStages.length; i++) {
+                        if (this.tokenCrowdSaleStages[i]) {
+                            if (this.tokenCrowdSaleStages[i].startDate) {
+                                return moment(this.tokenCrowdSaleStages[i].startDate).subtract(10, 'm').toDate();
+                            }
+                            if (this.tokenCrowdSaleStages[i].endDate) {
+                                return moment(this.tokenCrowdSaleStages[i].endDate).subtract(10, 'm').toDate();
+                            }
+                        }
+                    }
+                    return false;
+                }
+            },
+            getNotBeforeEnd(stageIndex) {
+                if (this.tokenCrowdSaleStages[stageIndex].startDate) {
+                    return moment(this.tokenCrowdSaleStages[stageIndex].startDate).add(10, 'm').toDate();
+                } else {
+                    for (let i = stageIndex - 1; i >= 0; i--) {
+                        if (this.tokenCrowdSaleStages[i]) {
+                            if (this.tokenCrowdSaleStages[i].endDate) {
+                                return moment(this.tokenCrowdSaleStages[i].endDate).add(10, 'm').toDate();
+                            }
+                            if (this.tokenCrowdSaleStages[i].startDate) {
+                                return moment(this.tokenCrowdSaleStages[i].startDate).add(10, 'm').toDate();
+                            }
+
+                        }
+                    }
+                    return new Date();
+                }
+            },
+            getNotAfterEnd(stageIndex) {
+                if (this.tokenCrowdSaleStages[stageIndex + 1]) {
+                    for (let i = stageIndex + 1; i <= this.tokenCrowdSaleStages.length; i++) {
+                        if (this.tokenCrowdSaleStages[i]) {
+                            if (this.tokenCrowdSaleStages[i].startDate) {
+                                return moment(this.tokenCrowdSaleStages[i].startDate).subtract(10, 'm').toDate();
+                            }
+                            if (this.tokenCrowdSaleStages[i].endDate) {
+                                return moment(this.tokenCrowdSaleStages[i].endDate).subtract(10, 'm').toDate();
+                            }
+                        }
+                    }
+                }
+                return false;
             },
         },
     };
