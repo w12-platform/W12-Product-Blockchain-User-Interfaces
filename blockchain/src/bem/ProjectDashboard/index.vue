@@ -3,7 +3,8 @@
         <section class="container">
             <h2>{{ $t('ProjectDashboard') }}</h2>
 
-            <b-notification v-if="isError" type="is-danger" has-icon>
+            <b-notification v-if="isError" type="is-danger" :closable="false" has-icon>
+                <span v-if="ledgerMeta.loadingError">{{ ledgerMeta.loadingError }}</span>
                 <span v-if="ProjectMeta.loadingError">{{ ProjectMeta.loadingError }}</span>
                 <span v-if="accountMeta.loadingError">{{ accountMeta.loadingError }}</span>
             </b-notification>
@@ -45,6 +46,7 @@
 
     import {createNamespacedHelpers} from 'vuex';
 
+    const LedgerNS = createNamespacedHelpers("Ledger");
     const AccountNS = createNamespacedHelpers("Account");
     const ProjectNS = createNamespacedHelpers("Project");
 
@@ -64,6 +66,9 @@
             };
         },
         computed: {
+            ...LedgerNS.mapState({
+                ledgerMeta: 'meta',
+            }),
             ...AccountNS.mapState({
                 currentAccount: "currentAccount",
                 accountMeta: "meta",
@@ -73,9 +78,7 @@
             }),
 
             isError() {
-                return (
-                    this.ProjectMeta.loadingError
-                );
+                return this.ledgerMeta.loadingError || this.ProjectMeta.loadingProjectError || this.accountMeta.loadingError;
             },
             isLoading() {
                 return (

@@ -3,7 +3,7 @@
         <section class="container">
             <h2>{{ $t('AdminDashboard') }}</h2>
 
-            <b-notification class="AdminDashboard__error" v-if="isError && !isLoading" type="is-danger" has-icon>
+            <b-notification class="AdminDashboard__error" v-if="isError && !isLoading" type="is-danger" :closable="false" has-icon>
                 <span v-if="ledgerMeta.loadingError">{{ ledgerMeta.loadingError }}</span>
                 <span v-if="tokensListMeta.loadingError">{{ tokensListMeta.loadingError }}</span>
                 <span v-if="accountMeta.loadingError">{{ accountMeta.loadingError }}</span>

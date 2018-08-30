@@ -60,20 +60,32 @@ export default {
                     if (Connector.isProvider('metamask')) {
                         const getAccounts = promisify(connectedWeb3.eth.getAccounts.bind(connectedWeb3.eth.getAccounts));
                         const currentAccount = (await getAccounts())[0];
-                        if (!currentAccount) {
-                            commit(UPDATE, {});
-                            commit(UPDATE_DATA, {});
-                            commit(UPDATE_META, {
-                                loading: false,
-                                loadingError: this._vm.$t('ERROR_METAMASK_IS_BLOCKED')
-                            });
-                        } else {
-                            if (this.state.Account.currentAccount !== currentAccount) {
-                                commit(UPDATE, {currentAccount});
-                                commit(UPDATE_META, {loading: false, loadingError: false});
-                                await this.dispatch('Account/updateAccountData');
+
+                        await connectedWeb3.version.getNetwork(async (err, networkId) => {
+                            if(networkId !== "4"){
+                                commit(UPDATE, {});
+                                commit(UPDATE_DATA, {});
+                                commit(UPDATE_META, {
+                                    loading: false,
+                                    loadingError: this._vm.$t('ERROR_METAMASK_IS_RINKEBY_NETWORK')
+                                });
+                            } else {
+                                if (!currentAccount) {
+                                    commit(UPDATE, {});
+                                    commit(UPDATE_DATA, {});
+                                    commit(UPDATE_META, {
+                                        loading: false,
+                                        loadingError: this._vm.$t('ERROR_METAMASK_IS_BLOCKED')
+                                    });
+                                } else {
+                                    if (this.state.Account.currentAccount !== currentAccount) {
+                                        commit(UPDATE, {currentAccount});
+                                        commit(UPDATE_META, {loading: false, loadingError: false});
+                                        await this.dispatch('Account/updateAccountData');
+                                    }
+                                }
                             }
-                        }
+                        });
                     } else {
                         commit(UPDATE_META, {
                             loading: false,

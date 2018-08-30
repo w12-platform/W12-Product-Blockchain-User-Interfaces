@@ -752,5 +752,8 @@ const translations = {
         "en": "Metamask is locked  please, unlock Metamask",
         "ru": "Метамаск заблокирован, пожалуйста разблокируйте метамаск"
     },
-
+    "ERROR_METAMASK_IS_RINKEBY_NETWORK": {
+        "en": "Please connect to the Rinkeby network",
+        "ru": "Пожалуйста подключитесь к сети Rinkeby"
+    },
 }
