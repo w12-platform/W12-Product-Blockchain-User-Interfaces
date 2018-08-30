@@ -393,8 +393,8 @@ const translations = {
         "ru": "Укажите количество {WToken}:"
     },
     "InvestorDashboardRefundEthCalculatorTokenAmountPlaceholder": {
-        "en": "Количество токенов",
-        "ru": "Token amount"
+        "en": "Token amount",
+        "ru": "Количество токенов"
     },
     "InvestorDashboardRefundEthCalculatorMessage": {
         "en": "This amount will allow to return:",

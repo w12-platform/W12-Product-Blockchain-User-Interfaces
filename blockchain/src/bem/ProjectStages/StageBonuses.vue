@@ -21,7 +21,7 @@
                                     <div class="col-12 pb-4">
                                         <div class="p-3 row align-items-center justify-content-between">
                                             <span class="ProjectDashboard__stageTitle">{{ $t('ProjectDashboardStageBonusesStage') }} #{{ stageIndex+1 }}</span>
-                                            <button class="btn btn-primary btn-sm" @click="deleteStageAt(stageIndex)">{{
+                                            <button class="btn btn-primary btn-sm" :disabled="isStartCrowdSale" @click="deleteStageAt(stageIndex)">{{
                                                 $t('ProjectDashboardStageBonusesRemove') }}
                                             </button>
                                         </div>
@@ -36,6 +36,7 @@
                                                                 type="datetime"
                                                                 :lang="translationsDef"
                                                                 format="YYYY-MM-DD HH:mm"
+                                                                :disabled="isStartCrowdSale"
                                                                 @change="changeAnyInputsForBonuses"
                                                                 confirm
                                                                 :time-picker-options="{ start: '00:00', step: '00:10', end: '23:50'}"
@@ -49,6 +50,7 @@
                                                                 v-model="tokenCrowdSaleStages[stageIndex].endDate"
                                                                 type="datetime"
                                                                 :lang="translationsDef"
+                                                                :disabled="isStartCrowdSale"
                                                                 format="YYYY-MM-DD HH:mm"
                                                                 @change="changeAnyInputsForBonuses"
                                                                 confirm
@@ -66,6 +68,7 @@
                                                                 type="number"
                                                                 min="0"
                                                                 max="100"
+                                                                :disabled="isStartCrowdSale"
                                                                 @input.native="changeAnyInputsForBonuses"
                                                                 v-model="tokenCrowdSaleStages[stageIndex].discount"
                                                                 icon="sale">
@@ -81,6 +84,7 @@
                                                                 v-model="tokenCrowdSaleStages[stageIndex].vestingDate"
                                                                 type="datetime"
                                                                 :lang="translationsDef"
+                                                                :disabled="isStartCrowdSale"
                                                                 format="YYYY-MM-DD HH:mm"
                                                                 @change="changeAnyInputsForBonuses"
                                                                 :time-picker-options="{ start: '00:00', step: '00:10', end: '23:50'}"
@@ -104,6 +108,7 @@
                                                             <b-input
                                                                     placeholder="ETH"
                                                                     type="number"
+                                                                    :disabled="isStartCrowdSale"
                                                                     min="0"
                                                                     :step="0.0001"
                                                                     v-model="tokenCrowdSaleStages[stageIndex].bonusVolumes[bonusVolumeIndex][0]"
@@ -121,6 +126,7 @@
                                                                     <b-input
                                                                             type="number"
                                                                             min="0"
+                                                                            :disabled="isStartCrowdSale"
                                                                             max="100"
                                                                             v-model="tokenCrowdSaleStages[stageIndex].bonusVolumes[bonusVolumeIndex][1]"
                                                                             icon="sale">
@@ -129,6 +135,7 @@
                                                             </div>
                                                             <div class="ProjectDashboard__deleteContainer col-md-2">
                                                                 <a class="delete is-large"
+                                                                   v-if="!isStartCrowdSale"
                                                                    @click="deleteBonusVolumesAt(stageIndex, bonusVolumeIndex)"></a>
                                                             </div>
                                                         </div>
@@ -138,12 +145,12 @@
                                             </div>
                                             <div class="text-left pt-2">
                                                 <button class="btn btn-primary btn-sm"
-                                                        :disabled="tokenCrowdSaleStagesChange"
+                                                        :disabled="tokenCrowdSaleStagesChange || isStartCrowdSale"
                                                         @click="addBonusVolumesAt(stageIndex)">
                                                     {{ $t('ProjectDashboardStageBonusesAddButton') }}
                                                 </button>
                                                 <button v-if="stage.bonusVolumes.length"
-                                                        :disabled="tokenCrowdSaleStagesChange"
+                                                        :disabled="tokenCrowdSaleStagesChange || isStartCrowdSale"
                                                         class="btn btn-primary btn-sm"
                                                         @click="saveBonusVolumesAt(stageIndex)">
                                                     {{ $t('ProjectDashboardStageBonusesSaveButton') }}
@@ -160,10 +167,11 @@
 
                             <footer class="card-footer">
                                 <a class="card-footer-item"
+                                   v-if="!isStartCrowdSale"
                                    @click="addStage"
                                 >{{$t('ProjectDashboardStageBonusesAddStageButton') }}</a>
                                 <a class="card-footer-item"
-                                   v-if="tokenCrowdSaleStages.length && tokenCrowdSaleStagesChange"
+                                   v-if="tokenCrowdSaleStages.length && tokenCrowdSaleStagesChange && !isStartCrowdSale"
                                    @click="saveStages"
                                 >{{ $t('ProjectDashboardStageBonusesSaveStagesButton') }}</a>
                             </footer>
@@ -228,7 +236,8 @@
                 'isCrowdsaleInited',
                 'tokensForAddCrowdsale',
                 'tokensForSaleAmountToNumber',
-                'tokenCrowdSaleStagesNS'
+                'tokenCrowdSaleStagesNS',
+                'isStartCrowdSale'
             ]),
             ...AccountNS.mapState({
                 currentAccount: "currentAccount",

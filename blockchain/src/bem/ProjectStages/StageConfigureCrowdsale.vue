@@ -121,7 +121,6 @@
     const LedgerNS = createNamespacedHelpers("Ledger");
     const AccountNS = createNamespacedHelpers("Account");
     const TransactionsNS = createNamespacedHelpers("Transactions");
-    import { CONFIRM_TX } from "store/modules/Transactions.js";
 
     const web3 = new Web3();
     const BigNumber = web3.BigNumber;

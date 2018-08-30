@@ -17,6 +17,7 @@ export const UPDATE_OWNER_BALANCE = "UPDATE_OWNER_BALANCE";
 export const UPDATE_CROWD_SALE_ADDRESS = "UPDATE_CROWD_SALE_ADDRESS";
 export const UPDATE_CROWD_SALE_INFO = "UPDATE_CROWD_SALE_INFO";
 export const UPDATE_CROWD_SALE_STAGES_LIST = "UPDATE_CROWD_SALE_STAGES_LIST";
+export const UPDATE_CROWD_SALE_IS_START = "UPDATE_CROWD_SALE_IS_START";
 export const UPDATE_CROWD_SALE_MILESTONES_LIST = "UPDATE_CROWD_SALE_MILESTONES_LIST";
 export const REMEMBER_APPROVE_TOKENS_TX = "REMEMBER_APPROVE_TOKENS_TX";
 export const UPDATE_RECEVING_INFO = "UPDATE_RECEVING_INFO";
@@ -88,6 +89,13 @@ export default {
                 ? state.currentProject.crowdSaleInformation.tokenCrowdSaleMilestones
                 : [];
         },
+        isStartCrowdSale: state => {
+            return state.currentProject
+            && state.currentProject.crowdSaleInformation
+            && state.currentProject.crowdSaleInformation.isStartCrowdSale
+                ? state.currentProject.crowdSaleInformation.isStartCrowdSale
+                : false;
+        }
     },
     mutations: {
         [UPDATE_META](state, payload) {
@@ -156,6 +164,15 @@ export default {
                 }
             }
         },
+        [UPDATE_CROWD_SALE_IS_START](state, isStartCrowdSale) {
+            state.currentProject = {
+                ...state.currentProject,
+                crowdSaleInformation: {
+                    ...state.currentProject.crowdSaleInformation,
+                    isStartCrowdSale
+                }
+            }
+        },
         [REMEMBER_APPROVE_TOKENS_TX](state, tx) {
             state.currentProject = {
                 ...state.currentProject,
@@ -212,9 +229,13 @@ export default {
 
                     if (getters.isCrowdsaleInited) {
                         await this.dispatch('Project/fetchCrowdSaleStagesList', {Token: state.currentProject});
-                        await this.dispatch('Project/fetchCrowdSaleMilestonesList', {Token: state.currentProject});
-                        await this.dispatch('Project/updateReceivingInformation', {Token: state.currentProject});
-                        await this.dispatch('Project/updateFundInformation', {Token: state.currentProject});
+                        await this.dispatch('Project/upCrowdSaleStart', {Token: state.currentProject});
+
+                        if (state.currentProject.crowdSaleInformation.tokenCrowdSaleStages.length) {
+                            await this.dispatch('Project/fetchCrowdSaleMilestonesList', {Token: state.currentProject});
+                            await this.dispatch('Project/updateReceivingInformation', {Token: state.currentProject});
+                            await this.dispatch('Project/updateFundInformation', {Token: state.currentProject});
+                        }
                     }
                 } else {
                     commit(UPDATE_META, {loadingProject: false, loadingProjectError: "ERROR_FETCH_PROJECT"});
@@ -330,6 +351,22 @@ export default {
                 commit(UPDATE_CROWD_SALE_STAGES_LIST, list);
             } catch (e) {
                 commit(UPDATE_CROWD_SALE_STAGES_LIST, []);
+                commit(UPDATE_META, {loadingProjectError: e.message});
+            }
+        },
+        async upCrowdSaleStart({commit}, {Token}) {
+            try {
+                if (Token.crowdSaleInformation.tokenCrowdSaleStages.length) {
+                    const {W12CrowdsaleFactory} = await this.dispatch('Ledger/fetch');
+                    const W12Crowdsale = W12CrowdsaleFactory.at(Token.tokenCrowdsaleAddress);
+                    const isSaleActive = await W12Crowdsale.methods.isSaleActive();
+                    const isEnded = await W12Crowdsale.methods.isEnded();
+                    const isStartCrowdSale = !(!isSaleActive && !isEnded);
+                    commit(UPDATE_CROWD_SALE_IS_START, isStartCrowdSale);
+                } else {
+                    commit(UPDATE_CROWD_SALE_IS_START, false);
+                }
+            } catch (e) {
                 commit(UPDATE_META, {loadingProjectError: e.message});
             }
         },
