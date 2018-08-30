@@ -24,14 +24,17 @@
             <div class="ExchangeTokens__form">
                 <label for="Amount">{{ $t('InvestorDashboardExchangeTokensAmount', {WToken: currentToken.symbol}) }}</label>
                 <b-field id="Amount">
-                    <b-input
+                    <b-icon icon="shopping"></b-icon>
+                    <cleave
                             :placeholder="$t('InvestorDashboardExchangeTokensAmountPlaceholder')"
-                            type="number"
-                            min="0"
-                            :step="0.000001"
                             v-model="amount"
-                            icon="shopping">
-                    </b-input>
+                            :options="optionsNumber"
+                            class="form-control"
+                            name="BaseTokenPrice"
+                            min="0"
+                            :max="tokensForSaleAmountToNumber"
+                            @keyup.enter.native="approveSwapToSpend"
+                    ></cleave>
                 </b-field>
 
                 <div>{{ $t('InvestorDashboardExchangeTokensMessagesBeforeApprove') }} {{ amount * rate }} {{ currentToken.tokenInformation.symbol }}</div>
@@ -99,6 +102,15 @@
             return {
                 rate: 1,
                 amount: 0,
+                optionsNumber: {
+                    prefix: '',
+                    numeral: true,
+                    numeralPositiveOnly: true,
+                    noImmediatePrefix: true,
+                    rawValueTrimPrefix: true,
+                    numeralIntegerScale: 18,
+                    numeralDecimalScale: 18
+                }
             };
         },
         watch: {},

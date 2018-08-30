@@ -15,27 +15,27 @@
                 <div class="col-sm py-2">
                     <label for="Tokens">{{ currentToken.symbol }}</label>
                     <b-field id="Tokens">
-                        <b-input
+                        <b-icon icon="shopping"></b-icon>
+                        <cleave
                                 :placeholder="$t('InvestorDashboardCalculatorTokenAmountPlaceholder')"
-                                type="number"
-                                min="0"
-                                :step="0.000001"
                                 v-model="tokens"
-                                icon="shopping">
-                        </b-input>
+                                class="form-control"
+                                :options="optionsNumber"
+                                min="0"
+                        ></cleave>
                     </b-field>
                 </div>
                 <div class="col-sm py-2">
                     <label for="ETHs">ETHs</label>
                     <b-field id="ETHs">
-                        <b-input
+                        <b-icon icon="ethereum"></b-icon>
+                        <cleave
                                 placeholder="ETH"
-                                type="number"
-                                min="0"
-                                :step="0.000001"
                                 v-model="ETHs"
-                                icon="ethereum">
-                        </b-input>
+                                class="form-control"
+                                :options="optionsNumber"
+                                min="0"
+                        ></cleave>
                     </b-field>
                 </div>
             </div>
@@ -85,6 +85,16 @@
                 blockChangeTokens: false,
                 blockChangeETHs: false,
                 total: 0,
+
+                optionsNumber: {
+                    prefix: '',
+                    numeral: true,
+                    numeralPositiveOnly: true,
+                    noImmediatePrefix: true,
+                    rawValueTrimPrefix: true,
+                    numeralIntegerScale: 18,
+                    numeralDecimalScale: 18
+                }
             };
         },
         watch: {
