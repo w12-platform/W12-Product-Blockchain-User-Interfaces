@@ -3,20 +3,20 @@
         <section class="container">
             <h2>{{ $t('AdminDashboard') }}</h2>
 
-            <b-notification class="AdminDashboard__error" v-if="isError && !isLoading" type="is-danger" has-icon>
+            <b-notification class="AdminDashboard__error" v-if="isError && !isLoading" type="is-danger" :closable="false" has-icon>
                 <span v-if="ledgerMeta.loadingError">{{ ledgerMeta.loadingError }}</span>
                 <span v-if="tokensListMeta.loadingError">{{ tokensListMeta.loadingError }}</span>
                 <span v-if="accountMeta.loadingError">{{ accountMeta.loadingError }}</span>
             </b-notification>
 
-            <b-notification v-if="isLoading && !isError && !currentAccount" :closable="false" class="AdminDashboard__loader">
+            <b-notification v-if="isLoading && !isError" :closable="false" class="AdminDashboard__loader">
                 <span v-if="ledgerMeta.loading">{{ $t('AdminDashboardLoadLedger') }}<br></span>
                 <span v-if="tokensListMeta.loading">{{ $t('AdminDashboardLoadTokens') }}<br></span>
 
                 <b-loading :is-full-page="false" :active.sync="isLoading" :can-cancel="true"></b-loading>
             </b-notification>
 
-            <div v-if="!isLoading && currentAccount">
+            <div v-if="!isLoading && this.currentAccount">
                 <WhiteListTable></WhiteListTable>
                 <WhiteListForm></WhiteListForm>
             </div>

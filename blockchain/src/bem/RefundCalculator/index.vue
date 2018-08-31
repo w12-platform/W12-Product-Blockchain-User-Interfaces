@@ -2,16 +2,17 @@
     <div class="RefundCalculator buefy">
             <label for="Amount">{{ $t('InvestorDashboardRefundEthCalculator', {WToken: tokenSymbol}) }}</label>
             <b-field id="Amount">
-                <b-input
+                <b-icon icon="shopping"></b-icon>
+                <cleave
                         :placeholder="$t('InvestorDashboardRefundEthCalculatorTokenAmountPlaceholder')"
-                        type="number"
-                        min="0"
-                        :step="1"
                         :max="decimals(refundInformation.currentWalletBalanceInTokens)"
                         v-model="inputValue"
-                        @input="calculate"
-                        icon="shopping">
-                </b-input>
+                        @input.native="calculate"
+                        :options="optionsNumber"
+                        class="form-control"
+                        min="0"
+                        @keyup.enter.native="approveSwapToSpend"
+                ></cleave>
             </b-field>
         <div class="row">
             <div class="col">
@@ -66,6 +67,15 @@
                 calculation: false,
                 refundAmount: '0',
                 inputValue: 0,
+                optionsNumber: {
+                    prefix: '',
+                    numeral: true,
+                    numeralPositiveOnly: true,
+                    noImmediatePrefix: true,
+                    rawValueTrimPrefix: true,
+                    numeralIntegerScale: 18,
+                    numeralDecimalScale: 18
+                }
             }
         },
         watch: {

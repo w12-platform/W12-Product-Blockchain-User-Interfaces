@@ -1,55 +1,73 @@
 <template>
     <div class="MilestoneCard py-4 buefy">
-        <div class="row">
-            <div class="col-sm-6">
-                <b-field
-                        id="MilestoneCard__name"
-                        :label="$t('MilestonesName')">
+        <div class="row justify-content-between">
+            <div class="col-sm py-2">
+                <label for="MilestoneCard__name">{{ $t('MilestonesName') }}</label>
+                <b-field id="MilestoneCard__name">
                     <b-input
+                            type="text"
                             :value="viewData.name"
                             @input="onInput('name', $event)"></b-input>
                 </b-field>
-                <b-field
-                        id="MilestoneCard__description"
-                        :label="$t('MilestonesDescription')">
+                <label for="MilestoneCard__description">{{ $t('MilestonesDescription') }}</label>
+                <b-field id="MilestoneCard__description">
                     <b-input
                             type="textarea"
                             :value="viewData.description"
                             @input="onInput('description', $event)"></b-input>
                 </b-field>
-                <b-field
-                        id="MilestoneCard__tranche"
-                        :label="$t('MilestonesTranche')">
+                <label for="MilestoneCard__tranche">{{ $t('MilestonesTranche') }}</label>
+                <b-field id="MilestoneCard__tranche">
                     <b-input
                             :value="viewData.tranchePercent"
                             @input="onInput('tranchePercent', $event)"
                             type="number"></b-input>
                 </b-field>
                 <p>{{ $t('MilestonesRelativeTotal') }}</p>
-                <button class="btn btn-sm btn-primary mt-4" @click="onDelete">{{ $t('MilestonesDelete') }}</button>
+
             </div>
-            <div class="col-sm-6">
-                <b-field
-                        id="MilestoneCard__end"
-                        :label="$t('MilestonesDate')">
-                    <date-picker v-model="viewData.endDate" type="datetime" @input="onInput('endDate', $event)" lang="en" format="YYYY-MM-DD hh:mm:ss" confirm></date-picker>
+            <div class="col-sm py-2">
+                <label for="MilestoneCard__end">{{ $t('MilestonesDate') }}</label>
+                <b-field id="MilestoneCard__end">
+                    <date-picker
+                            v-model="viewData.endDate"
+                            type="datetime"
+                            @input="onInput('endDate', $event)"
+                            :lang="translationsDef"
+                            format="YYYY-MM-DD HH:mm"
+                            confirm
+                    ></date-picker>
                 </b-field>
-                <b-field
-                        id="MilestoneCard__voteEnd"
-                        :label="$t('MilestonesDateEndVoting')">
-                    <date-picker v-model="viewData.voteEndDate" type="datetime" @input="onInput('voteEndDate', $event)" lang="en" format="YYYY-MM-DD hh:mm:ss" confirm></date-picker>
+                <!--<label for="MilestoneCard__voteEnd">{{ $t('MilestonesDateEndVoting') }}</label>-->
+                <!--<b-field id="MilestoneCard__voteEnd">-->
+                    <!--<date-picker-->
+                            <!--v-model="viewData.voteEndDate"-->
+                            <!--type="datetime"-->
+                            <!--@input="onInput('voteEndDate', $event)"-->
+                            <!--:lang="translationsDef"-->
+                            <!--format="YYYY-MM-DD HH:mm"-->
+                            <!--confirm-->
+                    <!--&gt;</date-picker>-->
+                <!--</b-field>-->
+                <label for="MilestoneCard__withdrawalEnd">{{ $t('MilestonesDateEndWithdrawal') }}</label>
+                <b-field id="MilestoneCard__withdrawalEnd">
+                    <date-picker
+                            v-model="viewData.withdrawalEndDate"
+                            @input="onInput('withdrawalEndDate', $event)"
+                            type="datetime"
+                            :lang="translationsDef"
+                            format="YYYY-MM-DD HH:mm"
+                            confirm
+                    ></date-picker>
                 </b-field>
-                <b-field
-                        id="MilestoneCard__withdrawalEnd"
-                        :label="$t('MilestonesDateEndWithdrawal')">
-                    <date-picker v-model="viewData.withdrawalEndDate" @input="onInput('withdrawalEndDate', $event)" type="datetime" lang="en" format="YYYY-MM-DD hh:mm:ss" confirm></date-picker>
-                </b-field>
+
+                <button class="btn btn-sm btn-primary mt-4" @click="onDelete">{{ $t('MilestonesDelete') }}</button>
             </div>
         </div>
     </div>
 </template>
 <script>
-    import { MilestoneModel } from './shared.js';
+    import {MilestoneModel} from './shared.js';
     import moment from 'moment';
     import DatePicker from 'vue2-datepicker';
 
@@ -69,7 +87,8 @@
         data() {
             return {
                 observableData: {},
-                block: false
+                block: false,
+                translationsDef: translationsDef,
             };
         },
         computed: {
@@ -91,7 +110,7 @@
                 deep: true
             },
             observableData: {
-                handler (value) {
+                handler(value) {
                     if (this.block) return;
 
                     const data = this.convertFromInternal(value);

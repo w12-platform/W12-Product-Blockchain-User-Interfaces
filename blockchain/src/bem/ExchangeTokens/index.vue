@@ -24,14 +24,16 @@
             <div class="ExchangeTokens__form">
                 <label for="Amount">{{ $t('InvestorDashboardExchangeTokensAmount', {WToken: currentToken.symbol}) }}</label>
                 <b-field id="Amount">
-                    <b-input
+                    <b-icon icon="shopping"></b-icon>
+                    <cleave
                             :placeholder="$t('InvestorDashboardExchangeTokensAmountPlaceholder')"
-                            type="number"
-                            min="0"
-                            :step="0.000001"
                             v-model="amount"
-                            icon="shopping">
-                    </b-input>
+                            :options="optionsNumber"
+                            class="form-control"
+                            name="BaseTokenPrice"
+                            min="0"
+                            @keyup.enter.native="approveSwapToSpend"
+                    ></cleave>
                 </b-field>
 
                 <div>{{ $t('InvestorDashboardExchangeTokensMessagesBeforeApprove') }} {{ amount * rate }} {{ currentToken.tokenInformation.symbol }}</div>
@@ -41,7 +43,7 @@
 
                     <div v-if="this.currentAccountData.allowanceForSwap !== '0'" class="py-2">
                         {{ $t('InvestorDashboardExchangeTokensMessagesBeforeSwap', {
-                            allowance: currentAccountData.allowanceForSwap | toEth,
+                            allowance: toEth(currentAccountData.allowanceForSwap),
                             WToken: currentToken.symbol,
                             Token: currentToken.tokenInformation.symbol
                         })}}
@@ -51,12 +53,12 @@
                         <button
                                 class="btn btn-primary py-2"
                                 :disabled="this.currentAccountData.allowanceForSwap === '0'"
-                                @click="decreaseSwapApprovalToSpend">{{ $t('InvestorDashboardExchangeTokensDecreaseSwap') }}
+                                @click="decreaseSwapApprovalToSpend">{{ $t('InvestorDashboardExchangeTokensDecrease') }}
                         </button>
                         <button
                                 class="btn btn-primary py-2 ml-3"
                                 :disabled="this.currentAccountData.allowanceForSwap === '0'"
-                                @click="exchange">{{ $t('InvestorDashboardExchangeTokensSwap') }}
+                                @click="exchange">{{ $t('InvestorDashboardExchangeTokensExchange') }}
                         </button>
                     </div>
                 </div>
@@ -99,6 +101,15 @@
             return {
                 rate: 1,
                 amount: 0,
+                optionsNumber: {
+                    prefix: '',
+                    numeral: true,
+                    numeralPositiveOnly: true,
+                    noImmediatePrefix: true,
+                    rawValueTrimPrefix: true,
+                    numeralIntegerScale: 18,
+                    numeralDecimalScale: 18
+                }
             };
         },
         watch: {},
@@ -134,7 +145,10 @@
             ...AccountNS.mapActions({
                 updateAccountData: 'updateAccountData',
             }),
-
+            toEth(value) {
+                value = value ? new BigNumber(value):0;
+                return web3.fromWei(value, 'ether').toString();
+            },
             async approveSwapToSpend() {
                 try {
                     const {W12TokenFactory, W12ListerFactory} = await this.ledgerFetch();

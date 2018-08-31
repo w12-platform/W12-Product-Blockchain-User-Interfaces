@@ -1,5 +1,5 @@
 import Connector from "lib/Blockchain/DefaultConnector";
-import {promisify} from "lib/utils";
+import {promisify, isZeroAddress} from "lib/utils";
 import {map} from 'p-iteration';
 
 const moment = window.moment;
@@ -10,8 +10,10 @@ export const ERROR_FETCH_TOKENS_LIST = 'An unknown error while trying get tokens
 
 export const UPDATE_TIMER_ID = 'UPDATE_TIMER_ID';
 export const TOKEN_SELECTED = "TOKEN_SELECTED";
+export const PROJECT_SELECTED = "PROJECT_SELECTED";
 export const UPDATE_META = "UPDATE_META";
 export const UPDATE = "UPDATE";
+export const UPDATE_PROJECTS = "UPDATE_PROJECTS";
 export const RESET = "RESET";
 
 
@@ -28,7 +30,6 @@ export default {
         timerId: false,
     },
     modules: {},
-    getters: {},
     mutations: {
         [UPDATE_TIMER_ID](state, payload) {
             clearInterval(this.state.TokensList.timerId);
@@ -45,6 +46,13 @@ export default {
             const list = payload.list || false;
             Object.assign(state, {list});
         },
+        [UPDATE_PROJECTS](state, payload) {
+            const projects = payload.projects || false;
+            Object.assign(state, {projects});
+        },
+        [PROJECT_SELECTED](state, payload) {
+            Object.assign(state, payload);
+        },
         [RESET](state) {
             state.list = false;
             state.currentToken = false;
@@ -57,24 +65,26 @@ export default {
                 const {W12ListerFactory, DetailedERC20Factory, W12CrowdsaleFactory, W12TokenFactory, W12FundFactory} = await this.dispatch('Ledger/fetch');
                 const W12Lister = W12ListerFactory.at(this.state.Config.W12Lister.address);
                 let list = (await W12Lister.fetchAllTokensComposedInformation());
-                list = list.filter(({token}) => Boolean(token.crowdsaleAddress));
-                list = await map(list, async el => {
+
+                list = list.filter((token) => !isZeroAddress(token.crowdsaleAddress));
+                list = await map(list, async token => {
                     const {web3} = await Connector.connect();
-                    const DetailedERC20 = DetailedERC20Factory.at(el.token.tokenAddress);
-                    const W12Crowdsale = W12CrowdsaleFactory.at(el.token.crowdsaleAddress);
-                    const WTokenAddress = (await W12Crowdsale.methods.token());
+                    const DetailedERC20 = DetailedERC20Factory.at(token.tokenAddress);
+                    const W12Crowdsale = W12CrowdsaleFactory.at(token.crowdsaleAddress);
+                    const WTokenAddress = token.wTokenAddress;
                     const W12FundAddress = (await W12Crowdsale.methods.fund());
                     const W12Token = W12TokenFactory.at(WTokenAddress);
                     const W12Fund = W12FundFactory.at(W12FundAddress);
 
                     const getBalance = promisify(web3.eth.getBalance.bind(web3.eth));
                     const foundBalanceInWei = (await getBalance(W12FundAddress)).toString();
-                    const WTokenTotal = web3.fromWei(el.token.wTokensIssuedAmount, 'ether').toString();
-                    const tokensOnSale = web3.fromWei((await W12Token.methods.balanceOf(el.token.crowdsaleAddress)).toString(), 'ether').toString();
-                    const tokensForSaleAmount = web3.fromWei(el.token.tokensForSaleAmount, 'ether').toString();
+
+                    const WTokenTotal = web3.fromWei(token.wTokensIssuedAmount, 'ether').toString();
+                    const tokensOnSale = web3.fromWei((await W12Token.methods.balanceOf(token.crowdsaleAddress)).toString(), 'ether').toString();
+                    const tokensForSaleAmount = web3.fromWei(token.tokensForSaleAmount, 'ether').toString();
                     const tokenPrice = web3.fromWei(await W12Crowdsale.methods.price(), 'ether').toString();
                     const stages = (await W12Crowdsale.getStagesList());
-                    const startDate = (await W12Crowdsale.methods.startDate()).toNumber();
+                    const startDate = stages.length ? stages[0].startDate : null;
 
                     let endDate = false;
                     let stageEndDate = false;
@@ -128,11 +138,11 @@ export default {
                         }
                     }
 
-                    el.token.tokenInformation = (await DetailedERC20.getDescription());
-                    el.token.crowdSaleInformation = {
+                    token.tokenInformation = (await DetailedERC20.getDescription());
+                    token.crowdSaleInformation = {
                         tokenPrice,
                         startDate: startDate,
-                        crowdsaleAddress: el.token.crowdsaleAddress,
+                        crowdsaleAddress: token.crowdsaleAddress,
                         stages,
                         status,
                         bonusVolumes,
@@ -156,12 +166,11 @@ export default {
                     };
                     if (endDate) {
                         if (!this.state.TokensList.currentToken) {
-                            commit(TOKEN_SELECTED, {currentToken: el.token});
+                            commit(TOKEN_SELECTED, {currentToken: token});
                         }
-                        return el.token;
+                        return token;
                     }
                 });
-
                 commit(UPDATE, {list});
             } catch (e) {
                 commit(UPDATE_META, {loading: false, loadingError: e.message || ERROR_FETCH_TOKENS_LIST});
@@ -184,7 +193,7 @@ export default {
                         const tokensOnSale = web3.fromWei((await W12Token.methods.balanceOf(token.crowdsaleAddress)).toString(), 'ether').toString();
                         const tokenPrice = web3.fromWei(await W12Crowdsale.methods.price(), 'ether').toString();
                         const stages = (await W12Crowdsale.getStagesList());
-                        const startDate = (await W12Crowdsale.methods.startDate()).toNumber();
+                        const startDate = stages.length ? stages[0].startDate : null;
 
                         let endDate = false;
                         let stageEndDate = false;

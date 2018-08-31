@@ -76,3 +76,7 @@ export function isZeroAddress(address) {
     }
 }
 
+/* 11 111.22 -> 11111.22 */
+export function formatNumber(textNumber) {
+    return textNumber ? parseFloat(textNumber.replace(/\s+/g, '')):0;
+}
