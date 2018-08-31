@@ -23,6 +23,19 @@ app.use(bodyParser.raw({limit: '50mb', type: ['multipart/form-data']}));
 app.use(cookieParser());
 app.use(express.static(APP_DIR));
 
+app.get('/crowdsale',function(req,res){
+    res.sendFile(APP_DIR + "/crowdsale.html");
+});
+app.get('/listing',function(req,res){
+    res.sendFile(APP_DIR + "/listing.html");
+});
+app.get('/config',function(req,res){
+    res.sendFile(APP_DIR + "/config.html");
+});
+app.get('/project',function(req,res){
+    res.sendFile(APP_DIR + "/project.html");
+});
+
 const proxyUrl = process.env.PROXY_URL;
 
 if (proxyUrl) {
@@ -35,7 +48,7 @@ if (proxyUrl) {
   app.use('/', api);
 }
 
-//app.use(fallbackHistory('index.html', { root: APP_DIR }));
+app.use(fallbackHistory('index.html', { root: APP_DIR }));
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
