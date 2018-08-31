@@ -8,8 +8,8 @@ RUN npm install npm@latest -g && npm -v
 # RUN npm install -g serve
 
 COPY . .
-RUN cd blockchain/ && npm ci && npm run build && cd -
 RUN cd server/ && npm ci && cd -
+RUN cd blockchain/ && npm ci && npm run build
 
 EXPOSE $PORT
 
