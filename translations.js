@@ -756,4 +756,8 @@ const translations = {
         "en": "Please connect to the Rinkeby network",
         "ru": "Пожалуйста подключитесь к сети Rinkeby"
     },
+    "MilestoneTitleErrorNotOneHundredPercent": {
+        "en": "The sum of all percentages is not 100",
+        "ru": "Сумма всех процентов не равно 100"
+    }
 }

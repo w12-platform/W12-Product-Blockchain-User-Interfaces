@@ -353,6 +353,12 @@
                     const W12Crowdsale = W12CrowdsaleFactory.at(this.currentProject.crowdsaleAddress);
 
                     const tx = await W12Crowdsale.setBonusVolumes(this.tokenCrowdSaleStages.length - stageIndex - 1, list);
+                    this.$store.commit(`Transactions/${UPDATE_TX}`, {
+                        token: this.currentProject.tokenAddress,
+                        name: "setStages",
+                        hash: tx,
+                        status: "pending"
+                    });
                     const connectedWeb3 = (await Connector.connect()).web3;
                     await waitTransactionReceipt(tx, connectedWeb3);
                 } catch (e) {

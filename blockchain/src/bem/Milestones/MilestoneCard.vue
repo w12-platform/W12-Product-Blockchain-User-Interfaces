@@ -5,6 +5,7 @@
                 <label for="MilestoneCard__name">{{ $t('MilestonesName') }}</label>
                 <b-field id="MilestoneCard__name">
                     <b-input
+                            :disabled="isStartCrowdSale"
                             type="text"
                             :value="viewData.name"
                             @input="onInput('name', $event)"></b-input>
@@ -12,6 +13,7 @@
                 <label for="MilestoneCard__description">{{ $t('MilestonesDescription') }}</label>
                 <b-field id="MilestoneCard__description">
                     <b-input
+                            :disabled="isStartCrowdSale"
                             type="textarea"
                             :value="viewData.description"
                             @input="onInput('description', $event)"></b-input>
@@ -19,6 +21,7 @@
                 <label for="MilestoneCard__tranche">{{ $t('MilestonesTranche') }}</label>
                 <b-field id="MilestoneCard__tranche">
                     <b-input
+                            :disabled="isStartCrowdSale"
                             :value="viewData.tranchePercent"
                             @input="onInput('tranchePercent', $event)"
                             type="number"></b-input>
@@ -30,9 +33,12 @@
                 <label for="MilestoneCard__end">{{ $t('MilestonesDate') }}</label>
                 <b-field id="MilestoneCard__end">
                     <date-picker
+                            :not-before="getNotBeforeEndDate(stageIndex)"
+                            :not-after="getNotAfterEndDate(stageIndex)"
                             v-model="viewData.endDate"
                             type="datetime"
                             @input="onInput('endDate', $event)"
+                            :disabled="isStartCrowdSale"
                             :lang="translationsDef"
                             format="YYYY-MM-DD HH:mm"
                             confirm
@@ -40,28 +46,34 @@
                 </b-field>
                 <!--<label for="MilestoneCard__voteEnd">{{ $t('MilestonesDateEndVoting') }}</label>-->
                 <!--<b-field id="MilestoneCard__voteEnd">-->
-                    <!--<date-picker-->
-                            <!--v-model="viewData.voteEndDate"-->
-                            <!--type="datetime"-->
-                            <!--@input="onInput('voteEndDate', $event)"-->
-                            <!--:lang="translationsDef"-->
-                            <!--format="YYYY-MM-DD HH:mm"-->
-                            <!--confirm-->
-                    <!--&gt;</date-picker>-->
+                <!--<date-picker-->
+                <!--v-model="viewData.voteEndDate"-->
+                <!--type="datetime"-->
+                <!--@input="onInput('voteEndDate', $event)"-->
+                <!--:disabled="isStartCrowdSale"-->
+                <!--:lang="translationsDef"-->
+                <!--format="YYYY-MM-DD HH:mm"-->
+                <!--confirm-->
+                <!--&gt;</date-picker>-->
                 <!--</b-field>-->
                 <label for="MilestoneCard__withdrawalEnd">{{ $t('MilestonesDateEndWithdrawal') }}</label>
                 <b-field id="MilestoneCard__withdrawalEnd">
                     <date-picker
+                            :not-before="getNotBeforeWithdrawalEndDate(stageIndex)"
+                            :not-after="getNotAfterWithdrawalEndDate(stageIndex)"
                             v-model="viewData.withdrawalEndDate"
                             @input="onInput('withdrawalEndDate', $event)"
                             type="datetime"
+                            :disabled="isStartCrowdSale"
                             :lang="translationsDef"
                             format="YYYY-MM-DD HH:mm"
                             confirm
                     ></date-picker>
                 </b-field>
 
-                <button class="btn btn-sm btn-primary mt-4" @click="onDelete">{{ $t('MilestonesDelete') }}</button>
+                <button :disabled="isStartCrowdSale" class="btn btn-sm btn-primary mt-4" @click="onDelete">{{
+                    $t('MilestonesDelete') }}
+                </button>
             </div>
         </div>
     </div>
@@ -70,6 +82,9 @@
     import {MilestoneModel} from './shared.js';
     import moment from 'moment';
     import DatePicker from 'vue2-datepicker';
+    import {createNamespacedHelpers} from "vuex";
+
+    const ProjectNS = createNamespacedHelpers("Project");
 
     const web3 = new Web3();
 
@@ -81,6 +96,9 @@
         props: {
             value: {
                 type: MilestoneModel,
+                required: true
+            },
+            stageIndex: {
                 required: true
             }
         },
@@ -94,7 +112,13 @@
         computed: {
             viewData() {
                 return this.convertToInternal(this.value);
-            }
+            },
+            ...ProjectNS.mapGetters([
+                'isStartCrowdSale',
+                'endDateCrowdSale',
+                'tokenCrowdSaleMilestonesNS'
+            ]),
+
         },
         watch: {
             value: {
@@ -142,11 +166,71 @@
             },
             onInput(name, value) {
                 this.observableData[name] = value;
-            }
+            },
+            getNotBeforeEndDate(stageIndex) {
+                if (this.tokenCrowdSaleMilestonesNS[stageIndex - 1]) {
+                    for (let i = stageIndex - 1; i >= 0; i--) {
+                        if (this.tokenCrowdSaleMilestonesNS[i]) {
+                            if (this.tokenCrowdSaleMilestonesNS[i].withdrawalEndDate  * 1000) {
+                                return moment(this.tokenCrowdSaleMilestonesNS[i].withdrawalEndDate  * 1000).add(10, 'm').toDate();
+                            }
+                            if (this.tokenCrowdSaleMilestonesNS[i].endDate) {
+                                return moment(this.tokenCrowdSaleMilestonesNS[i].endDate  * 1000).add(10, 'm').toDate();
+                            }
+                        }
+                    }
+                }
+                return this.endDateCrowdSale ? moment(this.endDateCrowdSale).add(10, 'm').toDate() : moment().add(10, 'm').toDate();
+            },
+            getNotAfterEndDate(stageIndex) {
+                if (this.tokenCrowdSaleMilestonesNS[stageIndex].withdrawalEndDate) {
+                    return moment(this.tokenCrowdSaleMilestonesNS[stageIndex].withdrawalEndDate * 1000).subtract(10, 'm').toDate();
+                } else {
+                    for (let i = stageIndex + 1; i <= this.tokenCrowdSaleMilestonesNS.length; i++) {
+                        if (this.tokenCrowdSaleMilestonesNS[i]) {
+                            if (this.tokenCrowdSaleMilestonesNS[i].endDate) {
+                                return moment(this.tokenCrowdSaleMilestonesNS[i].endDate * 1000).subtract(10, 'm').toDate();
+                            }
+                            if (this.tokenCrowdSaleMilestonesNS[i].withdrawalEndDate) {
+                                return moment(this.tokenCrowdSaleMilestonesNS[i].withdrawalEndDate  * 1000).subtract(10, 'm').toDate();
+                            }
+                        }
+                    }
+                    return false;
+                }
+            },
+            getNotBeforeWithdrawalEndDate(stageIndex) {
+                if (this.tokenCrowdSaleMilestonesNS[stageIndex].endDate) {
+                    return moment(this.tokenCrowdSaleMilestonesNS[stageIndex].endDate  * 1000).add(10, 'm').toDate();
+                } else {
+                    for (let i = stageIndex - 1; i >= 0; i--) {
+                        if (this.tokenCrowdSaleMilestonesNS[i]) {
+                            if (this.tokenCrowdSaleMilestonesNS[i].withdrawalEndDate) {
+                                return moment(this.tokenCrowdSaleMilestonesNS[i].withdrawalEndDate * 1000).add(10, 'm').toDate();
+                            }
+                            if (this.tokenCrowdSaleMilestonesNS[i].endDate) {
+                                return moment(this.tokenCrowdSaleMilestonesNS[i].endDate * 1000).add(10, 'm').toDate();
+                            }
+                        }
+                    }
+                    return this.endDateCrowdSale ? moment(this.endDateCrowdSale).add(10, 'm').toDate():moment().add(10, 'm').toDate();
+                }
+            },
+            getNotAfterWithdrawalEndDate(stageIndex) {
+                if (this.tokenCrowdSaleMilestonesNS[stageIndex + 1]) {
+                    for (let i = stageIndex + 1; i <= this.tokenCrowdSaleMilestonesNS.length; i++) {
+                        if (this.tokenCrowdSaleMilestonesNS[i]) {
+                            if (this.tokenCrowdSaleMilestonesNS[i].endDate) {
+                                return moment(this.tokenCrowdSaleMilestonesNS[i].endDate * 1000).subtract(10, 'm').toDate();
+                            }
+                            if (this.tokenCrowdSaleMilestonesNS[i].withdrawalEndDate) {
+                                return moment(this.tokenCrowdSaleMilestonesNS[i].withdrawalEndDate * 1000).subtract(10, 'm').toDate();
+                            }
+                        }
+                    }
+                }
+                return false;
+            },
         }
     };
 </script>
-<style lang="scss">
-    .MilestoneCard {
-    }
-</style>

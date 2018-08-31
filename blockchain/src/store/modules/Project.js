@@ -95,6 +95,16 @@ export default {
             && state.currentProject.crowdSaleInformation.isStartCrowdSale
                 ? state.currentProject.crowdSaleInformation.isStartCrowdSale
                 : false;
+        },
+        endDateCrowdSale: state => {
+            if(state.currentProject
+                && state.currentProject.crowdSaleInformation
+                && state.currentProject.crowdSaleInformation.tokenCrowdSaleStages
+                && state.currentProject.crowdSaleInformation.tokenCrowdSaleStages.length){
+                const length = state.currentProject.crowdSaleInformation.tokenCrowdSaleStages.length;
+                return state.currentProject.crowdSaleInformation.tokenCrowdSaleStages[length-1].endDate;
+            }
+            return false;
         }
     },
     mutations: {
