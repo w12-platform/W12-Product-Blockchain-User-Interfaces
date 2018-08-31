@@ -11,6 +11,8 @@ COPY . .
 RUN cd server/ && npm ci && cd -
 RUN cd blockchain/ && npm ci && npm run build
 
+WORKDIR /code/blockchain
+
 EXPOSE $PORT
 
 CMD [ "npm", "run", "docker-server" ]
