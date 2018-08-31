@@ -18,9 +18,9 @@
             </div>
             <div v-if="this.currentAccountData.allowanceForTheFund !== '0'" class="py-2">
                 {{ $t('InvestorDashboardRefundEthMessagesBeforeRefund', {
-                    allowance: currentAccountData.allowanceForTheFund | toEth,
+                    allowance: toEth(currentAccountData.allowanceForTheFund),
                     WToken: currentToken.symbol,
-                    refundAmount: currentAccountData.allowanceForTheFundInRefundAmount | toEth
+                    refundAmount: toEth(currentAccountData.allowanceForTheFundInRefundAmount)
                 }) }}
             </div>
             <div v-if="this.currentAccountData.allowanceForTheFund !== '0'" class="row pl-3 pr-3">
@@ -151,6 +151,10 @@
                 updateAccountData: 'updateAccountData',
             }),
 
+            toEth(value) {
+                value = value ? new BigNumber(value):0;
+                return web3.fromWei(value, 'ether').toString();
+            },
             async approveTheFundToSpend() {
                 try {
                     const {W12TokenFactory} = await this.ledgerFetch();
