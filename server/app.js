@@ -35,7 +35,7 @@ if (proxyUrl) {
   app.use('/', api);
 }
 
-app.use(fallbackHistory('index.html', { root: APP_DIR }));
+//app.use(fallbackHistory('index.html', { root: APP_DIR }));
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
