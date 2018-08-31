@@ -62,7 +62,7 @@ export default {
                         const currentAccount = (await getAccounts())[0];
 
                         await connectedWeb3.version.getNetwork(async (err, networkId) => {
-                            if(networkId !== "4"){
+                            if(networkId === "4"){ // 4 - RINKEBY
                                 commit(UPDATE, {});
                                 commit(UPDATE_DATA, {});
                                 commit(UPDATE_META, {
