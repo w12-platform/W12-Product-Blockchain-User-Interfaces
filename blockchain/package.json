@@ -7,12 +7,15 @@
     "serve": "webpack-dev-server --host localhost --mode development",
     "dev": "webpack --mode development",
     "build": "webpack -p",
-    "watch": "webpack --watch --mode development"
+    "watch": "webpack --watch --mode development",
+    "docker-server": "PROXY_URL=https://w12.io/ node ../server/bin/www",
+    "dev-server:proxy": "PROXY_URL=https://w12.io/ node ../server/bin/www"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@mdi/font": "^2.5.94",
+    "axios": "^0.18.0",
     "buefy": "^0.6.6",
     "countdown": "^2.6.0",
     "jsunicode": "^1.1.1",
@@ -60,6 +63,7 @@
     "vue-loader": "^15.2.4",
     "vue-template-compiler": "^2.5.16",
     "webpack": "^4.12.0",
+    "webpack-dev-server": "^3.1.0",
     "webpack-cli": "^3.0.8"
   }
 }

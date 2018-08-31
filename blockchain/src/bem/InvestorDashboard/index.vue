@@ -1,5 +1,5 @@
 <template>
-    <div class="InvestorDashboard buefy">
+    <div class="InvestorDashboard buefy" v-if="!langMeta.loading">
         <section class="container">
             <h2>{{ $t('InvestorDashboard') }}</h2>
 
@@ -43,6 +43,7 @@
     const LedgerNS = createNamespacedHelpers("Ledger");
     const AccountNS = createNamespacedHelpers("Account");
     const TokensListNS = createNamespacedHelpers("TokensList");
+    const LangNS = createNamespacedHelpers("Lang");
 
     const moment = window.moment;
     const web3 = new Web3();
@@ -89,6 +90,9 @@
                 currentAccount: "currentAccount",
                 currentAccountData: "currentAccountData",
                 accountMeta: "meta",
+            }),
+            ...LangNS.mapState({
+                langMeta: 'meta'
             }),
 
             isLoading() {

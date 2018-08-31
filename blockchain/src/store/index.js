@@ -8,6 +8,7 @@ import Whitelist from "store/modules/Whitelist.js";
 import W12Lister from "store/modules/W12Lister.js";
 import Project from "store/modules/Project.js";
 import Transactions from "store/modules/Transactions.js";
+import Lang from "store/modules/Lang.js";
 import PersistedStatePlugin from "vuex-persistedstate";
 
 Vue.use(Vuex);
@@ -25,14 +26,16 @@ const store = {
         TokensList,
         Whitelist,
         Project,
-        Transactions
+        Transactions,
+        Lang
     },
     plugins: [
         PersistedStatePlugin({
             paths: [
                 "Config.W12Lister.address",
                 "W12Lister",
-                'Transactions.list'
+                "Transactions.list",
+                "Lang.current"
             ]
         })
     ]

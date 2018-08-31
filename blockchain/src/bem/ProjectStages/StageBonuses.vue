@@ -204,6 +204,8 @@
     const LedgerNS = createNamespacedHelpers("Ledger");
     const AccountNS = createNamespacedHelpers("Account");
     const TransactionsNS = createNamespacedHelpers("Transactions");
+    const LangNS = createNamespacedHelpers("Lang");
+
     const web3 = new Web3();
     const BigNumber = web3.BigNumber;
     const moment = window.moment;
@@ -216,7 +218,6 @@
                 setStagesLoading: false,
                 tokenCrowdSaleStagesChange: false,
                 error: false,
-                translationsDef: translationsDef,
                 tokenCrowdSaleStages: []
             };
         },
@@ -233,6 +234,9 @@
         computed: {
             ...ProjectNS.mapState({
                 currentProject: "currentProject",
+            }),
+            ...LangNS.mapState({
+                translationsDef: 'current'
             }),
             ...ProjectNS.mapGetters([
                 'hasAllowance',

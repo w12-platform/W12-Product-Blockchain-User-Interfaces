@@ -1,5 +1,5 @@
 <template>
-    <div class="AdminDashboard buefy">
+    <div class="AdminDashboard buefy" v-if="!langMeta.loading">
         <section class="container">
             <h2>{{ $t('AdminDashboard') }}</h2>
 
@@ -35,6 +35,7 @@
     const LedgerNS = createNamespacedHelpers("Ledger");
     const AccountNS = createNamespacedHelpers("Account");
     const WhitelistNS = createNamespacedHelpers("Whitelist");
+    const LangNS = createNamespacedHelpers("Lang");
 
     export default {
         name: 'AdminDashboard',
@@ -61,6 +62,9 @@
             ...AccountNS.mapState({
                 currentAccount: "currentAccount",
                 accountMeta: "meta",
+            }),
+            ...LangNS.mapState({
+                langMeta: 'meta'
             }),
 
             isLoading() {

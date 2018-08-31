@@ -1,5 +1,5 @@
 <template>
-    <div class="ProjectDashboard buefy">
+    <div class="ProjectDashboard buefy" v-if="!langMeta.loading">
         <section class="container">
             <h2>{{ $t('ProjectDashboard') }}</h2>
 
@@ -49,6 +49,7 @@
     const LedgerNS = createNamespacedHelpers("Ledger");
     const AccountNS = createNamespacedHelpers("Account");
     const ProjectNS = createNamespacedHelpers("Project");
+    const LangNS = createNamespacedHelpers("Lang");
 
     export default {
         name: 'ProjectDashboard',
@@ -75,6 +76,9 @@
             }),
             ...ProjectNS.mapState({
                 ProjectMeta: "meta",
+            }),
+            ...LangNS.mapState({
+                langMeta: 'meta'
             }),
 
             isError() {

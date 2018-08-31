@@ -85,6 +85,7 @@
     import {createNamespacedHelpers} from "vuex";
 
     const ProjectNS = createNamespacedHelpers("Project");
+    const LangNS = createNamespacedHelpers("Lang");
 
     const web3 = new Web3();
 
@@ -106,7 +107,6 @@
             return {
                 observableData: {},
                 block: false,
-                translationsDef: translationsDef,
             };
         },
         computed: {
@@ -118,6 +118,9 @@
                 'endDateCrowdSale',
                 'tokenCrowdSaleMilestonesNS'
             ]),
+            ...LangNS.mapState({
+                translationsDef: 'current'
+            })
 
         },
         watch: {
