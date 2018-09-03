@@ -11,7 +11,7 @@
                         :options="optionsNumber"
                         class="form-control"
                         min="0"
-                        @keyup.enter.native="approveSwapToSpend"
+                        @keyup.enter.native="$emit('approve')"
                 ></cleave>
             </b-field>
         <div class="row">

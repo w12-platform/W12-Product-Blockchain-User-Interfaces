@@ -17,7 +17,9 @@
                               :fundAddress="currentToken.crowdSaleInformation.fund.W12FundAddress"
                               :accountAddress="currentAccount"
                               :tokenSymbol="currentToken.symbol"
-                              :tokenDecimals="currentToken.decimals">
+                              :tokenDecimals="currentToken.decimals"
+                              @approve="approveTheFundToSpend"
+            >
             </RefundCalculator>
             <div class="py-2">
                 <button class="btn btn-primary py-2" :disabled="disable"
