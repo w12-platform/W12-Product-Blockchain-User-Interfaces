@@ -73,6 +73,7 @@
             ...AccountNS.mapState({
                 currentAccount: "currentAccount",
                 accountMeta: "meta",
+                currentAccountData: "currentAccountData",
             }),
             ...ProjectNS.mapState({
                 ProjectMeta: "meta",
@@ -100,6 +101,7 @@
         methods: {
             ...AccountNS.mapActions({
                 watchCurrentAccount: 'watch',
+                updateAccountData: 'updateAccountData',
             }),
             ...ProjectNS.mapActions({
                 ProjectFetchList: "fetchList"

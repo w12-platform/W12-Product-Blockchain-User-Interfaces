@@ -2,7 +2,11 @@
     <div class="Milestones buefy" v-if="currentProject && isCrowdsaleInited && isStagesSave">
         <h2>{{ $t('Milestones') }}</h2>
 
-        <b-collapse class="card">
+        <div class="pm-2" v-if="isPendingTx">
+            <p class="py-2">{{ $t('WaitingConfirm') }}:</p>
+            <b-tag class="py-2">{{isPendingTx.hash}}</b-tag>
+        </div>
+        <b-collapse class="card" v-if="!isPendingTx">
             <div class="card-content" v-if="tokenCrowdSaleMilestones.length">
                 <div class="content">
                     <div v-for="(item, idx) in tokenCrowdSaleMilestones">
@@ -19,6 +23,10 @@
 
             <b-notification class="ProjectStages__errorStage" v-if="tokenCrowdSaleMilestones.length && !isOneHundredPercent" type="is-danger" has-icon>
                 {{ $t('MilestoneTitleErrorNotOneHundredPercent') }}
+            </b-notification>
+
+            <b-notification class="ProjectStages__errorStage" v-if="error" @close="error = false" type="is-danger" has-icon>
+                {{ error }}
             </b-notification>
 
             <footer class="card-footer" v-if="!isStartCrowdSale">
@@ -127,6 +135,21 @@
             saveDisable(){
                 return this.isOneHundredPercent && this.tokenCrowdSaleMilestones.length && this.isEmpty;
             },
+            isPendingTx() {
+                return this.TransactionsList && this.TransactionsList.length
+                    ? this.TransactionsList.find((tr) => {
+                        return tr.token
+                        && tr.name
+                        && tr.hash
+                        && tr.status
+                        && tr.token === this.currentProject.tokenAddress
+                        && tr.name === "saveMilestones"
+                        && tr.status === "pending"
+                            ? tr
+                            : false
+                    })
+                    : false;
+            }
         },
         methods: {
             ...LedgerNS.mapActions({
@@ -153,11 +176,16 @@
                     const {W12CrowdsaleFactory} = await this.ledgerFetch();
                     const W12Crowdsale = W12CrowdsaleFactory.at(this.currentProject.crowdsaleAddress);
                     const tx = await W12Crowdsale.setMilestones(this.tokenCrowdSaleMilestones);
+                    this.$store.commit(`Transactions/${UPDATE_TX}`, {
+                        token: this.currentProject.tokenAddress,
+                        name: "saveMilestones",
+                        hash: tx,
+                        status: "pending"
+                    });
                     const connectedWeb3 = (await Connector.connect()).web3;
                     await waitTransactionReceipt(tx, connectedWeb3);
-                    this.tokenCrowdsaleMilestones.forEach(stage => stage.wasCreated = true);
+                    this.tokenCrowdSaleMilestones.forEach(stage => stage.wasCreated = true);
                 } catch (e) {
-                    console.log(e.message);
                     this.error = e.message;
                 }
                 this.saveMilestonesLoading = false;

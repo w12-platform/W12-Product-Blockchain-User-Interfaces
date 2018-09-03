@@ -247,6 +247,7 @@ export default {
                             await this.dispatch('Project/updateFundInformation', {Token: state.currentProject});
                         }
                     }
+                    await this.dispatch('Account/updateAccountData');
                 } else {
                     commit(UPDATE_META, {loadingProject: false, loadingProjectError: "ERROR_FETCH_PROJECT"});
                 }
@@ -258,10 +259,12 @@ export default {
         async updateTokenInfo({commit}, {Token}) {
             try {
                 if (Token.tokenAddress) {
-                    const {W12ListerFactory} = await this.dispatch('Ledger/fetch');
+                    const {W12ListerFactory, DetailedERC20Factory} = await this.dispatch('Ledger/fetch');
                     const W12Lister = W12ListerFactory.at(this.state.Config.W12Lister.address);
 
-                    const token = await W12Lister.fetchComposedTokenInformationByTokenAddress(Token);
+                    let token = await W12Lister.fetchComposedTokenInformationByTokenAddress(Token);
+                    const DetailedERC20 = DetailedERC20Factory.at(token.tokenAddress);
+                    token.tokenInformation = (await DetailedERC20.getDescription());
 
                     commit(UPDATE_PROJECT, {currentProject: token});
                 } else {

@@ -1,6 +1,7 @@
 <template>
     <div class="ExchangeTokens buefy" v-if="currentToken">
-        <h2>{{ $t('InvestorDashboardExchangeTokens', { WToken: currentToken.symbol, Token: currentToken.tokenInformation.symbol}) }}</h2>
+        <h2>{{ $t('InvestorDashboardExchangeTokens', { WToken: currentToken.symbol, Token:
+            currentToken.tokenInformation.symbol}) }}</h2>
         <div class="ExchangeTokens__content">
             <table v-if="currentToken && currentAccountData"
                    class="table table-striped table-bordered table-hover table-responsive-sm">
@@ -20,10 +21,17 @@
                 </tr>
                 </tbody>
             </table>
-
-            <div class="ExchangeTokens__form">
-                <label for="Amount">{{ $t('InvestorDashboardExchangeTokensAmount', {WToken: currentToken.symbol}) }}</label>
-                <b-field id="Amount">
+            <b-notification class="" v-if="error" @close="error = false" type="is-danger" has-icon>
+                {{ error }}
+            </b-notification>
+            <div class="pm-2" v-if="isPendingTx">
+                <p class="py-2">{{ $t('WaitingConfirm') }}:</p>
+                <b-tag class="py-2">{{isPendingTx.hash}}</b-tag>
+            </div>
+            <div class="ExchangeTokens__form" v-if="!isPendingTx">
+                <label v-if="this.currentAccountData.allowanceForSwap === '0'" for="Amount">{{
+                    $t('InvestorDashboardExchangeTokensAmount', {WToken: currentToken.symbol}) }}</label>
+                <b-field v-if="this.currentAccountData.allowanceForSwap === '0'" id="Amount">
                     <b-icon icon="shopping"></b-icon>
                     <cleave
                             :placeholder="$t('InvestorDashboardExchangeTokensAmountPlaceholder')"
@@ -36,16 +44,22 @@
                     ></cleave>
                 </b-field>
 
-                <div>{{ $t('InvestorDashboardExchangeTokensMessagesBeforeApprove') }} {{ amount * rate }} {{ currentToken.tokenInformation.symbol }}</div>
+                <div v-if="this.currentAccountData.allowanceForSwap === '0'">{{
+                    $t('InvestorDashboardExchangeTokensMessagesBeforeApprove') }} {{ amount * rate }} {{
+                    currentToken.tokenInformation.symbol }}
+                </div>
 
                 <div class="ExchangeTokens__exchange py-2">
-                    <button class="btn btn-primary py-2" @click="approveSwapToSpend">{{ $t('InvestorDashboardExchangeTokensApprove') }}</button>
+                    <button class="btn btn-primary py-2" :disabled="disable"
+                            v-if="this.currentAccountData.allowanceForSwap === '0'" @click="approveSwapToSpend">{{
+                        $t('InvestorDashboardExchangeTokensApprove') }}
+                    </button>
 
                     <div v-if="this.currentAccountData.allowanceForSwap !== '0'" class="py-2">
                         {{ $t('InvestorDashboardExchangeTokensMessagesBeforeSwap', {
-                            allowance: toEth(currentAccountData.allowanceForSwap),
-                            WToken: currentToken.symbol,
-                            Token: currentToken.tokenInformation.symbol
+                        allowance: toEth(currentAccountData.allowanceForSwap),
+                        WToken: currentToken.symbol,
+                        Token: currentToken.tokenInformation.symbol
                         })}}
                     </div>
                     <div v-if="this.currentAccountData.allowanceForSwap !== '0'" class="row pl-3 pr-3">
@@ -64,6 +78,7 @@
                 </div>
             </div>
         </div>
+        <b-loading :is-full-page="false" :active.sync="loading" :can-cancel="true"></b-loading>
     </div>
 </template>
 
@@ -72,6 +87,7 @@
     import Connector from "lib/Blockchain/DefaultConnector";
     import {waitTransactionReceipt} from 'lib/utils.js';
     import {createNamespacedHelpers} from "vuex";
+    import {UPDATE_TX, CONFIRM_TX} from "store/modules/Transactions.js";
 
     const web3 = new Web3();
     const BigNumber = web3.BigNumber;
@@ -80,6 +96,8 @@
     const AccountNS = createNamespacedHelpers("Account");
     const LedgerNS = createNamespacedHelpers("Ledger");
     const ConfigNS = createNamespacedHelpers("Config");
+    const TransactionsNS = createNamespacedHelpers("Transactions");
+
 
     export default {
         name: 'ExchangeTokens',
@@ -87,7 +105,7 @@
         components: {},
         filters: {
             toEth(value) {
-                value = value ? new BigNumber(value):0;
+                value = value ? new BigNumber(value) : 0;
                 return web3.fromWei(value, 'ether').toString();
             },
             decimals(value) {
@@ -99,6 +117,10 @@
         },
         data() {
             return {
+                loading: false,
+                error: false,
+                subscribeToEventsLoading: false,
+
                 rate: 1,
                 amount: 0,
                 optionsNumber: {
@@ -112,7 +134,12 @@
                 }
             };
         },
-        watch: {},
+        watch: {
+            currentToken: {
+                handler: 'handleSelectedChange',
+                immediate: true
+            }
+        },
         computed: {
             ...ConfigNS.mapState({
                 configW12Lister: "W12Lister"
@@ -124,6 +151,9 @@
             ...TokensListNS.mapState({
                 currentToken: "currentToken"
             }),
+            ...TransactionsNS.mapState({
+                TransactionsList: "list"
+            }),
 
             balance() {
                 return web3.fromWei(this.currentAccountData.balance, 'ether').toString();
@@ -133,6 +163,28 @@
             },
             vestingBalance() {
                 return web3.fromWei(this.currentAccountData.vestingBalance, 'ether').toString();
+            },
+
+            isPendingTx() {
+                return this.TransactionsList && this.TransactionsList.length
+                    ? this.TransactionsList.find((tr) => {
+                        return tr.token
+                        && tr.name
+                        && tr.hash
+                        && tr.status
+                        && tr.token === this.currentToken.crowdSaleInformation.WTokenAddress
+                        && tr.name === "exchangeTokens"
+                        && tr.status === "pending"
+                            ? tr
+                            : false
+                    })
+                    : false;
+            },
+            disable() {
+                return parseFloat(this.unVestingBalance) === 0
+                    || (parseFloat(this.unVestingBalance) < parseFloat(this.amount))
+                    || parseFloat(this.amount) <= 0
+                    || !this.amount;
             }
         },
         methods: {
@@ -146,31 +198,38 @@
                 updateAccountData: 'updateAccountData',
             }),
             toEth(value) {
-                value = value ? new BigNumber(value):0;
+                value = value ? new BigNumber(value) : 0;
                 return web3.fromWei(value, 'ether').toString();
             },
             async approveSwapToSpend() {
+                this.loading = true;
                 try {
                     const {W12TokenFactory, W12ListerFactory} = await this.ledgerFetch();
                     const W12Lister = W12ListerFactory.at(this.configW12Lister.address);
                     const {web3} = await Connector.connect();
                     const W12Token = W12TokenFactory.at(this.currentToken.crowdSaleInformation.WTokenAddress);
                     const swapAddress = (await W12Lister.methods.swap());
-                    const approveTx = await W12Token.methods.approve(
+                    const tx = await W12Token.methods.approve(
                         swapAddress,
                         web3.toWei(this.amount, 'ether'),
                         {from: this.currentAccount}
                     );
-                    await waitTransactionReceipt(approveTx, web3);
-                    setTimeout(async () => {
-                        await this.updateAccountData();
-                    }, 5000);
+                    this.$store.commit(`Transactions/${UPDATE_TX}`, {
+                        token: this.currentToken.crowdSaleInformation.WTokenAddress,
+                        name: "exchangeTokens",
+                        hash: tx,
+                        status: "pending"
+                    });
+                    await waitTransactionReceipt(tx, web3);
+                    await this.updateAccountData();
                 } catch (e) {
-                    console.log(e);
+                    this.error = e.message;
                 }
+                this.loading = false;
             },
 
             async decreaseSwapApprovalToSpend() {
+                this.loading = true;
                 try {
                     const {W12TokenFactory, W12ListerFactory} = await this.ledgerFetch();
                     const W12Lister = W12ListerFactory.at(this.configW12Lister.address);
@@ -178,37 +237,104 @@
                     const W12Token = W12TokenFactory.at(this.currentToken.crowdSaleInformation.WTokenAddress);
                     const swapAddress = (await W12Lister.methods.swap());
 
-                    const approveTx = await W12Token.methods.decreaseApproval(
+                    const tx = await W12Token.methods.decreaseApproval(
                         swapAddress,
                         new BigNumber(this.currentAccountData.allowanceForSwap),
                         {from: this.currentAccount}
                     );
-
-                    await waitTransactionReceipt(approveTx, web3);
-                    setTimeout(async () => {
-                        await this.updateAccountData();
-                    }, 5000);
+                    this.$store.commit(`Transactions/${UPDATE_TX}`, {
+                        token: this.currentToken.crowdSaleInformation.WTokenAddress,
+                        name: "exchangeTokens",
+                        hash: tx,
+                        status: "pending"
+                    });
+                    await waitTransactionReceipt(tx, web3);
+                    await this.updateAccountData();
                 } catch (e) {
-                    console.log(e);
+                    this.error = e.message;
                 }
+                this.loading = false;
             },
 
-            async exchange(){
-                const {W12AtomicSwapFactory, W12ListerFactory} = await this.ledgerFetch();
-                const W12Lister = W12ListerFactory.at(this.configW12Lister.address);
-                const {web3} = await Connector.connect();
-                const swapAddress = (await W12Lister.methods.swap());
-                const W12AtomicSwap = W12AtomicSwapFactory.at(swapAddress);
+            async exchange() {
+                this.loading = true;
+                try {
+                    const {W12AtomicSwapFactory, W12ListerFactory} = await this.ledgerFetch();
+                    const W12Lister = W12ListerFactory.at(this.configW12Lister.address);
+                    const {web3} = await Connector.connect();
+                    const swapAddress = (await W12Lister.methods.swap());
+                    const W12AtomicSwap = W12AtomicSwapFactory.at(swapAddress);
 
-                const tx = await W12AtomicSwap.methods.exchange(
-                    this.currentToken.crowdSaleInformation.WTokenAddress,
-                    new BigNumber(this.currentAccountData.allowanceForSwap)
-                );
-
-                await waitTransactionReceipt(tx, web3);
-                setTimeout(async () => {
+                    const tx = await W12AtomicSwap.methods.exchange(
+                        this.currentToken.crowdSaleInformation.WTokenAddress,
+                        new BigNumber(this.currentAccountData.allowanceForSwap)
+                    );
+                    this.$store.commit(`Transactions/${UPDATE_TX}`, {
+                        token: this.currentToken.crowdSaleInformation.WTokenAddress,
+                        name: "exchangeTokens",
+                        hash: tx,
+                        status: "pending"
+                    });
+                    await waitTransactionReceipt(tx, web3);
                     await this.updateAccountData();
-                }, 5000);
+                } catch (e) {
+                    this.error = e.message;
+                }
+                this.loading = false;
+            },
+
+            async handleSelectedChange() {
+                await this.updateAccountData();
+                this.unsubscribeFromEvents();
+                await this.subscribeToEvents();
+            },
+
+            unsubscribeFromEvents() {
+                if (!this.subscribedEvents) return;
+
+                this.subscribedEvents.TokenPurchase.stopWatching();
+                this.subscribedEvents = null;
+            },
+            async subscribeToEvents() {
+                if (!this.currentToken) return;
+                if (this.subscribedEvents) return;
+
+                this.subscribeToEventsLoading = true;
+
+                try {
+                    const {ERC20Factory, W12AtomicSwapFactory, W12ListerFactory} = await this.ledgerFetch();
+                    const ERC20 = ERC20Factory.at(this.currentToken.crowdSaleInformation.WTokenAddress);
+                    const W12Lister = W12ListerFactory.at(this.configW12Lister.address);
+                    const swapAddress = (await W12Lister.methods.swap());
+                    const W12AtomicSwap = W12AtomicSwapFactory.at(swapAddress);
+
+                    const ApprovalEvent = ERC20.events.Approval(null, null, this.onApprovalEvent);
+                    const ExchangeEvent = W12AtomicSwap.events.Exchange(null, null, this.onExchangeEvent);
+
+                    this.subscribedEvents = {
+                        ApprovalEvent,
+                        ExchangeEvent
+                    };
+                } catch (e) {
+                    this.error = e.message;
+                }
+
+                this.subscribeToEventsLoading = false;
+            },
+
+            async onExchangeEvent(error, result) {
+                if (!error) {
+                    await this.updateAccountData();
+                    const tx = result.transactionHash;
+                    this.$store.commit(`Transactions/${CONFIRM_TX}`, tx);
+                }
+            },
+            async onApprovalEvent(error, result) {
+                if (!error) {
+                    await this.updateAccountData();
+                    const tx = result.transactionHash;
+                    this.$store.commit(`Transactions/${CONFIRM_TX}`, tx);
+                }
             },
         }
     };

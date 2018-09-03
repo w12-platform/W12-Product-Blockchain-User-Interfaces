@@ -44,6 +44,7 @@
     const AccountNS = createNamespacedHelpers("Account");
     const TokensListNS = createNamespacedHelpers("TokensList");
     const LangNS = createNamespacedHelpers("Lang");
+    const TransactionsNS = createNamespacedHelpers("Transactions");
 
     const moment = window.moment;
     const web3 = new Web3();
@@ -114,9 +115,13 @@
                 watchCurrentAccount: 'watch',
                 updateAccountData: 'updateAccountData',
             }),
+            ...TransactionsNS.mapActions({
+                transactionsUpStatusTx: "updateStatusTx"
+            }),
 
             async handleCurrentAccountChange(currentAccount) {
                 if(currentAccount){
+                    await this.transactionsUpStatusTx();
                     await this.tokensListFetch();
                     await this.updateAccountData();
                 }

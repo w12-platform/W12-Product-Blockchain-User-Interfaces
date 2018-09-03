@@ -1,16 +1,27 @@
 <template>
     <div class="ExchangeTokens buefy" v-if="balance !== '0'">
-        <h2>{{ $t('ExchangeTokensProjects', {Balance: balance, WToken: currentToken.symbol, Token: currentToken.tokenInformation.symbol})}}</h2>
-        <div class="ExchangeTokens__content">
+        <h2>{{ $t('ExchangeTokensProjects', {Balance: balance, WToken: currentProject.symbol, Token:
+            currentProject.tokenInformation.symbol})}}</h2>
+        <div class="pm-2" v-if="isPendingTx">
+            <p class="py-2">{{ $t('WaitingConfirm') }}:</p>
+            <b-tag class="py-2">{{isPendingTx.hash}}</b-tag>
+        </div>
+        <b-notification class="" v-if="error" @close="error = false" type="is-danger" has-icon>
+            {{ error }}
+        </b-notification>
+        <div class="ExchangeTokens__content" v-if="!isPendingTx">
             <div class="ExchangeTokens__form">
                 <div class="ExchangeTokens__exchange py-2">
-                    <button class="btn btn-primary py-2" @click="approveSwapToSpend">{{ $t('ExchangeTokensProjectsApprove') }}</button>
+                    <button class="btn btn-primary py-2"
+                            v-if="this.currentAccountData.allowanceForSwap === '0'" @click="approveSwapToSpend">{{
+                        $t('ExchangeTokensProjectsApprove') }}
+                    </button>
 
-                    <div v-if="this.currentAccountData.allowanceForSwap !== '0'" class="py-2">
+                    <div v-if="currentAccountData.allowanceForSwap !== '0'" class="py-2">
                         {{ $t('ExchangeTokensProjectsMessagesBeforeSwap', {
-                            allowance: toEth(currentAccountData.allowanceForSwap),
-                            WToken: currentToken.symbol,
-                            Token: currentToken.tokenInformation.symbol,
+                        allowance: toEth(currentAccountData.allowanceForSwap),
+                        WToken: currentProject.symbol,
+                        Token: currentProject.tokenInformation.symbol,
                         })}}
                     </div>
                     <div v-if="this.currentAccountData.allowanceForSwap !== '0'" class="row pl-3 pr-3">
@@ -29,6 +40,7 @@
                 </div>
             </div>
         </div>
+        <b-loading :is-full-page="false" :active.sync="loading" :can-cancel="true"></b-loading>
     </div>
 </template>
 
@@ -37,38 +49,29 @@
     import Connector from "lib/Blockchain/DefaultConnector";
     import {waitTransactionReceipt} from 'lib/utils.js';
     import {createNamespacedHelpers} from "vuex";
+    import {UPDATE_TX} from "store/modules/Transactions.js";
 
     const web3 = new Web3();
     const BigNumber = web3.BigNumber;
 
-    const TokensListNS = createNamespacedHelpers("TokensList");
     const AccountNS = createNamespacedHelpers("Account");
     const LedgerNS = createNamespacedHelpers("Ledger");
     const ConfigNS = createNamespacedHelpers("Config");
+    const ProjectNS = createNamespacedHelpers("Project");
+    const TransactionsNS = createNamespacedHelpers("Transactions");
 
     export default {
         name: 'ExchangeTokens',
         template: '#ExchangeTokensTemplate',
         components: {},
-        filters: {
-            toEth(value) {
-                value = value ? new BigNumber(value):0;
-                return web3.fromWei(value, 'ether').toString();
-            },
-            decimals(value) {
-                const d = this.currentToken ? this.currentToken.decimals : 0;
-                const base = new BigNumber(10);
-                value = new BigNumber(value);
-                return value.div(base.pow(d)).toString();
-            },
-        },
         data() {
             return {
                 rate: 1,
                 amount: 0,
+                error: false,
+                loading: false
             };
         },
-        watch: {},
         computed: {
             ...ConfigNS.mapState({
                 configW12Lister: "W12Lister"
@@ -77,8 +80,11 @@
                 currentAccount: "currentAccount",
                 currentAccountData: "currentAccountData",
             }),
-            ...TokensListNS.mapState({
-                currentToken: "currentToken"
+            ...ProjectNS.mapState({
+                currentProject: "currentProject",
+            }),
+            ...TransactionsNS.mapState({
+                TransactionsList: "list"
             }),
 
             balance() {
@@ -89,82 +95,114 @@
             },
             vestingBalance() {
                 return web3.fromWei(this.currentAccountData.vestingBalance, 'ether').toString();
-            }
+            },
+
+            isPendingTx() {
+                return this.TransactionsList && this.TransactionsList.length
+                    ? this.TransactionsList.find((tr) => {
+                        return tr.token
+                        && tr.name
+                        && tr.hash
+                        && tr.status
+                        && tr.token === this.currentProject.wTokenAddress
+                        && tr.name === "exchangeProject"
+                        && tr.status === "pending"
+                            ? tr
+                            : false
+                    })
+                    : false;
+            },
         },
         methods: {
             ...LedgerNS.mapActions({
                 ledgerFetch: "fetch"
             }),
-            ...TokensListNS.mapActions({
-                tokensListUpdate: "update"
-            }),
             ...AccountNS.mapActions({
                 updateAccountData: 'updateAccountData',
             }),
             toEth(value) {
-                value = value ? new BigNumber(value):0;
+                value = value ? new BigNumber(value) : 0;
                 return web3.fromWei(value, 'ether').toString();
             },
             async approveSwapToSpend() {
+                this.loading = true;
                 try {
                     const {W12TokenFactory, W12ListerFactory} = await this.ledgerFetch();
                     const W12Lister = W12ListerFactory.at(this.configW12Lister.address);
                     const {web3} = await Connector.connect();
-                    const W12Token = W12TokenFactory.at(this.currentToken.crowdSaleInformation.WTokenAddress);
+                    const W12Token = W12TokenFactory.at(this.currentProject.wTokenAddress);
                     const swapAddress = (await W12Lister.methods.swap());
-                    const approveTx = await W12Token.methods.approve(
+
+                    const tx = await W12Token.methods.approve(
                         swapAddress,
                         web3.toWei(this.balance, 'ether'),
                         {from: this.currentAccount}
                     );
-                    await waitTransactionReceipt(approveTx, web3);
-                    setTimeout(async () => {
-                        await this.updateAccountData();
-                    }, 5000);
+                    this.$store.commit(`Transactions/${UPDATE_TX}`, {
+                        token: this.currentProject.wTokenAddress,
+                        name: "exchangeProject",
+                        hash: tx,
+                        status: "pending"
+                    });
+                    await waitTransactionReceipt(tx, web3);
+                    await this.updateAccountData();
                 } catch (e) {
-                    console.log(e);
+                    this.error = e.message;
                 }
+                this.loading = false;
             },
 
             async decreaseSwapApprovalToSpend() {
+                this.loading = true;
                 try {
                     const {W12TokenFactory, W12ListerFactory} = await this.ledgerFetch();
                     const W12Lister = W12ListerFactory.at(this.configW12Lister.address);
                     const {web3} = await Connector.connect();
-                    const W12Token = W12TokenFactory.at(this.currentToken.crowdSaleInformation.WTokenAddress);
+                    const W12Token = W12TokenFactory.at(this.currentProject.wTokenAddress);
                     const swapAddress = (await W12Lister.methods.swap());
-
-                    const approveTx = await W12Token.methods.decreaseApproval(
+                    const tx = await W12Token.methods.decreaseApproval(
                         swapAddress,
                         new BigNumber(this.currentAccountData.allowanceForSwap),
                         {from: this.currentAccount}
                     );
-
-                    await waitTransactionReceipt(approveTx, web3);
-                    setTimeout(async () => {
-                        await this.updateAccountData();
-                    }, 5000);
-                } catch (e) {
-                    console.log(e);
-                }
-            },
-
-            async exchange(){
-                const {W12AtomicSwapFactory, W12ListerFactory} = await this.ledgerFetch();
-                const W12Lister = W12ListerFactory.at(this.configW12Lister.address);
-                const {web3} = await Connector.connect();
-                const swapAddress = (await W12Lister.methods.swap());
-                const W12AtomicSwap = W12AtomicSwapFactory.at(swapAddress);
-
-                const tx = await W12AtomicSwap.methods.exchange(
-                    this.currentToken.crowdSaleInformation.WTokenAddress,
-                    new BigNumber(this.currentAccountData.allowanceForSwap)
-                );
-
-                await waitTransactionReceipt(tx, web3);
-                setTimeout(async () => {
+                    this.$store.commit(`Transactions/${UPDATE_TX}`, {
+                        token: this.currentProject.wTokenAddress,
+                        name: "exchangeProject",
+                        hash: tx,
+                        status: "pending"
+                    });
+                    await waitTransactionReceipt(tx, web3);
                     await this.updateAccountData();
-                }, 5000);
+                } catch (e) {
+                    this.error = e.message;
+                }
+                this.loading = false;
+            },
+            async exchange() {
+                this.loading = true;
+                try {
+                    const {W12AtomicSwapFactory, W12ListerFactory} = await this.ledgerFetch();
+                    const W12Lister = W12ListerFactory.at(this.configW12Lister.address);
+                    const {web3} = await Connector.connect();
+                    const swapAddress = (await W12Lister.methods.swap());
+                    const W12AtomicSwap = W12AtomicSwapFactory.at(swapAddress);
+
+                    const tx = await W12AtomicSwap.methods.exchange(
+                        this.currentProject.wTokenAddress,
+                        new BigNumber(this.currentAccountData.allowanceForSwap)
+                    );
+                    this.$store.commit(`Transactions/${UPDATE_TX}`, {
+                        token: this.currentProject.wTokenAddress,
+                        name: "exchangeProject",
+                        hash: tx,
+                        status: "pending"
+                    });
+                    await waitTransactionReceipt(tx, web3);
+                    await this.updateAccountData();
+                } catch (e) {
+                    this.error = e.message;
+                }
+                this.loading = false;
             },
         }
     };

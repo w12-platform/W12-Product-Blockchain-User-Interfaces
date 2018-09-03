@@ -22,6 +22,7 @@
                 {{ refundAmount | ETH }} ETH
             </div>
         </div>
+        <b-loading :is-full-page="false" :active.sync="calculation" :can-cancel="true"></b-loading>
     </div>
 </template>
 <script>
@@ -91,7 +92,7 @@
                 },
                 immediate: true
             },
-            value: {
+            inputValue: {
                 async handler (value) {
                     await this.calculate();
                 },
@@ -135,9 +136,10 @@
                 try {
                     if (this.helpers) {
                         const {W12Fund} = this.helpers;
-                        const multiplier = new BigNumber(10).pow(this.tokenDecimals);
+                        //const multiplier = new BigNumber(10).pow(this.tokenDecimals);
                         const value = await W12Fund.methods.getRefundAmount(
-                            (new BigNumber(this.inputValue || 0)).mul(multiplier).toString(),
+                            web3.toWei(this.inputValue, 'ether'),
+                            //(new BigNumber(parseFloat() || 0)).mul(multiplier).toString(),
                             {from: this.accountAddress}
                         );
 

@@ -356,7 +356,7 @@
                     const {W12CrowdsaleFactory} = await this.LedgerFetch();
                     const W12Crowdsale = W12CrowdsaleFactory.at(this.currentProject.crowdsaleAddress);
 
-                    const tx = await W12Crowdsale.setBonusVolumes(this.tokenCrowdSaleStages.length - stageIndex - 1, list);
+                    const tx = await W12Crowdsale.setBonusVolumes(stageIndex, list);
                     this.$store.commit(`Transactions/${UPDATE_TX}`, {
                         token: this.currentProject.tokenAddress,
                         name: "setStages",

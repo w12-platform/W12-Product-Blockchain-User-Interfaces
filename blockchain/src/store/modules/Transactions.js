@@ -34,7 +34,7 @@ export default {
                 if (tr.hash) {
                     const connectedWeb3 = (await Connector.connect()).web3;
                     connectedWeb3.eth.getTransaction(tr.hash, function (err, receipt) {
-                        if (receipt.blockNumber && receipt.hash) {
+                        if (receipt && receipt.blockNumber && receipt.hash || (!err && !receipt)) {
                             commit(CONFIRM_TX, tr.hash);
                         }
                     });
