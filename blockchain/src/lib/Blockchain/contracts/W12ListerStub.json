@@ -507,14 +507,14 @@
     "absolutePath": "/Projects/w12-new/contracts/W12ListerStub.sol",
     "exportedSymbols": {
       "W12ListerStub": [
-        3726
+        3737
       ]
     },
-    "id": 3727,
+    "id": 3738,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 3701,
+        "id": 3712,
         "literals": [
           "solidity",
           "^",
@@ -527,10 +527,10 @@
       {
         "absolutePath": "/Projects/w12-new/contracts/W12Lister.sol",
         "file": "./W12Lister.sol",
-        "id": 3702,
+        "id": 3713,
         "nodeType": "ImportDirective",
-        "scope": 3727,
-        "sourceUnit": 3700,
+        "scope": 3738,
+        "sourceUnit": 3711,
         "src": "26:25:9",
         "symbolAliases": [],
         "unitAlias": ""
@@ -541,58 +541,58 @@
             "arguments": null,
             "baseName": {
               "contractScope": null,
-              "id": 3703,
+              "id": 3714,
               "name": "W12Lister",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 3699,
+              "referencedDeclaration": 3710,
               "src": "79:9:9",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_W12Lister_$3699",
+                "typeIdentifier": "t_contract$_W12Lister_$3710",
                 "typeString": "contract W12Lister"
               }
             },
-            "id": 3704,
+            "id": 3715,
             "nodeType": "InheritanceSpecifier",
             "src": "79:9:9"
           }
         ],
         "contractDependencies": [
-          3699,
-          5266,
-          5480
+          3710,
+          5277,
+          5491
         ],
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 3726,
+        "id": 3737,
         "linearizedBaseContracts": [
-          3726,
-          3699,
-          5266,
-          5480
+          3737,
+          3710,
+          5277,
+          5491
         ],
         "name": "W12ListerStub",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "body": {
-              "id": 3707,
+              "id": 3718,
               "nodeType": "Block",
               "src": "185:18:9",
               "statements": [
                 {
-                  "id": 3706,
+                  "id": 3717,
                   "nodeType": "PlaceholderStatement",
                   "src": "195:1:9"
                 }
               ]
             },
             "documentation": "@dev Allows for any account besides the owner.",
-            "id": 3708,
+            "id": 3719,
             "name": "onlyOwner",
             "nodeType": "ModifierDefinition",
             "parameters": {
-              "id": 3705,
+              "id": 3716,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "182:2:9"
@@ -602,13 +602,13 @@
           },
           {
             "body": {
-              "id": 3724,
+              "id": 3735,
               "nodeType": "Block",
               "src": "353:3:9",
               "statements": []
             },
             "documentation": null,
-            "id": 3725,
+            "id": 3736,
             "implemented": true,
             "isConstructor": true,
             "isDeclaredConst": false,
@@ -619,18 +619,18 @@
                     "argumentTypes": null,
                     "expression": {
                       "argumentTypes": null,
-                      "id": 3717,
+                      "id": 3728,
                       "name": "msg",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 6136,
+                      "referencedDeclaration": 6147,
                       "src": "308:3:9",
                       "typeDescriptions": {
                         "typeIdentifier": "t_magic_message",
                         "typeString": "msg"
                       }
                     },
-                    "id": 3718,
+                    "id": 3729,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -646,55 +646,55 @@
                   },
                   {
                     "argumentTypes": null,
-                    "id": 3719,
+                    "id": 3730,
                     "name": "_factory",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 3710,
+                    "referencedDeclaration": 3721,
                     "src": "320:8:9",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_IW12CrowdsaleFactory_$5045",
+                      "typeIdentifier": "t_contract$_IW12CrowdsaleFactory_$5056",
                       "typeString": "contract IW12CrowdsaleFactory"
                     }
                   },
                   {
                     "argumentTypes": null,
-                    "id": 3720,
+                    "id": 3731,
                     "name": "_ledger",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 3712,
+                    "referencedDeclaration": 3723,
                     "src": "330:7:9",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_W12TokenLedger_$3878",
+                      "typeIdentifier": "t_contract$_W12TokenLedger_$3889",
                       "typeString": "contract W12TokenLedger"
                     }
                   },
                   {
                     "argumentTypes": null,
-                    "id": 3721,
+                    "id": 3732,
                     "name": "_swap",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 3714,
+                    "referencedDeclaration": 3725,
                     "src": "339:5:9",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_IW12AtomicSwap_$4902",
+                      "typeIdentifier": "t_contract$_IW12AtomicSwap_$4913",
                       "typeString": "contract IW12AtomicSwap"
                     }
                   }
                 ],
-                "id": 3722,
+                "id": 3733,
                 "modifierName": {
                   "argumentTypes": null,
-                  "id": 3716,
+                  "id": 3727,
                   "name": "W12Lister",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 3699,
+                  "referencedDeclaration": 3710,
                   "src": "298:9:9",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_type$_t_contract$_W12Lister_$3699_$",
+                    "typeIdentifier": "t_type$_t_contract$_W12Lister_$3710_$",
                     "typeString": "type(contract W12Lister)"
                   }
                 },
@@ -705,31 +705,31 @@
             "name": "",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 3715,
+              "id": 3726,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3710,
+                  "id": 3721,
                   "name": "_factory",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3725,
+                  "scope": 3736,
                   "src": "221:29:9",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_contract$_IW12CrowdsaleFactory_$5045",
+                    "typeIdentifier": "t_contract$_IW12CrowdsaleFactory_$5056",
                     "typeString": "contract IW12CrowdsaleFactory"
                   },
                   "typeName": {
                     "contractScope": null,
-                    "id": 3709,
+                    "id": 3720,
                     "name": "IW12CrowdsaleFactory",
                     "nodeType": "UserDefinedTypeName",
-                    "referencedDeclaration": 5045,
+                    "referencedDeclaration": 5056,
                     "src": "221:20:9",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_IW12CrowdsaleFactory_$5045",
+                      "typeIdentifier": "t_contract$_IW12CrowdsaleFactory_$5056",
                       "typeString": "contract IW12CrowdsaleFactory"
                     }
                   },
@@ -738,26 +738,26 @@
                 },
                 {
                   "constant": false,
-                  "id": 3712,
+                  "id": 3723,
                   "name": "_ledger",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3725,
+                  "scope": 3736,
                   "src": "252:22:9",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_contract$_W12TokenLedger_$3878",
+                    "typeIdentifier": "t_contract$_W12TokenLedger_$3889",
                     "typeString": "contract W12TokenLedger"
                   },
                   "typeName": {
                     "contractScope": null,
-                    "id": 3711,
+                    "id": 3722,
                     "name": "W12TokenLedger",
                     "nodeType": "UserDefinedTypeName",
-                    "referencedDeclaration": 3878,
+                    "referencedDeclaration": 3889,
                     "src": "252:14:9",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_W12TokenLedger_$3878",
+                      "typeIdentifier": "t_contract$_W12TokenLedger_$3889",
                       "typeString": "contract W12TokenLedger"
                     }
                   },
@@ -766,26 +766,26 @@
                 },
                 {
                   "constant": false,
-                  "id": 3714,
+                  "id": 3725,
                   "name": "_swap",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3725,
+                  "scope": 3736,
                   "src": "276:20:9",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_contract$_IW12AtomicSwap_$4902",
+                    "typeIdentifier": "t_contract$_IW12AtomicSwap_$4913",
                     "typeString": "contract IW12AtomicSwap"
                   },
                   "typeName": {
                     "contractScope": null,
-                    "id": 3713,
+                    "id": 3724,
                     "name": "IW12AtomicSwap",
                     "nodeType": "UserDefinedTypeName",
-                    "referencedDeclaration": 4902,
+                    "referencedDeclaration": 4913,
                     "src": "276:14:9",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_IW12AtomicSwap_$4902",
+                      "typeIdentifier": "t_contract$_IW12AtomicSwap_$4913",
                       "typeString": "contract IW12AtomicSwap"
                     }
                   },
@@ -797,19 +797,19 @@
             },
             "payable": false,
             "returnParameters": {
-              "id": 3723,
+              "id": 3734,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "353:0:9"
             },
-            "scope": 3726,
+            "scope": 3737,
             "src": "209:147:9",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 3727,
+        "scope": 3738,
         "src": "53:305:9"
       }
     ],
@@ -819,14 +819,14 @@
     "absolutePath": "/Projects/w12-new/contracts/W12ListerStub.sol",
     "exportedSymbols": {
       "W12ListerStub": [
-        3726
+        3737
       ]
     },
-    "id": 3727,
+    "id": 3738,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 3701,
+        "id": 3712,
         "literals": [
           "solidity",
           "^",
@@ -839,10 +839,10 @@
       {
         "absolutePath": "/Projects/w12-new/contracts/W12Lister.sol",
         "file": "./W12Lister.sol",
-        "id": 3702,
+        "id": 3713,
         "nodeType": "ImportDirective",
-        "scope": 3727,
-        "sourceUnit": 3700,
+        "scope": 3738,
+        "sourceUnit": 3711,
         "src": "26:25:9",
         "symbolAliases": [],
         "unitAlias": ""
@@ -853,58 +853,58 @@
             "arguments": null,
             "baseName": {
               "contractScope": null,
-              "id": 3703,
+              "id": 3714,
               "name": "W12Lister",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 3699,
+              "referencedDeclaration": 3710,
               "src": "79:9:9",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_W12Lister_$3699",
+                "typeIdentifier": "t_contract$_W12Lister_$3710",
                 "typeString": "contract W12Lister"
               }
             },
-            "id": 3704,
+            "id": 3715,
             "nodeType": "InheritanceSpecifier",
             "src": "79:9:9"
           }
         ],
         "contractDependencies": [
-          3699,
-          5266,
-          5480
+          3710,
+          5277,
+          5491
         ],
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 3726,
+        "id": 3737,
         "linearizedBaseContracts": [
-          3726,
-          3699,
-          5266,
-          5480
+          3737,
+          3710,
+          5277,
+          5491
         ],
         "name": "W12ListerStub",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "body": {
-              "id": 3707,
+              "id": 3718,
               "nodeType": "Block",
               "src": "185:18:9",
               "statements": [
                 {
-                  "id": 3706,
+                  "id": 3717,
                   "nodeType": "PlaceholderStatement",
                   "src": "195:1:9"
                 }
               ]
             },
             "documentation": "@dev Allows for any account besides the owner.",
-            "id": 3708,
+            "id": 3719,
             "name": "onlyOwner",
             "nodeType": "ModifierDefinition",
             "parameters": {
-              "id": 3705,
+              "id": 3716,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "182:2:9"
@@ -914,13 +914,13 @@
           },
           {
             "body": {
-              "id": 3724,
+              "id": 3735,
               "nodeType": "Block",
               "src": "353:3:9",
               "statements": []
             },
             "documentation": null,
-            "id": 3725,
+            "id": 3736,
             "implemented": true,
             "isConstructor": true,
             "isDeclaredConst": false,
@@ -931,18 +931,18 @@
                     "argumentTypes": null,
                     "expression": {
                       "argumentTypes": null,
-                      "id": 3717,
+                      "id": 3728,
                       "name": "msg",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 6136,
+                      "referencedDeclaration": 6147,
                       "src": "308:3:9",
                       "typeDescriptions": {
                         "typeIdentifier": "t_magic_message",
                         "typeString": "msg"
                       }
                     },
-                    "id": 3718,
+                    "id": 3729,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -958,55 +958,55 @@
                   },
                   {
                     "argumentTypes": null,
-                    "id": 3719,
+                    "id": 3730,
                     "name": "_factory",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 3710,
+                    "referencedDeclaration": 3721,
                     "src": "320:8:9",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_IW12CrowdsaleFactory_$5045",
+                      "typeIdentifier": "t_contract$_IW12CrowdsaleFactory_$5056",
                       "typeString": "contract IW12CrowdsaleFactory"
                     }
                   },
                   {
                     "argumentTypes": null,
-                    "id": 3720,
+                    "id": 3731,
                     "name": "_ledger",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 3712,
+                    "referencedDeclaration": 3723,
                     "src": "330:7:9",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_W12TokenLedger_$3878",
+                      "typeIdentifier": "t_contract$_W12TokenLedger_$3889",
                       "typeString": "contract W12TokenLedger"
                     }
                   },
                   {
                     "argumentTypes": null,
-                    "id": 3721,
+                    "id": 3732,
                     "name": "_swap",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 3714,
+                    "referencedDeclaration": 3725,
                     "src": "339:5:9",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_IW12AtomicSwap_$4902",
+                      "typeIdentifier": "t_contract$_IW12AtomicSwap_$4913",
                       "typeString": "contract IW12AtomicSwap"
                     }
                   }
                 ],
-                "id": 3722,
+                "id": 3733,
                 "modifierName": {
                   "argumentTypes": null,
-                  "id": 3716,
+                  "id": 3727,
                   "name": "W12Lister",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 3699,
+                  "referencedDeclaration": 3710,
                   "src": "298:9:9",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_type$_t_contract$_W12Lister_$3699_$",
+                    "typeIdentifier": "t_type$_t_contract$_W12Lister_$3710_$",
                     "typeString": "type(contract W12Lister)"
                   }
                 },
@@ -1017,31 +1017,31 @@
             "name": "",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 3715,
+              "id": 3726,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3710,
+                  "id": 3721,
                   "name": "_factory",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3725,
+                  "scope": 3736,
                   "src": "221:29:9",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_contract$_IW12CrowdsaleFactory_$5045",
+                    "typeIdentifier": "t_contract$_IW12CrowdsaleFactory_$5056",
                     "typeString": "contract IW12CrowdsaleFactory"
                   },
                   "typeName": {
                     "contractScope": null,
-                    "id": 3709,
+                    "id": 3720,
                     "name": "IW12CrowdsaleFactory",
                     "nodeType": "UserDefinedTypeName",
-                    "referencedDeclaration": 5045,
+                    "referencedDeclaration": 5056,
                     "src": "221:20:9",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_IW12CrowdsaleFactory_$5045",
+                      "typeIdentifier": "t_contract$_IW12CrowdsaleFactory_$5056",
                       "typeString": "contract IW12CrowdsaleFactory"
                     }
                   },
@@ -1050,26 +1050,26 @@
                 },
                 {
                   "constant": false,
-                  "id": 3712,
+                  "id": 3723,
                   "name": "_ledger",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3725,
+                  "scope": 3736,
                   "src": "252:22:9",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_contract$_W12TokenLedger_$3878",
+                    "typeIdentifier": "t_contract$_W12TokenLedger_$3889",
                     "typeString": "contract W12TokenLedger"
                   },
                   "typeName": {
                     "contractScope": null,
-                    "id": 3711,
+                    "id": 3722,
                     "name": "W12TokenLedger",
                     "nodeType": "UserDefinedTypeName",
-                    "referencedDeclaration": 3878,
+                    "referencedDeclaration": 3889,
                     "src": "252:14:9",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_W12TokenLedger_$3878",
+                      "typeIdentifier": "t_contract$_W12TokenLedger_$3889",
                       "typeString": "contract W12TokenLedger"
                     }
                   },
@@ -1078,26 +1078,26 @@
                 },
                 {
                   "constant": false,
-                  "id": 3714,
+                  "id": 3725,
                   "name": "_swap",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3725,
+                  "scope": 3736,
                   "src": "276:20:9",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_contract$_IW12AtomicSwap_$4902",
+                    "typeIdentifier": "t_contract$_IW12AtomicSwap_$4913",
                     "typeString": "contract IW12AtomicSwap"
                   },
                   "typeName": {
                     "contractScope": null,
-                    "id": 3713,
+                    "id": 3724,
                     "name": "IW12AtomicSwap",
                     "nodeType": "UserDefinedTypeName",
-                    "referencedDeclaration": 4902,
+                    "referencedDeclaration": 4913,
                     "src": "276:14:9",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_IW12AtomicSwap_$4902",
+                      "typeIdentifier": "t_contract$_IW12AtomicSwap_$4913",
                       "typeString": "contract IW12AtomicSwap"
                     }
                   },
@@ -1109,19 +1109,19 @@
             },
             "payable": false,
             "returnParameters": {
-              "id": 3723,
+              "id": 3734,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "353:0:9"
             },
-            "scope": 3726,
+            "scope": 3737,
             "src": "209:147:9",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 3727,
+        "scope": 3738,
         "src": "53:305:9"
       }
     ],
@@ -1133,5 +1133,5 @@
   },
   "networks": {},
   "schemaVersion": "2.0.1",
-  "updatedAt": "2018-08-30T08:24:17.140Z"
+  "updatedAt": "2018-09-02T12:35:49.563Z"
 }
