@@ -540,8 +540,8 @@
         "ru": "Конфигурировать"
     },
     "ProjectDashboardStageConfigureCrowdsaleAddTokensLabel": {
-        "en": "Добавить токены в краудсейл",
-        "ru": "Add tokens to the crowdsdale"
+        "en": "Add tokens to the crowdsdale",
+        "ru": "Добавить токены в краудсейл"
     },
     "ProjectDashboardStageConfigureCrowdsaleAddButton": {
         "en": "Add",
@@ -739,15 +739,15 @@
         "en": "We are waiting for transaction confirmation",
         "ru": "Ожидаем подтверждение транзакции"
     },
-    "ERROR_METAMASK_NOT_INSTALLED": {
+    "ErrorMetamaskNotInstalled": {
         "en": "Please install Metamask to your browser",
         "ru": "Установите Метамаск в свой браузер"
     },
-    "ERROR_METAMASK_IS_BLOCKED": {
+    "ErrorMetamaskIsBlocked": {
         "en": "Metamask is locked  please, unlock Metamask",
         "ru": "Метамаск заблокирован, пожалуйста разблокируйте метамаск"
     },
-    "ERROR_METAMASK_IS_RINKEBY_NETWORK": {
+    "ErrorMetamaskIsRinkebyNetwork": {
         "en": "Please connect to the Rinkeby network",
         "ru": "Пожалуйста подключитесь к сети Rinkeby"
     },

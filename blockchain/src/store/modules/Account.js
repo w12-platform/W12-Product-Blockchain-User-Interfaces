@@ -67,7 +67,7 @@ export default {
                                 commit(UPDATE_DATA, {});
                                 commit(UPDATE_META, {
                                     loading: false,
-                                    loadingError: this._vm.$t('ERROR_METAMASK_IS_RINKEBY_NETWORK')
+                                    loadingError: this._vm.$t('ErrorMetamaskIsRinkebyNetwork')
                                 });
                             } else {
                                 if (!currentAccount) {
@@ -75,7 +75,7 @@ export default {
                                     commit(UPDATE_DATA, {});
                                     commit(UPDATE_META, {
                                         loading: false,
-                                        loadingError: this._vm.$t('ERROR_METAMASK_IS_BLOCKED')
+                                        loadingError: this._vm.$t('ErrorMetamaskIsBlocked')
                                     });
                                 } else {
                                     if (this.state.Account.currentAccount !== currentAccount) {
@@ -89,7 +89,7 @@ export default {
                     } else {
                         commit(UPDATE_META, {
                             loading: false,
-                            loadingError: this._vm.$t('ERROR_METAMASK_NOT_INSTALLED')
+                            loadingError: this._vm.$t('ErrorMetamaskNotInstalled')
                         });
                     }
                 } catch (e) {
