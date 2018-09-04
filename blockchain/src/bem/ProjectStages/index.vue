@@ -113,7 +113,7 @@
                     const W12Token = W12TokenFactory.at(this.currentProject.wTokenAddress);
                     const W12Lister = W12ListerFactory.at(this.W12Lister.address);
                     const W12Crowdsale = W12CrowdsaleFactory.at(this.currentProject.crowdsaleAddress);
-                    const fundAddress = this.currentProject.fundData.address;
+                    const fundAddress = W12Crowdsale.methods.fund();
                     const W12Fund = W12FundFactory.at(fundAddress);
 
                     const ApprovalEvent = ERC20.events.Approval(null, null, this.onApprovalEvent);
@@ -172,7 +172,7 @@
             },
             async onMilestonesUpdatedEvent(error, result) {
                 if (!error) {
-                    //await this.fetchCrowdSaleMilestonesList({Token: this.currentProject});
+                    await this.fetchCrowdSaleMilestonesList({Token: this.currentProject});
                     const tx = result.transactionHash;
                     this.$store.commit(`Transactions/${CONFIRM_TX}`, tx);
                 }
