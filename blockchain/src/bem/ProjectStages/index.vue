@@ -196,7 +196,6 @@
                 }
             },
             async onApprovalW12Event(error, result) {
-                console.log("onApprovalW12Event");
                 if (!error) {
                     const tx = result.transactionHash;
                     await this.updateTokensApprovedToPlaceValue({Token : this.currentProject});

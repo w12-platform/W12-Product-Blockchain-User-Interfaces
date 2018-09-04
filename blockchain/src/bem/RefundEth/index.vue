@@ -309,7 +309,6 @@
                 this.subscribeToEventsLoading = false;
             },
             async onFundsRefundedEvent(error, result) {
-                console.log("test onFundsRefundedEvent");
                 if (!error) {
                     const tx = result.transactionHash;
                     await this.updateAccountData();
