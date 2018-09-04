@@ -97,7 +97,7 @@
                 this.subscribedEvents.MilestonesUpdated.stopWatching();
                 this.subscribedEvents.UnsoldTokenReturned.stopWatching();
                 this.subscribedEvents.CrowdsaleTokenMinted.stopWatching();
-                this.subscribedEvents.TrancheOperation.stopWatching();
+                this.subscribedEvents.TrancheReleased.stopWatching();
 
                 this.subscribedEvents = null;
             },
@@ -113,7 +113,7 @@
                     const W12Token = W12TokenFactory.at(this.currentProject.wTokenAddress);
                     const W12Lister = W12ListerFactory.at(this.W12Lister.address);
                     const W12Crowdsale = W12CrowdsaleFactory.at(this.currentProject.crowdsaleAddress);
-                    const fundAddress = W12Crowdsale.methods.fund();
+                    const fundAddress = await W12Crowdsale.methods.fund();
                     const W12Fund = W12FundFactory.at(fundAddress);
 
                     const ApprovalEvent = ERC20.events.Approval(null, null, this.onApprovalEvent);
@@ -126,7 +126,7 @@
                     const CrowdsaleTokenMinted = W12Lister.events.CrowdsaleTokenMinted(null, null, this.onCrowdsaleTokenMintedEvent);
                     const MilestonesUpdated = W12Crowdsale.events.MilestonesUpdated(null, null, this.onMilestonesUpdatedEvent);
                     const UnsoldTokenReturned = W12Crowdsale.events.UnsoldTokenReturned(null, null, this.onUnsoldTokenReturnedEvent);
-                    const TrancheOperation = W12Fund.events.TrancheOperation(null, null, this.onTrancheOperationEvent);
+                    const TrancheReleased = W12Fund.events.TrancheReleased(null, null, this.onTrancheReleasedEvent);
 
                     this.subscribedEvents = {
                         ApprovalEvent,
@@ -138,7 +138,7 @@
                         MilestonesUpdated,
                         UnsoldTokenReturned,
                         CrowdsaleTokenMinted,
-                        TrancheOperation
+                        TrancheReleased
                     };
                 } catch (e) {
                     this.error = e.message;
@@ -147,7 +147,7 @@
                 this.subscribeToEventsLoading = false;
             },
 
-            async onTrancheOperationEvent(error, result) {
+            async onTrancheReleasedEvent(error, result) {
                 if (!error) {
                     await this.updateFundInformation({Token: this.currentProject});
                     await this.updateAccountData();

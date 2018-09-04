@@ -75,7 +75,7 @@
             isPendingTx() {
                 return this.TransactionsList && this.TransactionsList.length
                     ? this.TransactionsList.find((tr) => {
-                        return tr.token
+                        return tr.fund
                         && tr.name
                         && tr.hash
                         && tr.status
@@ -137,7 +137,7 @@
                     const {W12FundFactory} = await this.ledgerFetch();
                     const {web3} = await Connector.connect();
                     const W12Fund = W12FundFactory.at(fundAddress);
-                    const tx = await W12Fund.methods.tranche();
+                    const tx = await W12Fund.methods.tranche({from: this.currentAccount});
                     this.$store.commit(`Transactions/${UPDATE_TX}`, {
                         fund: this.currentProject.fundData.address,
                         name: "tranche",
