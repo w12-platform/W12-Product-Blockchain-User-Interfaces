@@ -387,10 +387,12 @@ export default {
             try {
                 const {W12CrowdsaleFactory} = await this.dispatch('Ledger/fetch');
                 const W12Crowdsale = W12CrowdsaleFactory.at(Token.tokenCrowdsaleAddress);
-
-                const milestones = await W12Crowdsale.getMilestones();
-
-                commit(UPDATE_CROWD_SALE_MILESTONES_LIST, milestones.map((obj) => new MilestoneModel(obj)));
+                if(Token.tokenCrowdsaleAddress) {
+                    const milestones = await W12Crowdsale.getMilestones();
+                    commit(UPDATE_CROWD_SALE_MILESTONES_LIST, milestones.map((obj) => new MilestoneModel(obj)));
+                } else {
+                    commit(UPDATE_CROWD_SALE_MILESTONES_LIST, []);
+                }
             } catch (e) {
                 commit(UPDATE_CROWD_SALE_MILESTONES_LIST, []);
                 commit(UPDATE_META, {loadingProjectError: e.message});

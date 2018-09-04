@@ -172,7 +172,7 @@
             },
             async onMilestonesUpdatedEvent(error, result) {
                 if (!error) {
-                    //await this.fetchCrowdSaleMilestonesList({Token: this.currentProject});
+                    await this.fetchCrowdSaleMilestonesList({Token: this.currentProject});
                     const tx = result.transactionHash;
                     this.$store.commit(`Transactions/${CONFIRM_TX}`, tx);
                 }
