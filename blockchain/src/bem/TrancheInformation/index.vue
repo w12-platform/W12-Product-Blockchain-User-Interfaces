@@ -40,6 +40,7 @@
     import {createNamespacedHelpers} from "vuex";
     import Connector from "lib/Blockchain/DefaultConnector";
     import {UPDATE_TX} from "store/modules/Transactions.js";
+    import {waitTransactionReceipt} from 'lib/utils.js';
 
     const ProjectNS = createNamespacedHelpers("Project");
     const LedgerNS = createNamespacedHelpers("Ledger");
