@@ -42,6 +42,7 @@
                             :lang="translationsDef"
                             format="YYYY-MM-DD HH:mm"
                             confirm
+                            :time-picker-options="{ start: '00:00', step: '00:10', end: '23:50'}"
                     ></date-picker>
                 </b-field>
                 <!--<label for="MilestoneCard__voteEnd">{{ $t('MilestonesDateEndVoting') }}</label>-->
@@ -68,6 +69,7 @@
                             :lang="translationsDef"
                             format="YYYY-MM-DD HH:mm"
                             confirm
+                            :time-picker-options="{ start: '00:00', step: '00:10', end: '23:50'}"
                     ></date-picker>
                 </b-field>
 
