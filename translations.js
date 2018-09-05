@@ -1,3 +1,30 @@
+const LocalTranslations = {
+    "TokensFactoryTitle": {
+        "en": "Factory tokens",
+        "ru": "Фабрика токенов"
+    },
+    "TokensFactoryCreate": {
+        "en": "Create",
+        "ru": "Создать"
+    },
+    "TokensFactoryCreateFormName": {
+        "en": "Name",
+        "ru": "Название"
+    },
+    "TokensFactoryCreateFormSymbol": {
+        "en": "Symbol",
+        "ru": "Символ"
+    },
+    "TokensFactoryCreateFormDecimals": {
+        "en": "Decimals",
+        "ru": "Количество десятичных знаков после запятой"
+    },
+    "TokensFactoryCreateFormAmount": {
+        "en": "Amount",
+        "ru": "Количество"
+    }
+};
+
 /*{
     "ConfigDashboardTitle": {
         "en": "Config Dashboard",

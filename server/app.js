@@ -23,6 +23,9 @@ app.use(bodyParser.raw({limit: '50mb', type: ['multipart/form-data']}));
 app.use(cookieParser());
 app.use(express.static(APP_DIR));
 
+app.get('/factory',function(req,res){
+    res.sendFile(APP_DIR + "/factory.html");
+});
 app.get('/crowdsale',function(req,res){
     res.sendFile(APP_DIR + "/crowdsale.html");
 });

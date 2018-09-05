@@ -5,6 +5,7 @@ import VueMask from 'v-mask';
 import Cleave from 'vue-cleave-component';
 
 import 'bem/buefy/default.scss';
+import Factory from 'bem/Factory';
 import ConfigDashboad from 'bem/ConfigDashboad';
 import AdminDashboard from 'bem/AdminDashboard';
 import ProjectDashboard from 'bem/ProjectDashboard';
@@ -47,6 +48,15 @@ const appAdminDashboard = (patch === "/listing") || (patch === "/listing.html") 
     template: "<admin-dashboard></admin-dashboard>",
     components: {
         AdminDashboard
+    }
+}):null;
+
+const appFactory = (patch === "/factory") || (patch === "/factory.html") ? new Vue({
+    store,
+    el: '#appFactory',
+    template: "<factory></factory>",
+    components: {
+        Factory
     }
 }):null;
 

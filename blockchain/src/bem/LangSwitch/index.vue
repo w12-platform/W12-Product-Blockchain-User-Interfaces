@@ -52,6 +52,22 @@
                         }
                     }
 
+                    /* set local file */
+                    translations = LocalTranslations;
+                    for (const label in LocalTranslations){
+                        for (const language in translations[label]) {
+                            if(labelsLang.indexOf(language) === -1 ){
+                                labelsLang.push(language);
+                            }
+                            if (translations[label].hasOwnProperty(language)) {
+                                if (!arrayTranslations.hasOwnProperty(language)) {
+                                    arrayTranslations[language] = {};
+                                }
+                                arrayTranslations[language][label] = translations[label][language];
+                            }
+                        }
+                    }
+
                     for (const language in arrayTranslations) {
                         if (arrayTranslations.hasOwnProperty(language)) {
                             this.$i18n.add(language, arrayTranslations[language]);

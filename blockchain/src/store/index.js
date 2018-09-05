@@ -9,6 +9,7 @@ import W12Lister from "store/modules/W12Lister.js";
 import Project from "store/modules/Project.js";
 import Transactions from "store/modules/Transactions.js";
 import Lang from "store/modules/Lang.js";
+import Factory from "store/modules/Factory.js";
 import PersistedStatePlugin from "vuex-persistedstate";
 
 Vue.use(Vuex);
@@ -27,15 +28,17 @@ const store = {
         Whitelist,
         Project,
         Transactions,
-        Lang
+        Lang,
+        Factory
     },
     plugins: [
         PersistedStatePlugin({
             paths: [
-                "Config.W12Lister.address",
+                "Config",
                 "W12Lister",
                 "Transactions.list",
-                "Lang.current"
+                "Lang.current",
+                "Factory.list"
             ]
         })
     ]

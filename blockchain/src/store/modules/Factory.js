@@ -1,0 +1,18 @@
+export const FACTORY_ADD = "FACTORY_ADD";
+
+export default {
+    namespaced: true,
+    state: {
+        list: []
+    },
+    modules: {},
+    getters: {},
+    mutations: {
+        [FACTORY_ADD](state, tokenAddress) {
+            if(state.list.indexOf(tokenAddress) === -1 ){
+                state.list.push(tokenAddress);
+            }
+        },
+    },
+    actions: {}
+};
