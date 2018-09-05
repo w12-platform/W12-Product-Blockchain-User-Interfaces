@@ -3,93 +3,105 @@
         <section class="container">
             <h2>{{ $t('TokensFactoryTitle') }}</h2>
 
-            <b-table
-                    detailed
-                    :data="list"
-                    :mobile-cards="true"
-                    paginated
-                    per-page="10"
-                    pagination-simple>
-                <template slot-scope="props">
-                    <b-table-column field="date" :label="$t('AdminDashboardTableToken')" :title="props.row.tokenAddress">
-                        <span class="tag is-success">{{ props.row.address | shortAddress }}</span>
-                    </b-table-column>
+            <b-notification class="AdminDashboard__error" v-if="isError && !isLoading" type="is-danger" :closable="false" has-icon>
+                <span v-if="ledgerMeta.loadingError">{{ ledgerMeta.loadingError }}</span>
+                <span v-if="accountMeta.loadingError">{{ accountMeta.loadingError }}</span>
+            </b-notification>
 
-                    <b-table-column field="date" :label="$t('AdminDashboardTableName')">
-                        {{ props.row.name }}
-                    </b-table-column>
+            <b-notification v-if="isLoading && !isError" :closable="false" class="AdminDashboard__loader">
+                <span v-if="ledgerMeta.loading">{{ $t('AdminDashboardLoadLedger') }}<br></span>
 
-                    <b-table-column field="date" :label="$t('AdminDashboardTableSymbol')" centered>
-                        {{ props.row.symbol }}
-                    </b-table-column>
+                <b-loading :is-full-page="false" :active.sync="isLoading" :can-cancel="true"></b-loading>
+            </b-notification>
 
-                    <b-table-column field="date" :label="$t('AdminDashboardTableDecimals')" centered>
-                        {{ props.row.decimals.toString() }}
-                    </b-table-column>
-                </template>
+            <div v-if="!isLoading && this.currentAccount">
+                <b-table
+                        detailed
+                        :data="list"
+                        :mobile-cards="true"
+                        paginated
+                        per-page="10"
+                        pagination-simple>
+                    <template slot-scope="props">
+                        <b-table-column field="date" :label="$t('AdminDashboardTableToken')" :title="props.row.tokenAddress">
+                            <span class="tag is-success">{{ props.row.address | shortAddress }}</span>
+                        </b-table-column>
 
-                <template slot="detail" slot-scope="props">
-                    <div class="WhiteListTable__detail">
-                        <div class="WhiteListTable__detailField">
-                            {{ $t('AdminDashboardTableToken') }} :
-                            <div class="WhiteListTable__detailToken">
-                                <span class="tag is-success">{{ props.row.address }}</span>
+                        <b-table-column field="date" :label="$t('AdminDashboardTableName')">
+                            {{ props.row.name }}
+                        </b-table-column>
+
+                        <b-table-column field="date" :label="$t('AdminDashboardTableSymbol')" centered>
+                            {{ props.row.symbol }}
+                        </b-table-column>
+
+                        <b-table-column field="date" :label="$t('AdminDashboardTableDecimals')" centered>
+                            {{ props.row.decimals.toString() }}
+                        </b-table-column>
+                    </template>
+
+                    <template slot="detail" slot-scope="props">
+                        <div class="WhiteListTable__detail">
+                            <div class="WhiteListTable__detailField">
+                                {{ $t('AdminDashboardTableToken') }} :
+                                <div class="WhiteListTable__detailToken">
+                                    <span class="tag is-success">{{ props.row.address }}</span>
+                                </div>
                             </div>
                         </div>
+                    </template>
+
+                    <b-loading :is-full-page="false" :active.sync="meta.loading" :can-cancel="true"></b-loading>
+                </b-table>
+                <div class="pm-2" v-if="isPendingTx">
+                    <p class="py-2">{{ $t('WaitingConfirm') }}:</p>
+                    <b-tag class="py-2">{{isPendingTx.hash}}</b-tag>
+                </div>
+                <div v-if="!isPendingTx">
+                    <div class="form-group">
+                        <label for="FactoryName">{{ $t('TokensFactoryCreateFormName') }}</label>
+                        <b-field id="FactoryName">
+                            <input type="text"
+                                   class="form-control"
+                                   v-model="createForm.name"/>
+                        </b-field>
                     </div>
-                </template>
+                    <div class="form-group">
+                        <label for="FactorySymbol">{{ $t('TokensFactoryCreateFormSymbol') }}</label>
+                        <b-field id="FactorySymbol">
+                            <input type="text"
+                                   class="form-control"
+                                   v-model="createForm.symbol"/>
+                        </b-field>
+                    </div>
+                    <div class="form-group">
+                        <label for="FactoryDecimals">{{ $t('TokensFactoryCreateFormDecimals') }}</label>
+                        <b-field id="FactoryDecimals">
+                            <cleave v-model="createForm.decimals"
+                                    class="form-control"
+                                    :options="optionsNumber"
+                                    min="0"
+                                    max="255"
+                            ></cleave>
+                        </b-field>
+                    </div>
+                    <div class="form-group">
+                        <label for="FactoryAmount">{{ $t('TokensFactoryCreateFormAmount') }}</label>
+                        <b-field id="FactoryAmount">
+                            <cleave v-model="createForm.amount"
+                                    class="form-control"
+                                    :options="optionsNumber"
+                                    min="0"
+                            ></cleave>
+                        </b-field>
+                    </div>
+                    <b-notification class="ProjectStages__errorStage" v-if="error" @close="error = false" type="is-danger" has-icon>{{ error }}</b-notification>
+                    <button class="btn btn-primary py-2 my-2" @click="create" :disabled="disable">{{
+                        $t('TokensFactoryCreate') }}
+                    </button>
 
-                <b-loading :is-full-page="false" :active.sync="meta.loading" :can-cancel="true"></b-loading>
-            </b-table>
-
-            <div class="pm-2" v-if="isPendingTx">
-                <p class="py-2">{{ $t('WaitingConfirm') }}:</p>
-                <b-tag class="py-2">{{isPendingTx.hash}}</b-tag>
-            </div>
-            <div v-if="!isPendingTx">
-                <div class="form-group">
-                    <label for="FactoryName">{{ $t('TokensFactoryCreateFormName') }}</label>
-                    <b-field id="FactoryName">
-                        <input type="text"
-                               class="form-control"
-                               v-model="createForm.name"/>
-                    </b-field>
+                    <b-loading :is-full-page="false" :active.sync="meta.creating" :can-cancel="true"></b-loading>
                 </div>
-                <div class="form-group">
-                    <label for="FactorySymbol">{{ $t('TokensFactoryCreateFormSymbol') }}</label>
-                    <b-field id="FactorySymbol">
-                        <input type="text"
-                               class="form-control"
-                               v-model="createForm.symbol"/>
-                    </b-field>
-                </div>
-                <div class="form-group">
-                    <label for="FactoryDecimals">{{ $t('TokensFactoryCreateFormDecimals') }}</label>
-                    <b-field id="FactoryDecimals">
-                        <cleave v-model="createForm.decimals"
-                                class="form-control"
-                                :options="optionsNumber"
-                                min="0"
-                                max="255"
-                        ></cleave>
-                    </b-field>
-                </div>
-                <div class="form-group">
-                    <label for="FactoryAmount">{{ $t('TokensFactoryCreateFormAmount') }}</label>
-                    <b-field id="FactoryAmount">
-                        <cleave v-model="createForm.amount"
-                                class="form-control"
-                                :options="optionsNumber"
-                                min="0"
-                        ></cleave>
-                    </b-field>
-                </div>
-                <b-notification class="ProjectStages__errorStage" v-if="error" @close="error = false" type="is-danger" has-icon>{{ error }}</b-notification>
-                <button class="btn btn-primary py-2 my-2" @click="create" :disabled="disable">{{
-                    $t('TokensFactoryCreate') }}
-                </button>
-
-                <b-loading :is-full-page="false" :active.sync="meta.creating" :can-cancel="true"></b-loading>
             </div>
         </section>
     </div>
@@ -190,6 +202,12 @@
                     || !this.createForm.symbol
                     || !this.createForm.decimals
                     || !this.createForm.amount;
+            },
+            isLoading() {
+                return this.meta.loading;
+            },
+            isError() {
+                return this.ledgerMeta.loadingError || this.accountMeta.loadingError;
             },
         },
         methods: {
