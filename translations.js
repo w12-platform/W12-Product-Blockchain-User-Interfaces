@@ -22,10 +22,8 @@ const LocalTranslations = {
     "TokensFactoryCreateFormAmount": {
         "en": "Amount",
         "ru": "Количество"
-    }
-};
-
-/*{
+    },
+    ////////
     "ConfigDashboardTitle": {
         "en": "Config Dashboard",
         "ru": "Панель конфигурации"
@@ -782,4 +780,4 @@ const LocalTranslations = {
         "en": "The sum of all percentages is not 100",
         "ru": "Сумма всех процентов не равно 100"
     }
-};*/
+};

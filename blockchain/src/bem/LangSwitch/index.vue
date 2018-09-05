@@ -34,11 +34,12 @@
 
             axios.get("/ru/api/translate/w12translations.json").then((response) =>{
                 if (response.data) {
-                    let translations = response.data;
                     let labelsLang = [];
                     let arrayTranslations = {};
 
-                    for (const label in translations) {
+                    /* set local file */
+                    let translations = LocalTranslations;
+                    for (const label in LocalTranslations){
                         for (const language in translations[label]) {
                             if(labelsLang.indexOf(language) === -1 ){
                                 labelsLang.push(language);
@@ -52,9 +53,8 @@
                         }
                     }
 
-                    /* set local file */
-                    translations = LocalTranslations;
-                    for (const label in LocalTranslations){
+                    translations = response.data;
+                    for (const label in translations) {
                         for (const language in translations[label]) {
                             if(labelsLang.indexOf(language) === -1 ){
                                 labelsLang.push(language);
@@ -77,7 +77,31 @@
                     this.$store.commit(`Lang/${LANG_UPDATE}`, {all: labelsLang});
                 }
             }, function (e) {
-                this.$store.commit(`Lang/${LANG_UPDATE_META}`, {loadingError: e.message});
+                /* set local file */
+                let labelsLang = [];
+                let arrayTranslations = {};
+                let translations = LocalTranslations;
+                for (const label in LocalTranslations){
+                    for (const language in translations[label]) {
+                        if(labelsLang.indexOf(language) === -1 ){
+                            labelsLang.push(language);
+                        }
+                        if (translations[label].hasOwnProperty(language)) {
+                            if (!arrayTranslations.hasOwnProperty(language)) {
+                                arrayTranslations[language] = {};
+                            }
+                            arrayTranslations[language][label] = translations[label][language];
+                        }
+                    }
+                }
+
+                for (const language in arrayTranslations) {
+                    if (arrayTranslations.hasOwnProperty(language)) {
+                        this.$i18n.add(language, arrayTranslations[language]);
+                    }
+                }
+                this.$store.commit(`Lang/${LANG_UPDATE_META}`, {loading: false});
+                this.$store.commit(`Lang/${LANG_UPDATE}`, {all: labelsLang});
             });
         },
     };
