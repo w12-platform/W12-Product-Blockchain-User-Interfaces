@@ -1,4 +1,7 @@
+import {RESET} from "./TokensList";
+
 export const FACTORY_ADD = "FACTORY_ADD";
+export const FACTORY_RESET = "FACTORY_RESET";
 
 export default {
     namespaced: true,
@@ -13,6 +16,13 @@ export default {
                 state.list.push(tokenAddress);
             }
         },
+        [FACTORY_RESET](state) {
+            state.list = [];
+        },
     },
-    actions: {}
+    actions: {
+        async reset({commit}) {
+            commit(FACTORY_RESET);
+        },
+    }
 };

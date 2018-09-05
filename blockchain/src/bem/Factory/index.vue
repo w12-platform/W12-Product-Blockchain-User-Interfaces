@@ -217,6 +217,9 @@
             ...LedgerNS.mapActions({
                 ledgerFetch: "fetch"
             }),
+            ...TransactionsNS.mapActions({
+                transactionsUpStatusTx: "updateStatusTx"
+            }),
 
             async create() {
                 this.meta.creating = true;
@@ -305,6 +308,7 @@
             this.unsubscribeFromEvents();
             await this.subscribeToEvents();
             await this.fetchList();
+            await this.transactionsUpStatusTx();
 
             this.meta.loading = false;
         },

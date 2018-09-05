@@ -36,6 +36,7 @@
 
     const ConfigNS = createNamespacedHelpers('Config');
     const TokensListNS = createNamespacedHelpers('TokensList');
+    const FactoryNS = createNamespacedHelpers('Factory');
 
     export default {
         name: 'ConfigDashboard',
@@ -56,6 +57,9 @@
             ...TokensListNS.mapActions({
                 reset: 'reset'
             }),
+            ...FactoryNS.mapActions({
+                FactoryReset: 'reset'
+            }),
 
             saveConfig () {
                 this.$store.commit(`Config/${CONFIG_UPDATE}`, {
@@ -63,6 +67,7 @@
                     FactoryTokens: { address: this.factory }
                 });
                 this.reset();
+                this.FactoryReset();
                 this.address = null;
                 this.factory = null;
             },
