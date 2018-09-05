@@ -2,25 +2,35 @@
     <div class="RefundEth byefy" v-if="currentToken">
         <h2>{{ $t('InvestorDashboardRefundEth', { WToken: currentToken.symbol }) }}</h2>
         <RefundInformation v-if="refundInformation" :data="refundInformation"></RefundInformation>
-        <div v-if="refundInformation">
+
+        <b-notification class="" v-if="error" @close="error = false" type="is-danger" has-icon>
+            {{ error }}
+        </b-notification>
+        <div class="pm-2" v-if="isPendingTx">
+            <p class="py-2">{{ $t('WaitingConfirm') }}:</p>
+            <b-tag class="py-2">{{isPendingTx.hash}}</b-tag>
+        </div>
+        <div v-if="refundInformation && !isPendingTx">
             <RefundCalculator v-if="refundInformation.currentWalletBalanceInRefundAmount"
                               v-model="refundValueInTokens"
                               :refundInformation="refundInformation"
                               :fundAddress="currentToken.crowdSaleInformation.fund.W12FundAddress"
                               :accountAddress="currentAccount"
                               :tokenSymbol="currentToken.symbol"
-                              :tokenDecimals="currentToken.decimals">
+                              :tokenDecimals="currentToken.decimals"
+                              @approve="approveTheFundToSpend"
+            >
             </RefundCalculator>
             <div class="py-2">
-                <button class="btn btn-primary py-2"
+                <button class="btn btn-primary py-2" :disabled="disable"
                         @click="approveTheFundToSpend">{{ $t('InvestorDashboardRefundEthApprove') }}
                 </button>
             </div>
             <div v-if="this.currentAccountData.allowanceForTheFund !== '0'" class="py-2">
                 {{ $t('InvestorDashboardRefundEthMessagesBeforeRefund', {
-                    allowance: currentAccountData.allowanceForTheFund | toEth,
+                    allowance: toEth(currentAccountData.allowanceForTheFund),
                     WToken: currentToken.symbol,
-                    refundAmount: currentAccountData.allowanceForTheFundInRefundAmount | toEth
+                    refundAmount: toEth(currentAccountData.allowanceForTheFundInRefundAmount)
                 }) }}
             </div>
             <div v-if="this.currentAccountData.allowanceForTheFund !== '0'" class="row pl-3 pr-3">
@@ -46,6 +56,7 @@
     import RefundInformation from 'bem/RefundInformation';
     import RefundCalculator from 'bem/RefundCalculator';
     import {RefundInformationModel} from 'bem/RefundInformation/shared.js';
+    import {UPDATE_TX, CONFIRM_TX} from "store/modules/Transactions.js";
 
     const web3 = new Web3();
     const BigNumber = web3.BigNumber;
@@ -54,6 +65,7 @@
     const AccountNS = createNamespacedHelpers("Account");
     const LedgerNS = createNamespacedHelpers("Ledger");
     const ConfigNS = createNamespacedHelpers("Config");
+    const TransactionsNS = createNamespacedHelpers("Transactions");
 
     export default {
         name: 'RefundEth',
@@ -71,9 +83,17 @@
         data() {
             return {
                 refundValueInTokens: '0',
+                loading: false,
+                error: false,
+                subscribeToEventsLoading: false,
             };
         },
-        watch: {},
+        watch: {
+            currentToken: {
+                handler: 'handleSelectedChange',
+                immediate: true
+            }
+        },
         computed: {
             ...ConfigNS.mapState({
                 configW12Lister: "W12Lister"
@@ -84,6 +104,9 @@
             }),
             ...TokensListNS.mapState({
                 currentToken: "currentToken"
+            }),
+            ...TransactionsNS.mapState({
+                TransactionsList: "list"
             }),
 
             refundInformation() {
@@ -139,6 +162,27 @@
                 const decimals = this.currentToken ? this.currentToken.decimals : 0;
                 return value.mul(new BigNumber(10).pow(decimals)).toString();
             },
+
+            isPendingTx() {
+                return this.TransactionsList && this.TransactionsList.length
+                    ? this.TransactionsList.find((tr) => {
+                        return tr.token
+                        && tr.name
+                        && tr.hash
+                        && tr.status
+                        && tr.token === this.currentToken.crowdSaleInformation.WTokenAddress
+                        && tr.name === "refund"
+                        && tr.status === "pending"
+                            ? tr
+                            : false
+                    })
+                    : false;
+            },
+            disable() {
+                return !this.refundValueInTokens
+                    || !this.refundInformation.refundTokensVolume
+                    || this.refundValueInTokens === "0";
+            }
         },
         methods: {
             ...LedgerNS.mapActions({
@@ -151,48 +195,63 @@
                 updateAccountData: 'updateAccountData',
             }),
 
+            toEth(value) {
+                value = value ? new BigNumber(value):0;
+                return web3.fromWei(value, 'ether').toString();
+            },
             async approveTheFundToSpend() {
+                this.loading = true;
                 try {
                     const {W12TokenFactory} = await this.ledgerFetch();
                     const {web3} = await Connector.connect();
                     const W12Token = W12TokenFactory.at(this.currentToken.crowdSaleInformation.WTokenAddress);
 
-                    const approveTx = await W12Token.methods.approve(
+                    const tx = await W12Token.methods.approve(
                         this.currentToken.crowdSaleInformation.fund.W12FundAddress,
                         web3.toWei(this.refundValueInTokens, 'ether'),
                         {from: this.currentAccount}
                     );
-
-                    await waitTransactionReceipt(approveTx, web3);
-                    setTimeout(async () => {
-                        await this.updateAccountData();
-                    }, 5000);
+                    this.$store.commit(`Transactions/${UPDATE_TX}`, {
+                        token: this.currentToken.crowdSaleInformation.WTokenAddress,
+                        name: "refund",
+                        hash: tx,
+                        status: "pending"
+                    });
+                    await waitTransactionReceipt(tx, web3);
+                    await this.updateAccountData();
                 } catch (e) {
-                    console.log(e);
+                    this.error = e.message;
                 }
+                this.loading = false;
             },
             async decreaseTheFundApprovalToSpend() {
+                this.loading = true;
                 try {
                     const value = new BigNumber(this.currentAccountData.allowanceForTheFund);
                     const {W12TokenFactory} = await this.ledgerFetch();
                     const {web3} = await Connector.connect();
                     const W12Token = W12TokenFactory.at(this.currentToken.crowdSaleInformation.WTokenAddress);
 
-                    const approveTx = await W12Token.methods.decreaseApproval(
+                    const tx = await W12Token.methods.decreaseApproval(
                         this.currentToken.crowdSaleInformation.fund.W12FundAddress,
                         value,
                         {from: this.currentAccount}
                     );
-
-                    await waitTransactionReceipt(approveTx, web3);
-                    setTimeout(async () => {
-                        await this.updateAccountData();
-                    }, 5000);
+                    this.$store.commit(`Transactions/${UPDATE_TX}`, {
+                        token: this.currentToken.crowdSaleInformation.WTokenAddress,
+                        name: "refund",
+                        hash: tx,
+                        status: "pending"
+                    });
+                    await waitTransactionReceipt(tx, web3);
+                    await this.updateAccountData();
                 } catch (e) {
-                    console.log(e);
+                    this.error = e.message;
                 }
+                this.loading = false;
             },
             async refund() {
+                this.loading = true;
                 try {
                     const value = new BigNumber(this.currentAccountData.allowanceForTheFund);
 
@@ -202,17 +261,61 @@
                         const W12Fund = W12FundFactory.at(this.currentToken.crowdSaleInformation.fund.W12FundAddress);
 
                         const tx = await W12Fund.methods.refund(value, {from: this.currentAccount});
-
+                        this.$store.commit(`Transactions/${UPDATE_TX}`, {
+                            token: this.currentToken.crowdSaleInformation.WTokenAddress,
+                            name: "refund",
+                            hash: tx,
+                            status: "pending"
+                        });
                         await waitTransactionReceipt(tx, web3);
-
-                        setTimeout(async () => {
-                            await this.updateAccountData();
-                        }, 5000);
+                        await this.updateAccountData();
                     }
                 } catch (e) {
-                    console.log(e);
+                    this.error = e.message;
                 }
-            }
+                this.loading = false;
+            },
+            async handleSelectedChange() {
+                await this.updateAccountData();
+                this.unsubscribeFromEvents();
+                await this.subscribeToEvents();
+            },
+
+            unsubscribeFromEvents() {
+                if (!this.subscribedEvents) return;
+
+                this.subscribedEvents.FundsRefunded.stopWatching();
+                this.subscribedEvents = null;
+            },
+            async subscribeToEvents() {
+                if (!this.currentToken) return;
+                if (this.subscribedEvents) return;
+
+                this.subscribeToEventsLoading = true;
+
+                try {
+                    const {W12FundFactory} = await this.ledgerFetch();
+                    const fundAddress = this.currentToken.crowdSaleInformation.fund.W12FundAddress;
+                    const W12Fund = W12FundFactory.at(fundAddress);
+                    const FundsRefunded = W12Fund.events.FundsRefunded(null, null, this.onFundsRefundedEvent);
+
+                    this.subscribedEvents = {
+                        FundsRefunded,
+                    };
+                } catch (e) {
+                    this.error = e.message;
+                }
+
+                this.subscribeToEventsLoading = false;
+            },
+            async onFundsRefundedEvent(error, result) {
+                if (!error) {
+                    const tx = result.transactionHash;
+                    await this.updateAccountData();
+                    await this.tokensListUpdate({Index: this.currentToken.index});
+                    this.$store.commit(`Transactions/${CONFIRM_TX}`, tx);
+                }
+            },
         }
     }
 </script>

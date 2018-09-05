@@ -1,7 +1,31 @@
-const translationsDef = "ru"; // en, ru
+const LocalTranslations = {
+    "TokensFactoryTitle": {
+        "en": "Factory tokens",
+        "ru": "Фабрика токенов"
+    },
+    "TokensFactoryCreate": {
+        "en": "Create",
+        "ru": "Создать"
+    },
+    "TokensFactoryCreateFormName": {
+        "en": "Name",
+        "ru": "Название"
+    },
+    "TokensFactoryCreateFormSymbol": {
+        "en": "Symbol",
+        "ru": "Символ"
+    },
+    "TokensFactoryCreateFormDecimals": {
+        "en": "Decimals",
+        "ru": "Количество десятичных знаков после запятой"
+    },
+    "TokensFactoryCreateFormAmount": {
+        "en": "Amount",
+        "ru": "Количество"
+    }
+};
 
-const translations = {
-    /* Config Dashboard */
+/*{
     "ConfigDashboardTitle": {
         "en": "Config Dashboard",
         "ru": "Панель конфигурации"
@@ -14,8 +38,6 @@ const translations = {
         "en": "Save",
         "ru": "Сохранить"
     },
-
-    /* AdminDashboard */
     "AdminDashboard": {
         "en": "Admin Dashboard",
         "ru": "Панель управления администратора"
@@ -545,8 +567,8 @@ const translations = {
         "ru": "Конфигурировать"
     },
     "ProjectDashboardStageConfigureCrowdsaleAddTokensLabel": {
-        "en": "Добавить токены в краудсейл",
-        "ru": "Add tokens to the crowdsdale"
+        "en": "Add tokens to the crowdsdale",
+        "ru": "Добавить токены в краудсейл"
     },
     "ProjectDashboardStageConfigureCrowdsaleAddButton": {
         "en": "Add",
@@ -744,16 +766,20 @@ const translations = {
         "en": "We are waiting for transaction confirmation",
         "ru": "Ожидаем подтверждение транзакции"
     },
-    "ERROR_METAMASK_NOT_INSTALLED": {
+    "ErrorMetamaskNotInstalled": {
         "en": "Please install Metamask to your browser",
         "ru": "Установите Метамаск в свой браузер"
     },
-    "ERROR_METAMASK_IS_BLOCKED": {
+    "ErrorMetamaskIsBlocked": {
         "en": "Metamask is locked  please, unlock Metamask",
         "ru": "Метамаск заблокирован, пожалуйста разблокируйте метамаск"
     },
-    "ERROR_METAMASK_IS_RINKEBY_NETWORK": {
+    "ErrorMetamaskIsRinkebyNetwork": {
         "en": "Please connect to the Rinkeby network",
         "ru": "Пожалуйста подключитесь к сети Rinkeby"
     },
-}
+    "MilestoneTitleErrorNotOneHundredPercent": {
+        "en": "The sum of all percentages is not 100",
+        "ru": "Сумма всех процентов не равно 100"
+    }
+};*/

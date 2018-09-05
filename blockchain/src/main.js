@@ -5,10 +5,13 @@ import VueMask from 'v-mask';
 import Cleave from 'vue-cleave-component';
 
 import 'bem/buefy/default.scss';
+import Factory from 'bem/Factory';
 import ConfigDashboad from 'bem/ConfigDashboad';
 import AdminDashboard from 'bem/AdminDashboard';
 import ProjectDashboard from 'bem/ProjectDashboard';
 import InvestorDashboard from 'bem/InvestorDashboard';
+import LangSwitch from 'bem/LangSwitch';
+import Title from 'bem/Title';
 import store from "store";
 
 Vue.use(VueMask);
@@ -18,24 +21,15 @@ Vue.use(Cleave);
 Vue.use(vuexI18n.plugin, store, {
     translateFilterName: 't'
 });
-Vue.i18n.set(translationsDef);
 
-let arrayTranslations = {};
-for (const label in translations) {
-    for (const language in translations[label]) {
-        if (translations[label].hasOwnProperty(language)) {
-            if (!arrayTranslations.hasOwnProperty(language)) {
-                arrayTranslations[language] = {};
-            }
-            arrayTranslations[language][label] = translations[label][language];
-        }
+new Vue({
+    store,
+    el: '#langSwitch',
+    template: "<lang-switch></lang-switch>",
+    components: {
+        LangSwitch
     }
-}
-for (const language in arrayTranslations) {
-    if (arrayTranslations.hasOwnProperty(language)) {
-        Vue.i18n.add(language, arrayTranslations[language]);
-    }
-}
+});
 
 const patch = window.location.pathname;
 
@@ -54,6 +48,15 @@ const appAdminDashboard = (patch === "/listing") || (patch === "/listing.html") 
     template: "<admin-dashboard></admin-dashboard>",
     components: {
         AdminDashboard
+    }
+}):null;
+
+const appFactory = (patch === "/factory") || (patch === "/factory.html") ? new Vue({
+    store,
+    el: '#appFactory',
+    template: "<factory></factory>",
+    components: {
+        Factory
     }
 }):null;
 
@@ -76,6 +79,11 @@ const appInvestorDashboard = (patch === "/crowdsale") || (patch === "/crowdsale.
 }):null;
 
 new Vue({
+    store,
     el: '#appTitle',
-    template: "<h1 class='text-center purchase-heading'>{{ $t('GeneralTitle') }}</h1>",
+    template: "<Title></Title>",
+    components: {
+        Title
+    }
 });
+

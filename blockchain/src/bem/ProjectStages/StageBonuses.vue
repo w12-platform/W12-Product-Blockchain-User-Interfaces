@@ -204,6 +204,8 @@
     const LedgerNS = createNamespacedHelpers("Ledger");
     const AccountNS = createNamespacedHelpers("Account");
     const TransactionsNS = createNamespacedHelpers("Transactions");
+    const LangNS = createNamespacedHelpers("Lang");
+
     const web3 = new Web3();
     const BigNumber = web3.BigNumber;
     const moment = window.moment;
@@ -216,7 +218,6 @@
                 setStagesLoading: false,
                 tokenCrowdSaleStagesChange: false,
                 error: false,
-                translationsDef: translationsDef,
                 tokenCrowdSaleStages: []
             };
         },
@@ -233,6 +234,9 @@
         computed: {
             ...ProjectNS.mapState({
                 currentProject: "currentProject",
+            }),
+            ...LangNS.mapState({
+                translationsDef: 'current'
             }),
             ...ProjectNS.mapGetters([
                 'hasAllowance',
@@ -352,7 +356,13 @@
                     const {W12CrowdsaleFactory} = await this.LedgerFetch();
                     const W12Crowdsale = W12CrowdsaleFactory.at(this.currentProject.crowdsaleAddress);
 
-                    const tx = await W12Crowdsale.setBonusVolumes(this.tokenCrowdSaleStages.length - stageIndex - 1, list);
+                    const tx = await W12Crowdsale.setBonusVolumes(stageIndex, list);
+                    this.$store.commit(`Transactions/${UPDATE_TX}`, {
+                        token: this.currentProject.tokenAddress,
+                        name: "setStages",
+                        hash: tx,
+                        status: "pending"
+                    });
                     const connectedWeb3 = (await Connector.connect()).web3;
                     await waitTransactionReceipt(tx, connectedWeb3);
                 } catch (e) {

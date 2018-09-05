@@ -54,6 +54,9 @@ module.exports = {
         contentBase: path.join(__dirname, '../'),
         publicPath: '/blockchain/build/',
         compress: true,
-        port: 8090
+        port: 8090,
+        proxy: {
+            "/ru/api": "http://[::1]:3000"
+        }
     }
 };

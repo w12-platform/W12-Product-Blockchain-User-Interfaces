@@ -1,5 +1,5 @@
 <template>
-    <div class="InvestorDashboard buefy">
+    <div class="InvestorDashboard buefy" v-if="!langMeta.loading">
         <section class="container">
             <h2>{{ $t('InvestorDashboard') }}</h2>
 
@@ -43,6 +43,8 @@
     const LedgerNS = createNamespacedHelpers("Ledger");
     const AccountNS = createNamespacedHelpers("Account");
     const TokensListNS = createNamespacedHelpers("TokensList");
+    const LangNS = createNamespacedHelpers("Lang");
+    const TransactionsNS = createNamespacedHelpers("Transactions");
 
     const moment = window.moment;
     const web3 = new Web3();
@@ -90,6 +92,9 @@
                 currentAccountData: "currentAccountData",
                 accountMeta: "meta",
             }),
+            ...LangNS.mapState({
+                langMeta: 'meta'
+            }),
 
             isLoading() {
                 return this.tokensListMeta.loading && this.meta.loading;
@@ -110,9 +115,13 @@
                 watchCurrentAccount: 'watch',
                 updateAccountData: 'updateAccountData',
             }),
+            ...TransactionsNS.mapActions({
+                transactionsUpStatusTx: "updateStatusTx"
+            }),
 
             async handleCurrentAccountChange(currentAccount) {
                 if(currentAccount){
+                    await this.transactionsUpStatusTx();
                     await this.tokensListFetch();
                     await this.updateAccountData();
                 }

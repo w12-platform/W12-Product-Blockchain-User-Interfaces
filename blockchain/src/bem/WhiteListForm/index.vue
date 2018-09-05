@@ -136,10 +136,14 @@
             <b-notification v-if="errorMessage !== ''" type="is-danger" has-icon>
                 {{ errorMessage }}
             </b-notification>
+            <div class="pm-2" v-if="isPendingTx">
+                <p class="py-2">{{ $t('WaitingConfirm') }}:</p>
+                <b-tag class="py-2">{{isPendingTx.hash}}</b-tag>
+            </div>
             <button class="btn btn-primary py-2 my-2" @click="tryWhiteListToken" :disabled="disableWhiteListButton">{{
                 $t('AdminDashboardWhitelist') }}
             </button>
-            <b-loading :is-full-page="false" :active.sync="checkingToken" :can-cancel="true"></b-loading>
+            <b-loading  :is-full-page="false" :active.sync="whitelistingToken"></b-loading>
         </div>
     </div>
 </template>
@@ -148,12 +152,14 @@
     import './default.scss';
     import Connector from 'lib/Blockchain/DefaultConnector.js';
     import {promisify, waitTransactionReceipt} from 'lib/utils.js';
+    import {UPDATE_TX} from "store/modules/Transactions.js";
 
     import {createNamespacedHelpers} from "vuex";
 
     const LedgerNS = createNamespacedHelpers("Ledger");
     const WhitelistNS = createNamespacedHelpers("Whitelist");
     const ConfigNS = createNamespacedHelpers('Config');
+    const TransactionsNS = createNamespacedHelpers("Transactions");
 
     const EndOfSymbol = "-W";
 
@@ -185,10 +191,14 @@
         },
         computed: {
             ...WhitelistNS.mapState({
-                tokensList: "list"
+                tokensList: "list",
+                whiteMeta: "meta"
             }),
             ...ConfigNS.mapState({
                 W12Lister: "W12Lister"
+            }),
+            ...TransactionsNS.mapState({
+                TransactionsList: "list"
             }),
 
             disableWhiteListButton() {
@@ -214,8 +224,21 @@
                 )
             },
             isLoading() {
-                return this.whitelistingToken;
+                return this.whiteMeta.loading || this.meta.loading;
             },
+            isPendingTx() {
+                return this.TransactionsList && this.TransactionsList.length
+                    ? this.TransactionsList.find((tr) => {
+                        return tr.name
+                        && tr.hash
+                        && tr.status
+                        && tr.name === "whitelistToken"
+                        && tr.status === "pending"
+                            ? tr
+                            : false
+                    })
+                    : false;
+            }
         },
         watch: {
             'whiteListForm.tokenAddress': {
@@ -232,6 +255,9 @@
             ...WhitelistNS.mapActions({
                 whitelistFetch: "fetch",
             }),
+            ...TransactionsNS.mapActions({
+                updateStatusTx: "updateStatusTx"
+            }),
             async tryWhiteListToken() {
                 this.clearErrorMessage();
 
@@ -245,9 +271,10 @@
             setErrorMessage(message) {
                 this.errorMessage = message;
             },
-            onOwnerWhitelistedEvent(errors, result) {
+            async onOwnerWhitelistedEvent(errors) {
                 if (!errors) {
-                    this.whitelistFetch();
+                    await this.whitelistFetch();
+                    await this.updateStatusTx();
                 } else {
                     this.setErrorMessage(errors.message);
                 }
@@ -271,6 +298,11 @@
                             parseInt((parseFloat(data.WTokenSaleFeePercent).toFixed(2) * 100)),
                             parseInt((parseFloat(data.trancheFeePercent).toFixed(2) * 100))
                         );
+                        this.$store.commit(`Transactions/${UPDATE_TX}`, {
+                            name: "whitelistToken",
+                            hash: tx,
+                            status: "pending"
+                        });
                         await waitTransactionReceipt(tx, connectedWeb3);
                         this.endTokenWhiteListOperation();
                     } catch (e) {
@@ -325,17 +357,10 @@
                     if (W12ListerFactory) {
                         try {
                             const W12Lister = W12ListerFactory.at(this.W12Lister.address);
-                            const all = W12Lister.events.OwnerWhitelisted(null, {
-                                fromBlock: 0
-                            });
-                            const latests = W12Lister.events.OwnerWhitelisted(null, {
-                                fromBlock: 'latest'
-                            });
-                            latests.watch(this.onOwnerWhitelistedEvent);
+                            const OwnerWhitelisted = W12Lister.events.OwnerWhitelisted(null, null, this.onOwnerWhitelistedEvent);
 
                             this.EventHelpers = {
-                                all,
-                                fromLatestBlock: latests
+                                OwnerWhitelisted,
                             };
                         } catch (e) {
                             this.setErrorMessage(e.message);
@@ -345,8 +370,7 @@
             },
             destroyEventsHelpers() {
                 if (this.EventHelpers) {
-                    this.EventHelpers.all.stopWatching();
-                    this.EventHelpers.fromLatestBlock.stopWatching();
+                    this.EventHelpers.OwnerWhitelisted.stopWatching();
                     delete this.EventHelpers;
                 }
             },
@@ -380,6 +404,7 @@
             this.meta.loading = true;
 
             await this.createEventsHelpers();
+            await this.updateStatusTx();
 
             this.meta.loading = false;
         },

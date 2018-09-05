@@ -94,7 +94,6 @@ export class W12CrowdsaleWrapper extends BaseWrapper {
         const namesAndDescriptions = [];
 
         for (let milestone of milestones) {
-            console.log(milestone);
             dates.push(
                 milestone.endDate,
                 milestone.endDate+1, //voteEndDate remove vote

@@ -62,12 +62,12 @@ export default {
                         const currentAccount = (await getAccounts())[0];
 
                         await connectedWeb3.version.getNetwork(async (err, networkId) => {
-                            if(networkId !== "4"){
+                            if(networkId !== "4"){ // 4 - RINKEBY
                                 commit(UPDATE, {});
                                 commit(UPDATE_DATA, {});
                                 commit(UPDATE_META, {
                                     loading: false,
-                                    loadingError: this._vm.$t('ERROR_METAMASK_IS_RINKEBY_NETWORK')
+                                    loadingError: this._vm.$t('ErrorMetamaskIsRinkebyNetwork')
                                 });
                             } else {
                                 if (!currentAccount) {
@@ -75,7 +75,7 @@ export default {
                                     commit(UPDATE_DATA, {});
                                     commit(UPDATE_META, {
                                         loading: false,
-                                        loadingError: this._vm.$t('ERROR_METAMASK_IS_BLOCKED')
+                                        loadingError: this._vm.$t('ErrorMetamaskIsBlocked')
                                     });
                                 } else {
                                     if (this.state.Account.currentAccount !== currentAccount) {
@@ -89,7 +89,7 @@ export default {
                     } else {
                         commit(UPDATE_META, {
                             loading: false,
-                            loadingError: this._vm.$t('ERROR_METAMASK_NOT_INSTALLED')
+                            loadingError: this._vm.$t('ErrorMetamaskNotInstalled')
                         });
                     }
                 } catch (e) {
@@ -112,18 +112,21 @@ export default {
         },
         async updateAccountData({commit}) {
             const selectedToken = this.state.TokensList.currentToken;
-            if (!selectedToken) return;
+            const currentProject = this.state.Project.currentProject;
+
+            if (!selectedToken && !currentProject) return;
+            if(currentProject && !currentProject.fundData) return;
 
             commit(UPDATE_META, {updated: true});
 
             try {
                 const {W12TokenFactory, W12FundFactory, W12ListerFactory} = await this.dispatch('Ledger/fetch');
                 const W12Lister = W12ListerFactory.at(this.state.Config.W12Lister.address);
-                const wTokenAddress = selectedToken.crowdSaleInformation.WTokenAddress;
-                const fundAddress = selectedToken.crowdSaleInformation.fund.W12FundAddress;
+                const wTokenAddress = selectedToken ? selectedToken.crowdSaleInformation.WTokenAddress : currentProject.wTokenAddress;
+                const fundAddress = selectedToken ? selectedToken.crowdSaleInformation.fund.W12FundAddress : currentProject.fundData.address;
                 const W12Token = W12TokenFactory.at(wTokenAddress);
                 const W12Fund = W12FundFactory.at(fundAddress);
-                const decimals = selectedToken.decimals;
+                const decimals = selectedToken ? selectedToken.decimals : currentProject.decimals;
                 const oneToken = new BigNumber(10).pow(decimals);
                 const balance = (await W12Token.methods.balanceOf(this.state.Account.currentAccount)).toString();
                 const allowanceForTheFund = (await W12Token.methods.allowance(this.state.Account.currentAccount, fundAddress)).toString();

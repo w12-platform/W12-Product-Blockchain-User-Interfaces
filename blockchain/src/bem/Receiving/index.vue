@@ -1,9 +1,13 @@
 <template>
-    <div class="ReturnToProject" v-if="currentProject && currentProject.receiving">
+    <div class="Receiving buefy" v-if="currentProject && currentProject.receiving">
 
         <h2>{{ $t('Receiving', {Token:currentProject.receiving.symbol})}}</h2>
 
-        <table class="table table-striped table-bordered table-hover table-responsive-sm">
+        <div class="pm-2" v-if="isPendingTx">
+            <p class="py-2">{{ $t('WaitingConfirm') }}:</p>
+            <b-tag class="py-2">{{isPendingTx.hash}}</b-tag>
+        </div>
+        <table v-if="!isPendingTx" class="table table-striped table-bordered table-hover table-responsive-sm">
             <tbody>
             <tr>
                 <td>{{ $t('ReceivingUnsold', {Token:currentProject.receiving.symbol})}}</td>
@@ -25,10 +29,18 @@
             <!--</tr>-->
             </tbody>
         </table>
-        <button class="btn btn-primary py-2 my-2" @click="claimRemainingTokens">{{
+        <b-notification class="ProjectStages__errorStage" v-if="error" @close="error = false" type="is-danger" has-icon>
+            {{ error }}
+        </b-notification>
+        <button
+                v-if="!isPendingTx && currentProject.receiving.amountUnSold !== '0'"
+                class="btn btn-primary py-2 my-2"
+                @click="claimRemainingTokens"
+                :disabled="!currentProject.receiving.amountUnSold">{{
             $t('ReceivingGetUnsold',{WToken:currentProject.receiving.symbolW})}}
         </button>
-        <ExchangeTokensProjects></ExchangeTokensProjects>
+        <ExchangeTokensProjects v-if="!isPendingTx"></ExchangeTokensProjects>
+        <b-loading :is-full-page="false" :active.sync="loadingClaim" :can-cancel="true"></b-loading>
     </div>
 </template>
 <script>
@@ -36,11 +48,14 @@
     import ExchangeTokensProjects from 'bem/ExchangeTokensProjects';
     import {waitTransactionReceipt} from 'lib/utils.js';
     import Connector from 'lib/Blockchain/DefaultConnector.js';
+    import {UPDATE_TX} from "store/modules/Transactions.js";
 
     import {createNamespacedHelpers} from 'vuex';
 
     const ProjectNS = createNamespacedHelpers("Project");
+    const AccountNS = createNamespacedHelpers("Account");
     const LedgerNS = createNamespacedHelpers("Ledger");
+    const TransactionsNS = createNamespacedHelpers("Transactions");
 
     export default {
         name: 'Receiving',
@@ -52,9 +67,39 @@
             ...ProjectNS.mapState({
                 currentProject: "currentProject",
             }),
+            ...TransactionsNS.mapState({
+                TransactionsList: "list"
+            }),
+            ...AccountNS.mapState({
+                currentAccount: "currentAccount",
+                currentAccountData: "currentAccountData",
+            }),
+            isPendingTx() {
+                return this.TransactionsList && this.TransactionsList.length
+                    ? this.TransactionsList.find((tr) => {
+                        return tr.token
+                        && tr.name
+                        && tr.hash
+                        && tr.status
+                        && tr.token === this.currentProject.tokenAddress
+                        && tr.name === "claimRemainingTokens"
+                        && tr.status === "pending"
+                            ? tr
+                            : false
+                    })
+                    : false;
+            },
+            balance() {
+                return web3.fromWei(this.currentAccountData.balance, 'ether').toString();
+            },
+            disable() {
+                return !this.currentProject.receiving.amountUnSold
+                    || parseFloat(this.currentProject.receiving.amountUnSold) <= 0;
+            }
         },
         data() {
             return {
+                loadingClaim: false,
                 error: false,
             };
         },
@@ -63,17 +108,23 @@
                 LedgerFetch: 'fetch',
             }),
             async claimRemainingTokens() {
+                this.loadingClaim = true;
                 try {
                     const {W12CrowdsaleFactory} = await this.LedgerFetch();
                     const W12Crowdsale = W12CrowdsaleFactory.at(this.currentProject.crowdsaleAddress);
                     const connectedWeb3 = (await Connector.connect()).web3;
                     const tx = await W12Crowdsale.methods.claimRemainingTokens();
+                    this.$store.commit(`Transactions/${UPDATE_TX}`, {
+                        token: this.currentProject.tokenAddress,
+                        name: "claimRemainingTokens",
+                        hash: tx,
+                        status: "pending"
+                    });
                     await waitTransactionReceipt(tx, connectedWeb3);
-                    //await this.updateReceivingInformation();
-                    //событие проверить
                 } catch (e) {
                     this.error = e.message;
                 }
+                this.loadingClaim = false;
             },
         }
     };

@@ -41,7 +41,8 @@
             </div>
 
             <div class="Calculator__info">
-                <p v-if="currentToken.crowdSaleInformation.stageDiscount !== '0'">{{$t('InvestorDashboardCalculatorDiscount')}}
+                <p v-if="currentToken.crowdSaleInformation.stageDiscount !== '0'">
+                    {{$t('InvestorDashboardCalculatorDiscount')}}
                     <b-tag type="is-success">{{ currentToken.crowdSaleInformation.stageDiscount }}%</b-tag>
                     {{ profitInEth }} ETH
                 </p>
@@ -49,14 +50,25 @@
                     <b-tag type="is-success">+{{ bonusVolume }} {{ currentToken.symbol }}</b-tag>
                 </p>
 
-                <div class="Calculator__total">{{$t('InvestorDashboardCalculatorTotalBuy')}} {{ totalToken }} {{ currentToken.symbol }} - {{ total }} ETH
+                <div class="Calculator__total">{{$t('InvestorDashboardCalculatorTotalBuy')}} {{ totalToken }} {{
+                    currentToken.symbol }} - {{ total }} ETH
                 </div>
             </div>
 
-            <div class="Calculator__buy">
-                <button class="btn btn-danger" @click="buy">{{$t('InvestorDashboardCalculatorBuy')}}</button>
+            <b-notification class="" v-if="error" @close="error = false" type="is-danger" has-icon>
+                {{ error }}
+            </b-notification>
+
+            <div class="pm-2" v-if="isPendingTx">
+                <p class="py-2">{{ $t('WaitingConfirm') }}:</p>
+                <b-tag class="py-2">{{isPendingTx.hash}}</b-tag>
+            </div>
+
+            <div class="Calculator__buy" v-if="!isPendingTx">
+                <button class="btn btn-danger" :disabled="disable" @click="buy">{{$t('InvestorDashboardCalculatorBuy')}}</button>
             </div>
         </div>
+        <b-loading :is-full-page="false" :active.sync="loading" :can-cancel="true"></b-loading>
     </div>
 </template>
 
@@ -64,10 +76,12 @@
     import './default.scss';
     import {createNamespacedHelpers} from "vuex";
     import {waitTransactionReceipt} from 'lib/utils.js';
+    import {UPDATE_TX, CONFIRM_TX} from "store/modules/Transactions.js";
 
     const LedgerNS = createNamespacedHelpers("Ledger");
     const AccountNS = createNamespacedHelpers("Account");
     const TokensListNS = createNamespacedHelpers("TokensList");
+    const TransactionsNS = createNamespacedHelpers("Transactions");
 
     const web3 = new Web3();
     const BigNumber = web3.BigNumber;
@@ -78,6 +92,10 @@
         template: '#CalculatorTemplate',
         data() {
             return {
+                loading: false,
+                error: false,
+                subscribeToEventsLoading: false,
+
                 tokens: '0',
                 tokensWithoutDiscount: '0',
                 ETHs: '0',
@@ -117,6 +135,9 @@
                 tokensList: 'list',
                 currentToken: 'currentToken',
             }),
+            ...TransactionsNS.mapState({
+                TransactionsList: "list"
+            }),
             tokenPrice() {
                 return this.currentToken.crowdSaleInformation.tokenPrice;
             },
@@ -148,6 +169,25 @@
                 const bonusMultiplier = amount ? this.getBonusMultiplierByEth(amount) : new BigNumber(1);
 
                 return new BigNumber(amount).mul(bonusMultiplier).div(price).toFixed(2).toString();
+            },
+            isPendingTx() {
+                return this.TransactionsList && this.TransactionsList.length
+                    ? this.TransactionsList.find((tr) => {
+                        return tr.token
+                        && tr.name
+                        && tr.hash
+                        && tr.status
+                        && tr.token === this.currentToken.crowdSaleInformation.WTokenAddress
+                        && tr.name === "buy"
+                        && tr.status === "pending"
+                            ? tr
+                            : false
+                    })
+                    : false;
+            },
+            disable() {
+                const amount = new BigNumber(this.total);
+                return !amount.greaterThan(0);
             }
         },
         methods: {
@@ -289,28 +329,75 @@
             },
 
             async buy() {
+                if(this.disable) return;
+
                 const amount = new BigNumber(this.total);
 
-                if (amount.greaterThan(0)) {
+                this.loading = true;
+                try {
                     const {W12CrowdsaleFactory} = await this.ledgerFetch();
                     const connectedWeb3 = (await Connector.connect()).web3;
                     const W12Crowdsale = W12CrowdsaleFactory.at(this.currentToken.crowdSaleInformation.crowdsaleAddress);
-                    const tx = await W12Crowdsale.methods.buyTokens({value: web3.toWei(amount.toFixed(6), 'ether')});
+                    const tx = await W12Crowdsale.methods.buyTokens({value: web3.toWei(amount.toFixed(18), 'ether')}); //amount.toFixed(6)
+                    this.$store.commit(`Transactions/${UPDATE_TX}`, {
+                        token: this.currentToken.crowdSaleInformation.WTokenAddress,
+                        name: "buy",
+                        hash: tx,
+                        status: "pending"
+                    });
                     await waitTransactionReceipt(tx, connectedWeb3);
-                    setTimeout(async () => {
-                        await this.updateAccountData();
-                        await this.tokensListUpdate({Index: this.currentToken.index});
-                    }, 5000);
+                } catch (e) {
+                    this.error = e.message;
                 }
+                this.loading = false;
             },
 
-            handleSelectedChange(newSelected, oldSelected) {
+            async handleSelectedChange(newSelected, oldSelected) {
                 if (newSelected && oldSelected && newSelected.name !== oldSelected.name) {
                     this.total = 0;
                     this.ETHs = 0;
                     this.tokens = 0;
                 }
-            }
+                await this.updateAccountData();
+                this.unsubscribeFromEvents();
+                await this.subscribeToEvents();
+            },
+
+            unsubscribeFromEvents() {
+                if (!this.subscribedEvents) return;
+
+                this.subscribedEvents.TokenPurchase.stopWatching();
+                this.subscribedEvents = null;
+            },
+            async subscribeToEvents() {
+                if (!this.currentToken) return;
+                if (this.subscribedEvents) return;
+
+                this.subscribeToEventsLoading = true;
+
+                try {
+                    const {W12CrowdsaleFactory} = await this.ledgerFetch();
+                    const W12Crowdsale = W12CrowdsaleFactory.at(this.currentToken.crowdSaleInformation.crowdsaleAddress);
+                    const TokenPurchase = W12Crowdsale.events.TokenPurchase(null, null, this.onTokenPurchaseEvent);
+
+                    this.subscribedEvents = {
+                        TokenPurchase,
+                    };
+                } catch (e) {
+                    this.error = e.message;
+                }
+
+                this.subscribeToEventsLoading = false;
+            },
+
+            async onTokenPurchaseEvent(error, result) {
+                if (!error) {
+                    const tx = result.transactionHash;
+                    await this.updateAccountData();
+                    await this.tokensListUpdate({Index: this.currentToken.index});
+                    this.$store.commit(`Transactions/${CONFIRM_TX}`, tx);
+                }
+            },
         },
     };
 </script>

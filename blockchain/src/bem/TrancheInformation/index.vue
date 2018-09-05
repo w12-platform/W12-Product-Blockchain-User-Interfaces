@@ -2,7 +2,11 @@
     <div class="TrancheInformation buefy" v-if="trancheInformationData">
         <h2>{{ $t('trancheInformation') }}</h2>
 
-        <table class="table table-striped table-bordered table-hover table-responsive-sm">
+        <div class="pm-2" v-if="isPendingTx">
+            <p class="py-2">{{ $t('WaitingConfirm') }}:</p>
+            <b-tag class="py-2">{{isPendingTx.hash}}</b-tag>
+        </div>
+        <table v-if="!isPendingTx" class="table table-striped table-bordered table-hover table-responsive-sm">
             <tbody>
             <tr>
                 <td>{{ $t('trancheInformationFundBalance') }}</td>
@@ -19,9 +23,14 @@
             </tbody>
         </table>
 
-        <button class="btn btn-primary py-2 my-2" :disabled="disable" @click="tryTranche">{{
+        <b-notification class="" v-if="error" @close="error = false" type="is-danger" has-icon>
+            {{ error }}
+        </b-notification>
+
+        <button v-if="!isPendingTx" class="btn btn-primary py-2 my-2" :disabled="disable" @click="tryTranche">{{
             $t('trancheInformationReceive') }}
         </button>
+        <b-loading :is-full-page="false" :active.sync="loading" :can-cancel="true"></b-loading>
     </div>
 </template>
 <script>
@@ -30,9 +39,12 @@
     import moment from 'moment';
     import {createNamespacedHelpers} from "vuex";
     import Connector from "lib/Blockchain/DefaultConnector";
+    import {UPDATE_TX} from "store/modules/Transactions.js";
+    import {waitTransactionReceipt} from 'lib/utils.js';
 
     const ProjectNS = createNamespacedHelpers("Project");
     const LedgerNS = createNamespacedHelpers("Ledger");
+    const TransactionsNS = createNamespacedHelpers("Transactions");
 
     const web3 = new Web3();
     const BigNumber = web3.BigNumber;
@@ -47,11 +59,34 @@
                 return value ? moment.unix(value).format('DD.MM.YYYY[ г. ]hh:mm') : '-';
             }
         },
+        data() {
+            return {
+                loading: false,
+                error: false,
+            };
+        },
         computed: {
             ...ProjectNS.mapState({
                 currentProject: "currentProject",
             }),
-
+            ...TransactionsNS.mapState({
+                TransactionsList: "list"
+            }),
+            isPendingTx() {
+                return this.TransactionsList && this.TransactionsList.length
+                    ? this.TransactionsList.find((tr) => {
+                        return tr.fund
+                        && tr.name
+                        && tr.hash
+                        && tr.status
+                        && tr.fund === this.currentProject.fundData.address
+                        && tr.name === "tranche"
+                        && tr.status === "pending"
+                            ? tr
+                            : false
+                    })
+                    : false;
+            },
             disable(){
                 return !(new BigNumber(this.currentProject.fundData.trancheAmount).gt(0));
             },
@@ -96,17 +131,25 @@
             }),
 
             async tryTranche() {
+                this.loading = true;
                 try {
                     const fundAddress = this.currentProject.fundData.address;
                     const {W12FundFactory} = await this.ledgerFetch();
                     const {web3} = await Connector.connect();
                     const W12Fund = W12FundFactory.at(fundAddress);
-                    const tx = await W12Fund.methods.tranche();
+                    const tx = await W12Fund.methods.tranche({from: this.currentAccount});
+                    this.$store.commit(`Transactions/${UPDATE_TX}`, {
+                        fund: this.currentProject.fundData.address,
+                        name: "tranche",
+                        hash: tx,
+                        status: "pending"
+                    });
                     await waitTransactionReceipt(tx, web3);
                 } catch (e) {
                     this.error = e.message;
                 }
-             },
+                this.loading = false;
+            },
         }
     };
 </script>
