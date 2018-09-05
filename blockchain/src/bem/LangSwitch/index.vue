@@ -76,7 +76,7 @@
                     this.$store.commit(`Lang/${LANG_UPDATE_META}`, {loading: false});
                     this.$store.commit(`Lang/${LANG_UPDATE}`, {all: labelsLang});
                 }
-            }, function (e) {
+            }, (e) => {
                 /* set local file */
                 let labelsLang = [];
                 let arrayTranslations = {};
