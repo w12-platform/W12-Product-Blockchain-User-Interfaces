@@ -23,23 +23,24 @@
 
                 <!--<b-table-column v-if="props.row.bonusVolume.length" field="bonusVolume" label="Token amount with discount" centered>-->
                     <!--<div class="SaleTable__volumeElem" v-for="bonusVolume in props.row.bonusVolume.slice().reverse()">-->
-                        <!--<span>{{ bonusVolume[0] * (1 / props.row.price) + bonusVolume[0] * (1 / props.row.price) * (props.row.sale/100) }}</span>-->
+                        <!--<span>{{ (bonusVolume[0] * (1 / props.row.price)) / (1 - (props.row.sale/100)) }}</span>-->
                     <!--</div>-->
                 <!--</b-table-column>-->
 
                 <b-table-column v-if="props.row.bonusVolume.length" field="bonusVolume" label="Token amount with volume bonus" centered>
                     <div class="SaleTable__volumeElem" v-for="bonusVolume in props.row.bonusVolume.slice().reverse()">
                         <span>{{
-                            (bonusVolume[0] * (1 / props.row.price) + bonusVolume[0] * (1 / props.row.price) * (props.row.sale/100)) +
-                            (bonusVolume[0] * (1 / props.row.price) + bonusVolume[0] * (1 / props.row.price) * (props.row.sale/100)) * (bonusVolume[1]/100)
+                            ((bonusVolume[0] * (1 / props.row.price)) / (1 - (props.row.sale/100)) +
+                            (bonusVolume[0] * (1 / props.row.price)) / (1 - (props.row.sale/100)) * (bonusVolume[1]/100))
+                            .toFixed(2)
                             }}</span>
                     </div>
                 </b-table-column>
                 <b-table-column v-if="props.row.bonusVolume.length" field="bonusVolume" label="W-tokens gain, total (%)" centered>
                     <div class="SaleTable__volumeElem" v-for="bonusVolume in props.row.bonusVolume.slice().reverse()">
                         <span>{{
-                            ((((bonusVolume[0] * (1 / props.row.price) + bonusVolume[0] * (1 / props.row.price) * (props.row.sale/100))
-                            + (bonusVolume[0] * (1 / props.row.price) + bonusVolume[0] * (1 / props.row.price) * (props.row.sale/100)) * (bonusVolume[1]/100))
+                            ((((bonusVolume[0] * (1 / props.row.price)) / (1 - (props.row.sale/100))
+                            + (bonusVolume[0] * (1 / props.row.price)) / (1 - (props.row.sale/100)) * (bonusVolume[1]/100))
                             / (bonusVolume[0] * (1 / props.row.price)) - 1)
                             *100).toFixed(2)
                             }} %</span>

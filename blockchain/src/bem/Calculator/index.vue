@@ -3,28 +3,50 @@
         <div v-if="errorMessage" class="alert alert-danger" role="alert">
             <span>{{ errorMessage }}</span>
         </div>
-        <p>Token address: {{ selected.WTokenAddress }}</p>
-        <p>Token name: {{ selected.nameW }}</p>
-        <p>Token symbol: {{ selected.symbolW }}</p>
+        <div class="Calculator__infoToken">
+            <p>Token address: <b-tag type="is-success">{{ selected.WTokenAddress }}</b-tag></p>
+            <p>Token name: {{ selected.nameW }}</p>
+            <p>Token symbol: {{ selected.symbolW }}</p>
+        </div>
 
-        <div class="Calculator__inputs">
-            <div class="Calculator__inputTokens">
+        <div class="Calculator__inputs row">
+            <div class="col-sm py-2">
                 <label for="Tokens">{{ selected.symbolW }}</label>
-                <input type="text" class="form-control" id="Tokens" v-model="tokens">
+                <b-field id="Tokens">
+                    <b-input
+                            placeholder="Token amount"
+                            type="number"
+                            min="0"
+                            :step="0.000001"
+                            v-model="tokens"
+                            icon="shopping">
+                    </b-input>
+                </b-field>
             </div>
-            <div class="Calculator__inputEth">
+            <div class="col-sm py-2">
                 <label for="ETHs">ETHs</label>
-                <input type="text" class="form-control" id="ETHs" v-model="ETHs">
+                <b-field id="ETHs">
+                    <b-input
+                            placeholder="ETH"
+                            type="number"
+                            min="0"
+                            :step="0.000001"
+                            v-model="ETHs"
+                            icon="ethereum">
+                    </b-input>
+                </b-field>
             </div>
         </div>
 
         <div class="Calculator__info">
-            <span>Profit: {{ profitInEth }} ETH</span>
-            <p>Total buy: {{ total }} ETH</p>
+            <p v-if="selected.stageDiscount !== '0'">Discount: <b-tag type="is-success">{{ selected.stageDiscount }}%</b-tag> {{ profitInEth }} ETH</p>
+            <p v-if="bonusVolume !== '0.00'">Bonus: <b-tag type="is-success">+{{ bonusVolume }} {{ selected.symbolW }}</b-tag></p>
+
+            <div class="Calculator__total">Total buy: {{ totalToken }} {{ selected.symbolW }} - {{ total }} ETH</div>
         </div>
 
         <div class="Calculator__buy">
-            <button class="btn btn-primary" @click="buy">Buy</button>
+            <button class="btn btn-danger" @click="buy">Buy</button>
         </div>
     </div>
 </template>
@@ -91,7 +113,23 @@
                     ? '0'
                     : this.ETHs;
 
-                return new BigNumber(this.ETHsWithoutDiscount).minus(ETHs).toString();
+                return new BigNumber(this.ETHsWithoutDiscount).minus(ETHs).toFixed(4).toString();
+            },
+            bonusVolume(){
+                const amount = this.ETHs ? this.ETHs : 0;
+                const price = this.getPrice();
+                const bonusMultiplier = amount ? this.getBonusMultiplierByEth(amount) : new BigNumber(1);
+
+                return new BigNumber(amount).mul(bonusMultiplier).div(price).minus(
+                    new BigNumber(amount).div(price)
+                ).toFixed(2).toString();
+            },
+            totalToken(){
+                const amount = this.ETHs ? this.ETHs : 0;
+                const price = this.getPrice();
+                const bonusMultiplier = amount ? this.getBonusMultiplierByEth(amount) : new BigNumber(1);
+
+                return new BigNumber(amount).mul(bonusMultiplier).div(price).toFixed(2).toString();
             }
         },
         methods: {
@@ -125,9 +163,7 @@
                         let bonusPercent = new BigNumber(item[1]);
 
                         if (result.length > 0 && !last.end.isFinite()) {
-                            last.end = start;
-
-                            start = start.plus(web3.fromWei(1, 'ether'));
+                            last.end = start.minus(web3.fromWei(1, 'ether'));
                         }
 
                         result.push({
@@ -172,6 +208,7 @@
                 return discount;
             },
             convertTokensToEth(amount, price, bonusMultiplier) {
+
                 price = price != null
                     ? new BigNumber(price)
                     : this.getPrice();
@@ -180,7 +217,8 @@
                     ? new BigNumber(bonusMultiplier)
                     : this.getBonusMultiplierByTokens(amount);
 
-                return new BigNumber(amount).div(bonusMultiplier).mul(price);
+                //return new BigNumber(amount).div(bonusMultiplier).mul(price);
+                return new BigNumber(amount).mul(price);
             },
             convertEthToTokens(amount, price, bonusMultiplier) {
                 price = price
@@ -191,7 +229,8 @@
                     ? new BigNumber(bonusMultiplier)
                     : this.getBonusMultiplierByEth(amount);
 
-                return new BigNumber(amount).mul(bonusMultiplier).div(price);
+                //return new BigNumber(amount).mul(bonusMultiplier).div(price);
+                return new BigNumber(amount).div(price);
             },
 
             handleTokensChange(value, prevValue) {
@@ -251,9 +290,7 @@
                 if (amount.greaterThan(0)) {
                     const {W12CrowdsaleFactory} = await this.loadLedger();
                     const W12Crowdsale = W12CrowdsaleFactory.at(this.selected.crowdsaleAddress);
-                    console.log("croudsale");
-                    console.log(W12Crowdsale);
-                    await W12Crowdsale.methods.buyTokens({ value: web3.toWei(amount, 'ether') });
+                    await W12Crowdsale.methods.buyTokens({ value: web3.toWei(amount.toFixed(6), 'ether') });
                 }
             },
 

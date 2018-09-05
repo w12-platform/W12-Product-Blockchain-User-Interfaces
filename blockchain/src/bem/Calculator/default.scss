@@ -1,7 +1,18 @@
 .Calculator {
+  background: #f2f2f2;
+  padding: 20px;
+  border: 1px solid #dbdbdb;
+  p {
+    padding-bottom: 5px;
+    font-size: 12px;
+    color: #363636;
+  }
+
   &__inputs {
-    display: flex;
     margin-bottom: 20px;
+  }
+  &__infoToken {
+
   }
   &__inputTokens {
     margin-left: 5px;
@@ -14,5 +25,15 @@
   }
   &__buy {
     margin: 10px auto;
+
+    button {
+      padding: 15px 60px;
+    }
+  }
+  &__total {
+    font-size: 14px;
+    border-top: 1px solid #dbdbdb;
+    padding: 10px 0;
+    margin-top: 20px;
   }
 }
