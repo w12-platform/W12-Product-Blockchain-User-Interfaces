@@ -15,6 +15,7 @@
     "@mdi/font": "^2.5.94",
     "buefy": "^0.6.6",
     "countdown": "^2.6.0",
+    "jsunicode": "^1.1.1",
     "lodash": "^4.17.10",
     "moment": "^2.22.2",
     "resolve": "^1.8.1",

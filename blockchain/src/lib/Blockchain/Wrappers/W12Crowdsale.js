@@ -1,4 +1,4 @@
-import { promisify } from '../../utils.js';
+import { countStringBytes, decodeStringFromBytes, encodeStringToBytes, promisify } from '../../utils.js';
 import { BaseWrapper } from './BaseWrapper.js';
 
 const moment = window.moment;
@@ -87,5 +87,65 @@ export class W12CrowdsaleWrapper extends BaseWrapper {
         }
 
         return await this.methods.setStages(endDates, discounts, vestings);
+    }
+
+    async setMilestones(milestones) {
+        const dates = [];
+        const tranchePercents = [];
+        const offsets = [];
+        const namesAndDescriptions = [];
+
+        let lastOffset = 0;
+
+        for (let milestone of milestones) {
+            dates.push(
+                milestone.endDate,
+                milestone.voteEndDate,
+                milestone.withdrawalEndDate
+            );
+            tranchePercents.push(milestone.tranchePercent);
+            offsets.push(
+                lastOffset += countStringBytes(milestone.name),
+                lastOffset += countStringBytes(milestone.description),
+            );
+            namesAndDescriptions.push(
+                encodeStringToBytes(milestone.name),
+                encodeStringToBytes(milestone.description)
+            )
+        }
+
+        const a = namesAndDescriptions.reduce((output, el) => output + el.slice(2), '0x');
+
+        return await this.methods.setMilestones(
+            dates,
+            tranchePercents,
+            offsets,
+            a
+        );
+    }
+
+    async getMilestones() {
+        const milestonesLenght = (await this.methods.milestonesLength()).toNumber();
+        const list = [];
+
+        if (milestonesLenght > 0) {
+            for (let i = 0; i < milestonesLenght; i++) {
+                const milestone = await this.methods.milestones(i);
+
+                const data = {
+                    name: decodeStringFromBytes(milestone[4]),
+                    description: decodeStringFromBytes(milestone[5]),
+                    tranchePercent: milestone[1].toString(),
+                    endDate: milestone[0].toNumber(),
+                    voteEndDate: milestone[2].toNumber(),
+                    withdrawalEndDate: milestone[3].toNumber(),
+                    wasCreated: true
+                };
+
+                list.push(data);
+            }
+        }
+
+        return list;
     }
 }

@@ -1,3 +1,5 @@
+import jsunicode from 'jsunicode';
+
 export function promisify (funct) {
     return function (...args) {
         return new Promise((accept, reject) => {
@@ -48,4 +50,18 @@ export function waitTransactionReceipt(tx, web3, timeout = 240000) {
 }
 
 export function wait(ms) { return new Promise(rs => setTimeout(rs, ms)); }
+
+export function decodeStringFromBytes(bytesString) {
+    bytesString = bytesString.indexOf('0x') === 0 ? bytesString.slice(2) : bytesString;
+
+    return jsunicode.decode(bytesString, jsunicode.constants.encoding.utf16);
+}
+
+export function encodeStringToBytes (string) {
+    return '0x' + jsunicode.encode(string, jsunicode.constants.encoding.utf16);
+}
+
+export function countStringBytes (string) {
+    return jsunicode.countEncodedBytes(string, jsunicode.constants.encoding.utf16);
+}
 

@@ -1,6 +1,7 @@
 export class RefundInformationModel {
     constructor (model) {
         this.tokenSymbol = model.tokenSymbol;
+        this.tokenDecimals = model.tokenDecimals;
         this.freezeTokensVolume = model.freezeTokensVolume;
         this.refundTokensVolume = model.refundTokensVolume;
         this.refundAmountPerToken = model.refundAmountPerToken;
