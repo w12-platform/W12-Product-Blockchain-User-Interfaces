@@ -34,4 +34,3 @@ deploy:
   script:
     - ssh -o StrictHostKeyChecking=no deployer@dev2.ingenix.ai docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
     - ssh -o StrictHostKeyChecking=no deployer@dev2.ingenix.ai "cd /opt/servers/ && docker-compose -f docker-compose-w12-product.yml pull && docker-compose -f docker-compose-w12-product.yml up -d"
-
