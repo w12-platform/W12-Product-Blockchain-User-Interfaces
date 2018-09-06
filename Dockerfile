@@ -1,6 +1,6 @@
 FROM node:carbon
 
-ENV PORT=80
+ENV PORT=443
 
 WORKDIR /code
 
