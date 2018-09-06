@@ -32,6 +32,12 @@
         created(){
             this.$i18n.set(this.currentLang);
 
+            axios.get("https://w12.io/ru/api/translate/w12translations.json").then((response) =>{
+                console.log("ok", response);
+            }, (e) => {
+                console.log("error", e);
+            });
+
             axios.get("/ru/api/translate/w12translations.json").then((response) =>{
                 if (response.data) {
                     let labelsLang = [];
