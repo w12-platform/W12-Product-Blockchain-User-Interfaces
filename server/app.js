@@ -53,9 +53,10 @@ if (proxyUrl) {
         delete proxyReqOpts.headers['x-forwarded-proto'];
         delete proxyReqOpts.headers['x-real-ip'];
         delete proxyReqOpts.headers['X-Real-IP'];
-        // 'cf-ray': '4562bfabead38e91-DME',
-        // 'cf-visitor': '{"scheme":"https"}',
-        // cf-ipcountry'
+        delete proxyReqOpts.headers['cf-ray'];
+        delete proxyReqOpts.headers['cf-visitor'];
+        delete proxyReqOpts.headers['cf-connecting-ip'];
+        delete proxyReqOpts.headers['cf-ipcountry'];
 
         return proxyReqOpts;
     },
