@@ -43,6 +43,7 @@ const proxyUrl = process.env.PROXY_URL;
 
 if (proxyUrl) {
   app.use('/', proxy(proxyUrl, {
+    preserveHostHdr: true,
     proxyReqPathResolver: function (RQ) {
       return RQ.originalUrl;
     }
