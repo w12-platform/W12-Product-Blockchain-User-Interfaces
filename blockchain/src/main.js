@@ -12,6 +12,8 @@ import ProjectDashboard from 'bem/ProjectDashboard';
 import InvestorDashboard from 'bem/InvestorDashboard';
 import LangSwitch from 'bem/LangSwitch';
 import Title from 'bem/Title';
+import SidebarMenu from 'bem/SidebarMenu';
+import HeaderBuyW12Tokens from 'bem/Header/BuyW12Tokens';
 import store from "store";
 
 Vue.use(VueMask);
@@ -78,12 +80,29 @@ const appInvestorDashboard = (patch === "/crowdsale") || (patch === "/crowdsale.
     }
 }):null;
 
-new Vue({
+const appTitle = (patch === "/") || (patch === "/index.html") ? new Vue({
     store,
     el: '#appTitle',
     template: "<Title></Title>",
     components: {
         Title
     }
+}):null;
+
+new Vue({
+    store,
+    el: '#HeaderBuyW12Tokens',
+    template: "<HeaderBuyW12Tokens></HeaderBuyW12Tokens>",
+    components: {
+        HeaderBuyW12Tokens
+    }
 });
 
+new Vue({
+    store,
+    el: '#SidebarMenu',
+    template: "<SidebarMenu></SidebarMenu>",
+    components: {
+        SidebarMenu
+    }
+});

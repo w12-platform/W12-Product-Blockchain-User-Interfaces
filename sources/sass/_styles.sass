@@ -1,0 +1,657 @@
+@import '_mixins/layout-mixins'
+*
+	padding: 0
+	margin: 0
+	box-sizing: border-box
+
+*::-webkit-input-placeholder
+	color: #000000
+	opacity: .5
+
+*:-moz-placeholder
+	color: #000000
+	opacity: .5
+
+*::-moz-placeholder
+	color: #000000
+	opacity: .5
+
+*:-ms-input-placeholder
+	color: #000000
+	opacity: .5
+::selection
+	background: #ccc
+	color: #fff
+::-moz-selection
+	background: #ccc
+	color: #fff
+
+::-webkit-selection
+	background: #ccc
+	color: #fff
+
+body input:focus:required:invalid,
+body textarea:focus:required:invalid
+	color: #272727
+body input:required:valid,
+body textarea:required:valid
+	color: #272727
+
+html, body
+	display: -webkit-flex
+	display: -moz-flex
+	display: -ms-flex
+	display: -o-flex
+	display: flex
+	flex-direction: column
+	min-height: 100vh
+	width: 100%
+
+body
+	font-size: 16px
+	min-width: 320px
+	position: relative
+	line-height: 1.625
+	font-family: $geor
+	overflow-x: hidden
+	opacity: 1
+	background: #f0f0f0
+
+a
+	cursor: pointer
+.sticky-footer
+	flex-grow: 1
+
+.img-responsive
+	max-width: 100%
+	height: auto
+
+
+.container
+	max-width: 1170px
+	margin: 0 auto
+	padding: 0 15px
+
+
+.header
+	position: relative
+	height: 88px
+	width: 100%
+	&__line
+		width: 100%
+		position: fixed
+		top: 0
+		left: 0
+		right: 0
+		height: 88px
+		background-color: #171925
+		z-index: 10
+	&__content
+		display: flex
+		align-items: center
+		height: 88px
+
+.logo
+	&__link
+		display: inline-flex
+	&__img
+		max-width: 295px
+		width: 100%
+
+.btn
+	display: inline-flex
+	align-items: center
+	justify-content: center
+	text-transform: uppercase
+	text-decoration: none
+	font-family: $geob
+	border-radius: 4px
+	height: 46px
+	padding: 0 25px
+	font-size: 12px
+	letter-spacing: .5px
+.actions
+	display: flex
+	align-items: center
+	margin-left: auto
+	&__buytokens
+		max-width: 234px
+		min-width: 234px
+		background-image: linear-gradient(to right, #ff9c00, #ff1b46)
+		color: #fff
+		box-shadow: 0px 0px 57px 0px rgba(254, 92, 38, 0.52)
+	.actions__select
+		margin-left: 45px
+
+
+
+
+.select
+	position: relative
+	display: inline-flex
+	margin: 0 auto
+	user-select: none
+	-webkit-touch-callout: none
+	&__placeholder
+		position: relative
+		display: inline-flex
+		justify-content: center
+		align-items: center
+		font-size: 13px
+		border: 1px solid rgba(255, 255, 255, .40)
+		background-color: transparent
+		z-index: 1
+		border-radius: 25px
+		cursor: pointer
+		color: #fff
+		letter-spacing: .5px
+		min-width: 80px
+		max-width: 80px
+		height: 36px
+		&:after
+			content: ''
+			display: inline-block
+			margin-left: 8px
+			margin-top: 2px
+			width: 0
+			height: 0
+			border-style: solid
+			border-width: 4px 3.5px 0 3.5px
+			border-color: #fff transparent transparent transparent
+	&__list
+		display: none
+		flex-direction: column
+		position: absolute
+		overflow: hidden
+		width: 100%
+		background: #fff
+		border-radius: 18px
+		top: 100%
+		left: 0
+		list-style: none
+		margin: 2px 0 0 0
+		padding: 0
+		z-index: 5
+		padding: 10px 0
+		li
+			display: block
+			text-align: left
+			padding: 6px 0
+			font-size: 13px
+			text-align: center
+			background-color: none
+			color: #212529
+			cursor: pointer
+			&:hover
+				background-color: #007bff
+				color: #fff
+	&.is-open
+		.select__placeholder:after
+			border-width: 0 3.5px 4px 3.5px
+			border-color: transparent transparent #fff transparent
+		.select__list
+			display: flex
+
+
+.main
+	padding: 48px 0 72px 0
+	overflow: hidden
+	&__track
+		display: flex
+		align-items: flex-start
+
+.toggle-mobile-btn
+	display: none
+.content
+	max-width: 750px
+	min-width: 750px
+	margin-right: 30px
+	padding: 66px 70px
+	background-color: #fff
+	box-shadow: 0px 6px 18px 0px rgba(180, 180, 180, 0.2)
+	&__heading
+		font-size: 36px
+		line-height: 40px
+		font-family: $gexb
+		max-width: 610px
+		text-align: center
+		margin: 0 auto
+
+.sidebar
+	flex-grow: 1
+	&__inner
+		box-shadow: 0px 6px 18px 0px rgba(180, 180, 180, 0.2)
+		background-color: #fff
+		padding: 39px
+
+
+.btn.sidebar-btn
+	width: 100%
+	position: relative
+	border: 1px solid #d1d1d1
+	font-size: 12px
+	color: #000
+	margin-bottom: 20px
+	padding: 0
+	&:last-child
+		margin-bottom: 0
+.btn.sidebar-btn.warn
+	&:before
+		content: attr(data-warn)
+		position: absolute
+		top: -12px
+		right: -12px
+		background-color: #ed1c24
+		width: 24px
+		height: 24px
+		border-radius: 50%
+		display: inline-flex
+		align-items: center
+		justify-content: center
+		color: #fff
+		font-family: $geor
+		font-size: 16px
+
+
+.coupon
+	&__heading
+		font-size: 36px
+		font-family: $geob
+		margin-top: 10px
+	&__actions
+		display: flex
+		justify-content: space-between
+		margin-top: 15px
+		input
+			border: 0
+			height: 46px
+			min-width: 140px
+			max-width: 140px
+			background-color: #edf0f8
+			border-radius: 4px
+			font-family: $geor
+			font-size: 16px
+			color: #000
+			padding: 0 15px
+		&__apply
+			background-image: linear-gradient(to right, #ff9c00, #ff1b46)
+			color: #fff
+			font-family: $geor
+			min-width: 126px
+			max-width: 126px
+			box-shadow: 0px 0px 57px 0px rgba(254, 92, 38, 0.52)
+
+
+.project-descr
+	display: flex
+	align-items: flex-start
+	margin-top: 30px
+	&__att
+		margin-right: 30px
+		display: inline-flex
+		align-items: center
+		justify-content: center
+		min-width: 44px
+		max-width: 44px
+		height: 44px
+		border-radius: 50%
+		background-color: #4d7ced
+		color: #fff
+		font-size: 30px
+		font-family: $geor
+	&__info
+		p
+			font-size: 16px
+			font-family: $geor
+			line-height: 24px
+			color: #000
+			margin-bottom: 18px
+			b
+				font-family: $geob
+
+
+.test-steps
+	margin-top: 30px
+	&__heading
+		font-size: 30px
+		line-height: 1.3
+		font-family: $gexb
+		text-align: center
+	&__table
+		box-shadow: 0px 3px 9px 0px rgba(23, 25, 37, 0.25)
+		border-bottom-left-radius: 4px
+		border-bottom-right-radius: 4px
+		margin-top: 30px
+		min-width: 600px
+	&__row
+		display: flex
+		align-items: center
+		width: 100%
+		&:first-child
+			background-color: #171925
+			border-top-left-radius: 4px
+			border-top-right-radius: 4px
+			border-top: 1px solid #83848b
+			border-bottom: 1px solid #83848b
+		&:not(:first-child)
+			padding: 20px 0
+		&:not(:first-child):nth-child(odd)
+			background-color: #f2f5fd
+	&__head
+		display: inline-flex
+		align-items: center
+		text-transform: uppercase
+		color: #fff
+		font-size: 13px
+		font-family: $geom
+		height: 58px
+		&:nth-child(1)
+			min-width: 112px
+			max-width: 112px
+			justify-content: center
+		&:nth-child(2)
+			padding-left: 5px
+			padding-right: 5px
+			min-width: 275px
+			max-width: 275px
+		&:nth-child(3)
+			padding-left: 5px
+			padding-right: 5px
+			flex-grow: 1
+	&__cell
+		display: flex
+		.icon
+			padding-left: 28px
+			position: relative
+			line-height: 1
+			background-repeat: no-repeat
+			background-position: left 2px
+			margin: 4px 0
+		.icon.icon-blue
+				background-image: url('../img/icon-blue.svg')
+		.icon.icon-green
+				background-image: url('../img/icon-green.svg')
+		.icon.icon-red
+				background-image: url('../img/icon-red.svg')
+		.num
+			font-size: 24px
+			line-height: 1
+			color: #171925
+			font-family: $geom
+		a
+			display: inline-block
+			font-size: 16px
+			color: #171925
+			text-decoration: underline
+			line-height: 22px
+			&:hover
+				color: #3062da
+		p
+			font-size: 13px
+			line-height: 14px
+			letter-spacing: .5px
+			color: #6b6b6b
+			margin-top: 12px
+		&:nth-child(1)
+			min-width: 112px
+			max-width: 112px
+			justify-content: center
+		&:nth-child(2)
+			padding-left: 5px
+			padding-right: 5px
+			min-width: 275px
+			max-width: 275px
+			flex-direction: column
+		&:nth-child(3)
+			padding-left: 5px
+			padding-right: 5px
+			flex-grow: 1
+			display: flex
+			flex-direction: column
+
+
+.tech-adv
+	&__heading
+		font-size: 30px
+		line-height: 36px
+		font-family: $gexb
+		text-align: center
+		max-width: 440px
+		margin: 53px auto 22px auto
+	&__subheading
+		font-size: 24px
+		color: #000000
+		font-family: $geob
+	&__text
+		display: inline-flex
+		align-items: flex-start
+		font-size: 14px
+		line-height: 24px
+		margin-bottom: 10px
+		&:before
+			content: ''
+			position: relative
+			top: 6px
+			margin-right: 20px
+			min-width: 11px
+			max-width: 11px
+			height: 11px
+			border-radius: 50%
+			background-color: #4d7ced
+	&__text.no-points
+		&:before
+			display: none
+
+.versions
+	margin-top: 20px
+	&__heading
+		font-size: 30px
+		text-align: center
+		font-family: $gexb
+	&__table
+		box-shadow: 0px 3px 9px 0px rgba(23, 25, 37, 0.25)
+		border-bottom-left-radius: 4px
+		padding: 0 0 20px 0
+		border-bottom-right-radius: 4px
+		margin-top: 30px
+		min-width: 600px
+	&__row
+		display: flex
+		position: relative
+		width: 100%
+		&:first-child
+			align-items: center
+			background-color: #171925
+			border-top-left-radius: 4px
+			border-top-right-radius: 4px
+			padding: 0 5px
+		&:last-child
+			&:before
+				display: none
+		&:not(:first-child)
+			padding: 20px 0
+			&:before
+				content: ''
+				position: absolute
+				bottom: 0
+				right: 0
+				left: 0
+				width: calc(100% - 56px)
+				margin: 0 auto
+				height: 1px
+				background-color: #d7d7d7
+	&__head
+		display: inline-flex
+		align-items: center
+		color: #ffffff
+		text-transform: uppercase
+		font-size: 13px
+		font-family: $geom
+		line-height: 1.3
+		height: 58px
+		&:nth-child(1)
+			justify-content: center
+			text-align: center
+			min-width: 160px
+			max-width: 160px
+		&:nth-child(2)
+			flex-grow: 1
+	&__cell
+		h4
+			font-family: $geob
+			font-size: 16px
+			line-height: 18px
+			color: #171925
+			margin-top: 10px
+		p
+			font-size: 14px
+			line-height: 18px
+			color: #171925
+			margin-top: 10px
+			padding-right: 20px
+		.version
+			font-size: 24px
+			font-family: $geom
+			color: #171925
+		&:nth-child(1)
+			justify-content: center
+			min-width: 160px
+			max-width: 160px
+			text-align: center
+		&:nth-child(2)
+			padding-top: 2px
+			flex-grow: 1
+
+	
+.footer
+	padding-top: 73px
+	padding-bottom: 105px
+	background-color: #171717
+	&__line
+		display: flex
+.footer-links
+	&.first
+		margin-right: 150px
+	&__heading
+		font-family: $roman
+		color: #ffffff
+		opacity: 0.2
+		text-transform: uppercase
+		font-weight: 200
+		line-height: 1
+		margin-bottom: 30px
+	&__list
+		margin: 0
+		padding: 0
+		list-style: none
+	&__link
+		line-height: 1
+		text-decoration: none
+		color: #ffffff
+		opacity: 0.8
+		font-size: 13px
+		font-family: $roman
+		letter-spacing: 1px
+		&:hover
+			color: #007ffa
+			opacity: 1
+	&__item
+		line-height: 1
+		margin-bottom: 20px
+
+.footer-actions
+	flex-grow: 1
+	margin-left: 135px
+	&__links
+		display: flex
+		justify-content: space-between
+		width: 100%
+		a
+			font-size: 13px
+			letter-spacing: 1px
+			font-family: $roman
+			color: #ffffff
+			opacity: 0.8
+			text-decoration: none
+			font-weight: 200
+			&:hover
+				color: #007ffa
+				opacity: 1
+
+.footer-form
+	margin-top: 50px
+	&__label
+		display: inline-block
+		color: #ffffff
+		opacity: 0.2
+		font-family: $roman
+		font-weight: 200
+		letter-spacing: 1px
+		margin-bottom: 5px
+	&__row
+		display: flex
+	&__tags
+		display: inline-block
+		font-family: $roman
+		font-size: 12px
+		color: #ffffff
+		opacity: 0.2
+		letter-spacing: .5px
+		margin-top: 8px
+	input
+		flex-grow: 1
+		height: 46px
+		border-top-left-radius: 4px
+		border-bottom-left-radius: 4px
+		border: 0
+		padding-left: 45px
+		background-image: url('../img/mail-icon.svg')
+		background-repeat: no-repeat
+		background-position: 14px center
+		font-size: 14px
+		+placeholder
+			font-family: $roman
+			font-size: 13px
+			letter-spacing: 1px
+			color: #989898
+			font-weight: 200
+	button
+		text-transform: uppercase
+		font-family: $romanb
+		padding: 0 40px
+		font-size: 14px
+		color: #fff
+		letter-spacing: .5px
+		background: linear-gradient(90deg, rgba(0,99,221,1) 0%, rgba(0,132,255,1) 100%)
+		border: 0
+		border-top-right-radius: 4px
+		border-bottom-right-radius: 4px
+
+
+.footer-follow
+	display: flex
+	border-top: 1px solid #3b3a3c
+	padding-top: 22px
+	margin-top: 55px
+	&__heading
+		text-transform: uppercase
+		font-family: $roman
+		font-size: 14px
+		color: #fff
+		opacity: 0.2
+		line-height: 1
+	&__social
+		margin-left: auto
+		padding-right: 10px
+		a
+			display: inline-flex
+			color: #606060
+			font-size: 18px
+			text-decoration: none
+			margin: 0 20px
+
+
+.table-wrap
+	overflow-x: auto
+	padding: 10px
+	margin: -10px

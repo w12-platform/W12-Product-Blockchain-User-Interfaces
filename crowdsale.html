@@ -1,859 +1,94 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru-RU">
 <head>
-
     <meta charset="utf-8">
+    <title></title>
+    <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="csrf_token" content="2a4f8b818fda635645923e2ef0c41fa54065e950b02a455d4b32d06e84609869">
-    <!--link rel="shortcut icon" href="/images/system/" type="image/x-icon"-->
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css"
-          integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg"
-          crossorigin="anonymous">
-    <link href="css/font-awesome.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="js/custom-scroll/jquery.mCustomScrollbar.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="theme-color" content="#000">
+    <meta name="msapplication-navbutton-color" content="#000">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#000"><style>body { opacity: 0; overflow-x: hidden; } html { background-color: #fff; }</style>
+    <!--[if lt IE 9]>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.2/html5shiv.min.js"></script><![endif]-->
     <link href="css/bootstrap.css" rel="stylesheet">
-    <link href="css/bootstrap-reboot.css?v=20" rel="stylesheet">
-    <link href="css/bootstrap-grid.css" rel="stylesheet">
-    <link href="css/bootstrap-theme.css?v=20" rel="stylesheet">
-    <link href="js/slick/slick.css" rel="stylesheet">
-    <link href="js/fancybox/jquery.fancybox.min.css" rel="stylesheet">
-    <link href="js/formstyler/jquery.formstyler.css" rel="stylesheet">
-    <link href="js/formstyler/jquery.formstyler.theme.css" rel="stylesheet">
-    <link href="js/datepicker/css/bootstrap-datepicker.standalone.css" rel="stylesheet">
-    <link rel="stylesheet" href="js/flipclock/flipclock.css">
-    <link href="css/media.css?v=20" rel="stylesheet">
-    <link href="css/custom.css?v=20" rel="stylesheet">
-    <link rel="stylesheet" href="//cdn.materialdesignicons.com/2.4.85/css/materialdesignicons.min.css">
-    <!---->
     <script src="./translations.js"></script>
-    <!---->
-    <script type="text/javascript">
-        window.afterDocReady = [];
-        window.afterWinLoad = [];
-    </script>
+    <link rel="stylesheet" href="//cdn.materialdesignicons.com/2.4.85/css/materialdesignicons.min.css">
 </head>
 <body>
-<script>
-    window.afterDocReady.push(function () {
-        $(document).on('click', 'a[data-swlang]', function (ev) {
-            ev.preventDefault();
-            var _href = window.location.pathname.replace(/^\/(en|ru|kr|jp|cn)\//, '/');
-            var _code = $(this).attr('data-swlang');
-            if (_code != 'en') {
-                _href = '/' + _code + _href;
-            }
-            _href += window.location.search;
-            _href += window.location.hash;
-            window.location.href = _href;
-        });
-    });
-</script>
-<div class="global-menu">
-    <div class="global-menu-head d-flex justify-content-between align-items-center">
-        <div class="header-logo">
-            <img src="images/system/logo-modal.png" alt="">
-        </div>
-        <div><a href="#" class="close-global-menu">&times;</a></div>
-    </div>
-    <div class="mobile-menu">
-        <div class="mobile-menu-item">
-            <a href="/"><span>Browse projects</span></a>
-        </div>
-        <div class="mobile-menu-item">
-            <a href="/start-project/"><span>Start a project</span></a>
-        </div>
-
-    </div>
-    <div class="global-menu-item">
-        <div class="m-pp d-flex align-items-center">
-            <div class="m-pp-img">
-                <img src="media/user/1777522627001fa8f3e1.jpg" alt="">
-            </div>
-            <div><a href="#" class="m-pp-link">Your account</a></div>
-        </div>
-        <style>
-            .m-pp-slide a.disable {
-                cursor: default;
-                color: #939393;
-                text-decoration: none;
-            }
-        </style>
-        <div class="m-pp-slide">
-            <a href="/transactions/">Transaction history and purchased tokens</a>
-            <a href="/my-projects/">My projects</a>
-            <a href="/favourites/">My favorites</a>
-            <a href="/otzivi/">Reviews</a>
-            <a href="/kyc-moder/">KYC</a>
-            <a href="/admn/">Админ</a>
-            <a href="/settings/">Settings</a>
-            <a href="#" class="disable">My services</a>
-            <a href="#" class="disable">Posts</a>
-            <a href="#" class="disable">Referral income</a>
-            <a href="#" class="disable">My profile</a>
-        </div>
-    </div>
-    <div class="global-menu-item">
-        <div class="d-flex align-items-center mobile-lang">
-            <div class="mr-2">Language</div>
-            <div class="header-lang">
-                <a href="#" id="p-lang" data-toggle="dropdown" aria-haspopup="true"
-                   aria-expanded="false"><span>Eng</span></a>
-                <div class="dropdown-menu" aria-labelledby="p-lang">
-                    <a data-swlang="en" class="dropdown-item active" href="/buy-tokens/id/22/step/3/">En</a>
-                    <a data-swlang="ru" class="dropdown-item" href="/ru/buy-tokens/id/22/step/3/">Ru</a>
-                    <a data-swlang="kr" class="dropdown-item" href="/kr/buy-tokens/id/22/step/3/">Kr</a>
-                    <a data-swlang="jp" class="dropdown-item" href="/jp/buy-tokens/id/22/step/3/">Jp</a>
-                    <a data-swlang="cn" class="dropdown-item" href="/cn/buy-tokens/id/22/step/3/">Cn</a>
+<header class="header">
+    <div class="header__line">
+        <div class="container">
+            <div class="header__content">
+                <div class="logo"><a class="logo__link" href="/"><img class="logo__img" src="img/logo.svg" alt=""></a></div>
+                <div class="actions">
+                    <div id="HeaderBuyW12Tokens"></div>
+                    <div id="langSwitch" style="margin-left: 45px; width: 80px;"></div>
                 </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<header>
-    <div class="container">
-        <div class="header-content d-flex align-items-center justify-content-between">
-            <div class="d-lg-none">
-                <a href="#" class="btn-menu"></a>
-            </div>
-            <div>
-                <div class="header-logo">
-                    <a href="/"><img src="images/system/logo-modal.png" alt=""></a>
-                </div>
-            </div>
-            <!--<div class="d-none d-lg-block">-->
-                <!--<div class="header-menu d-flex flex-nowrap">-->
-                    <!--<div class="header-menu-item">-->
-                        <!--<a href="/"><span>Browse projects</span></a>-->
-                    <!--</div>-->
-                    <!--<div class="header-menu-item">-->
-                        <!--<a href="/start-project/"><span>Start a project</span></a>-->
-                    <!--</div>-->
-                <!--</div>-->
-            <!--</div>-->
-            <div class="d-none d-lg-block">
-                <div class="d-flex align-items-center">
-                    <div id="langSwitch"></div>
-                    <!--<div class="header-pp">-->
-                        <!--<div class="header-pp-logo">-->
-                            <!--<img src="media/user/1777522627001fa8f3e1.jpg" alt="">-->
-                        <!--</div>-->
-                        <!--<a href="/settings/" class="header-pp-name"><span>Денис Петров</span></a>-->
-                        <!--<a href="/?logout" class="header-pp-exit">Exit</a>-->
-                        <!--<div class="header-pp-popup">-->
-                            <!--<a href="/transactions/">Transaction history and purchased tokens</a>-->
-                            <!--<a href="/my-projects/">My projects</a>-->
-                            <!--<a href="/favourites/">My favorites</a>-->
-                            <!--<a href="/otzivi/">Reviews</a>-->
-                            <!--<a href="/kyc-moder/">KYC</a>-->
-                            <!--<a href="/admn/">Админ</a>-->
-                            <!--<a href="/settings/">Settings</a>-->
-                            <!--<a href="#" class="disable">My services</a>-->
-                            <!--<a href="#" class="disable">Posts</a>-->
-                            <!--<a href="#" class="disable">Referral income</a>-->
-                            <!--<a href="#" class="disable">My profile</a>-->
-                        <!--</div>-->
-                    <!--</div>-->
-                </div>
-            </div>
-            <div class="d-lg-none">
-                <a href="/settings/" class="pp-mobile">
-                    <img src="media/user/1777522627001fa8f3e1.jpg" alt="">
-                </a>
             </div>
         </div>
     </div>
 </header>
-<style>
-    .tokenb-title {
-        font-size: 30px;
-        line-height: 38px;
-    }
-
-    @media (max-width: 1200px) {
-        .tokenb-title {
-            font-size: 26px;
-            line-height: 32px;
-        }
-    }
-</style>
-<section class="py-3 py-md-5">
+<main class="main">
     <div class="container">
-        <div id="appTitle"></div>
-
-        <div class="row">
-            <div class="col-xs-12 col-lg-8">
-                <div class="bytoken tokenb">
-
-                    <!--INJECTED PAGES: START-->
-                    <div id="appInvestorDashboard"></div>
-
-                    <script src="blockchain/node_modules/moment/moment.js"></script>
-                    <script src="blockchain/node_modules/web3/dist/web3.js"></script>
-
-                    <script src="/blockchain/build/build.js?v=3"></script>
-                    <!--INJECTED PAGES: END-->
-
-
-                    <!--<div style="height: 540px"></div>-->
-                    <!--<h2 class="tokenb-title">-->
-                        <!--Buy W12 tokens today and get a discount of 22.12%-->
-                    <!--</h2>-->
-                    <!--<div class="token-price">-->
-                        <!--<span class="token-price__label">Token price:</span>-->
-                        <!--<div class="token-price__count">-->
-                            <!--<span class="token-price__count__dashed">0.00035&nbsp;ETH</span>-->
-                            <!--<span class="token-price__count__normal">0.00027258&nbsp;ETH</span>-->
-                            <!--<form class="code-form code-form-mobile" action="" method="post">-->
-                            <!--</form>-->
-                        <!--</div>-->
-                        <!--<div class="token-price__discount">-->
-                            <!--<span class="token-price__discount__label">22.12% discount</span>-->
-                            <!--<div class="token-price__timer"></div>-->
-                            <!--<script>-->
-                                <!--window.afterDocReady.push(function () {-->
-                                    <!--var firstTimer = $('.token-price__timer').FlipClock({-->
-                                        <!--clockFace: 'DailyCounter',-->
-                                        <!--countdown: true-->
-                                    <!--});-->
-                                    <!--firstTimer.setTime(84689);-->
-                                    <!--firstTimer.setCountdown(true);-->
-                                    <!--firstTimer.start();-->
-                                <!--});-->
-                            <!--</script>-->
-                        <!--</div>-->
-                    <!--</div>-->
-                    <!--<h3 class="features-title">-->
-                        <!--Advantages of participating in the W12 ICO </h3>-->
-                    <!--<p class="features-text">-->
-                        <!--Purchasing W12 tokens at the ICO stage gives you access to tokens of hundreds of other ICO-->
-                        <!--projects for free. </p>-->
-                    <!--<p class="features-text">-->
-                        <!--By purchasing W12 tokens during our ICO you receive a premium account for free, granting you-->
-                        <!--access to hundreds of other projects that launch their ICOs on the W12 platform. In addition to-->
-                        <!--this, 50% of token commission received from each applicable ICO will be distributed to premium-->
-                        <!--account holders . Premium accounts will be valid for 2 years. After 2 years, renewal is-->
-                        <!--possible. </p>-->
-                    <!--<h5 class="calc-bonus">-->
-                        <!--Terms and conditions for additional bonuses: </h5>-->
-                    <!--<div class="table-bonus-wrap">-->
-                        <!--<table class="table-bonus">-->
-                            <!--<tr>-->
-                                <!--<td>TYPE OF ACCOUNT</td>-->
-                                <!--<td>bronze</td>-->
-                                <!--<td>silver</td>-->
-                                <!--<td>gold</td>-->
-                                <!--<td>platinum</td>-->
-                                <!--<td>diamond</td>-->
-                            <!--</tr>-->
-
-                            <!--<tr>-->
-                                <!--<td>Purchase during the pre-sale stage from:</td>-->
-                                <!--<td>3 ETH</td>-->
-                                <!--<td>10 ETH</td>-->
-                                <!--<td>30 ETH</td>-->
-                                <!--<td>100 ETH</td>-->
-                                <!--<td>300 ETH</td>-->
-                            <!--</tr>-->
-
-                            <!--<tr>-->
-                                <!--<td>Purchase during the crowdsale stage from:</td>-->
-                                <!--<td>4.5 ETH</td>-->
-                                <!--<td>15 ETH</td>-->
-                                <!--<td>45 ETH</td>-->
-                                <!--<td>150 ETH</td>-->
-                                <!--<td>450 ETH</td>-->
-                            <!--</tr>-->
-
-                            <!--<tr>-->
-                                <!--<td>Number of tokens (dependent on account level):</td>-->
-                                <!--<td class="large">1X</td>-->
-                                <!--<td class="large">3,3X</td>-->
-                                <!--<td class="large">10X</td>-->
-                                <!--<td class="large">33,3X</td>-->
-                                <!--<td class="large">100X</td>-->
-                            <!--</tr>-->
-
-                            <!--<tr>-->
-                                <!--<td>Participation in the private pre-sale:</td>-->
-                                <!--<td class="small">5th</td>-->
-                                <!--<td class="small">4th</td>-->
-                                <!--<td class="small">3rd</td>-->
-                                <!--<td class="small">2nd</td>-->
-                                <!--<td class="small">1st</td>-->
-                            <!--</tr>-->
-
-                            <!--<tr>-->
-                                <!--<td>W12 Foundation</td>-->
-                                <!--<td>bronze</td>-->
-                                <!--<td>silver</td>-->
-                                <!--<td>gold</td>-->
-                                <!--<td>platinum</td>-->
-                                <!--<td>diamond</td>-->
-                            <!--</tr>-->
-
-                            <!--<tr>-->
-                                <!--<td>Number of accounts available</td>-->
-                                <!--<td>1350</td>-->
-                                <!--<td>450</td>-->
-                                <!--<td>150</td>-->
-                                <!--<td>50</td>-->
-                                <!--<td>12</td>-->
-                            <!--</tr>-->
-                        <!--</table>-->
-                    <!--</div>-->
-                    <!--<div class="table-inf">-->
-                        <!--<span class="table-inf__icon">!</span>-->
-                        <!--<div>-->
-                            <!--<p>Premium account holders also receive access to the private pre-sales of ICO projects-->
-                                <!--using the W12 platform and can participate in the W12 Foundation.</p>-->
-                            <!--<p><b>These advantages are not provided if users purchase W12 tokens on an exchange or from-->
-                                <!--any other third-party resources.</b></p>-->
-                        <!--</div>-->
-                    <!--</div>-->
-                    <!--<div class="bytoken-title" id="choose-payment-method">Step 3. Choose a payment method</div>-->
-                    <!--<div class="bytoken-i-padd">-->
-                        <!--<div class="l-radio-peyment d-flex flex-wrap">-->
-
-                            <!--<div class="l-radio-peyment-item">-->
-                                <!--<div class="l-radio-peyment-body">-->
-                                    <!--<input type="radio" id="br-03" value="4" name="payment-btn">-->
-                                    <!--<label for="br-03" class="d-flex flex-column justify-content-end">-->
-                                        <!--<div class="l-radio-peyment-img d-flex flex-wrap align-items-center justify-content-center">-->
-                                            <!--<img src="images/system/img-radio-peyment-03.png" alt="">-->
-                                        <!--</div>-->
-                                        <!--<span>Ethereum</span>-->
-                                    <!--</label>-->
-                                <!--</div>-->
-                            <!--</div>-->
-
-                            <!--<div class="l-radio-peyment-item">-->
-                                <!--<div class="l-radio-peyment-body">-->
-                                    <!--<input type="radio" id="br-02" value="3" name="payment-btn">-->
-                                    <!--<label for="br-02" class="d-flex flex-column justify-content-end">-->
-                                        <!--<div class="l-radio-peyment-img d-flex flex-wrap align-items-center justify-content-center">-->
-                                            <!--<img src="images/system/img-radio-peyment-02.png" alt="">-->
-                                        <!--</div>-->
-                                        <!--<span>Bitcoin</span>-->
-                                    <!--</label>-->
-                                <!--</div>-->
-                            <!--</div>-->
-
-                            <!--<div class="l-radio-peyment-item">-->
-                                <!--<div class="l-radio-peyment-body">-->
-                                    <!--<input type="radio" id="br-04" value="5" name="payment-btn">-->
-                                    <!--<label for="br-04" class="d-flex flex-column justify-content-end">-->
-                                        <!--<div class="l-radio-peyment-img d-flex flex-wrap align-items-center justify-content-center">-->
-                                            <!--<img src="images/system/img-radio-peyment-04.png" alt="">-->
-                                        <!--</div>-->
-                                        <!--<span>Litecoin</span>-->
-                                    <!--</label>-->
-                                <!--</div>-->
-                            <!--</div>-->
-
-                        <!--</div>-->
-                    <!--</div>-->
-
-
-                    <!--<style>-->
-                        <!--.payment-b {-->
-                            <!--display: none;-->
-                        <!--}-->
-                    <!--</style>-->
-                    <!--<script>-->
-                        <!--window.afterDocReady.push(function () {-->
-                            <!--$('[name=payment-btn]').on('change', function () {-->
-                                <!--_togglePaymensB();-->
-                            <!--});-->
-                            <!--_togglePaymensB();-->
-                            <!--new Clipboard('[data-clipboard-text]');-->
-
-                            <!--caclPayment_4();-->
-                            <!--$(document).on('change keyup', '.payment-b-4 [name=summ]', function () {-->
-                                <!--caclPayment_4();-->
-                            <!--});-->
-                            <!--caclPayment_3();-->
-                            <!--$(document).on('change keyup', '.payment-b-3 [name=summ]', function () {-->
-                                <!--caclPayment_3();-->
-                            <!--});-->
-                            <!--caclPayment_5();-->
-                            <!--$(document).on('change keyup', '.payment-b-5 [name=summ]', function () {-->
-                                <!--caclPayment_5();-->
-                            <!--});-->
-                        <!--});-->
-
-                        <!--function _togglePaymensB () {-->
-                            <!--$('.payment-b').hide();-->
-                            <!--var _val = $('[name=payment-btn]:checked').val();-->
-                            <!--if (_val) {-->
-                                <!--$('.payment-b-' + _val).show();-->
-                            <!--}-->
-                        <!--}-->
-
-                        <!--function _get_next (v, rate, summ) {-->
-                            <!--var _next = v * rate - summ;-->
-                            <!--if (_next < 0.01) {-->
-                                <!--_next = 0.01;-->
-                            <!--}-->
-                            <!--_next = Math.ceil(_next * 100) / 100;-->
-                            <!--return _next;-->
-                        <!--}-->
-
-                        <!--function _calcAccountType (eth_summ, _class, coin, summ, rate) {-->
-                            <!--var _html = '';-->
-                            <!--var _html_left = '';-->
-                            <!--if (eth_summ >= 300) {-->
-                                <!--_html = '<b>DIAMOND</b>';-->
-                            <!--} else {-->
-                                <!--if (eth_summ >= 100) {-->
-                                    <!--_html = '<b>PLATINUM</b>';-->
-                                    <!--_html_left = 'To receive DIAMOND account you must buy W12 tokens for at least ' + _get_next(300, rate, summ) + '&nbsp;' + coin;-->
-                                <!--} else {-->
-                                    <!--if (eth_summ >= 30) {-->
-                                        <!--_html = '<b>GOLD</b>';-->
-                                        <!--_html_left = 'To receive PLATINUM account you must buy W12 tokens for at least ' + _get_next(100, rate, summ) + '&nbsp;' + coin;-->
-                                    <!--} else {-->
-                                        <!--if (eth_summ >= 10) {-->
-                                            <!--_html = '<b>SILVER</b>';-->
-                                            <!--_html_left = 'To receive GOLD account you must buy W12 tokens for at least ' + _get_next(30, rate, summ) + '&nbsp;' + coin;-->
-                                        <!--} else {-->
-                                            <!--if (eth_summ >= 3) {-->
-                                                <!--_html = '<b>BRONZE</b>';-->
-                                                <!--_html_left = 'To receive SILVER account you must buy W12 tokens for at least ' + _get_next(10, rate, summ) + '&nbsp;' + coin;-->
-                                            <!--} else {-->
-                                                <!--_html = 'Not premium';-->
-                                                <!--_html_left = 'To receive BRONZE account you must buy W12 tokens for at least ' + _get_next(3, rate, summ) + '&nbsp;' + coin;-->
-                                            <!--}-->
-                                        <!--}-->
-                                    <!--}-->
-                                <!--}-->
-                            <!--}-->
-                            <!--$('.' + _class + ' .calc-account-type').html(_html);-->
-                            <!--$('.' + _class + ' .calc-account-type-left').html(_html_left);-->
-                        <!--}-->
-
-                        <!--function caclPayment_4 () {-->
-                            <!--var summ = Number($('.payment-b-4 [name=summ]').val());-->
-                            <!--var eth_summ = summ;-->
-                            <!--if (summ > 0) {-->
-                                <!--var count = Math.round(summ / 0.00027258);-->
-                                <!--$('.payment-b-4 .calc-tokens-count').html('<b>' + count + '</b>');-->
-                                <!--var summ_old = count * 0.00035000;-->
-                                <!--var _diff = summ_old - summ;-->
-                                <!--if (_diff >= 0.01) {-->
-                                    <!--var _v = '<b>' + _diff.toFixed(2);-->
-                                    <!--_v = _v.replace(/0+$/, '');-->
-                                    <!--_v = _v.replace(/\.$/, '');-->
-                                    <!--_v = _v + '&nbsp;ETH</b>';-->
-                                    <!--_v += ' (~' + Math.floor(_diff * 607.54491827202) + '&nbsp;USD)';-->
-                                    <!--$('.payment-b-4 .calc-tokens-disc').html(_v);-->
-                                <!--} else {-->
-                                    <!--$('.payment-b-4 .calc-tokens-disc').html('<b>0 ETH</b>');-->
-                                <!--}-->
-                            <!--} else {-->
-                                <!--$('.payment-b-4 .calc-tokens-count').html('<b>0</b>');-->
-                                <!--$('.payment-b-4 .calc-tokens-disc').html('<b>0 ETH</b>');-->
-                            <!--}-->
-                            <!--_calcAccountType(eth_summ, 'payment-b-4', 'ETH', summ, 1);-->
-                        <!--}-->
-
-                        <!--function caclPayment_3 () {-->
-                            <!--var summ = Number($('.payment-b-3 [name=summ]').val());-->
-                            <!--var eth_summ = summ / 0.078971000000000000000000;-->
-                            <!--if (summ > 0) {-->
-                                <!--var count = Math.round(summ / (0.00027258 * 0.078971000000000000000000));-->
-                                <!--$('.payment-b-3 .calc-tokens-count').html('<b>' + count + '</b>');-->
-                                <!--var summ_old = count * 0.00035000 * 0.078971000000000000000000;-->
-                                <!--var _diff = summ_old - summ;-->
-                                <!--if (_diff >= 0.01) {-->
-                                    <!--var _v = '<b>' + _diff.toFixed(2);-->
-                                    <!--_v = _v.replace(/0+$/, '');-->
-                                    <!--_v = _v.replace(/\.$/, '');-->
-                                    <!--_v = _v + '&nbsp;BTC</b>';-->
-                                    <!--_v += ' (~' + Math.floor(_diff * 7693.2661137888) + '&nbsp;USD)';-->
-                                    <!--$('.payment-b-3 .calc-tokens-disc').html(_v);-->
-                                <!--} else {-->
-                                    <!--$('.payment-b-3 .calc-tokens-disc').html('<b>0 BTC</b>');-->
-                                <!--}-->
-                            <!--} else {-->
-                                <!--$('.payment-b-3 .calc-tokens-count').html('<b>0</b>');-->
-                                <!--$('.payment-b-3 .calc-tokens-disc').html('<b>0 BTC</b>');-->
-                            <!--}-->
-                            <!--_calcAccountType(eth_summ, 'payment-b-3', 'BTC', summ, 0.078971000000000000000000);-->
-                        <!--}-->
-
-                        <!--function caclPayment_5 () {-->
-                            <!--var summ = Number($('.payment-b-5 [name=summ]').val());-->
-                            <!--var eth_summ = summ / 4.9993115509096;-->
-                            <!--if (summ > 0) {-->
-                                <!--var count = Math.round(summ / (0.00027258 * 4.9993115509096));-->
-                                <!--$('.payment-b-5 .calc-tokens-count').html('<b>' + count + '</b>');-->
-                                <!--var summ_old = count * 0.00035000 * 4.9993115509096;-->
-                                <!--var _diff = summ_old - summ;-->
-                                <!--if (_diff >= 0.01) {-->
-                                    <!--var _v = '<b>' + _diff.toFixed(2);-->
-                                    <!--_v = _v.replace(/0+$/, '');-->
-                                    <!--_v = _v.replace(/\.$/, '');-->
-                                    <!--_v = _v + '&nbsp;LTC</b>';-->
-                                    <!--_v += ' (~' + Math.floor(_diff * 121.5257165082) + '&nbsp;USD)';-->
-                                    <!--$('.payment-b-5 .calc-tokens-disc').html(_v);-->
-                                <!--} else {-->
-                                    <!--$('.payment-b-5 .calc-tokens-disc').html('<b>0 LTC</b>');-->
-                                <!--}-->
-                            <!--} else {-->
-                                <!--$('.payment-b-5 .calc-tokens-count').html('<b>0</b>');-->
-                                <!--$('.payment-b-5 .calc-tokens-disc').html('<b>0 LTC</b>');-->
-                            <!--}-->
-                            <!--_calcAccountType(eth_summ, 'payment-b-5', 'LTC', summ, 4.9993115509096);-->
-                        <!--}-->
-                    <!--</script>-->
-
-                    <!--<div class="payment-b payment-b-4">-->
-                        <!--<form action="" method="post" target="_blank">-->
-                            <!--<input type="hidden" name="csrf_token"-->
-                                   <!--value="2a4f8b818fda635645923e2ef0c41fa54065e950b02a455d4b32d06e84609869"/>-->
-                            <!--<div class="bytoken-h2">Purchase amount</div>-->
-                            <!--<div class="bytoken-i-padd">-->
-                                <!--<div class="row bytoken-btc align-items-center">-->
-                                    <!--<div class="col-auto">-->
-                                        <!--<input style="width: 220px;" type="text" class="form-control num-float"-->
-                                               <!--value="5" name="summ">-->
-                                    <!--</div>-->
-                                    <!--<div class="col-auto">-->
-                                        <!--<span>ETH</span>-->
-                                    <!--</div>-->
-                                <!--</div>-->
-                            <!--</div>-->
-                            <!--<div class="table-amount">-->
-                                <!--<div class="table-amount__row">-->
-                                    <!--<span class="table-amount__label">Amount of W12 tokens</span>-->
-                                    <!--<span class="table-amount__number calc-tokens-count">N/A</span>-->
-                                <!--</div>-->
-                                <!--<div class="table-amount__row" style="">-->
-                                    <!--<span class="table-amount__label">Saving</span>-->
-                                    <!--<span class="table-amount__number calc-tokens-disc"></span>-->
-                                <!--</div>-->
-                                <!--<div class="table-amount__row">-->
-                                    <!--<span class="table-amount__label">Type of account</span>-->
-                                    <!--<span class="table-amount__number calc-account-type"></span>-->
-                                <!--</div>-->
-                            <!--</div>-->
-                            <!--<p class="calc-account-type-left"></p>-->
-                            <!--<input type="hidden" name="payment" value="4"/>-->
-                            <!--<input type="hidden" name="buy-tokens"/>-->
-                            <!--<a href="#" onclick="$(this).parents('form').submit(); return false;"-->
-                               <!--class="get-tokens-btn">BUY TOKENS</a>-->
-                        <!--</form>-->
-                    <!--</div>-->
-
-                    <!--<div class="payment-b payment-b-3">-->
-                        <!--<form action="" method="post" target="_blank">-->
-                            <!--<input type="hidden" name="csrf_token"-->
-                                   <!--value="2a4f8b818fda635645923e2ef0c41fa54065e950b02a455d4b32d06e84609869"/>-->
-                            <!--<div class="bytoken-h2">Purchase amount</div>-->
-                            <!--<div class="bytoken-i-padd">-->
-                                <!--<div class="row bytoken-btc align-items-center">-->
-                                    <!--<div class="col-auto">-->
-                                        <!--<input style="width: 220px;" type="text" class="form-control num-float"-->
-                                               <!--value="0.25" name="summ">-->
-                                    <!--</div>-->
-                                    <!--<div class="col-auto">-->
-                                        <!--<span>BTC</span>-->
-                                    <!--</div>-->
-                                <!--</div>-->
-                            <!--</div>-->
-                            <!--<div class="table-amount">-->
-                                <!--<div class="table-amount__row">-->
-                                    <!--<span class="table-amount__label">Amount of W12 tokens</span>-->
-                                    <!--<span class="table-amount__number calc-tokens-count"></span>-->
-                                <!--</div>-->
-                                <!--<div class="table-amount__row" style="">-->
-                                    <!--<span class="table-amount__label">Saving</span>-->
-                                    <!--<span class="table-amount__number calc-tokens-disc"></span>-->
-                                <!--</div>-->
-                                <!--<div class="table-amount__row">-->
-                                    <!--<span class="table-amount__label">Type of account</span>-->
-                                    <!--<span class="table-amount__number calc-account-type"></span>-->
-                                <!--</div>-->
-                            <!--</div>-->
-                            <!--<p class="calc-account-type-left"></p>-->
-                            <!--<input type="hidden" name="payment" value="3"/>-->
-                            <!--<input type="hidden" name="buy-tokens"/>-->
-                            <!--<a href="#" onclick="$(this).parents('form').submit(); return false;"-->
-                               <!--class="get-tokens-btn">BUY TOKENS</a>-->
-                        <!--</form>-->
-                    <!--</div>-->
-
-                    <!--<div class="payment-b payment-b-5">-->
-                        <!--<form action="" method="post" target="_blank">-->
-                            <!--<input type="hidden" name="csrf_token"-->
-                                   <!--value="2a4f8b818fda635645923e2ef0c41fa54065e950b02a455d4b32d06e84609869"/>-->
-                            <!--<div class="bytoken-h2">Purchase amount</div>-->
-                            <!--<div class="bytoken-i-padd">-->
-                                <!--<div class="row bytoken-btc align-items-center">-->
-                                    <!--<div class="col-auto">-->
-                                        <!--<input style="width: 220px;" type="text" class="form-control num-float"-->
-                                               <!--value="15" name="summ">-->
-                                    <!--</div>-->
-                                    <!--<div class="col-auto">-->
-                                        <!--<span>LTC</span>-->
-                                    <!--</div>-->
-                                <!--</div>-->
-                            <!--</div>-->
-                            <!--<div class="table-amount">-->
-                                <!--<div class="table-amount__row">-->
-                                    <!--<span class="table-amount__label">Amount of W12 tokens</span>-->
-                                    <!--<span class="table-amount__number calc-tokens-count"></span>-->
-                                <!--</div>-->
-                                <!--<div class="table-amount__row" style="">-->
-                                    <!--<span class="table-amount__label">Saving</span>-->
-                                    <!--<span class="table-amount__number calc-tokens-disc"></span>-->
-                                <!--</div>-->
-                                <!--<div class="table-amount__row">-->
-                                    <!--<span class="table-amount__label">Type of account</span>-->
-                                    <!--<span class="table-amount__number calc-account-type"></span>-->
-                                <!--</div>-->
-                            <!--</div>-->
-                            <!--<p class="calc-account-type-left"></p>-->
-                            <!--<input type="hidden" name="payment" value="5"/>-->
-                            <!--<input type="hidden" name="buy-tokens"/>-->
-                            <!--<a href="#" onclick="$(this).parents('form').submit(); return false;"-->
-                               <!--class="get-tokens-btn">BUY TOKENS</a>-->
-                        <!--</form>-->
-                    <!--</div>-->
-
-
-                </div>
+        <div class="main__track">
+            <div class="content">
+                <div id="appInvestorDashboard"></div>
             </div>
-            <div class="col-xs-12 col-lg-4">
-                <div id="sticky-wrapper" class="sticky-wrapper">
-                    <div class="side-menu side-menu-tokens">
-                        <div class="side-tokens-wrap">
-                            <a href="https://w12.io/buy-w12/?utm_source=test-net&utm_medium=demo_page" target="_blank" class="get-tokens-button">Buy W12 Tokens</a>
-                            <a href="https://tokensale.w12.io/?utm_source=test-net&utm_medium=demo_page" target="_blank" class="default-tokens-btn">How it works?</a>
-                            <!--<span class="default-tokens-btn__icon">!</span>-->
-                            <a href="https://github.com/w12-platform/W12-Product" target="_blank" class="default-tokens-btn">View Code on Github</a>
-                            <a href="https://tokensale.w12.io/?utm_source=test-net&utm_medium=demo_page" target="_blank" class="default-tokens-btn">Go to Marketplace</a>
-                            <!--<form class="code-form" action="" method="post">-->
-                                <!--<input type="hidden" name="csrf_token"-->
-                                       <!--value="2a4f8b818fda635645923e2ef0c41fa54065e950b02a455d4b32d06e84609869"/> <span-->
-                                    <!--class="code-form__label">Сoupon:</span>-->
-                                <!--<div class="code-form__row">-->
-                                    <!--<input type="text" class="code-form__input" name="code">-->
-                                    <!--<button type="submit" class="code-form__button" name="set-code">-->
-                                        <!--Apply-->
-                                    <!--</button>-->
-                                <!--</div>-->
-                            <!--</form>-->
-                            <!--<ul class="tokens-presale-list">-->
-                                <!--<li><b>Pre-sale:</b></li>-->
-                                <!--<li>Start: May 20</li>-->
-                                <!--<li>Hard cap: ~ 5000 ETH (20 million tokens W12)</li>-->
-                                <!--<li class="mt"><b>Crowd sale: </b></li>-->
-                                <!--<li>Start: July 27</li>-->
-                                <!--<li>Hard cap: ~ 25,000 ETH (80 million tokens W12)</li>-->
-                            <!--</ul>-->
-                        </div>
-                    </div>
-                </div>
+            <div class="sidebar" id="sidebar"><span class="toggle-mobile-btn"><i class="fa fa-arrow-up"></i></span>
+                <div class="sidebar__inner"><a class="btn sidebar-btn warn" href="https://tokensale.w12.io/?utm_source=test-net&amp;utm_medium=demo_page" data-warn="!" target="_blank">HOW IT WORKS?</a><a class="btn sidebar-btn" href="https://github.com/w12-platform/W12-Product">VIEW CODE ON GITHUB</a><a class="btn sidebar-btn" href="https://tokensale.w12.io/?utm_source=test-net&amp;utm_medium=demo_page">GO TO MARKETPLACE</a></div>
             </div>
         </div>
-
-
     </div>
-</section>
-<style>
-    .modal-bg {
-        background: url(/images/system/sign_bg.jpg);
-        background-size: cover;
-    }
-</style>
-<footer>
+</main>
+<div class="sticky-footer"></div>
+<footer class="footer">
     <div class="container">
-        <div class="row">
-            <div class="col-12 col-md-5 col-lg-6 d-none d-md-block">
-                <div class="row">
-                    <div class="col-12 col-sm-6">
-                        <div class="footer-title d-hide" data-html="QUJPVVQgVzEy"></div>
-                        <div class="footer-menu">
-                            <div class="footer-menu-item">
-                                <a data-href="aHR0cDovL3Rva2Vuc2FsZS53MTIuaW8v" target="_blank" class="d-hide"
-                                   data-html="SG93IGl0IFdvcmtz"></a>
-                            </div>
-                            <div class="footer-menu-item">
-                                <a data-href="aHR0cDovL3Rva2Vuc2FsZS53MTIuaW8vVzEyLWVuLnBkZg==" target="_blank"
-                                   class="d-hide" data-html="V2hpdGVwYXBlcg=="></a>
-                            </div>
-                            <div class="footer-menu-item">
-                                <a data-href="aHR0cHM6Ly9naXRodWIuY29tL3cxMi1wbGF0Zm9ybQ==" target="_blank"
-                                   class="d-hide" data-html="R2l0aHVi"></a>
-                            </div>
-                            <div class="footer-menu-item">
-                                <a data-href="aHR0cDovL3Rva2Vuc2FsZS53MTIuaW8vUHJpdmFjeS1Qb2xpY3kucGRm" target="_blank"
-                                   class="d-hide" data-html="UHJpdmFjeSBQb2xpY3k="></a>
-                            </div>
-                            <div class="footer-menu-item">
-                                <a data-href="aHR0cDovL3Rva2Vuc2FsZS53MTIuaW8vVGVybXMtQ29uZGl0aW9ucy5wZGY="
-                                   target="_blank" class="d-hide" data-html="VGVybXMgJmFtcDsgQ29uZGl0aW9ucw=="></a>
-                            </div>
-                            <!--div class="footer-menu-item"><a href="#">Our Rules</a></div>
-                                        <div class="footer-menu-item"><a href="#">ICO vs Crowdfunding</a></div>
-                                        <div class="footer-menu-item"><a href="#">Jobs</a></div>
-                                        <div class="footer-menu-item"><a href="#">Press</a></div>
-                                        <div class="footer-menu-item"><a href="#">Blog</a></div>
-                                        <div class="footer-menu-item"><a href="#">Brand Resources</a></div-->
-                        </div>
-                    </div>
-                    <div class="col-12 col-sm-6">
-                        <div class="footer-title d-hide" data-html="SGVscA=="></div>
-                        <div class="footer-menu">
-                            <div class="footer-menu-item">
-                                <a data-href="bWFpbHRvOnN1cHBvcnRAdzEyLmlv" target="_blank" class="d-hide"
-                                   data-html="U3VwcG9ydA=="></a>
-                            </div>
-                            <div class="footer-menu-item">
-                                <a href="/upcoming-pre-ICOs/">Upcoming pre-ICOs</a>
-                            </div>
-                            <div class="footer-menu-item">
-                                <a href="/upcoming-ICOs/">Upcoming ICOs</a>
-                            </div>
-                            <div class="footer-menu-item">
-                                <a href="/ICOs-of-blockchain-projects/">Blockchain project ICOs</a>
-                            </div>
-                            <div class="footer-menu-item">
-                                <a href="/all-projects/">All projects</a>
-                            </div>
-                            <!--div class="footer-menu-item"><a href="#">FAQ</a></div>
-                        <div class="footer-menu-item"><a href="#">Support</a></div>
-                        <div class="footer-menu-item"><a href="#">Terms of Use</a></div-->
-                            <!--div class="footer-menu-item"><a href="#">Cookie Policy</a></div-->
-                        </div>
-                    </div>
-                </div>
+        <div class="footer__line">
+            <div class="footer-links first">
+                <h5 class="footer-links__heading">About icoplate</h5>
+                <ul class="footer-links__list">
+                    <li class="footer-links__item"><a class="footer-links__link" href="#">How it Works</a></li>
+                    <li class="footer-links__item"><a class="footer-links__link" href="#">Whitepaper</a></li>
+                    <li class="footer-links__item"><a class="footer-links__link" href="#">GitHub</a></li>
+                    <li class="footer-links__item"><a class="footer-links__link" href="#">Privacy Policy</a></li>
+                    <li class="footer-links__item"><a class="footer-links__link" href="#">Terms & Conditions</a></li>
+                    <li class="footer-links__item"><a class="footer-links__link" href="#">W12 logos</a></li>
+                </ul>
             </div>
-            <div class="col-12 col-md-7 col-lg-6">
-                <div class="footer-hotlinks d-none d-sm-flex flex-wrap justify-content-between">
-                    <div class="footer-hotlinks-item">
-                        <a data-href="Lw==" class="d-hide" data-text="QnJvd3NlIHByb2plY3Rz"></a>
-                    </div>
-                    <div class="footer-hotlinks-item">
-                        <a data-href="L3N0YXJ0LXByb2plY3Qv" class="d-hide" data-text="U3RhcnQgYSBwcm9qZWN0"></a>
-                    </div>
-                    <!--div class="footer-hotlinks-item">
-              <a href="#" class="d-hide" data-text="RmluZCBhbiBleHBlcnQ="></a>
-            </div-->
-                </div>
-                <div class="footer-signin">
-                    <div class="footer-signin-title d-hide" data-html="U0lHTiBVUCBGT1IgU1BFQ0lBTCBPRkZFUlM="></div>
-                    <div class="footer-signin-content">
-                        <form action="#" id="footer_subscribe_form">
-                            <input type="hidden" name="csrf_token"
-                                   value="2a4f8b818fda635645923e2ef0c41fa54065e950b02a455d4b32d06e84609869"/>
-                            <div class="d-flex justify-content-center position-relative">
-                                <i class="fa fa-envelope-o envelop-form" aria-hidden="true"></i>
-                                <input type="text" name="email" placeholder="Your Email Address">
-                                <button type="button" class="d-hide"
-                                        data-html="U2lnbiB1cDxzcGFuIGNsYXNzPSJkLW5vbmUgZC1zbS1pbmxpbmUtYmxvY2siPiZuYnNwO25vdzwvc3Bhbj4="
-                                        onclick="_footer_subscribe();"></button>
-                            </div>
-                            <script>
-                                function _footer_subscribe () {
-                                    _ajaxJson({
-                                        url: '/?ajax=FooterSubscribe',
-                                        data: $('#footer_subscribe_form').serialize(),
-                                        success: function (json) {
-                                            $('#footer_subscribe_form input').val('');
-                                            alert(json.res);
-                                        },
-                                        error: function (e) {
-                                            alert(e);
-                                        }
-                                    });
-                                }
-                            </script>
-                        </form>
-                    </div>
-                    <div class="footer-signin-info d-hide" data-html="UHJpdmF0ZSwgc2VjdXJlLCBzcGFtLWZyZWU="></div>
-                </div>
-                <div class="footer-line no-gutters d-flex flex-wrap align-items-center justify-content-center justify-content-sm-between">
-                    <div class="col-12 col-sm-auto text-center text-sm-left mb-2 mb-sm-0 d-hide"
-                         data-html="Rm9sbG93IHVz"></div>
-                    <div class="col-12 col-sm-auto d-flex flex-wrap justify-content-center footer-socio">
-                        <div>
-                            <a data-href="aHR0cHM6Ly93d3cuZmFjZWJvb2suY29tL3cxMi5pbw==" target="_blank" class="d-hide">
-                                <i class="fa fa-facebook"></i>
-                            </a>
-                        </div>
-                        <!--div><a href="#" target="_blank"><i class="fa fa-slack"></i></a></div-->
-                        <div>
-                            <a data-href="aHR0cHM6Ly90Lm1lL3cxMl9pbw==" target="_blank" class="d-hide">
-                                <i class="fa fa-telegram"></i>
-                            </a>
-                        </div>
-                        <div>
-                            <a data-href="aHR0cHM6Ly90d2l0dGVyLmNvbS93MTJfaW8=" target="_blank" class="d-hide">
-                                <i class="fa fa-twitter"></i>
-                            </a>
-                        </div>
-                        <div>
-                            <a data-href="aHR0cHM6Ly9tZWRpdW0uY29tL0B3MTJfaW8=" target="_blank" class="d-hide">
-                                <i class="fa fa-medium"></i>
-                            </a>
-                        </div>
-                        <!--div><a href="#" target="_blank"><i class="fa fa-qq"></i></a></div>
-                        <div><a href="#" target="_blank"><i class="fa fa-weixin"></i></a></div-->
-                        <div>
-                            <a data-href="bWFpbHRvOmVucXVpcmllc0B3MTIuaW8=" target="_blank" class="d-hide">
-                                <i class="fa fa-envelope"></i>
-                            </a>
-                        </div>
-                    </div>
+            <div class="footer-links">
+                <h5 class="footer-links__heading">Help</h5>
+                <ul class="footer-links__list">
+                    <li class="footer-links__item"><a class="footer-links__link" href="#">Support</a></li>
+                    <li class="footer-links__item"><a class="footer-links__link" href="#">Upcoming pre-ICOs</a></li>
+                    <li class="footer-links__item"><a class="footer-links__link" href="#">Upcoming ICOs</a></li>
+                    <li class="footer-links__item"><a class="footer-links__link" href="#">Blockchain project ICOs</a></li>
+                    <li class="footer-links__item"><a class="footer-links__link" href="#">All projects</a></li>
+                </ul>
+            </div>
+            <div class="footer-actions">
+                <div class="footer-actions__links"><a href="#">Browse projects</a><a href="#">Start a project</a><a href="#">Log in</a><a href="#">Sign up</a></div>
+                <form class="footer-form">
+                    <label class="footer-form__label">SIGN UP FOR SPECIAL OFFERS</label>
+                    <div class="footer-form__row">
+                        <input type="email" placeholder="Your email address">
+                        <button type="submi">Sign up now</button>
+                    </div><span class="footer-form__tags">Private, secure, spam-free</span>
+                </form>
+                <div class="footer-follow"><span class="footer-follow__heading">follow us</span>
+                    <div class="footer-follow__social"><a href="#"><i class="fa fa-facebook"></i></a><a href="#"><i class="fa fa-telegram"></i></a><a href="#"><i class="fa fa-twitter"></i></a><a href="#"><i class="fa fa-medium"></i></a><a href="#"><i class="fa fa-envelope"></i></a></div>
                 </div>
             </div>
         </div>
     </div>
 </footer>
-
-
-<div class="overflow-container">
-    <svg width="0" height="0">
-        <linearGradient id="lgrad" x1="0%" y1="78%" x2="100%" y2="22%">
-            <stop offset="0%" style="stop-color:rgb(255,120,0);stop-opacity:1"/>
-            <stop offset="100%" style="stop-color:rgb(252,226,5);stop-opacity:1"/>
-        </linearGradient>
-    </svg>
-</div>
-
-<script src="js/jquery-1.11.3.min.js"></script>
-<script src="js/popper.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<script src="js/jquery.mobile.custom.min.js"></script>
-<script src="js/jquery.smooth-scroll.min.js"></script>
-<script src="js/jquery.maskedinput.min.js"></script>
-<script src="js/slick/slick.min.js"></script>
-<script src="js/fancybox/jquery.fancybox.min.js"></script>
-<script src="js/formstyler/jquery.formstyler.min.js"></script>
-<script src="js/datepicker/js/bootstrap-datepicker.min.js"></script>
-<script src="js/datepicker/locales/bootstrap-datepicker.ru.min.js"></script>
-<script src="js/ddscrollspy.js"></script>
-<script src="js/ui/jquery-ui.min.js"></script>
-<script src="js/plupload-2.3.6/js/plupload.full.min.js"></script>
-<script src="js/plupload-2.3.6/js/i18n/ru.js"></script>
-<script src="js/clipboard.min.js"></script>
-<script src="js/jquery.sticky.js"></script>
-<script src="js/bootstrap-rating-input.js"></script>
-<script src="js/Chart.js/Chart.min.js"></script>
-<script src="js/jquery.floatThead.min.js"></script>
-<script src="js/custom-scroll/jquery.mCustomScrollbar.concat.min.js"></script>
-<script src="js/jquery.equalheights.min.js"></script>
-<script src="js/flipclock/flipclock.min.js"></script>
-
-
-<script src="js/ammi.js?v=20"></script>
-
-<script src="js/main.js?v=20"></script>
-<script src="js/dev/main.js?v=20"></script>
-
+<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+<link rel="stylesheet" href="css/main.css">
+<script src="libs/jquery/jquery-3.2.1.min.js"></script>
+<script src="libs/sticky/sticky-sidebar.min.js"></script>
+<script src="js/common.js"></script>
+<script src="blockchain/node_modules/moment/moment.js"></script>
+<script src="blockchain/node_modules/web3/dist/web3.js"></script>
+<script src="/blockchain/build/build.js?v=4"></script>
 </body>
 </html>

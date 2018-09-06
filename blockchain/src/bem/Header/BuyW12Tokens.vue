@@ -1,5 +1,5 @@
 <template>
-    <h1 v-if="!langMeta.loading" class="content__heading">{{ $t('GeneralTitle') }}</h1>
+    <a v-if="!langMeta.loading" class="btn actions__buytokens" href="https://w12.io/buy-w12/?utm_source=test-net&amp;utm_medium=demo_page" target="_blank">{{ $t('HeaderByuW12Tokens') }}</a>
 </template>
 
 <script>
@@ -8,8 +8,8 @@
     const LangNS = createNamespacedHelpers("Lang");
 
     export default {
-        name: 'Title',
-        template: '#TitleTemplate',
+        name: 'BuyW12Tokens',
+        template: '#BuyW12TokensTemplate',
         computed: {
             ...LangNS.mapState({
                 langMeta: 'meta'

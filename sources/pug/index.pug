@@ -1,0 +1,216 @@
+doctype html
+html(lang="ru-RU")
+	include includes/head
+	body
+		include includes/header
+		main.main
+			.container
+				.main__track
+					.content
+						h1.content__heading W12 Product v.1.0 в тестовой сети Rinkeby с пользовательским Blockchain UI
+						.project-descr
+							span.project-descr__att i
+							.project-descr__info
+								p Этот стенд создан для удобного тестирования функций продукта аудиторами, проектами, комьюнити W12. 
+								p Смарт контракты продукта W12 задеплоины в тестовой сети Эфириума (Rinkeby) и для покупки токенов используется тестовый ETH. Чтобы протестировать работу всех основных функций, вам необходимо 
+									b пройти через все шаги в таблице 
+									| ниже.
+						.test-steps
+							h3.test-steps__heading Шаги тестирования продукта
+							.table-wrap
+								.test-steps__table
+									.test-steps__row
+										span.test-steps__head № шага
+										span.test-steps__head Название функции
+										span.test-steps__head Роль
+									.test-steps__row
+										.test-steps__cell
+											span.num 1
+										.test-steps__cell
+											a(href="#") Установка MetaMask
+										.test-steps__cell
+											span.icon.icon-blue проект,
+											span.icon.icon-green покупатель токенов,
+											span.icon.icon-red администратор W12
+									.test-steps__row
+										.test-steps__cell
+											span.num 2
+										.test-steps__cell
+											a(href="#") Получение тестового ETH
+											p для тестирования функций 
+												br
+												|покупателя токенов
+										.test-steps__cell
+											span.icon.icon-green покупатель токенов
+									.test-steps__row
+										.test-steps__cell
+											span.num 3
+										.test-steps__cell
+											a(href="#") Выпуск токенов проектом
+										.test-steps__cell
+											span.icon.icon-blue проект
+									.test-steps__row
+										.test-steps__cell
+											span.num 4
+										.test-steps__cell
+											a(href="#") Добавление токена
+												br
+												|проекта в белый список  
+										.test-steps__cell
+											span.icon.icon-red администратор W12
+									.test-steps__row
+										.test-steps__cell
+											span.num 5
+										.test-steps__cell
+											a(href="#") Настройка продажи токенов 
+											p даты продажи токенов, 
+												br
+												|скидки и другое
+										.test-steps__cell
+											span.icon.icon-blue проект
+									.test-steps__row
+										.test-steps__cell
+											span.num 6
+										.test-steps__cell
+											a(href="#") Покупка токенов  
+										.test-steps__cell
+											span.icon.icon-green покупатель токенов
+									.test-steps__row
+										.test-steps__cell
+											span.num 7
+										.test-steps__cell
+											a(href="#") Возврат средств 
+												br
+												|из фонда проект
+										.test-steps__cell
+											span.icon.icon-green покупатель токенов
+									.test-steps__row
+										.test-steps__cell
+											span.num 8
+										.test-steps__cell
+											a(href="#") Обмен W-tokens
+												br
+												| на Original Tokens
+										.test-steps__cell
+											span.icon.icon-green покупатель токенов
+									.test-steps__row
+										.test-steps__cell
+											span.num 9
+										.test-steps__cell
+											a(href="#") Получение средств
+												br
+												|проектом после окончания
+												br
+												|этапа дорожной карты
+										.test-steps__cell
+											span.icon.icon-blue проект
+						.tech-adv
+							h3.tech-adv__heading Преимущества технического решения W12
+							h4.tech-adv__subheading Максимальная гибкость
+							p.tech-adv__text The project can issue tokens independently and sell only part of its tokens on the W12 platform ac-cording to the secured model. Это позволит платформе W12 быстро начать продавать токены большого количеством ICO проектов, предоставить покупателями токенов большой ассор-тимент и быстро занять большую долю ICO рынка.
+							p.tech-adv__text The project can implement almost any logic for its token sale (by setting any intervals for sale rounds, discounts and bonuses, of the period of freezing purchased tokens).  
+							p.tech-adv__text The project can issue tokens on the W12 platform and sell part of the tokens independently (for ex-ample, on its website). За счет чего любой проект будет иметь возможность не писать и не ауди-ровать смарт контракты crowdsale и выпустить токены бесплатно. 
+							p.tech-adv__text В следующих версиях продукта, the project can choose which cryptocurrencies to store money in the project fund (for example, you can store money in stable coins to reduce volatility); the higher the fraction of this money that is stored as W12 tokens, the lower the platform commission for the project.
+							h4.tech-adv__subheading Кросс-блокчейн решение
+							p.tech-adv__text.no-points The first product version (already developed) works based on the Ethereum blockchain. A crossblockchain solution will be implemented on the W12 platform along with the growth of populari-ty among the projects of other blockchains that allow creation of smart contracts for the ICO. 
+							h4.tech-adv__subheading Полностью on-chain решение
+							p.tech-adv__text.no-points При работе продукта все операции происходят в блокчейне. Это делает процесс продажи токенов прозрачным, легко аудируемым и исключает необходимость доверять третьей стороне.
+							h4.tech-adv__subheading Интегрируемость
+							p.tech-adv__text.no-points Продукт W12 легко интегрируется в сайты проектов и сторонние платформы.
+						.versions
+							h3.versions__heading Версии продукта
+							.table-wrap
+								.versions__table
+									.versions__row
+										span.versions__head версия
+											br
+											| продукта
+										span.versions__head Основные функции продукта
+									.versions__row
+										.versions__cell
+											span.version v.1
+										.versions__cell
+											p Поддерживаемые блокчейны: Ethereum 
+											p Поддерживаемые токены проектов: ERC20 
+											p Покупка токенов с помощью: ETH 
+											p Хранение средств в фонде проекта: ETH
+											p Выдача средств проекту: ETH
+											p Тип фонда проекта: фонд №1 (каждый пользователь 
+									.versions__row
+										.versions__cell
+											span.version v.2
+										.versions__cell
+											h4 Дополнительные функции
+											p Покупка токенов с помощью: W12, ERC20 stable coins, ликвидных ECR20 tokens 
+											p Хранение средств в фонде проекта: W12 token, ERC20 stable coins, ликвидных ECR20 tokens 
+											p Выдача средств проекту: валюты в которых хранятся средства в фонде проекта
+									.versions__row
+										.versions__cell
+											span.version v.3
+										.versions__cell
+											h4 Дополнительные функции
+											p Возможность для проектов хранить любую часть средств фонда в токенах W12 (и за счёт этого снижать комиссию сервиса) 
+									.versions__row
+										.versions__cell
+											span.version v.4
+										.versions__cell
+											h4 Дополнительные функции
+											p Покупка токенов с помощью: BTC, LTC и других популярных криптовалют с помощью встроенного криптовалютного обменника
+									.versions__row
+										.versions__cell
+											span.version v.5
+										.versions__cell
+											h4 Дополнительные функции
+											p Тип фонда: фонд №2 (решение принимается оракулами)
+									.versions__row
+										.versions__cell
+											span.version v.6
+										.versions__cell
+											h4 Дополнительные функции
+											p Покупка токенов с помощью: кредитных карточек (Visa, MasterCard, UnionPay, JCB), и банковских переводов (SWIFT, SEPA)
+									.versions__row
+										.versions__cell
+											span.version v.7
+										.versions__cell
+											h4 Дополнительные функции
+											p Выдача средств проекту: банковский перевод на расчетный счёт компании
+									.versions__row
+										.versions__cell
+											span.version v.8
+										.versions__cell
+											h4 Дополнительные функции
+											p Тип фонда: фонд №3 (решение принимается голосованием покупателей токенов)
+									.versions__row
+										.versions__cell
+											span.version v.9
+										.versions__cell
+											h4 Дополнительные функции
+											p Возможность быстрой интеграции продукта в сайты проектов
+									.versions__row
+										.versions__cell
+											span.version v.10
+										.versions__cell
+											h4 Дополнительные функции
+											p Возможность интеграция продукта в маркетплейсы
+									.versions__row
+										.versions__cell
+											span.version v.11
+										.versions__cell
+											h4 Дополнительные функции
+											p Кросс-блокчейн решение для возможности использования токенов стандарта отличного от ERC20 (EOS, NEO, NEM, Stellar
+					.sidebar#sidebar
+						span.toggle-mobile-btn
+							i.fa.fa-arrow-up
+						.sidebar__inner
+							a(href="https://tokensale.w12.io/?utm_source=test-net&utm_medium=demo_page" data-warn="!" target="_blank").btn.sidebar-btn.warn HOW IT WORKS?
+							a(href="https://github.com/w12-platform/W12-Product").btn.sidebar-btn VIEW CODE ON GITHUB
+							a(href="https://tokensale.w12.io/?utm_source=test-net&utm_medium=demo_page").btn.sidebar-btn GO TO MARKETPLACE
+							//- .coupon
+							//- 	h3.coupon__heading Coupon:
+							//- 	.coupon__actions
+							//- 		input(type="text")
+							//- 		a(href="javascript:void(0)").btn.coupon__actions__apply apply
+
+		include includes/footer
+		//- Подключение скриптов
+		include includes/scripts

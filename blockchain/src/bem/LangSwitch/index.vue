@@ -1,9 +1,10 @@
 <template>
-    <div class="header-lang">
-        <a href="#" id="p-lang" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>{{ currentLang }}</span></a>
-        <div class="dropdown-menu" aria-labelledby="p-lang">
-            <a v-for="lang in allLang" class="dropdown-item" @click="select(lang)">{{lang}}</a>
-        </div>
+    <div :class="isClasses" @click="isOpen = !isOpen">
+        <span class="select__placeholder">{{ currentLang }}</span>
+        <ul class="select__list">
+            <li v-for="lang in allLang"  @click="select(lang)" :data-value="lang">{{lang}}</li>
+        </ul>
+        <input type="hidden" name="select-value">
     </div>
 </template>
 
@@ -22,6 +23,19 @@
                 currentLang: "current",
                 allLang: "all"
             }),
+
+            isClasses(){
+                return {
+                    "is-open" : this.isOpen,
+                    "actions__select": true,
+                    "select": true
+                }
+            }
+        },
+        data() {
+            return {
+                isOpen: false
+            };
         },
         methods: {
             select(lang){

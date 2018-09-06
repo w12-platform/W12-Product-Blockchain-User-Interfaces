@@ -23,6 +23,11 @@ const LocalTranslations = {
         "en": "Amount",
         "ru": "Количество"
     },
+    "HeaderByuW12Tokens": {
+        "en": "BUY W12 TOKENS",
+        "ru": "КУПИТЬ W12 TOKENS"
+    },
+
     ////////
     "ConfigDashboardTitle": {
         "en": "Config Dashboard",
