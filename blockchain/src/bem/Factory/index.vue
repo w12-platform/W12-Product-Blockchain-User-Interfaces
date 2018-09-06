@@ -80,6 +80,7 @@
                             <cleave v-model="createForm.decimals"
                                     class="form-control"
                                     :options="optionsNumber"
+                                    disabled
                                     min="0"
                                     max="255"
                             ></cleave>

@@ -1,0 +1,126 @@
+@import "vars"
+
+/*==========  Desktop First  ==========*/
+
+/* Large Devices, Wide Screens */
+@media only screen and (max-width : 1170px)
+	.container
+		max-width: 992px
+	.footer-links.first
+		margin-right: 100px
+	.footer-actions
+		margin-left: 80px
+	.sidebar
+		position: fixed
+		bottom: 0
+		left: 0
+		right: 0
+		z-index: 10
+		height: 40px
+		transition: height .5s ease
+	.toggle-mobile-btn
+		display: inline-block
+		position: relative
+		top: 5px
+		padding: 5px 0 0 0
+		left: 0
+		right: 0
+		text-align: center
+		width: 100%
+		background-color: #fff
+		cursor: pointer
+	.sidebar.active
+		height: 276px
+		.toggle-mobile-btn
+			i
+				transform: rotate(180deg)
+	.coupon__actions
+		input
+			max-width: none
+			width: 100%
+			margin-right: 15px
+	.content
+		max-width: none
+		min-width: 1px
+		margin: 0
+
+/* Medium Devices, Desktops */
+@media only screen and (max-width : 992px)
+	.container
+		max-width: 768px
+	.footer-actions
+		margin-left: 30px
+	.footer-links.first
+		margin-right: 20px
+	.content__heading
+		font-size: 26px
+		line-height: 30px
+	.test-steps__heading,
+	.tech-adv__heading,
+	.versions__heading
+		font-size: 22px
+		line-height: 24px
+	.tech-adv__subheading
+		font-size: 18px
+
+
+/* Small Devices, Tablets */
+@media only screen and (max-width : 768px)
+	.container
+		max-width: 570px
+	.footer-links
+		display: none
+	.content
+		padding: 20px 15px
+	.header__content,
+	.header__line
+		height: auto
+	.header__line
+		padding: 20px 0
+	.header__content
+		flex-direction: column
+		align-items: center
+	.actions
+		margin-left: 0
+		margin-top: 10px
+
+
+/* Extra Small Devices, Phones */
+@media only screen and (max-width : 570px)
+	//123
+@media only screen and (max-width : 480px)
+	.footer-actions__links
+		display: none
+	.footer-follow
+		flex-direction: column
+		align-items: center
+	.footer-follow__social
+		padding: 0
+		justify-content: center
+		margin: 20px 0 0 0
+	.footer
+		padding-top: 15px
+		padding-bottom: 60px
+	.footer-actions
+		margin-left: 0
+	.footer-form
+		margin-top: 0
+	.footer-form__row
+		flex-direction: column
+	.footer-form input
+		border-radius: 4px
+	.footer-form button
+		height: 46px
+		border-radius: 4px
+		margin-top: 15px
+	.actions__buytokens
+		min-width: 170px
+		max-width: 170px
+	.sidebar__inner
+		padding: 15px
+
+
+/* Custom, iPhone Retina */
+@media only screen and (max-width : 320px)
+	/**/
+

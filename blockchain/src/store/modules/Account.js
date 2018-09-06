@@ -80,8 +80,8 @@ export default {
                                 } else {
                                     if (this.state.Account.currentAccount !== currentAccount) {
                                         commit(UPDATE, {currentAccount});
-                                        commit(UPDATE_META, {loading: false, loadingError: false});
                                         await this.dispatch('Account/updateAccountData');
+                                        commit(UPDATE_META, {loading: false, loadingError: false});
                                     }
                                 }
                             }
@@ -113,7 +113,7 @@ export default {
         async updateAccountData({commit}) {
             const selectedToken = this.state.TokensList.currentToken;
             const currentProject = this.state.Project.currentProject;
-
+            
             if (!selectedToken && !currentProject) return;
             if(currentProject && !currentProject.fundData) return;
 
