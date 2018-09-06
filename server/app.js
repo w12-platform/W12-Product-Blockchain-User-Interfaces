@@ -43,11 +43,20 @@ const proxyUrl = process.env.PROXY_URL;
 
 if (proxyUrl) {
   app.use('/', proxy(proxyUrl, {
-    preserveHostHdr: true,
+    preserveHostHdr: false,
     proxyReqOptDecorator: function(proxyReqOpts, srcReq) {
         console.log(proxyReqOpts.headers);
+        
         delete proxyReqOpts.headers['X-Forwarded-For'];
         delete proxyReqOpts.headers['X-Forwarded-Proto'];
+        delete proxyReqOpts.headers['x-forwarded-for'];
+        delete proxyReqOpts.headers['x-forwarded-proto'];
+        delete proxyReqOpts.headers['x-real-ip'];
+        delete proxyReqOpts.headers['X-Real-IP'];
+        // 'cf-ray': '4562bfabead38e91-DME',
+        // 'cf-visitor': '{"scheme":"https"}',
+        // cf-ipcountry'
+
         return proxyReqOpts;
     },
     proxyReqPathResolver: function (RQ) {
