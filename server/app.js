@@ -41,16 +41,22 @@ app.get('/project',function(req,res){
 
 const proxyUrl = process.env.PROXY_URL;
 
-// if (proxyUrl) {
-//   app.use('/', proxy(proxyUrl, {
-//     preserveHostHdr: true,
-//     proxyReqPathResolver: function (RQ) {
-//       return RQ.originalUrl;
-//     }
-//   }));
-// } else {
-//   app.use('/', api);
-// }
+if (proxyUrl) {
+  app.use('/', proxy(proxyUrl, {
+    preserveHostHdr: true,
+    proxyReqOptDecorator: function(proxyReqOpts, srcReq) {
+        console.log(proxyReqOpts.headers);
+        delete proxyReqOpts.headers['X-Forwarded-For'];
+        delete proxyReqOpts.headers['X-Forwarded-Proto'];
+        return proxyReqOpts;
+    },
+    proxyReqPathResolver: function (RQ) {
+      return RQ.originalUrl;
+    }
+  }));
+} else {
+  app.use('/', api);
+}
 
 app.use(fallbackHistory('index.html', { root: APP_DIR }));
 // catch 404 and forward to error handler
