@@ -66,7 +66,6 @@
 </script>
 <style lang="scss">
     .RefundInformation {
-        font-size: 12px;
         margin: 20px 0;
 
         table {
