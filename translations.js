@@ -60,6 +60,323 @@ const LocalTranslations = {
         "en": "Commission for the withdrawal of project funds from the fund",
         "ru": "Комиссия при выводе средств проектом из фонда"
     },
+    "HomeDescrInfo1": {
+        "en": "This stand was created for convenient testing of product functions by auditors, projects, community W12.",
+        "ru": "Этот стенд создан для удобного тестирования функций продукта аудиторами, проектами, комьюнити W12."
+    },
+    "HomeDescrInfo2": {
+        "en": "The Smart W12 product contracts in the test network of the Etherium (Rinkeby) and the test ETH is used to purchase the tokens. To test the work of all the basic functions, you need to <b> go through all the steps in the table </b> below.",
+        "ru": "Смарт контракты продукта W12 задеплоины в тестовой сети Эфириума (Rinkeby) и для покупки токенов используется тестовый ETH. Чтобы протестировать работу всех основных функций, вам необходимо <b>пройти через все шаги в таблице </b>ниже."
+    },
+    "HomeStepsHeading": {
+        "en": "Steps for testing the product",
+        "ru": "Шаги тестирования продукта"
+    },
+    "HomeStepsNumber": {
+        "en": "Step number",
+        "ru": "№ шага"
+    },
+    "HomeStepsName": {
+        "en": "Function name",
+        "ru": "Название функции"
+    },
+    "HomeStepsRole": {
+        "en": "Role",
+        "ru": "Роль"
+    },
+    "HomeStepsNum1": {
+        "en": "Installing MetaMask",
+        "ru": "Установка MetaMask"
+    },
+    "HomeStepsProject": {
+        "en": "project",
+        "ru": "проект"
+    },
+    "HomeStepsBuyerTokens": {
+        "en": "buyer tokens",
+        "ru": "покупатель токенов"
+    },
+    "HomeStepsAdmin": {
+        "en": "W12 administrator",
+        "ru": "администратор W12"
+    },
+    "HomeStepsNum2": {
+        "en": "Getting the test ETH",
+        "ru": "Получение тестового ETH"
+    },
+    "HomeStepsForTest": {
+        "en": "for testing functions <br> customer tokens",
+        "ru": "для тестирования функций <br>покупателя токенов"
+    },
+    "HomeStepsNum3": {
+        "en": "Issue of project tokens",
+        "ru": "Выпуск токенов проектом"
+    },
+    "HomeStepsNum4": {
+        "en": "Добавление токена<br>проекта в белый список",
+        "ru": "Добавление токена<br>проекта в белый список"
+    },
+    "HomeStepsNum5": {
+        "en": "Setting up the sale of tokens",
+        "ru": "Настройка продажи токенов"
+    },
+    "HomeStepsSale": {
+        "en": "date of sale of tokens, discounts and other",
+        "ru": "даты продажи токенов, <br>скидки и другое"
+    },
+    "HomeStepsNum6": {
+        "en": "Buying tokens",
+        "ru": "Покупка токенов"
+    },
+    "HomeStepsNum7": {
+        "en": "Refund of funds from the fund project",
+        "ru": "Возврат средств <br>из фонда проект"
+    },
+    "HomeStepsNum8": {
+        "en": "Exchange W-tokens for Original Tokens",
+        "ru": "Обмен W-tokens<br>на Original Tokens"
+    },
+    "HomeStepsNum9": {
+        "en": "Receipt of funds by the project after the end of the road map phase",
+        "ru": "Получение средств<br>проектом после окончания<br>этапа дорожной карты"
+    },
+    "HomeBenefits": {
+        "en": "Advantages of the technical solution W12",
+        "ru": "Преимущества технического решения W12"
+    },
+    "HomeBenefitsMaxFlexibility": {
+        "en": "Maximum flexibility",
+        "ru": "Максимальная гибкость"
+    },
+    "HomeBenefits1": {
+        "en": "The project can independently issue markers and sell only part of its tokens on the W12 platform in accordance with the protected model. This will allow the W12 platform to quickly begin selling tokens of a large number of ICO-projects, buyers of tokens a large assortment and quickly occupy a large share of the ICO market.",
+        "ru": "Проект может самостоятельно выдавать маркеры и продавать только часть своих токенов на платформе W12 в соответствии с защищенной моделью. Это позволит платформе W12 быстро начать продавать токены большого количества ICO-проекты, покупатели токенов большой ассор-тимент и быстро занять большую долю ICO рынка."
+    },
+    "HomeBenefits2": {
+        "en": "The project can implement almost any logic for its token sale (by setting any intervals for sale rounds, discounts and bonuses, of the period of freezing purchased tokens).",
+        "ru": "Проект может реализовать практически любую логику для его продажи токенов (путем установки каких-либо интервалов для раундов продажи, скидок и бонусов, периода замораживания купленных жетонов)."
+    },
+    "HomeBenefits3": {
+        "en": "The project can issue tokens on the W12 platform and sell part of the tokens independently (for ex-ample, on its website). Due to what any project will have the opportunity not to write and auditing smart contracts crowdsale and to release tokens for free.",
+        "ru": "Проект может выдавать маркеры на платформе W12 и продавать часть жетонов самостоятельно (например, на своем веб-сайте). За счет чего любой проект будет иметь возможность не писать и не слушать-ровать смарт контракты crowdsale и выпустить токены бесплатно."
+    },
+    "HomeBenefits4": {
+        "en": "In the next versions of the product, the project can choose which cryptocurrencies to store money in the project fund (for example, you can store money in stable coins to reduce volatility); the higher the fraction of this money that is stored as W12 tokens, the lower the platform for the project.",
+        "ru": "В следующих версиях продукта проект может выбрать, какие криптовалюты хранить деньги в проектном фонде (например, вы можете хранить деньги в стабильных монетах для снижения волатильности); чем выше доля этих денег, которые хранятся в качестве токенов W12, тем ниже платформа для проекта."
+    },
+    "HomeBenefits5": {
+        "en": "Cross-block solution",
+        "ru": "Кросс-блокчейн решение"
+    },
+    "HomeBenefits6": {
+        "en": "The first product version (already developed) works based on the Ethereum blockchain. A crossblockchain solution will be implemented on the W12 platform along with the growth of populari-ty among the projects of other blockchains that allow creation of smart contracts for the ICO.",
+        "ru": "Первая версия продукта (уже разработанная) работает на основе блок-цепи Ethereum. Решение Crossblockchain будет реализовано на платформе W12 наряду с ростом популярности среди проектов других блоков, которые позволяют создавать интеллектуальные контракты для ICO."
+    },
+    "HomeBenefits7": {
+        "en": "Fully on-chain solution",
+        "ru": "Полностью on-chain решение"
+    },
+    "HomeBenefits8": {
+        "en": "When the product works, all operations take place in the blockroom. This makes the process of selling tokens transparent, easily audited and eliminates the need to trust a third party.",
+        "ru": "При работе продукта все операции происходят в блокчейне. Это делает процесс продажи токенов прозрачным, легко аудируемым и исключает необходимость доверять третьей стороне."
+    },
+    "HomeBenefits9": {
+        "en": "Integrability",
+        "ru": "Интегрируемость"
+    },
+    "HomeBenefits10": {
+        "en": "The W12 product is easily integrated into project sites and third-party platforms.",
+        "ru": "Продукт W12 легко интегрируется в сайты проектов и сторонние платформы."
+    },
+    "HomeVersions": {
+        "en": "Product Versions",
+        "ru": "Версии продукта"
+    },
+    "HomeVersionsVersionProduct": {
+        "en": "product<br>version",
+        "ru": "версия<br>продукта"
+    },
+    "HomeVersionsMainFunction": {
+        "en": "The main functions of the product",
+        "ru": "Основные функции продукта"
+    },
+
+    "HomeVersionsAdditionalFunctions": {
+        "en": "Additional functions",
+        "ru": "Дополнительные функции"
+    },
+    "HomeVersions1Func1": {
+        "en": "Supported blockhouses: Ethereum",
+        "ru": "Поддерживаемые блокчейны: Ethereum"
+    },
+    "HomeVersions1Func2": {
+        "en": "Supported project tokens: ERC20",
+        "ru": "Поддерживаемые токены проектов: ERC20"
+    },
+    "HomeVersions1Func3": {
+        "en": "Purchase tokens with: ETH",
+        "ru": "Покупка токенов с помощью: ETH"
+    },
+    "HomeVersions1Func4": {
+        "en": "Storage of funds in the project fund: ETH",
+        "ru": "Хранение средств в фонде проекта: ETH"
+    },
+    "HomeVersions1Func5": {
+        "en": "Issuance of funds to the project: ETH",
+        "ru": "Выдача средств проекту: ETH"
+    },
+    "HomeVersions1Func6": {
+        "en": "Type of project fund: fund number 1 (each user)",
+        "ru": "Тип фонда проекта: фонд №1 (каждый пользователь)"
+    },
+    "HomeVersions1Func7": {
+        "en": "Purchase of tokens with: W12, ERC20 stable coins, liquid ECR20 tokens",
+        "ru": "Покупка токенов с помощью: W12, ERC20 stable coins, ликвидных ECR20 tokens"
+    },
+    "HomeVersions1Func8": {
+        "en": "Storage of funds in the project fund: W12 token, ERC20 stable coins, liquid ECR20 tokens",
+        "ru": "Хранение средств в фонде проекта: W12 token, ERC20 stable coins, ликвидных ECR20 tokens"
+    },
+    "HomeVersions1Func9": {
+        "en": "Issuance of funds to the project: the currencies in which the funds are held in the project fund",
+        "ru": "Выдача средств проекту: валюты в которых хранятся средства в фонде проекта"
+    },
+    "HomeVersions1Func10": {
+        "en": "The ability for projects to store any part of the fund in W12 tokens (and thereby reduce the commission of the service)",
+        "ru": "Возможность для проектов хранить любую часть средств фонда в токенах W12 (и за счёт этого снижать комиссию сервиса)"
+    },
+    "HomeVersions1Func11": {
+        "en": "Purchase of tokens with: BTC, LTC and other popular crypto currency using the built-in crypto currency exchanger",
+        "ru": "Покупка токенов с помощью: BTC, LTC и других популярных криптовалют с помощью встроенного криптовалютного обменника"
+    },
+    "HomeVersions1Func12": {
+        "en": "Type of fund: fund number 2 (the decision is accepted by oracles)",
+        "ru": "Тип фонда: фонд №2 (решение принимается оракулами)"
+    },
+    "HomeVersions1Func13": {
+        "en": "Purchase of tokens with: credit cards (Visa, MasterCard, UnionPay, JCB), and bank transfers (SWIFT, SEPA)",
+        "ru": "Покупка токенов с помощью: кредитных карточек (Visa, MasterCard, UnionPay, JCB), и банковских переводов (SWIFT, SEPA)"
+    },
+    "HomeVersions1Func14": {
+        "en": "Issuance of funds to the project: bank transfer to the company's current account\n",
+        "ru": "Выдача средств проекту: банковский перевод на расчетный счёт компании"
+    },
+    "HomeVersions1Func15": {
+        "en": "Fund type: fund number 3 (the decision is made by voting buyers of tokens)",
+        "ru": "Тип фонда: фонд №3 (решение принимается голосованием покупателей токенов)"
+    },
+    "HomeVersions1Func16": {
+        "en": "The ability to quickly integrate the product into project sites",
+        "ru": "Возможность быстрой интеграции продукта в сайты проектов"
+    },
+    "HomeVersions1Func17": {
+        "en": "The ability to integrate the product into the marketplace",
+        "ru": "Возможность интеграция продукта в маркетплейсы"
+    },
+    "HomeVersions1Func18": {
+        "en": "Cross-block solution for the possibility of using tokens of a standard other than ERC20 (EOS, NEO, NEM, Stellar)",
+        "ru": "Кросс-блокчейн решение для возможности использования токенов стандарта отличного от ERC20 (EOS, NEO, NEM, Stellar)"
+    },
+    "SidebarMenuHowItWorks": {
+        "en": "HOW IT WORKS?",
+        "ru": "КАК ЭТО РАБОТАЕТ?"
+    },
+    "SidebarMenuViewCode": {
+        "en": "VIEW CODE ON GITHUB",
+        "ru": "СМОТРЕТЬ КОД НА GITHUB"
+    },
+    "SidebarMenuGoMarketplace": {
+        "en": "GO TO MARKETPLACE",
+        "ru": "ПЕРЕЙТИ НА МАРКЕТПЛЕЙС"
+    },
+    "FooterMenu1": {
+        "en": "About icoplate",
+        "ru": "О icoplate"
+    },
+    "FooterMenu2": {
+        "en": "How it Works",
+        "ru": "Как это работает"
+    },
+    "FooterMenu3": {
+        "en": "Whitepaper",
+        "ru": "Белая бумага"
+    },
+    "FooterMenu4": {
+        "en": "GitHub",
+        "ru": "GitHub"
+    },
+    "FooterMenu5": {
+        "en": "Privacy Policy",
+        "ru": "Политика конфиденциальности"
+    },
+    "FooterMenu6": {
+        "en": "Terms & Conditions",
+        "ru": "Условия и положения"
+    },
+    "FooterMenu7": {
+        "en": "W12 logos",
+        "ru": "W12 логотипы"
+    },
+    "FooterMenu8": {
+        "en": "Help",
+        "ru": "Помощь"
+    },
+    "FooterMenu9": {
+        "en": "Support",
+        "ru": "Поддержка"
+    },
+    "FooterMenu10": {
+        "en": "Upcoming pre-ICOs",
+        "ru": "Предстоящие до-ИОС"
+    },
+    "FooterMenu11": {
+        "en": "Upcoming ICOs",
+        "ru": "Предстоящие ICO"
+    },
+    "FooterMenu12": {
+        "en": "Blockchain project ICOs",
+        "ru": "Проект Blockchain ICOs"
+    },
+    "FooterMenu13": {
+        "en": "All projects",
+        "ru": "Все проекты"
+    },
+    "FooterActionsBrowseProjects": {
+        "en": "Browse projects",
+        "ru": "Просмотр проектов"
+    },
+    "FooterActionsStartProject": {
+        "en": "Start a project",
+        "ru": "Начать проект"
+    },
+    "FooterActionsLogIn": {
+        "en": "Log in",
+        "ru": "Вход"
+    },
+    "FooterActionsSignUp": {
+        "en": "Sign up",
+        "ru": "Решистрация"
+    },
+    "FooterForm1": {
+        "en": "SIGN UP FOR SPECIAL OFFERS",
+        "ru": "ПОДПИШИТЕСЬ НА СПЕЦИАЛЬНЫЕ ПРЕДЛОЖЕНИЯ"
+    },
+    "FooterForm2": {
+        "en": "Your email address",
+        "ru": "Ваш адрес электронной почты"
+    },
+    "FooterForm3": {
+        "en": "Sign up now",
+        "ru": "Подписаться"
+    },
+    "FooterForm4": {
+        "en": "Private, secure, spam-free",
+        "ru": "Частный, безопасный, без спама"
+    },
+    "FooterFollow": {
+        "en": "follow us",
+        "ru": "Подписывайтесь"
+    },
     //---
 
     "ConfigDashboardTitle": {

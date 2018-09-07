@@ -14,6 +14,7 @@ import ProjectDashboard from 'bem/ProjectDashboard';
 import InvestorDashboard from 'bem/InvestorDashboard';
 import LangSwitch from 'bem/LangSwitch';
 import Title from 'bem/Title';
+import Footer from 'bem/Footer';
 import Home from 'bem/Home';
 import SidebarMenu from 'bem/SidebarMenu';
 import HeaderBuyW12Tokens from 'bem/Header/BuyW12Tokens';
@@ -112,11 +113,20 @@ new Vue({
     }
 });
 
-// new Vue({
-//     store,
-//     el: '#SidebarMenu',
-//     template: "<SidebarMenu></SidebarMenu>",
-//     components: {
-//         SidebarMenu
-//     }
-// });
+new Vue({
+    store,
+    el: '#SidebarMenu',
+    template: "<SidebarMenu></SidebarMenu>",
+    components: {
+        SidebarMenu
+    }
+});
+
+new Vue({
+    store,
+    el: '#appFooter',
+    template: "<Footer></Footer>",
+    components: {
+        Footer
+    }
+});
