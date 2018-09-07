@@ -9,6 +9,14 @@
                 </td>
             </tr>
             <tr>
+                <td>{{ $t('TokenInfoOwner') }}</td>
+                <td>
+                    <div class="TokenInfo__detailOwner" v-for="owner in currentProject.tokenOwners">
+                        <span class="tag is-primary">{{ owner }}</span>
+                    </div>
+                </td>
+            </tr>
+            <tr>
                 <td>{{ $t('TokenInfoName') }}</td>
                 <td>{{ currentProject.name }}</td>
             </tr>

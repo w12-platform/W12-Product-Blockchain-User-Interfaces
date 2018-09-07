@@ -32,6 +32,10 @@ const LocalTranslations = {
         "en": "Token Address",
         "ru": "Адрес токена"
     },
+    "TokenInfoOwner": {
+        "en": "Project’s wallet",
+        "ru": "Кошелек проекта"
+    },
     "TokenInfoName": {
         "en": "Name",
         "ru": "Название"
