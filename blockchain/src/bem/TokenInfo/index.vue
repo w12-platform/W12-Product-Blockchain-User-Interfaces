@@ -1,11 +1,43 @@
 <template>
     <div class="TokenInfo" v-if="currentProject">
-        <div class="TokenInfo__row row align-items-center justify-content-around py-4">
-            <div>{{ $t('ProjectDashboardSymbol') }} {{ currentProject.symbol }}</div>
-            <div>{{ $t('ProjectDashboardDecimals') }} {{ currentProject.decimals }}</div>
-            <div>{{ $t('ProjectDashboardFeeTokens') }} {{ currentProject.feePercent/100 }}%</div>
-            <div>{{ $t('ProjectDashboardFeeEth') }} {{ currentProject.feeETHPercent/100 }}%</div>
-        </div>
+        <table class="table table-striped table-bordered table-hover table-responsive-sm">
+            <tbody>
+            <tr>
+                <td>{{ $t('TokenInfoAddress') }}</td>
+                <td>
+                    <b-tag type="is-info">{{ currentProject.tokenAddress }}</b-tag>
+                </td>
+            </tr>
+            <tr>
+                <td>{{ $t('TokenInfoName') }}</td>
+                <td>{{ currentProject.name }}</td>
+            </tr>
+            <tr>
+                <td>{{ $t('TokenInfoSymbol') }}</td>
+                <td>{{ currentProject.symbol }}</td>
+            </tr>
+            <tr>
+                <td>{{ $t('TokenInfoFeeEth') }}</td>
+                <td>{{ currentProject.feePercent/100 }}%</td>
+            </tr>
+            <tr>
+                <td>{{ $t('TokenInfoTrancheFeePercent') }}</td>
+                <td>{{ currentProject.trancheFeePercent | percentFractional }}%</td>
+            </tr>
+            <tr>
+                <td>{{ $t('TokenInfoFeeTokens') }}</td>
+                <td>{{ currentProject.WTokenSaleFeePercent | percentFractional }}%</td>
+            </tr>
+            <tr>
+                <td>{{ $t('TokenInfoFeeEth') }}</td>
+                <td>{{ currentProject.feeETHPercent/100 }}%</td>
+            </tr>
+            <tr>
+                <td>{{ $t('TokenInfoDecimals') }}</td>
+                <td>{{ currentProject.decimals }}</td>
+            </tr>
+            </tbody>
+        </table>
     </div>
 </template>
 
@@ -21,6 +53,11 @@
         template: '#TokenInfoTemplate',
         components: {},
         watch: {},
+        filters: {
+            percentFractional(value) {
+                return value/100;
+            },
+        },
         computed: {
             ...ProjectNS.mapState({
                 currentProject: "currentProject",

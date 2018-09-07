@@ -28,7 +28,36 @@ const LocalTranslations = {
         "ru": "КУПИТЬ W12 TOKENS"
     },
 
-    ////////
+    "TokenInfoAddress": {
+        "en": "Token Address",
+        "ru": "Адрес токена"
+    },
+    "TokenInfoName": {
+        "en": "Name",
+        "ru": "Название"
+    },
+    "TokenInfoSymbol": {
+        "en": "Symbol",
+        "ru": "Символ"
+    },
+    "TokenInfoDecimals": {
+        "en": "Decimals",
+        "ru": "Количество десятичных знаков после запятой"
+    },
+    "TokenInfoFeeTokens": {
+        "en": "Fee (tokens)",
+        "ru": "Сбор (в токенах)"
+    },
+    "TokenInfoFeeEth": {
+        "en": "Commission from the sale of tokens",
+        "ru": "Комиссия с продажи токенов"
+    },
+    "TokenInfoTrancheFeePercent": {
+        "en": "Commission for the withdrawal of project funds from the fund",
+        "ru": "Комиссия при выводе средств проектом из фонда"
+    },
+    //---
+
     "ConfigDashboardTitle": {
         "en": "Config Dashboard",
         "ru": "Панель конфигурации"
@@ -467,7 +496,7 @@ const LocalTranslations = {
     },
     "ProjectDashboardDecimals": {
         "en": "Decimals",
-        "ru": "Десятичные"
+        "ru": "Количество десятичных знаков после запятой"
     },
     "ProjectDashboardFeeTokens": {
         "en": "Fee (tokens)",
