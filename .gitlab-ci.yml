@@ -19,18 +19,18 @@ image:
 build:
   stage: build
   only:
-    - stage
+    - develop
   script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
-    - docker build --pull  -t "$CI_REGISTRY_IMAGE":stage .
-    - docker push "$CI_REGISTRY_IMAGE":stage
+    - docker build --pull  -t "$CI_REGISTRY_IMAGE" .
+    - docker push "$CI_REGISTRY_IMAGE"
   services:
     - docker:dind
 
 deploy:
   stage: deploy
   only:
-    - stage
+    - develop
   script:
-    - ssh -o StrictHostKeyChecking=no deployer@dev3.ingenix.ai docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
-    - ssh -o StrictHostKeyChecking=no deployer@dev3.ingenix.ai "cd /opt/servers/ && docker-compose -f docker-compose-w12-stage.yml pull && docker-compose -f docker-compose-w12-stage.yml up -d"
+    - ssh -o StrictHostKeyChecking=no deployer@dev2.ingenix.ai docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
+    - ssh -o StrictHostKeyChecking=no deployer@dev2.ingenix.ai "cd /opt/servers/ && docker-compose -f docker-compose-w12-product.yml pull && docker-compose -f docker-compose-w12-product.yml up -d"
