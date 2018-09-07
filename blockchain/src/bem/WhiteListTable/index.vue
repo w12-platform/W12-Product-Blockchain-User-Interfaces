@@ -29,18 +29,6 @@
                 <b-table-column field="date" :label="$t('AdminDashboardTableSymbol')" centered>
                     {{ props.row.symbol }}
                 </b-table-column>
-
-                <!--<b-table-column field="date" :label="$t('AdminDashboardTableDecimals')" centered>-->
-                    <!--{{ props.row.decimals }}-->
-                <!--</b-table-column>-->
-
-                <b-table-column field="date" :label="$t('AdminDashboardTableFeeTokens')" centered>
-                    {{ props.row.feePercent | percentFractional }}%
-                </b-table-column>
-
-                <b-table-column field="date" :label="$t('AdminDashboardTableFeeEth')" centered>
-                    {{ props.row.feeETHPercent | percentFractional }}%
-                </b-table-column>
             </template>
 
             <template slot="detail" slot-scope="props">
@@ -75,6 +63,18 @@
                             <span>{{ props.row.trancheFeePercent | percentFractional }}%</span>
                         </div>
                     </div>
+                    <div class="WhiteListTable__detailField">
+                        {{ $t('AdminDashboardTableFeeTokens') }} :
+                        <div class="WhiteListTable__detailDecimals">
+                            <span>{{ props.row.feePercent | percentFractional }}%</span>
+                        </div>
+                    </div>
+                    <div class="WhiteListTable__detailField">
+                        {{ $t('AdminDashboardTableFeeEth') }} :
+                        <div class="WhiteListTable__detailDecimals">
+                            <span>{{ props.row.feeETHPercent | percentFractional }}%</span>
+                        </div>
+                    </div>
                 </div>
             </template>
         </b-table>
@@ -94,7 +94,7 @@
         filters: {
             shortAddress(value) {
                 const length = value.length;
-                return value.slice(0, 4) + ".." + value.slice(length - 2, length);
+                return value.slice(0, 8) + " ... " + value.slice(length - 8, length);
             },
             percentFractional(value) {
                 return value/100;
