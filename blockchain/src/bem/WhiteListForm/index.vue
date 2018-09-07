@@ -64,9 +64,11 @@
                         v-model="whiteListForm.name">
             </div>
             <div class="form-group">
-                <label for="trancheFeePercent">{{ $t('AdminDashboardFieldTrancheFeePercentLabel') }}</label>
-                <b-field id="trancheFeePercent"
-                         :message="$t('AdminDashboardFieldTrancheFeePercentLabelMessage')">
+                <label for="trancheFeePercent">
+                    {{ $t('AdminDashboardFieldTrancheFeePercentLabel') }}
+                    <span class="labelTooltip" v-tooltip="$t('AdminDashboardFieldTrancheFeePercentLabelMessage')">?</span>
+                </label>
+                <b-field id="trancheFeePercent">
                     <input
                             :placeholder="$t('AdminDashboardFieldTrancheFeePercentPlaceholder')"
                             type="text"
@@ -80,9 +82,11 @@
                 </b-field>
             </div>
             <div class="form-group">
-                <label for="WTokenSaleFeePercent">{{ $t('AdminDashboardFieldWTokenSaleFeePercentLabel') }}</label>
-                <b-field id="WTokenSaleFeePercent"
-                         :message="$t('AdminDashboardFieldWTokenSaleFeePercentLabelMessage')">
+                <label for="WTokenSaleFeePercent">
+                    {{ $t('AdminDashboardFieldWTokenSaleFeePercentLabel') }}
+                    <span class="labelTooltip" v-tooltip="$t('AdminDashboardFieldWTokenSaleFeePercentLabelMessage')">?</span>
+                </label>
+                <b-field id="WTokenSaleFeePercent">
                     <input
                             :placeholder="$t('AdminDashboardFieldWTokenSaleFeePercentPlaceholder')"
                             type="text"
@@ -96,9 +100,10 @@
                 </b-field>
             </div>
             <div class="form-group">
-                <label for="FeeTokens">{{ $t('AdminDashboardFieldFeeTokensLabel') }}</label>
-                <b-field id="FeeTokens"
-                         :message="$t('AdminDashboardFieldFeeTokensLabelMessage')">
+                <label for="FeeTokens">{{ $t('AdminDashboardFieldFeeTokensLabel') }}
+                    <span class="labelTooltip" v-tooltip="$t('AdminDashboardFieldFeeTokensLabelMessage')">?</span>
+                </label>
+                <b-field id="FeeTokens">
                     <input
                             :placeholder="$t('AdminDashboardFieldFeeTokensPlaceholder')"
                             type="text"
@@ -112,9 +117,10 @@
                 </b-field>
             </div>
             <div class="form-group">
-                <label for="FeeETH">{{ $t('AdminDashboardFieldFeeEthLabel') }}</label>
-                <b-field id="FeeETH"
-                         :message="$t('AdminDashboardFieldFeeEthLabelMessage')">
+                <label for="FeeETH">{{ $t('AdminDashboardFieldFeeEthLabel') }}
+                    <span class="labelTooltip" v-tooltip="$t('AdminDashboardFieldFeeEthLabelMessage')">?</span>
+                </label>
+                <b-field id="FeeETH">
                     <input
                             :placeholder="$t('AdminDashboardFieldFeeEthPlaceholder')"
                             type="text"
@@ -150,6 +156,7 @@
 
 <script>
     import './default.scss';
+    import 'bem/labelTooltip/default.scss';
     import Connector from 'lib/Blockchain/DefaultConnector.js';
     import {promisify, waitTransactionReceipt} from 'lib/utils.js';
     import {UPDATE_TX} from "store/modules/Transactions.js";

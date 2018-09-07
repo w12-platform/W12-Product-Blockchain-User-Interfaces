@@ -3,6 +3,8 @@ import Buefy from 'buefy';
 import vuexI18n from 'vuex-i18n';
 import VueMask from 'v-mask';
 import Cleave from 'vue-cleave-component';
+import Tooltip from 'vue-directive-tooltip';
+import 'vue-directive-tooltip/css/index.css';
 
 import 'bem/buefy/default.scss';
 import Factory from 'bem/Factory';
@@ -19,6 +21,7 @@ import store from "store";
 Vue.use(VueMask);
 Vue.use(Buefy);
 Vue.use(Cleave);
+Vue.use(Tooltip);
 
 Vue.use(vuexI18n.plugin, store, {
     translateFilterName: 't'
@@ -98,11 +101,11 @@ new Vue({
     }
 });
 
-new Vue({
-    store,
-    el: '#SidebarMenu',
-    template: "<SidebarMenu></SidebarMenu>",
-    components: {
-        SidebarMenu
-    }
-});
+// new Vue({
+//     store,
+//     el: '#SidebarMenu',
+//     template: "<SidebarMenu></SidebarMenu>",
+//     components: {
+//         SidebarMenu
+//     }
+// });
