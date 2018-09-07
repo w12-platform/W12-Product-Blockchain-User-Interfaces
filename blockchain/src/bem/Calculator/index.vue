@@ -65,7 +65,7 @@
             </div>
 
             <div class="Calculator__buy" v-if="!isPendingTx">
-                <button class="btn btn-danger" :disabled="disable" @click="buy">{{$t('InvestorDashboardCalculatorBuy')}}</button>
+                <button class="btn btn-primary" :disabled="disable" @click="buy">{{$t('InvestorDashboardCalculatorBuy')}}</button>
             </div>
         </div>
         <b-loading :is-full-page="false" :active.sync="loading" :can-cancel="true"></b-loading>
