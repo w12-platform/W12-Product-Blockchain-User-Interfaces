@@ -14,6 +14,7 @@ import ProjectDashboard from 'bem/ProjectDashboard';
 import InvestorDashboard from 'bem/InvestorDashboard';
 import LangSwitch from 'bem/LangSwitch';
 import Title from 'bem/Title';
+import Home from 'bem/Home';
 import SidebarMenu from 'bem/SidebarMenu';
 import HeaderBuyW12Tokens from 'bem/Header/BuyW12Tokens';
 import store from "store";
@@ -89,6 +90,16 @@ const appTitle = (patch === "/") || (patch === "/index.html") ? new Vue({
     template: "<Title></Title>",
     components: {
         Title
+    }
+}):null;
+
+
+const appHome = (patch === "/") || (patch === "/index.html") ? new Vue({
+    store,
+    el: '#appHome',
+    template: "<Home></Home>",
+    components: {
+        Home
     }
 }):null;
 
