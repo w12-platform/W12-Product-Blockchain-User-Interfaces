@@ -88,7 +88,7 @@
                         }
                     }
                     this.$store.commit(`Lang/${LANG_UPDATE_META}`, {loading: false});
-                    this.$store.commit(`Lang/${LANG_UPDATE}`, {all: labelsLang});
+                    //this.$store.commit(`Lang/${LANG_UPDATE}`, {all: labelsLang});
                 }
             }, (e) => {
                 /* set local file */
@@ -115,7 +115,7 @@
                     }
                 }
                 this.$store.commit(`Lang/${LANG_UPDATE_META}`, {loading: false});
-                this.$store.commit(`Lang/${LANG_UPDATE}`, {all: labelsLang});
+                //this.$store.commit(`Lang/${LANG_UPDATE}`, {all: labelsLang});
             });
         },
     };
