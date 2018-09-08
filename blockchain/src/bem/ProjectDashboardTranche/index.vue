@@ -22,11 +22,7 @@
                 </b-notification>
 
                 <div class="ProjectDashboard__project" v-if="!ProjectMeta.loadingProjectError">
-                    <TokenInfo></TokenInfo>
-                    <ProjectStages></ProjectStages>
-                    <Milestones></Milestones>
-                    <!--<Receiving></Receiving>-->
-                    <!--<TrancheInformation></TrancheInformation>-->
+                    <TrancheInformation></TrancheInformation>
 
                     <b-loading :is-full-page="false" :active.sync="ProjectMeta.loadingProject" :can-cancel="true"></b-loading>
                 </div>

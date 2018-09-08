@@ -1,7 +1,6 @@
 import config from '../../config.js';
 import { promisify } from '../utils.js';
 
-
 const Web3 = window.Web3;
 const web3 = new Web3();
 const onLoad = new Promise((resolve, reject) => {

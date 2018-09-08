@@ -18,10 +18,7 @@
 
             <div v-if="!isLoading && currentToken && currentAccountData">
                 <TokenSwitch></TokenSwitch>
-                <CrowdSale></CrowdSale>
-                <SaleTable></SaleTable>
-                <Calculator></Calculator>
-                <!--<RefundEth></RefundEth>-->
+                <RefundEth></RefundEth>
             </div>
         </section>
     </div>
@@ -65,10 +62,6 @@
         },
         components: {
             TokenSwitch,
-            CrowdSale,
-            SaleTable,
-            Calculator,
-            ExchangeTokens,
             RefundEth
         },
         data() {

@@ -50,22 +50,22 @@
                     </div>
                     <div class="test-steps__row">
                         <div class="test-steps__cell"><span class="num">7</span></div>
-                        <div class="test-steps__cell"><a href="/crowdsale.html" v-html="$t('HomeStepsNum7')"></a></div>
+                        <div class="test-steps__cell"><a href="/investor-refund.html" v-html="$t('HomeStepsNum7')"></a></div>
                         <div class="test-steps__cell"><span class="icon icon-green">{{ $t('HomeStepsBuyerTokens') }}</span></div>
                     </div>
                     <div class="test-steps__row">
                         <div class="test-steps__cell"><span class="num">8</span></div>
-                        <div class="test-steps__cell"><a href="/crowdsale.html"  v-html="$t('HomeStepsNum8')"></a></div>
+                        <div class="test-steps__cell"><a href="/investor-exchange.html"  v-html="$t('HomeStepsNum8')"></a></div>
                         <div class="test-steps__cell"><span class="icon icon-green">{{ $t('HomeStepsBuyerTokens') }}</span></div>
                     </div>
                     <div class="test-steps__row">
                         <div class="test-steps__cell"><span class="num">9</span></div>
-                        <div class="test-steps__cell"><a href="/project.html" v-html="$t('HomeStepsNum9')"></a></div>
+                        <div class="test-steps__cell"><a href="/tranche.html" v-html="$t('HomeStepsNum9')"></a></div>
                         <div class="test-steps__cell"><span class="icon icon-blue">{{ $t('HomeStepsProject') }}</span></div>
                     </div>
                     <div class="test-steps__row">
                         <div class="test-steps__cell"><span class="num">10</span></div>
-                        <div class="test-steps__cell"><a href="/project.html" v-html="$t('HomeStepsNum10')"></a></div>
+                        <div class="test-steps__cell"><a href="/receiving.html" v-html="$t('HomeStepsNum10')"></a></div>
                         <div class="test-steps__cell"><span class="icon icon-blue">{{ $t('HomeStepsProject') }}</span></div>
                     </div>
                 </div>
