@@ -140,6 +140,10 @@ const LocalTranslations = {
         "en": "Receipt of funds by the project after the end of the road map phase",
         "ru": "Получение средств<br>проектом после окончания<br>этапа дорожной карты"
     },
+    "HomeStepsNum10": {
+        "en": "Returning project tokens",
+        "ru": "Возврат токенов проектом"
+    },
     "HomeBenefits": {
         "en": "Advantages of the technical solution W12",
         "ru": "Преимущества технического решения W12"

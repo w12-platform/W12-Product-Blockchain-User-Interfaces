@@ -63,6 +63,11 @@
                         <div class="test-steps__cell"><a href="/project.html" v-html="$t('HomeStepsNum9')"></a></div>
                         <div class="test-steps__cell"><span class="icon icon-blue">{{ $t('HomeStepsProject') }}</span></div>
                     </div>
+                    <div class="test-steps__row">
+                        <div class="test-steps__cell"><span class="num">10</span></div>
+                        <div class="test-steps__cell"><a href="/project.html" v-html="$t('HomeStepsNum10')"></a></div>
+                        <div class="test-steps__cell"><span class="icon icon-blue">{{ $t('HomeStepsProject') }}</span></div>
+                    </div>
                 </div>
             </div>
         </div>
