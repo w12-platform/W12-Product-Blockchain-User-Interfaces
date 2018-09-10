@@ -90,6 +90,7 @@
                     this.$store.commit(`Lang/${LANG_UPDATE_META}`, {loading: false});
                     //this.$store.commit(`Lang/${LANG_UPDATE}`, {all: labelsLang});
                 }
+                window.dispatchEvent(new Event('resize'));
             }, (e) => {
                 /* set local file */
                 let labelsLang = [];
@@ -116,6 +117,7 @@
                 }
                 this.$store.commit(`Lang/${LANG_UPDATE_META}`, {loading: false});
                 //this.$store.commit(`Lang/${LANG_UPDATE}`, {all: labelsLang});
+                window.dispatchEvent(new Event('resize'));
             });
         },
     };
