@@ -88,6 +88,7 @@
             await this.watchCurrentAccount();
             await this.whitelistFetch();
 
+            window.dispatchEvent(new Event('resize'));
             this.meta.loading = false;
         },
     };

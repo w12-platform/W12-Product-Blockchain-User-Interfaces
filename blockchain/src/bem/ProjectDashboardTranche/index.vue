@@ -1,5 +1,5 @@
 <template>
-    <div class="ProjectDashboard buefy" v-if="!langMeta.loading">
+    <div class="ProjectDashboardTranche buefy" v-if="!langMeta.loading">
         <section class="container">
             <h2>{{ $t('ProjectDashboard') }}</h2>
 
@@ -21,7 +21,7 @@
                     {{ ProjectMeta.loadingProjectError }}
                 </b-notification>
 
-                <div class="ProjectDashboard__project" v-if="!ProjectMeta.loadingProjectError">
+                <div class="ProjectDashboardTranche__project" v-if="!ProjectMeta.loadingProjectError">
                     <TrancheInformation></TrancheInformation>
 
                     <b-loading :is-full-page="false" :active.sync="ProjectMeta.loadingProject" :can-cancel="true"></b-loading>
@@ -48,7 +48,7 @@
     const LangNS = createNamespacedHelpers("Lang");
 
     export default {
-        name: 'ProjectDashboard',
+        name: 'ProjectDashboardTranche',
         components: {
             ProjectSwitch,
             TokenInfo,

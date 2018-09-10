@@ -1,5 +1,5 @@
 <template>
-    <div class="ProjectDashboard buefy" v-if="!langMeta.loading">
+    <div class="ProjectDashboardReceiving buefy" v-if="!langMeta.loading">
         <section class="container">
             <h2>{{ $t('ProjectDashboard') }}</h2>
 
@@ -21,7 +21,7 @@
                     {{ ProjectMeta.loadingProjectError }}
                 </b-notification>
 
-                <div class="ProjectDashboard__project" v-if="!ProjectMeta.loadingProjectError">
+                <div class="ProjectDashboardReceiving__project" v-if="!ProjectMeta.loadingProjectError">
                     <Receiving></Receiving>
 
                     <b-loading :is-full-page="false" :active.sync="ProjectMeta.loadingProject" :can-cancel="true"></b-loading>
@@ -34,11 +34,7 @@
 <script>
     import './default.scss';
     import ProjectSwitch from 'bem/ProjectSwitch';
-    import TokenInfo from 'bem/TokenInfo';
-    import ProjectStages from 'bem/ProjectStages';
     import Receiving from 'bem/Receiving';
-    import Milestones from 'bem/Milestones';
-    import TrancheInformation from 'bem/TrancheInformation';
 
     import {createNamespacedHelpers} from 'vuex';
 
@@ -48,19 +44,10 @@
     const LangNS = createNamespacedHelpers("Lang");
 
     export default {
-        name: 'ProjectDashboard',
+        name: 'ProjectDashboardReceiving',
         components: {
             ProjectSwitch,
-            TokenInfo,
-            ProjectStages,
-            Milestones,
             Receiving,
-            TrancheInformation,
-        },
-        data() {
-            return {
-
-            };
         },
         computed: {
             ...LedgerNS.mapState({
@@ -72,6 +59,7 @@
                 currentAccountData: "currentAccountData",
             }),
             ...ProjectNS.mapState({
+                currentProject: "currentProject",
                 ProjectMeta: "meta",
             }),
             ...LangNS.mapState({
@@ -93,6 +81,10 @@
                 handler: 'handleCurrentAccountChange',
                 immediate: true
             },
+            'currentProject': {
+                handler: 'handleCurrentProjectChange',
+                immediate: true
+            }
         },
         methods: {
             ...AccountNS.mapActions({
@@ -107,6 +99,9 @@
                 if(currentAccount){
                     await this.ProjectFetchList();
                 }
+            },
+            async handleCurrentProjectChange() {
+                window.dispatchEvent(new Event('resize'));
             }
         },
         async created() {

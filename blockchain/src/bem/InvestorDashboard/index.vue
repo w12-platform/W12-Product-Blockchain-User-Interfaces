@@ -9,19 +9,18 @@
                 <span v-if="accountMeta.loadingError">{{ accountMeta.loadingError }}</span>
             </b-notification>
 
-            <b-notification v-if="isLoading && !currentToken && !currentAccountData" :closable="false" class="InvestorDashboard__loader">
+            <b-notification v-if="isLoading" :closable="false" class="InvestorDashboard__loader">
                 <span v-if="ledgerMeta.loading">{{ $t('InvestorDashboardLoadLedger') }}<br></span>
                 <span v-if="tokensListMeta.loading">{{ $t('InvestorDashboardLoadTokens') }}<br></span>
 
                 <b-loading :is-full-page="false" :active.sync="isLoading" :can-cancel="true"></b-loading>
             </b-notification>
 
-            <div v-if="!isLoading && currentToken && currentAccountData">
+            <div v-if="!isLoading">
                 <TokenSwitch></TokenSwitch>
                 <CrowdSale></CrowdSale>
                 <SaleTable></SaleTable>
                 <Calculator></Calculator>
-                <!--<RefundEth></RefundEth>-->
             </div>
         </section>
     </div>
@@ -36,8 +35,6 @@
     import CrowdSale from 'bem/CrowdSale';
     import SaleTable from 'bem/SaleTable';
     import Calculator from 'bem/Calculator';
-    import ExchangeTokens from 'bem/ExchangeTokens';
-    import RefundEth from 'bem/RefundEth';
 
     const LedgerNS = createNamespacedHelpers("Ledger");
     const AccountNS = createNamespacedHelpers("Account");
@@ -45,7 +42,6 @@
     const LangNS = createNamespacedHelpers("Lang");
     const TransactionsNS = createNamespacedHelpers("Transactions");
 
-    const moment = window.moment;
     const web3 = new Web3();
     const BigNumber = web3.BigNumber;
 
@@ -68,8 +64,6 @@
             CrowdSale,
             SaleTable,
             Calculator,
-            ExchangeTokens,
-            RefundEth
         },
         data() {
             return {
@@ -123,6 +117,8 @@
                     await this.transactionsUpStatusTx();
                     await this.tokensListFetch();
                     await this.updateAccountData();
+                    window.dispatchEvent(new Event('resize'));
+                    this.meta.loading = false;
                 }
             }
         },
@@ -134,10 +130,7 @@
         },
         async created() {
             this.meta.loading = true;
-
             await this.watchCurrentAccount();
-
-            this.meta.loading = false;
-        }
+        },
     };
 </script>

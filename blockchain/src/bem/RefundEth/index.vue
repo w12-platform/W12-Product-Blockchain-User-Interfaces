@@ -1,5 +1,5 @@
 <template>
-    <div class="RefundEth byefy" v-if="currentToken">
+    <div class="RefundEth byefy" v-if="currentToken && currentAccountData">
         <h2>{{ $t('InvestorDashboardRefundEth', { WToken: currentToken.symbol }) }}</h2>
         <RefundInformation v-if="refundInformation" :data="refundInformation"></RefundInformation>
 
@@ -279,6 +279,7 @@
                 await this.updateAccountData();
                 this.unsubscribeFromEvents();
                 await this.subscribeToEvents();
+                window.dispatchEvent(new Event('resize'));
             },
 
             unsubscribeFromEvents() {

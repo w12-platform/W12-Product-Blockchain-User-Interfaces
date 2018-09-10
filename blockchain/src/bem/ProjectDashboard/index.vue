@@ -25,8 +25,6 @@
                     <TokenInfo></TokenInfo>
                     <ProjectStages></ProjectStages>
                     <Milestones></Milestones>
-                    <!--<Receiving></Receiving>-->
-                    <!--<TrancheInformation></TrancheInformation>-->
 
                     <b-loading :is-full-page="false" :active.sync="ProjectMeta.loadingProject" :can-cancel="true"></b-loading>
                 </div>
@@ -40,9 +38,7 @@
     import ProjectSwitch from 'bem/ProjectSwitch';
     import TokenInfo from 'bem/TokenInfo';
     import ProjectStages from 'bem/ProjectStages';
-    import Receiving from 'bem/Receiving';
     import Milestones from 'bem/Milestones';
-    import TrancheInformation from 'bem/TrancheInformation';
 
     import {createNamespacedHelpers} from 'vuex';
 
@@ -58,13 +54,6 @@
             TokenInfo,
             ProjectStages,
             Milestones,
-            Receiving,
-            TrancheInformation,
-        },
-        data() {
-            return {
-
-            };
         },
         computed: {
             ...LedgerNS.mapState({
@@ -76,12 +65,12 @@
                 currentAccountData: "currentAccountData",
             }),
             ...ProjectNS.mapState({
+                currentProject: "currentProject",
                 ProjectMeta: "meta",
             }),
             ...LangNS.mapState({
                 langMeta: 'meta'
             }),
-
             isError() {
                 return this.ledgerMeta.loadingError || this.ProjectMeta.loadingProjectError || this.accountMeta.loadingError;
             },
@@ -97,6 +86,10 @@
                 handler: 'handleCurrentAccountChange',
                 immediate: true
             },
+            'currentProject': {
+                handler: 'handleCurrentProjectChange',
+                immediate: true
+            }
         },
         methods: {
             ...AccountNS.mapActions({
@@ -111,10 +104,13 @@
                 if(currentAccount){
                     await this.ProjectFetchList();
                 }
+            },
+            async handleCurrentProjectChange() {
+                window.dispatchEvent(new Event('resize'));
             }
         },
         async created() {
             await this.watchCurrentAccount();
         },
-    };
+    }
 </script>

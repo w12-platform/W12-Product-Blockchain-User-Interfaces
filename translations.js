@@ -113,7 +113,7 @@ const LocalTranslations = {
         "ru": "Выпуск токенов проектом"
     },
     "HomeStepsNum4": {
-        "en": "Добавление токена<br>проекта в белый список",
+        "en": "Adding a token to<br> a project in the white list",
         "ru": "Добавление токена<br>проекта в белый список"
     },
     "HomeStepsNum5": {

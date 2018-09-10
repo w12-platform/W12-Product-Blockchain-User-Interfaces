@@ -311,6 +311,7 @@
             await this.fetchList();
             await this.transactionsUpStatusTx();
 
+            window.dispatchEvent(new Event('resize'));
             this.meta.loading = false;
         },
     };
