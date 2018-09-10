@@ -46,7 +46,7 @@
         created(){
             this.$i18n.set(this.currentLang);
 
-            axios.get("/ru/api/translate/w12translations.json").then((response) =>{
+            axios.get("https://w12.io/ru/api/translate/w12translations.json").then((response) =>{
                 if (response.data) {
                     let labelsLang = [];
                     let arrayTranslations = {};
