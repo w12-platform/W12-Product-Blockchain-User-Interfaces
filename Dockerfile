@@ -5,14 +5,12 @@ ENV PORT=443
 WORKDIR /code
 
 RUN npm install npm@latest -g && npm -v
-# RUN npm install -g serve
-
+RUN npm install -g serve
 COPY . .
-RUN cd server/ && npm ci && cd -
-RUN cd blockchain/ && npm ci && npm run build
+RUN cd blockchain/ && npm ci && npm run build && cd -
 
-WORKDIR /code/blockchain
+ARG PORT=$PORT
 
 EXPOSE $PORT
 
-CMD [ "npm", "run", "docker-server" ]
+CMD serve -l $PORT
