@@ -1138,5 +1138,15 @@ const LocalTranslations = {
     "MilestoneTitleErrorNotOneHundredPercent": {
         "en": "The sum of all percentages is not 100",
         "ru": "Сумма всех процентов не равно 100"
-    }
+    },
+    //---
+    // validations
+    "ErrorValidDecimals": {
+        "en": "The number of decimal places after the decimal point can be only from 0 to 36",
+        "ru": "Количество десятичный знаков после запятой может быть только от 0 до 36"
+    },
+    "ErrorValidMaxAmount": {
+        "en": "The number of tokens can be from {min} to {max}",
+        "ru": "Количество токенов может быть от {min} до {max}"
+    },
 };

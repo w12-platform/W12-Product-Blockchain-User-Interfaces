@@ -3,7 +3,8 @@
         <section class="container">
             <h2>{{ $t('TokensFactoryTitle') }}</h2>
 
-            <b-notification class="AdminDashboard__error" v-if="isError && !isLoading" type="is-danger" :closable="false" has-icon>
+            <b-notification class="AdminDashboard__error" v-if="isError && !isLoading" type="is-danger"
+                            :closable="false" has-icon>
                 <span v-if="ledgerMeta.loadingError">{{ ledgerMeta.loadingError }}</span>
                 <span v-if="accountMeta.loadingError">{{ accountMeta.loadingError }}</span>
             </b-notification>
@@ -23,7 +24,8 @@
                         per-page="10"
                         pagination-simple>
                     <template slot-scope="props">
-                        <b-table-column field="date" :label="$t('AdminDashboardTableToken')" :title="props.row.tokenAddress">
+                        <b-table-column field="date" :label="$t('AdminDashboardTableToken')"
+                                        :title="props.row.tokenAddress">
                             <span class="tag is-success">{{ props.row.address | shortAddress }}</span>
                         </b-table-column>
 
@@ -76,19 +78,16 @@
                     </div>
                     <div class="form-group">
                         <label for="FactoryDecimals">{{ $t('TokensFactoryCreateFormDecimals') }}</label>
-                        <b-field id="FactoryDecimals">
+                        <b-field id="FactoryDecimals" :type="typeDecimals" :message="messageDecimals">
                             <cleave v-model="createForm.decimals"
                                     class="form-control"
-                                    :options="optionsNumber"
-                                    disabled
-                                    min="0"
-                                    max="255"
+                                    :options="optionsNumberDecimals"
                             ></cleave>
                         </b-field>
                     </div>
                     <div class="form-group">
                         <label for="FactoryAmount">{{ $t('TokensFactoryCreateFormAmount') }}</label>
-                        <b-field id="FactoryAmount">
+                        <b-field id="FactoryAmount" :type="typeAmount" :message="messageAmount">
                             <cleave v-model="createForm.amount"
                                     class="form-control"
                                     :options="optionsNumber"
@@ -96,7 +95,9 @@
                             ></cleave>
                         </b-field>
                     </div>
-                    <b-notification class="ProjectStages__errorStage" v-if="error" @close="error = false" type="is-danger" has-icon>{{ error }}</b-notification>
+                    <b-notification class="ProjectStages__errorStage" v-if="error" @close="error = false"
+                                    type="is-danger" has-icon>{{ error }}
+                    </b-notification>
                     <button class="btn btn-primary py-2 my-2" @click="create" :disabled="disable">{{
                         $t('TokensFactoryCreate') }}
                     </button>
@@ -118,6 +119,20 @@
     import {createNamespacedHelpers} from "vuex";
 
     const web3 = new Web3();
+    const BigNumber = web3.BigNumber;
+    BigNumber.config({
+        DECIMAL_PLACES: 36,
+        FORMAT: {
+            decimalSeparator: '.',
+            groupSeparator: '',
+            groupSize: 3,
+            secondaryGroupSize: 0,
+            fractionGroupSeparator: ' ',
+            fractionGroupSize: 0
+        }
+    });
+
+    const uintMaxValue = new BigNumber(2).pow(256).minus(1);
 
     const LedgerNS = createNamespacedHelpers("Ledger");
     const AccountNS = createNamespacedHelpers("Account");
@@ -141,14 +156,14 @@
                     loading: false,
                     creating: false
                 },
-                optionsNumber: {
+                optionsNumberDecimals: {
                     prefix: '',
                     numeral: true,
                     numeralPositiveOnly: true,
                     noImmediatePrefix: true,
                     rawValueTrimPrefix: true,
-                    numeralIntegerScale: 18,
-                    numeralDecimalScale: 18
+                    numeralIntegerScale: 2,
+                    numeralDecimalScale: 0,
                 },
                 error: false,
                 subscribeToEventsLoading: false,
@@ -161,7 +176,7 @@
                 return value.slice(0, 4) + ".." + value.slice(length - 2, length);
             },
             percentFractional(value) {
-                return value/100;
+                return value / 100;
             },
         },
         computed: {
@@ -185,6 +200,56 @@
                 FactoryList: "list"
             }),
 
+            isCorrectDecimals() {
+                return this.createForm.decimals ?
+                    this.createForm.decimals <= 36 &&
+                    this.createForm.decimals >= 0
+                    : false;
+            },
+            isCorrectAmount() {
+                return this.createForm.amount ?
+                    new BigNumber(this.createForm.amount).lte(this.maxAmount) &&
+                    new BigNumber(this.createForm.amount).gt(0)
+                    : false
+            },
+
+            typeDecimals() {
+                return this.isCorrectDecimals ? "" : "is-danger";
+            },
+            messageDecimals() {
+                return this.isCorrectDecimals ? "" : this.$t("ErrorValidDecimals");
+            },
+            maxAmount() {
+                const decimals = this.createForm.decimals ? this.createForm.decimals : 0;
+                return uintMaxValue.div(new BigNumber(10).pow(decimals)).toFormat(0);
+            },
+            maxAmountPrecision(){
+                return this.maxAmount ? (new BigNumber(this.maxAmount)).toPrecision (2, 1) : false;
+            },
+            lengthMaxAmount() {
+                return this.maxAmount.length;
+            },
+            optionsNumber() {
+                return {
+                    prefix: '',
+                    numeral: true,
+                    numeralPositiveOnly: true,
+                    noImmediatePrefix: true,
+                    rawValueTrimPrefix: true,
+                    numeralIntegerScale: this.lengthMaxAmount,
+                    numeralDecimalScale: this.createForm.decimals,
+                };
+            },
+            typeAmount() {
+                return this.isCorrectAmount ? "" : "is-danger";
+            },
+            messageAmount() {
+                const decimals = this.createForm.decimals ? this.createForm.decimals : 0;
+                return this.isCorrectAmount ? "" : this.$t("ErrorValidMaxAmount", {
+                    min: new BigNumber(1).div(new BigNumber(10).pow(decimals)),
+                    max: this.maxAmountPrecision,
+                });
+            },
             isPendingTx() {
                 return this.TransactionsList && this.TransactionsList.length
                     ? this.TransactionsList.find((tr) => {
@@ -202,6 +267,8 @@
                 return !this.createForm.name
                     || !this.createForm.symbol
                     || !this.createForm.decimals
+                    || !this.isCorrectDecimals
+                    || !this.isCorrectAmount
                     || !this.createForm.amount;
             },
             isLoading() {
@@ -258,7 +325,7 @@
                         const DetailedERC20 = DetailedERC20Factory.at(address);
                         const tokenInformation = await DetailedERC20.getDescription();
                         const {name, symbol, decimals} = tokenInformation;
-                        listInfo.push({ address, name, symbol, decimals });
+                        listInfo.push({address, name, symbol, decimals});
                     });
                     this.list = listInfo;
                 } catch (e) {
@@ -292,7 +359,7 @@
             async onNewTokenEvent(error, result) {
                 if (!error) {
                     const {tokenAddress} = result.args;
-                    if(tokenAddress) {
+                    if (tokenAddress) {
                         this.$store.commit(`Factory/${FACTORY_ADD}`, tokenAddress);
                     }
                     const tx = result.transactionHash;
