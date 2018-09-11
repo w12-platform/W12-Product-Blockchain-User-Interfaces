@@ -9,9 +9,8 @@
 </template>
 
 <script>
-    import { LANG_UPDATE, LANG_UPDATE_META } from "store/modules/Lang.js";
+    import { LANG_UPDATE } from "store/modules/Lang.js";
     import {createNamespacedHelpers} from "vuex";
-    import axios from "axios";
 
     const LangNS = createNamespacedHelpers("Lang");
 
@@ -39,86 +38,9 @@
         },
         methods: {
             select(lang){
-                this.$i18n.set(lang);
                 this.$store.commit(`Lang/${LANG_UPDATE}`, {current: lang});
+                document.location.replace(window.location.origin + window.location.pathname + "?lang=" + lang);
             }
-        },
-        created(){
-            this.$i18n.set(this.currentLang);
-
-            axios.get("https://w12.io/ru/api/translate/w12translations.json").then((response) =>{
-                if (response.data) {
-                    let labelsLang = [];
-                    let arrayTranslations = {};
-
-                    /* set local file */
-                    let translations = LocalTranslations;
-                    for (const label in LocalTranslations){
-                        for (const language in translations[label]) {
-                            if(labelsLang.indexOf(language) === -1 ){
-                                labelsLang.push(language);
-                            }
-                            if (translations[label].hasOwnProperty(language)) {
-                                if (!arrayTranslations.hasOwnProperty(language)) {
-                                    arrayTranslations[language] = {};
-                                }
-                                arrayTranslations[language][label] = translations[label][language];
-                            }
-                        }
-                    }
-
-                    translations = response.data;
-                    for (const label in translations) {
-                        for (const language in translations[label]) {
-                            if(labelsLang.indexOf(language) === -1 ){
-                                labelsLang.push(language);
-                            }
-                            if (translations[label].hasOwnProperty(language)) {
-                                if (!arrayTranslations.hasOwnProperty(language)) {
-                                    arrayTranslations[language] = {};
-                                }
-                                arrayTranslations[language][label] = translations[label][language];
-                            }
-                        }
-                    }
-
-                    for (const language in arrayTranslations) {
-                        if (arrayTranslations.hasOwnProperty(language)) {
-                            this.$i18n.add(language, arrayTranslations[language]);
-                        }
-                    }
-                    this.$store.commit(`Lang/${LANG_UPDATE_META}`, {loading: false});
-                    //this.$store.commit(`Lang/${LANG_UPDATE}`, {all: labelsLang});
-                }
-                window.dispatchEvent(new Event('resize'));
-            }, (e) => {
-                /* set local file */
-                let labelsLang = [];
-                let arrayTranslations = {};
-                let translations = LocalTranslations;
-                for (const label in LocalTranslations){
-                    for (const language in translations[label]) {
-                        if(labelsLang.indexOf(language) === -1 ){
-                            labelsLang.push(language);
-                        }
-                        if (translations[label].hasOwnProperty(language)) {
-                            if (!arrayTranslations.hasOwnProperty(language)) {
-                                arrayTranslations[language] = {};
-                            }
-                            arrayTranslations[language][label] = translations[label][language];
-                        }
-                    }
-                }
-
-                for (const language in arrayTranslations) {
-                    if (arrayTranslations.hasOwnProperty(language)) {
-                        this.$i18n.add(language, arrayTranslations[language]);
-                    }
-                }
-                this.$store.commit(`Lang/${LANG_UPDATE_META}`, {loading: false});
-                //this.$store.commit(`Lang/${LANG_UPDATE}`, {all: labelsLang});
-                window.dispatchEvent(new Event('resize'));
-            });
         },
     };
 </script>

@@ -1,4 +1,5 @@
-const LocalTranslations = {
+const lang = "ru";
+const VocabularyScript = {
     "TokensFactoryTitle": {
         "en": "Factory tokens",
         "ru": "Фабрика токенов"

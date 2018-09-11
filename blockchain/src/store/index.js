@@ -38,6 +38,7 @@ const store = {
                 "W12Lister",
                 "Transactions.list",
                 "Lang.current",
+                "Lang.vocabulary",
                 "Factory.list"
             ]
         })

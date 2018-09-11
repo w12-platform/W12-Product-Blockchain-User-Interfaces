@@ -1,8 +1,8 @@
 let path = require("path");
-let webpack = require('webpack');
+//let webpack = require('webpack');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 
-const MODE = "development"; //production
+const MODE = "production"; //production || development
 
 module.exports = [
     {
@@ -21,7 +21,8 @@ module.exports = [
                 '@': path.join(__dirname, '..', "src"),
                 'bem': path.join(__dirname, "src/bem"),
                 'lib': path.join(__dirname, "src/lib"),
-                'store': path.join(__dirname, "src/store")
+                'store': path.join(__dirname, "src/store"),
+                'plugin': path.join(__dirname, "src/plugin")
             }
         },
         module: {
@@ -81,7 +82,8 @@ module.exports = [
                 '@': path.join(__dirname, '..', "src"),
                 'bem': path.join(__dirname, "src/bem"),
                 'lib': path.join(__dirname, "src/lib"),
-                'store': path.join(__dirname, "src/store")
+                'store': path.join(__dirname, "src/store"),
+                'plugin': path.join(__dirname, "src/plugin")
             }
         },
         module: {
@@ -141,7 +143,8 @@ module.exports = [
                 '@': path.join(__dirname, '..', "src"),
                 'bem': path.join(__dirname, "src/bem"),
                 'lib': path.join(__dirname, "src/lib"),
-                'store': path.join(__dirname, "src/store")
+                'store': path.join(__dirname, "src/store"),
+                'plugin': path.join(__dirname, "src/plugin")
             }
         },
         module: {
@@ -201,7 +204,8 @@ module.exports = [
                 '@': path.join(__dirname, '..', "src"),
                 'bem': path.join(__dirname, "src/bem"),
                 'lib': path.join(__dirname, "src/lib"),
-                'store': path.join(__dirname, "src/store")
+                'store': path.join(__dirname, "src/store"),
+                'plugin': path.join(__dirname, "src/plugin")
             }
         },
         module: {
@@ -261,7 +265,8 @@ module.exports = [
                 '@': path.join(__dirname, '..', "src"),
                 'bem': path.join(__dirname, "src/bem"),
                 'lib': path.join(__dirname, "src/lib"),
-                'store': path.join(__dirname, "src/store")
+                'store': path.join(__dirname, "src/store"),
+                'plugin': path.join(__dirname, "src/plugin")
             }
         },
         module: {
@@ -321,7 +326,8 @@ module.exports = [
                 '@': path.join(__dirname, '..', "src"),
                 'bem': path.join(__dirname, "src/bem"),
                 'lib': path.join(__dirname, "src/lib"),
-                'store': path.join(__dirname, "src/store")
+                'store': path.join(__dirname, "src/store"),
+                'plugin': path.join(__dirname, "src/plugin")
             }
         },
         module: {
@@ -381,7 +387,8 @@ module.exports = [
                 '@': path.join(__dirname, '..', "src"),
                 'bem': path.join(__dirname, "src/bem"),
                 'lib': path.join(__dirname, "src/lib"),
-                'store': path.join(__dirname, "src/store")
+                'store': path.join(__dirname, "src/store"),
+                'plugin': path.join(__dirname, "src/plugin")
             }
         },
         module: {
@@ -441,7 +448,8 @@ module.exports = [
                 '@': path.join(__dirname, '..', "src"),
                 'bem': path.join(__dirname, "src/bem"),
                 'lib': path.join(__dirname, "src/lib"),
-                'store': path.join(__dirname, "src/store")
+                'store': path.join(__dirname, "src/store"),
+                'plugin': path.join(__dirname, "src/plugin")
             }
         },
         module: {
@@ -501,7 +509,8 @@ module.exports = [
                 '@': path.join(__dirname, '..', "src"),
                 'bem': path.join(__dirname, "src/bem"),
                 'lib': path.join(__dirname, "src/lib"),
-                'store': path.join(__dirname, "src/store")
+                'store': path.join(__dirname, "src/store"),
+                'plugin': path.join(__dirname, "src/plugin")
             }
         },
         module: {
@@ -561,7 +570,252 @@ module.exports = [
                 '@': path.join(__dirname, '..', "src"),
                 'bem': path.join(__dirname, "src/bem"),
                 'lib': path.join(__dirname, "src/lib"),
-                'store': path.join(__dirname, "src/store")
+                'store': path.join(__dirname, "src/store"),
+                'plugin': path.join(__dirname, "src/plugin")
+            }
+        },
+        module: {
+            rules: [
+                {
+                    test: /\.vue$/,
+                    loader: "vue-loader"
+                },
+                {
+                    test: /\.css$/,
+                    use: ['style-loader', 'css-loader']
+                },
+                {
+                    test: /\.scss$/,
+                    use: [
+                        "vue-style-loader",
+                        "css-loader",
+                        "sass-loader"
+                    ]
+                },
+                {
+                    test: /\.(png|woff|woff2|eot|ttf|svg)$/,
+                    loader: 'url-loader',
+                },
+                {
+                    test: /\.svg$/,
+                    loader: 'svg-inline-loader'
+                }
+            ]
+        },
+        plugins: [
+            new VueLoaderPlugin()
+        ],
+        devServer: {
+            contentBase: path.join(__dirname, '../'),
+            publicPath: '/blockchain/build/',
+            compress: true,
+            port: 8090,
+            proxy: {
+                "/ru/api": "http://[::1]:3000"
+            }
+        }
+    },
+    {
+        name: "LangSwitch",
+        mode: MODE,
+        entry: './src/components/LangSwitch.js',
+        output: {
+            path: path.resolve(__dirname, 'build'),
+            publicPath: '/blockchain/build/',
+            filename: "LangSwitch.js"
+        },
+        resolve: {
+            extensions: ['.js', '.vue', '.json'],
+            alias: {
+                'vue$': 'vue/dist/vue.esm.js',
+                '@': path.join(__dirname, '..', "src"),
+                'bem': path.join(__dirname, "src/bem"),
+                'lib': path.join(__dirname, "src/lib"),
+                'store': path.join(__dirname, "src/store"),
+                'plugin': path.join(__dirname, "src/plugin")
+            }
+        },
+        module: {
+            rules: [
+                {
+                    test: /\.vue$/,
+                    loader: "vue-loader"
+                },
+                {
+                    test: /\.css$/,
+                    use: ['style-loader', 'css-loader']
+                },
+                {
+                    test: /\.scss$/,
+                    use: [
+                        "vue-style-loader",
+                        "css-loader",
+                        "sass-loader"
+                    ]
+                },
+                {
+                    test: /\.(png|woff|woff2|eot|ttf|svg)$/,
+                    loader: 'url-loader',
+                },
+                {
+                    test: /\.svg$/,
+                    loader: 'svg-inline-loader'
+                }
+            ]
+        },
+        plugins: [
+            new VueLoaderPlugin()
+        ],
+        devServer: {
+            contentBase: path.join(__dirname, '../'),
+            publicPath: '/blockchain/build/',
+            compress: true,
+            port: 8090,
+            proxy: {
+                "/ru/api": "http://[::1]:3000"
+            }
+        }
+    },
+    {
+        name: "HeaderBuyW12Tokens",
+        mode: MODE,
+        entry: './src/components/HeaderBuyW12Tokens.js',
+        output: {
+            path: path.resolve(__dirname, 'build'),
+            publicPath: '/blockchain/build/',
+            filename: "HeaderBuyW12Tokens.js"
+        },
+        resolve: {
+            extensions: ['.js', '.vue', '.json'],
+            alias: {
+                'vue$': 'vue/dist/vue.esm.js',
+                '@': path.join(__dirname, '..', "src"),
+                'bem': path.join(__dirname, "src/bem"),
+                'lib': path.join(__dirname, "src/lib"),
+                'store': path.join(__dirname, "src/store"),
+                'plugin': path.join(__dirname, "src/plugin")
+            }
+        },
+        module: {
+            rules: [
+                {
+                    test: /\.vue$/,
+                    loader: "vue-loader"
+                },
+                {
+                    test: /\.css$/,
+                    use: ['style-loader', 'css-loader']
+                },
+                {
+                    test: /\.scss$/,
+                    use: [
+                        "vue-style-loader",
+                        "css-loader",
+                        "sass-loader"
+                    ]
+                },
+                {
+                    test: /\.(png|woff|woff2|eot|ttf|svg)$/,
+                    loader: 'url-loader',
+                },
+                {
+                    test: /\.svg$/,
+                    loader: 'svg-inline-loader'
+                }
+            ]
+        },
+        plugins: [
+            new VueLoaderPlugin()
+        ],
+        devServer: {
+            contentBase: path.join(__dirname, '../'),
+            publicPath: '/blockchain/build/',
+            compress: true,
+            port: 8090,
+            proxy: {
+                "/ru/api": "http://[::1]:3000"
+            }
+        }
+    },
+    {
+        name: "SidebarMenu",
+        mode: MODE,
+        entry: './src/components/SidebarMenu.js',
+        output: {
+            path: path.resolve(__dirname, 'build'),
+            publicPath: '/blockchain/build/',
+            filename: "SidebarMenu.js"
+        },
+        resolve: {
+            extensions: ['.js', '.vue', '.json'],
+            alias: {
+                'vue$': 'vue/dist/vue.esm.js',
+                '@': path.join(__dirname, '..', "src"),
+                'bem': path.join(__dirname, "src/bem"),
+                'lib': path.join(__dirname, "src/lib"),
+                'store': path.join(__dirname, "src/store"),
+                'plugin': path.join(__dirname, "src/plugin")
+            }
+        },
+        module: {
+            rules: [
+                {
+                    test: /\.vue$/,
+                    loader: "vue-loader"
+                },
+                {
+                    test: /\.css$/,
+                    use: ['style-loader', 'css-loader']
+                },
+                {
+                    test: /\.scss$/,
+                    use: [
+                        "vue-style-loader",
+                        "css-loader",
+                        "sass-loader"
+                    ]
+                },
+                {
+                    test: /\.(png|woff|woff2|eot|ttf|svg)$/,
+                    loader: 'url-loader',
+                },
+                {
+                    test: /\.svg$/,
+                    loader: 'svg-inline-loader'
+                }
+            ]
+        },
+        plugins: [
+            new VueLoaderPlugin()
+        ],
+        devServer: {
+            contentBase: path.join(__dirname, '../'),
+            publicPath: '/blockchain/build/',
+            compress: true,
+            port: 8090,
+            proxy: {
+                "/ru/api": "http://[::1]:3000"
+            }
+        }
+    },
+    {
+        name: "Footer",
+        mode: MODE,
+        entry: './src/components/Footer.js',
+        output: {
+            path: path.resolve(__dirname, 'build'),
+            publicPath: '/blockchain/build/',
+            filename: "Footer.js"
+        },
+        resolve: {
+            extensions: ['.js', '.vue', '.json'],
+            alias: {
+                'vue$': 'vue/dist/vue.esm.js',
+                '@': path.join(__dirname, '..', "src"),
+                'bem': path.join(__dirname, "src/bem"),
+                'lib': path.join(__dirname, "src/lib"),
+                'store': path.join(__dirname, "src/store"),
+                'plugin': path.join(__dirname, "src/plugin")
             }
         },
         module: {

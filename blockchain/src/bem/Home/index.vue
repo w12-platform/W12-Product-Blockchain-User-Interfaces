@@ -1,5 +1,6 @@
 <template>
     <div v-if="!langMeta.loading">
+        <h1 v-if="!langMeta.loading" class="content__heading">{{ $t('GeneralTitle') }}</h1>
         <div class="project-descr"><span class="project-descr__att">i</span>
             <div class="project-descr__info">
                 <p v-html="$t('HomeDescrInfo1')"></p>
