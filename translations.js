@@ -105,6 +105,10 @@ const VocabularyScript = {
         "en": "Getting the test ETH",
         "ru": "Получение тестового ETH"
     },
+    "HomeStepsForMetamask": {
+        "en": "A crypto-currency wallet-plug-in <br> for browsers Chrome, Firefox, Opera, Brave",
+        "ru": "Криптовалютный кошелёк-плагин <br>для браузеров Chrome, Firefox, Opera, Brave"
+    },
     "HomeStepsForTest": {
         "en": "for testing functions <br> customer tokens",
         "ru": "для тестирования функций <br>покупателя токенов"
@@ -286,13 +290,33 @@ const VocabularyScript = {
         "en": "HOW IT WORKS?",
         "ru": "КАК ЭТО РАБОТАЕТ?"
     },
-    "SidebarMenuViewCode": {
-        "en": "VIEW CODE ON GITHUB",
-        "ru": "СМОТРЕТЬ КОД НА GITHUB"
+    "SidebarMenuViewCodeProduct": {
+        "en": "PRODUCT ON GITHUB",
+        "ru": "ПРОДУКТ НА GITHUB"
+    },
+    "SidebarMenuViewCodeUI": {
+        "en": "INTERFACES ON GITHUB",
+        "ru": "ИНТЕРФЕЙСЫ НА GITHUB"
     },
     "SidebarMenuGoMarketplace": {
         "en": "GO TO MARKETPLACE",
         "ru": "ПЕРЕЙТИ НА МАРКЕТПЛЕЙС"
+    },
+    "SidebarMenuReadWhitePaper": {
+        "en": "READ WHITE PAPER",
+        "ru": "ПРОЧИТАТЬ WHITE PAPER"
+    },
+    "SidebarMenuReadWhitePaperHref": {
+        "en": "https://tokensale.w12.io/W12-en.pdf",
+        "ru": "https://tokensale.w12.io/W12-ru.pdf"
+    },
+    "SidebarMenuTelegram": {
+        "en": "JOIN IN TELEGRAM CHAT",
+        "ru": "ВСТУПИТЬ В TELEGRAM ЧАТ"
+    },
+    "SidebarMenuTelegramHref": {
+        "en": "https://t.me/w12io",
+        "ru": "https://t.me/W12_chat_ru"
     },
     "FooterMenu1": {
         "en": "About icoplate",

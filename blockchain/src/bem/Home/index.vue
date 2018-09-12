@@ -17,12 +17,14 @@
                         <span class="test-steps__head">{{ $t('HomeStepsRole') }}</span></div>
                     <div class="test-steps__row">
                         <div class="test-steps__cell"><span class="num">1</span></div>
-                        <div class="test-steps__cell"><a href="#">{{ $t('HomeStepsNum1') }}</a></div>
-                        <div class="test-steps__cell"><span class="icon icon-blue">{{ $t('HomeStepsProject') }},</span><span class="icon icon-green">{{ $t('HomeStepsBuyerTokens') }},</span><span class="icon icon-red">{{ $t('HomeStepsAdmin')}}</span></div>
+                        <div class="test-steps__cell"><a target="_blank" href="https://metamask.io">{{ $t('HomeStepsNum1') }}</a>
+                            <p v-html="$t('HomeStepsForMetamask')"></p>
+                        </div>
+                        <div class="test-steps__cell"><span class="icon icon-blue">{{ $t('HomeStepsProject') }}</span><span class="icon icon-green">{{ $t('HomeStepsBuyerTokens') }}</span><span class="icon icon-red">{{ $t('HomeStepsAdmin')}}</span></div>
                     </div>
                     <div class="test-steps__row">
                         <div class="test-steps__cell"><span class="num">2</span></div>
-                        <div class="test-steps__cell"><a href="#">{{ $t('HomeStepsNum2')}}</a>
+                        <div class="test-steps__cell"><a target="_blank" href="https://www.youtube.com/watch?v=s50E0s3peb8">{{ $t('HomeStepsNum2')}}</a>
                             <p v-html="$t('HomeStepsForTest')"></p>
                         </div>
                         <div class="test-steps__cell"><span class="icon icon-green">{{ $t('HomeStepsBuyerTokens') }}</span></div>
