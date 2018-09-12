@@ -33,14 +33,12 @@
                             <div class="form-group">
                                 <label for="SpendFrom">{{ $t('ProjectDashboardStageApproveAmountLabel') }}</label>
                                 <cleave
-                                        :placeholder="$t('ProjectDashboardStageApproveAmountPlaceholder', {ownerBalance})"
+                                        :placeholder="$t('ProjectDashboardStageApproveAmountPlaceholder', {ownerBalance: maxAmountFormat})"
                                         id="SpendFrom"
                                         v-model="approveForm.value"
                                         :options="optionsNumber"
                                         class="form-control"
                                         name="SpendFrom"
-                                        min="0"
-                                        :max="currentProject.ownerBalance"
                                         @keyup.enter.native="approveTokensToSpend"
                                 ></cleave>
                             </div>
@@ -71,7 +69,7 @@
     import './default.scss';
     import Connector from 'lib/Blockchain/DefaultConnector.js';
     import {UPDATE_TX} from "store/modules/Transactions.js";
-    import {waitTransactionReceipt, formatNumber} from 'lib/utils.js';
+    import {waitTransactionReceipt, formatNumber, toWeiDecimals} from 'lib/utils.js';
 
     import {createNamespacedHelpers} from "vuex";
 
@@ -82,6 +80,17 @@
     const TransactionsNS = createNamespacedHelpers("Transactions");
     const web3 = new Web3();
     const BigNumber = web3.BigNumber;
+    BigNumber.config({
+        DECIMAL_PLACES: 36,
+        FORMAT: {
+            decimalSeparator: '.',
+            groupSeparator: '',
+            groupSize: 3,
+            secondaryGroupSize: 0,
+            fractionGroupSeparator: ' ',
+            fractionGroupSize: 0
+        }
+    });
 
     export default {
         name: 'StageApprove',
@@ -95,15 +104,6 @@
                 },
                 tx: null,
                 error: false,
-                optionsNumber: {
-                    prefix: '',
-                    numeral: true,
-                    numeralPositiveOnly: true,
-                    noImmediatePrefix: true,
-                    rawValueTrimPrefix: true,
-                    numeralIntegerScale: 18,
-                    numeralDecimalScale: 18
-                }
             };
         },
         computed: {
@@ -128,19 +128,36 @@
                 TransactionsList: "list"
             }),
 
+            maxAmount() {
+                return this.ownerBalance ? new BigNumber(this.ownerBalance).toFormat(0) : "";
+            },
+            maxAmountFormat(){
+                return formatNumber(this.maxAmount)
+            },
+            lengthMaxAmount() {
+                return this.maxAmount.length;
+            },
+            optionsNumber() {
+                return {
+                    prefix: '',
+                    numeral: true,
+                    numeralPositiveOnly: true,
+                    noImmediatePrefix: true,
+                    rawValueTrimPrefix: true,
+                    numeralIntegerScale: this.lengthMaxAmount,
+                    numeralDecimalScale: this.currentProject.decimals,
+                };
+            },
+
             amountError(){
-                const value = formatNumber(this.approveForm.value) || null;
-                const balance = parseFloat(this.currentProject.ownerBalance) || null;
-                return this.approveForm.value && this.currentProject.ownerBalance
-                    ? !(value >= 0 && value <= balance)
-                    : false;
+                const value = this.approveForm.value ? new BigNumber(this.approveForm.value) : null;
+                const balance = this.currentProject.ownerBalance ? new BigNumber(this.currentProject.ownerBalance) : null;
+                return value && balance ? !(value.gte(0) && value.lte(balance)) : false;
             },
             disable() {
-                const value = formatNumber(this.approveForm.value) || null;
-                const balance = parseFloat(this.currentProject.ownerBalance) || null;
-                return this.approveForm.value && this.currentProject.ownerBalance
-                    ? !(value > 0 && value <= balance)
-                    : true;
+                const value = this.approveForm.value ? new BigNumber(this.approveForm.value) : null;
+                const balance = this.currentProject.ownerBalance ? new BigNumber(this.currentProject.ownerBalance) : null;
+                return value && balance ? !(value.gt(0) && value.lte(balance)) : true;
             },
             isPendingTx() {
                 return this.TransactionsList && this.TransactionsList.length
@@ -166,7 +183,7 @@
             async approveTokensToSpend() {
                 if(this.disable) return;
 
-                const value = new BigNumber(formatNumber(this.approveForm.value));
+                const value = toWeiDecimals(this.approveForm.value, this.currentProject.decimals);
 
                 this.approveTokensToSpendLoading = true;
 
@@ -174,7 +191,7 @@
                     const {ERC20Factory} = await this.LedgerFetch();
                     const ERC20 = ERC20Factory.at(this.currentProject.tokenAddress);
                     const connectedWeb3 = (await Connector.connect()).web3;
-                    const tx = await ERC20.methods.approve(this.W12Lister.address, web3.toWei(value, 'ether'));
+                    const tx = await ERC20.methods.approve(this.W12Lister.address, value);
                     this.$store.commit(`Transactions/${UPDATE_TX}`, {
                         token: this.currentProject.tokenAddress,
                         name: "ApproveTokens",

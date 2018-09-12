@@ -1,4 +1,4 @@
-import {promisify, isZeroAddress} from "lib/utils";
+import {promisify, isZeroAddress, fromWeiDecimalsString, fromWeiDecimals} from "lib/utils";
 import {map} from 'p-iteration';
 
 import {ReceivingModel} from 'bem/Receiving/model.js';
@@ -9,6 +9,17 @@ import Connector from "lib/Blockchain/DefaultConnector";
 const moment = window.moment;
 const web3 = new Web3();
 const BigNumber = web3.BigNumber;
+BigNumber.config({
+    DECIMAL_PLACES: 36,
+    FORMAT: {
+        decimalSeparator: '.',
+        groupSeparator: '',
+        groupSize: 3,
+        secondaryGroupSize: 0,
+        fractionGroupSeparator: ' ',
+        fractionGroupSize: 0
+    }
+});
 
 export const UPDATE_PROJECT = "UPDATE_PROJECT";
 export const UPDATE_TOKENS_APPROVED = "UPDATE_TOKENS_APPROVED";
@@ -53,18 +64,13 @@ export default {
             return state.currentProject && state.currentProject.ownerBalance ? state.currentProject.ownerBalance : "";
         },
         tokensAmountThatApprovedToPlaceByTokenOwnerToNumber: state => {
-            return (
-                state.currentProject && state.currentProject.tokensAmountThatApprovedToPlaceByTokenOwner
-                    ? web3.fromWei(state.currentProject.tokensAmountThatApprovedToPlaceByTokenOwner, 'ether').toString()
-                    : '0'
-            );
+            return state.currentProject && state.currentProject.tokensAmountThatApprovedToPlaceByTokenOwner
+                    ? fromWeiDecimalsString(state.currentProject.tokensAmountThatApprovedToPlaceByTokenOwner, state.currentProject.decimals)
+                    : '0';
         },
         tokensForAddCrowdsale: state => {
-            return (state.currentProject
-                && state.currentProject.wTokensIssuedAmount
-                && state.currentProject.tokensForSaleAmount)
-                ? web3.fromWei(new BigNumber(state.currentProject.tokensForSaleAmount)
-                    .minus(state.currentProject.wTokensIssuedAmount), 'ether').toString()
+            return state.currentProject && state.currentProject.wTokensIssuedAmount && state.currentProject.tokensForSaleAmount
+                ? fromWeiDecimalsString(new BigNumber(state.currentProject.tokensForSaleAmount).minus(state.currentProject.wTokensIssuedAmount), state.currentProject.decimals)
                 : 0;
         },
         isCrowdsaleInited: state => {
@@ -72,7 +78,7 @@ export default {
         },
         tokensForSaleAmountToNumber: state => {
             return state.currentProject && state.currentProject.tokensForSaleAmount
-                ? web3.fromWei(state.currentProject.tokensForSaleAmount, 'ether').toString()
+                ? fromWeiDecimalsString(state.currentProject.tokensForSaleAmount, state.currentProject.decimals)
                 : 0;
         },
         tokenCrowdSaleStagesNS: state => {
@@ -229,7 +235,6 @@ export default {
             commit(UPDATE_META, {loadingProject: true});
             try {
                 if (Token.tokenAddress && Token.tokenOwners) {
-
                     await this.dispatch('Project/updateTokenInfo', {Token});
                     await this.dispatch('Transactions/updateStatusTx');
                     await this.dispatch('Project/updateOwnerBalance', {Token});
@@ -311,7 +316,8 @@ export default {
                 const {ERC20Factory} = await this.dispatch('Ledger/fetch');
                 const ERC20 = ERC20Factory.at(Token.tokenAddress);
 
-                const balance = web3.fromWei(await ERC20.methods.balanceOf(this.state.Account.currentAccount), 'ether').toString();
+                const balance = (new BigNumber(await ERC20.methods.balanceOf(this.state.Account.currentAccount))
+                    .div(new BigNumber(10).pow(Token.decimals))).toString();
 
                 commit(UPDATE_OWNER_BALANCE, balance);
             } catch (e) {

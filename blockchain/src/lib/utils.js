@@ -1,7 +1,18 @@
 import jsunicode from 'jsunicode';
-import {ERROR_FETCH_LEDGER, UPDATE_META} from "../store/modules/Ledger";
 
 const web3 = new Web3();
+const BigNumber = web3.BigNumber;
+BigNumber.config({
+    DECIMAL_PLACES: 36,
+    FORMAT: {
+        decimalSeparator: '.',
+        groupSeparator: '',
+        groupSize: 3,
+        secondaryGroupSize: 0,
+        fractionGroupSeparator: ' ',
+        fractionGroupSize: 0
+    }
+});
 
 export function promisify (funct) {
     return function (...args) {
@@ -79,4 +90,20 @@ export function isZeroAddress(address) {
 /* 11 111.22 -> 11111.22 */
 export function formatNumber(textNumber) {
     return textNumber ? parseFloat(textNumber.replace(/\s+/g, '')):0;
+}
+
+export function fromWeiDecimalsString(value, decimals) {
+    return new BigNumber(value)
+        .div(new BigNumber(10).pow(decimals))
+        .toString();
+}
+
+export function fromWeiDecimals(value, decimals) {
+    return new BigNumber(value)
+        .div(new BigNumber(10).pow(decimals));
+}
+
+export function toWeiDecimals(value, decimals) {
+    const oneToken = new BigNumber(10).pow(decimals);
+    return new BigNumber(value).times(oneToken);
 }

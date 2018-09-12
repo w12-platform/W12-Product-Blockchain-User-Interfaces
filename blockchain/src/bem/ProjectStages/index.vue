@@ -18,7 +18,8 @@
     import StageBonuses from 'bem/ProjectStages/StageBonuses';
 
     import {createNamespacedHelpers} from "vuex";
-    import { CONFIRM_TX } from "store/modules/Transactions.js";
+    import {CONFIRM_TX} from "store/modules/Transactions.js";
+    import {isZeroAddress} from 'lib/utils';
 
     const ConfigNS = createNamespacedHelpers('Config');
     const ProjectNS = createNamespacedHelpers("Project");
@@ -91,13 +92,26 @@
 
                 this.subscribedEvents.CrowdsaleInitialized.stopWatching();
                 this.subscribedEvents.ApprovalEvent.stopWatching();
-                this.subscribedEvents.ApprovalW12Event.stopWatching();
+                if (this.subscribedEvents.ApprovalW12Event) {
+                    this.subscribedEvents.ApprovalW12Event.stopWatching();
+                }
+                if(this.subscribedEvents.StagesUpdated){
+                    this.subscribedEvents.StagesUpdated.stopWatching();
+                }
+                if(this.subscribedEvents.StagesUpdated){
+                    this.subscribedEvents.MilestonesUpdated.stopWatching();
+                }
+                if(this.subscribedEvents.StagesUpdated){
+                    this.subscribedEvents.UnsoldTokenReturned.stopWatching();
+                }
+                if(this.subscribedEvents.StagesUpdated){
+                    this.subscribedEvents.CrowdsaleTokenMinted.stopWatching();
+                }
+                if(this.subscribedEvents.StagesUpdated){
+                    this.subscribedEvents.TrancheReleased.stopWatching();
+                }
+
                 this.subscribedEvents.TokenPlaced.stopWatching();
-                this.subscribedEvents.StagesUpdated.stopWatching();
-                this.subscribedEvents.MilestonesUpdated.stopWatching();
-                this.subscribedEvents.UnsoldTokenReturned.stopWatching();
-                this.subscribedEvents.CrowdsaleTokenMinted.stopWatching();
-                this.subscribedEvents.TrancheReleased.stopWatching();
 
                 this.subscribedEvents = null;
             },
@@ -110,23 +124,36 @@
                 try {
                     const {ERC20Factory, W12ListerFactory, W12CrowdsaleFactory, W12TokenFactory, W12FundFactory} = await this.LedgerFetch();
                     const ERC20 = ERC20Factory.at(this.currentProject.tokenAddress);
-                    const W12Token = W12TokenFactory.at(this.currentProject.wTokenAddress);
                     const W12Lister = W12ListerFactory.at(this.W12Lister.address);
-                    const W12Crowdsale = W12CrowdsaleFactory.at(this.currentProject.crowdsaleAddress);
-                    const fundAddress = await W12Crowdsale.methods.fund();
-                    const W12Fund = W12FundFactory.at(fundAddress);
+                    let ApprovalW12Event = null;
+                    let StageUpdated = null;
+                    let StagesUpdated = null;
+                    let MilestonesUpdated = null;
+                    let UnsoldTokenReturned = null;
+                    let TrancheReleased = null;
+
+                    if (!isZeroAddress(this.currentProject.crowdsaleAddress)) {
+                        const W12Crowdsale = W12CrowdsaleFactory.at(this.currentProject.crowdsaleAddress);
+                        const fundAddress = await W12Crowdsale.methods.fund();
+                        const W12Fund = W12FundFactory.at(fundAddress);
+                        StagesUpdated = W12Crowdsale.events.StagesUpdated(null, null, this.onStagesUpdatedEvent);
+                        StageUpdated = W12Crowdsale.events.StageUpdated(null, null, this.onStageUpdatedEvent);
+                        MilestonesUpdated = W12Crowdsale.events.MilestonesUpdated(null, null, this.onMilestonesUpdatedEvent);
+                        UnsoldTokenReturned = W12Crowdsale.events.UnsoldTokenReturned(null, null, this.onUnsoldTokenReturnedEvent);
+                        TrancheReleased = W12Fund.events.TrancheReleased(null, null, this.onTrancheReleasedEvent);
+                    }
+
+                    if (!isZeroAddress(this.currentProject.wTokenAddress)) {
+                        const W12Token = W12TokenFactory.at(this.currentProject.wTokenAddress);
+                        ApprovalW12Event = W12Token.events.Approval(null, null, this.onApprovalW12Event);
+                    }
 
                     const ApprovalEvent = ERC20.events.Approval(null, null, this.onApprovalEvent);
-                    const ApprovalW12Event = W12Token.events.Approval(null, null, this.onApprovalW12Event);
-
                     const TokenPlaced = W12Lister.events.TokenPlaced(null, null, this.onTokenPlacedEvent);
                     const CrowdsaleInitialized = W12Lister.events.CrowdsaleInitialized(null, null, this.onCrowdsaleInitializedEvent);
-                    const StagesUpdated = W12Crowdsale.events.StagesUpdated(null, null, this.onStagesUpdatedEvent);
-                    const StageUpdated = W12Crowdsale.events.StageUpdated(null, null, this.onStageUpdatedEvent);
                     const CrowdsaleTokenMinted = W12Lister.events.CrowdsaleTokenMinted(null, null, this.onCrowdsaleTokenMintedEvent);
-                    const MilestonesUpdated = W12Crowdsale.events.MilestonesUpdated(null, null, this.onMilestonesUpdatedEvent);
-                    const UnsoldTokenReturned = W12Crowdsale.events.UnsoldTokenReturned(null, null, this.onUnsoldTokenReturnedEvent);
-                    const TrancheReleased = W12Fund.events.TrancheReleased(null, null, this.onTrancheReleasedEvent);
+
+
 
                     this.subscribedEvents = {
                         ApprovalEvent,
@@ -189,7 +216,7 @@
                     const {spender} = result.args;
                     const tx = result.transactionHash;
                     if (spender.toString() === this.W12Lister.address) {
-                        await this.updateTokensApprovedToPlaceValue({Token : this.currentProject});
+                        await this.updateTokensApprovedToPlaceValue({Token: this.currentProject});
                     }
                     await this.updateAccountData();
                     this.$store.commit(`Transactions/${CONFIRM_TX}`, tx);
@@ -198,7 +225,7 @@
             async onApprovalW12Event(error, result) {
                 if (!error) {
                     const tx = result.transactionHash;
-                    await this.updateTokensApprovedToPlaceValue({Token : this.currentProject});
+                    await this.updateTokensApprovedToPlaceValue({Token: this.currentProject});
                     await this.updateAccountData();
                     this.$store.commit(`Transactions/${CONFIRM_TX}`, tx);
                 }
@@ -209,7 +236,7 @@
 
                     const tx = result.transactionHash;
                     if (originalTokenAddress.toString() === this.currentProject.tokenAddress) {
-                        await this.upTokenAfterEvent({Token : this.currentProject});
+                        await this.upTokenAfterEvent({Token: this.currentProject});
                     }
                     this.$store.commit(`Transactions/${CONFIRM_TX}`, tx);
                 }
@@ -220,7 +247,7 @@
 
                     const tx = result.transactionHash;
                     if (tokenAddress.toString() === this.currentProject.tokenAddress) {
-                        await this.upTokenAfterEvent({Token : this.currentProject});
+                        await this.upTokenAfterEvent({Token: this.currentProject});
                     }
                     this.$store.commit(`Transactions/${CONFIRM_TX}`, tx);
                 }

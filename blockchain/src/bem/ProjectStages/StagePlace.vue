@@ -63,7 +63,7 @@
 <script>
     import './default.scss';
     import Connector from 'lib/Blockchain/DefaultConnector.js';
-    import { waitTransactionReceipt, formatNumber } from 'lib/utils.js';
+    import { waitTransactionReceipt, formatNumber, toWeiDecimals, fromWeiDecimals} from 'lib/utils.js';
     import {UPDATE_TX} from "store/modules/Transactions.js";
 
     import {createNamespacedHelpers} from "vuex";
@@ -75,6 +75,17 @@
     const TransactionsNS = createNamespacedHelpers("Transactions");
     const web3 = new Web3();
     const BigNumber = web3.BigNumber;
+    BigNumber.config({
+        DECIMAL_PLACES: 36,
+        FORMAT: {
+            decimalSeparator: '.',
+            groupSeparator: '',
+            groupSize: 3,
+            secondaryGroupSize: 0,
+            fractionGroupSeparator: ' ',
+            fractionGroupSize: 0
+        }
+    });
 
     export default {
         name: 'StagePlace',
@@ -87,16 +98,6 @@
                     value: null
                 },
                 error: false,
-
-                optionsNumber: {
-                    prefix: '',
-                    numeral: true,
-                    numeralPositiveOnly: true,
-                    noImmediatePrefix: true,
-                    rawValueTrimPrefix: true,
-                    numeralIntegerScale: 18,
-                    numeralDecimalScale: 18
-                }
             };
         },
         computed: {
@@ -119,9 +120,31 @@
             ...TransactionsNS.mapState({
                 TransactionsList: "list"
             }),
+            optionsNumber() {
+                return {
+                    prefix: '',
+                    numeral: true,
+                    numeralPositiveOnly: true,
+                    noImmediatePrefix: true,
+                    rawValueTrimPrefix: true,
+                    numeralIntegerScale: this.lengthMaxAmount,
+                    numeralDecimalScale: this.currentProject.decimals,
+                };
+            },
+            lengthMaxAmount() {
+                return this.maxAmount.length;
+            },
+            maxAmount() {
+                return this.currentProject.tokensAmountThatApprovedToPlaceByTokenOwner
+                    ? fromWeiDecimals(this.currentProject.tokensAmountThatApprovedToPlaceByTokenOwner, this.currentProject.decimals).toFormat(0)
+                    : "";
+            },
+            maxAmountFormat(){
+                return formatNumber(this.maxAmount)
+            },
             amountError(){
                 if(this.placeTokensForm.value && this.currentProject.tokensAmountThatApprovedToPlaceByTokenOwner){
-                    const value = new BigNumber(web3.toWei(formatNumber(this.placeTokensForm.value), 'ether'));
+                    const value = toWeiDecimals(this.placeTokensForm.value, this.currentProject.decimals);
                     const limit = new BigNumber(this.currentProject.tokensAmountThatApprovedToPlaceByTokenOwner);
 
                     return !value.lessThanOrEqualTo(limit)
@@ -130,7 +153,7 @@
             },
             disable(){
                 if(this.placeTokensForm.value && this.currentProject.tokensAmountThatApprovedToPlaceByTokenOwner){
-                    const value = new BigNumber(web3.toWei(formatNumber(this.placeTokensForm.value), 'ether'));
+                    const value = toWeiDecimals(this.placeTokensForm.value, this.currentProject.decimals);
                     const limit = new BigNumber(this.currentProject.tokensAmountThatApprovedToPlaceByTokenOwner);
 
                     return !value.greaterThan(0) || !value.lessThanOrEqualTo(limit)
@@ -164,7 +187,7 @@
             async placeTokens() {
                 if(this.disable) return;
 
-                const value = new BigNumber(web3.toWei(formatNumber(this.placeTokensForm.value), 'ether'));
+                const value = toWeiDecimals(this.placeTokensForm.value, this.currentProject.decimals);
                 const limit = new BigNumber(this.currentProject.tokensAmountThatApprovedToPlaceByTokenOwner);
 
                 if (!value.greaterThan(0) || !value.lessThanOrEqualTo(limit)) {

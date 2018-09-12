@@ -40,7 +40,7 @@
                                 <cleave
                                         placeholder="ETH"
                                         v-model="crowdsaleInitForm.price"
-                                        :options="optionsNumber"
+                                        :options="optionsNumberPrice"
                                         class="form-control"
                                         name="BaseTokenPrice"
                                         min="0"
@@ -60,8 +60,6 @@
                                         :options="optionsNumber"
                                         class="form-control"
                                         name="BaseTokenPrice"
-                                        min="0"
-                                        :max="tokensForSaleAmountToNumber"
                                         @keyup.enter.native="initCrawdsale"
                                 ></cleave>
                             </b-field>
@@ -85,8 +83,6 @@
                                         v-model="crowdsaleInitForm.amountForSale"
                                         :options="optionsNumber"
                                         class="form-control"
-                                        min="0"
-                                        :max="tokensForAddCrowdsale"
                                         @keyup.enter.native="addTokensToCrowdSale"
                                         icon="shopping"
                                 ></cleave>
@@ -112,7 +108,7 @@
 <script>
     import './default.scss';
     import Connector from 'lib/Blockchain/DefaultConnector.js';
-    import {waitTransactionReceipt} from 'lib/utils.js';
+    import { waitTransactionReceipt, formatNumber, toWeiDecimals, fromWeiDecimals} from 'lib/utils.js';
 
     import {createNamespacedHelpers} from "vuex";
     import {UPDATE_TX} from "store/modules/Transactions.js";
@@ -124,6 +120,17 @@
 
     const web3 = new Web3();
     const BigNumber = web3.BigNumber;
+    BigNumber.config({
+        DECIMAL_PLACES: 36,
+        FORMAT: {
+            decimalSeparator: '.',
+            groupSeparator: '',
+            groupSize: 3,
+            secondaryGroupSize: 0,
+            fractionGroupSeparator: ' ',
+            fractionGroupSize: 0
+        }
+    });
 
     export default {
         name: 'StageConfigureCrowdsale',
@@ -143,13 +150,13 @@
                     price: null
                 },
                 error: false,
-                optionsNumber: {
+                optionsNumberPrice: {
                     prefix: '',
                     numeral: true,
                     numeralPositiveOnly: true,
                     noImmediatePrefix: true,
                     rawValueTrimPrefix: true,
-                    numeralIntegerScale: 18,
+                    numeralIntegerScale: 36,
                     numeralDecimalScale: 18
                 }
             };
@@ -178,6 +185,20 @@
             ...TransactionsNS.mapState({
                 TransactionsList: "list"
             }),
+            optionsNumber() {
+                return {
+                    prefix: '',
+                    numeral: true,
+                    numeralPositiveOnly: true,
+                    noImmediatePrefix: true,
+                    rawValueTrimPrefix: true,
+                    numeralIntegerScale: this.lengthMaxAmount,
+                    numeralDecimalScale: this.currentProject.decimals,
+                };
+            },
+            lengthMaxAmount() {
+                return this.tokensForSaleAmountToNumber ? this.tokensForSaleAmountToNumber.length : 0;
+            },
             isPendingTx() {
                 return this.TransactionsList && this.TransactionsList.length
                     ? this.TransactionsList.find((tr) => {
@@ -194,22 +215,21 @@
                     : false;
             },
             disable() {
-                if(this.tokensForSaleAmountToNumber
-                    && this.crowdsaleInitForm.amountForSale
-                    && this.crowdsaleInitForm.price){
-                    if(parseFloat(this.crowdsaleInitForm.price) > 0
-                        && parseFloat(this.crowdsaleInitForm.amountForSale) <= parseFloat(this.tokensForSaleAmountToNumber)){
-                        return false;
-                    }
+                if(this.tokensForSaleAmountToNumber && this.crowdsaleInitForm.amountForSale && this.crowdsaleInitForm.price){
+                    const value = new BigNumber(this.crowdsaleInitForm.amountForSale);
+                    const price = new BigNumber(this.crowdsaleInitForm.price);
+                    const limit = new BigNumber(this.tokensForSaleAmountToNumber);
+
+                    return !(price.gt(0) && value.gt(0) && value.lte(limit));
                 }
                 return true;
             },
             disableAdd(){
                 if(this.tokensForAddCrowdsale && this.crowdsaleInitForm.amountForSale){
-                    if(parseFloat(this.crowdsaleInitForm.amountForSale) > 0
-                        && parseFloat(this.crowdsaleInitForm.amountForSale) <= parseFloat(this.tokensForAddCrowdsale)){
-                        return false;
-                    }
+                    const value = new BigNumber(this.crowdsaleInitForm.amountForSale);
+                    const limit = new BigNumber(this.tokensForSaleAmountToNumber);
+
+                    return !(value.gt(0) && value.lte(limit))
                 }
                 return true;
             }
@@ -230,8 +250,13 @@
 
             async initCrawdsale() {
                 const data = this.crowdsaleInitForm;
-                const amountForSale = (new web3.BigNumber(web3.toWei(data.amountForSale, 'ether') || 0)).toString();
-                const price = (new web3.BigNumber(web3.toWei(data.price, 'ether') || 0)).toString();
+                const amountForSale = toWeiDecimals(data.amountForSale, this.currentProject.decimals);
+                const price = new web3.BigNumber(web3.toWei(data.price, 'ether') || 0);
+
+                console.log(this.currentProject.tokenAddress);
+                console.log(amountForSale);
+                console.log(price);
+                console.log(this.currentAccount);
 
                 this.initCrawdsaleLoading = true;
 
@@ -244,7 +269,8 @@
                     const tx = await W12Lister.methods.initCrowdsale(
                         this.currentProject.tokenAddress,
                         amountForSale,
-                        price
+                        price,
+                        {from: this.currentAccount}
                     );
                     this.$store.commit(`Transactions/${UPDATE_TX}`, {
                         token: this.currentProject.tokenAddress,
@@ -262,7 +288,7 @@
             async addTokensToCrowdSale() {
                     if (this.disableAdd) return;
                     const data = this.crowdsaleInitForm;
-                    const amountForSale = new web3.BigNumber(web3.toWei(data.amountForSale, 'ether') || 0);
+                    const amountForSale = toWeiDecimals(data.amountForSale, this.currentProject.decimals);
 
                     this.initCrawdsaleLoading = true;
 
@@ -274,7 +300,7 @@
 
                         const tx = await W12Lister.methods.addTokensToCrowdsale(
                             this.currentProject.tokenAddress,
-                            amountForSale.toString(),
+                            amountForSale,
                         );
                         this.$store.commit(`Transactions/${UPDATE_TX}`, {
                             token: this.currentProject.tokenAddress,
