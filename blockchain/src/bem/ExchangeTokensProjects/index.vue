@@ -19,7 +19,7 @@
 
                     <div v-if="currentAccountData.allowanceForSwap !== '0'" class="py-2">
                         {{ $t('ExchangeTokensProjectsMessagesBeforeSwap', {
-                        allowance: toEth(currentAccountData.allowanceForSwap),
+                        allowance: toEthDecimals(currentAccountData.allowanceForSwap),
                         WToken: currentProject.symbol,
                         Token: currentProject.tokenInformation.symbol,
                         })}}
@@ -47,12 +47,23 @@
 <script>
     import './default.scss';
     import Connector from "lib/Blockchain/DefaultConnector";
-    import {waitTransactionReceipt} from 'lib/utils.js';
+    import { waitTransactionReceipt, formatNumber, toWeiDecimals, fromWeiDecimals, fromWeiDecimalsString} from 'lib/utils.js';
     import {createNamespacedHelpers} from "vuex";
     import {UPDATE_TX} from "store/modules/Transactions.js";
 
     const web3 = new Web3();
     const BigNumber = web3.BigNumber;
+    BigNumber.config({
+        DECIMAL_PLACES: 36,
+        FORMAT: {
+            decimalSeparator: '.',
+            groupSeparator: '',
+            groupSize: 3,
+            secondaryGroupSize: 0,
+            fractionGroupSeparator: ' ',
+            fractionGroupSize: 0
+        }
+    });
 
     const AccountNS = createNamespacedHelpers("Account");
     const LedgerNS = createNamespacedHelpers("Ledger");
@@ -88,13 +99,13 @@
             }),
 
             balance() {
-                return web3.fromWei(this.currentAccountData.balance, 'ether').toString();
+                return fromWeiDecimalsString(this.currentAccountData.balance, this.currentProject.decimals);
             },
             unVestingBalance() {
-                return web3.fromWei(this.currentAccountData.unVestingBalance, 'ether').toString();
+                return fromWeiDecimalsString(this.currentAccountData.unVestingBalance, this.currentProject.decimals);
             },
             vestingBalance() {
-                return web3.fromWei(this.currentAccountData.vestingBalance, 'ether').toString();
+                return fromWeiDecimalsString(this.currentAccountData.vestingBalance, this.currentProject.decimals);
             },
 
             isPendingTx() {
@@ -123,6 +134,10 @@
             toEth(value) {
                 value = value ? new BigNumber(value) : 0;
                 return web3.fromWei(value, 'ether').toString();
+            },
+            toEthDecimals(value) {
+                value = value ? new BigNumber(value) : 0;
+                return fromWeiDecimalsString(value, this.currentProject.decimals);
             },
             async approveSwapToSpend() {
                 this.loading = true;

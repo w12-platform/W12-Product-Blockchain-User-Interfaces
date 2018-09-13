@@ -2,7 +2,7 @@ let path = require("path");
 //let webpack = require('webpack');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 
-const MODE = "production"; //production || development
+const MODE = "development"; //production || development
 
 module.exports = [
     {

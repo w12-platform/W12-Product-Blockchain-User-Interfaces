@@ -51,7 +51,7 @@
 <script>
     import './default.scss';
     import Connector from "lib/Blockchain/DefaultConnector";
-    import {waitTransactionReceipt} from 'lib/utils.js';
+    import { waitTransactionReceipt, formatNumber, toWeiDecimals, fromWeiDecimals, fromWeiDecimalsString} from 'lib/utils.js';
     import {createNamespacedHelpers} from "vuex";
     import RefundInformation from 'bem/RefundInformation';
     import RefundCalculator from 'bem/RefundCalculator';

@@ -17,7 +17,7 @@
             </div>
             <div v-if="isCrowdsaleInited" class="col-sm text-right">
                 {{currentProject.crowdSaleInformation.tokenPrice}} ETH<br>
-                {{currentProject.crowdSaleInformation.tokensForSaleAmount | toEth}} {{currentProject.symbol}}
+                {{ toEth(currentProject.crowdSaleInformation.tokensForSaleAmount) }} {{currentProject.symbol}}
             </div>
             <div class="ProjectDashboard__configureCrowdsale col-12 text-left">
                 <div class="pm-2" v-if="isPendingTx">
@@ -108,7 +108,7 @@
 <script>
     import './default.scss';
     import Connector from 'lib/Blockchain/DefaultConnector.js';
-    import { waitTransactionReceipt, formatNumber, toWeiDecimals, fromWeiDecimals} from 'lib/utils.js';
+    import { waitTransactionReceipt, formatNumber, toWeiDecimals, fromWeiDecimals, fromWeiDecimalsString} from 'lib/utils.js';
 
     import {createNamespacedHelpers} from "vuex";
     import {UPDATE_TX} from "store/modules/Transactions.js";
@@ -136,12 +136,6 @@
         name: 'StageConfigureCrowdsale',
         template: '#StageConfigureCrowdsaleTemplate',
         watch: {},
-        filters: {
-            toEth(value) {
-                value = new BigNumber(value);
-                return web3.fromWei(value, 'ether').toString();
-            },
-        },
         data() {
             return {
                 initCrawdsaleLoading: false,
@@ -247,16 +241,14 @@
                 updateOwnerBalance: "updateOwnerBalance",
                 upTokenAfterEvent: "upTokenAfterEvent"
             }),
-
+            toEth(value) {
+                value = new BigNumber(value);
+                return this.currentProject ? fromWeiDecimalsString(value, this.currentProject.decimals) : "";
+            },
             async initCrawdsale() {
                 const data = this.crowdsaleInitForm;
                 const amountForSale = toWeiDecimals(data.amountForSale, this.currentProject.decimals);
                 const price = new web3.BigNumber(web3.toWei(data.price, 'ether') || 0);
-
-                console.log(this.currentProject.tokenAddress);
-                console.log(amountForSale);
-                console.log(price);
-                console.log(this.currentAccount);
 
                 this.initCrawdsaleLoading = true;
 

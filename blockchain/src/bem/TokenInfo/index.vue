@@ -25,24 +25,24 @@
                 <td>{{ currentProject.symbol }}</td>
             </tr>
             <tr>
-                <td>{{ $t('TokenInfoFeeEth') }}</td>
-                <td>{{ currentProject.feePercent/100 }}%</td>
+                <td>{{ $t('TokenInfoDecimals') }}</td>
+                <td>{{ currentProject.decimals }}</td>
             </tr>
             <tr>
-                <td>{{ $t('TokenInfoTrancheFeePercent') }}</td>
-                <td>{{ currentProject.trancheFeePercent | percentFractional }}%</td>
-            </tr>
-            <tr>
-                <td>{{ $t('TokenInfoFeeTokens') }}</td>
+                <td>{{ $t('AdminDashboardTableWTokenSaleFeePercent')  }}</td>
                 <td>{{ currentProject.WTokenSaleFeePercent | percentFractional }}%</td>
             </tr>
             <tr>
-                <td>{{ $t('TokenInfoFeeEth') }}</td>
-                <td>{{ currentProject.feeETHPercent/100 }}%</td>
+                <td>{{ $t('AdminDashboardTableTrancheFeePercent') }}</td>
+                <td>{{ currentProject.trancheFeePercent | percentFractional }}%</td>
             </tr>
             <tr>
-                <td>{{ $t('TokenInfoDecimals') }}</td>
-                <td>{{ currentProject.decimals }}</td>
+                <td>{{ $t('AdminDashboardTableFeeTokens') }}</td>
+                <td>{{ currentProject.feePercent/100 }}%</td>
+            </tr>
+            <tr>
+                <td>{{ $t('AdminDashboardTableFeeEth') }}</td>
+                <td>{{ currentProject.feeETHPercent/100 }}%</td>
             </tr>
             </tbody>
         </table>

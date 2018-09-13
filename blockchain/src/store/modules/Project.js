@@ -404,7 +404,7 @@ export default {
                 commit(UPDATE_META, {loadingProjectError: e.message});
             }
         },
-        async updateReceivingInformation({commit}, {Token}) {
+        async updateReceivingInformation({commit, state}, {Token}) {
             try {
                 const {W12TokenFactory, DetailedERC20Factory} = await this.dispatch('Ledger/fetch');
                 const W12Token = W12TokenFactory.at(Token.wTokenAddress);
@@ -414,7 +414,7 @@ export default {
                 const receiving = new ReceivingModel({
                     symbol: token.symbol,
                     symbolW: Token.symbol,
-                    amountUnSold: web3.fromWei(await W12Token.methods.balanceOf(Token.crowdsaleAddress), 'ether').toString(),
+                    amountUnSold: fromWeiDecimalsString(await W12Token.methods.balanceOf(Token.crowdsaleAddress), state.currentProject.decimals),
                     amountRemainingInTokenChanger: 0,
                     amountRemainingAfterTheExchange: 0,
                     amountTotalAvailable: 0,
