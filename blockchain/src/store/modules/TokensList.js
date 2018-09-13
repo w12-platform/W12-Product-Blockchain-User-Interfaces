@@ -1,5 +1,5 @@
 import Connector from "lib/Blockchain/DefaultConnector";
-import {promisify, isZeroAddress} from "lib/utils";
+import {promisify, isZeroAddress, fromWeiDecimalsString} from "lib/utils";
 import {map} from 'p-iteration';
 
 const moment = window.moment;
@@ -78,9 +78,9 @@ export default {
                     const getBalance = promisify(web3.eth.getBalance.bind(web3.eth));
                     const foundBalanceInWei = (await getBalance(W12FundAddress)).toString();
 
-                    const WTokenTotal = web3.fromWei(token.wTokensIssuedAmount, 'ether').toString();
-                    const tokensOnSale = web3.fromWei((await W12Token.methods.balanceOf(token.crowdsaleAddress)).toString(), 'ether').toString();
-                    const tokensForSaleAmount = web3.fromWei(token.tokensForSaleAmount, 'ether').toString();
+                    const WTokenTotal = fromWeiDecimalsString(token.wTokensIssuedAmount, token.decimals);
+                    const tokensOnSale = fromWeiDecimalsString((await W12Token.methods.balanceOf(token.crowdsaleAddress)).toString(), token.decimals);
+                    const tokensForSaleAmount = fromWeiDecimalsString(token.tokensForSaleAmount, token.decimals);
                     const tokenPrice = web3.fromWei(await W12Crowdsale.methods.price(), 'ether').toString();
                     const stages = (await W12Crowdsale.getStagesList());
                     const startDate = stages.length ? stages[0].startDate : null;
@@ -188,8 +188,10 @@ export default {
                         const WTokenAddress = (await W12Crowdsale.methods.token());
                         const W12Token = W12TokenFactory.at(WTokenAddress);
 
-                        const WTokenTotal = web3.fromWei(token.wTokensIssuedAmount, 'ether').toString();
-                        const tokensOnSale = web3.fromWei((await W12Token.methods.balanceOf(token.crowdsaleAddress)).toString(), 'ether').toString();
+                        const WTokenTotal = fromWeiDecimalsString(token.wTokensIssuedAmount, token.decimals);
+                        const tokensOnSale = fromWeiDecimalsString((await W12Token.methods.balanceOf(token.crowdsaleAddress)).toString(), token.decimals);
+                        const tokensForSaleAmount = fromWeiDecimalsString(token.tokensForSaleAmount, token.decimals);
+
                         const tokenPrice = web3.fromWei(await W12Crowdsale.methods.price(), 'ether').toString();
                         const stages = (await W12Crowdsale.getStagesList());
                         const startDate = stages.length ? stages[0].startDate : null;
@@ -246,6 +248,7 @@ export default {
                         token.crowdSaleInformation.saleAmount = new BigNumber(WTokenTotal).minus(tokensOnSale).toString();
                         token.crowdSaleInformation.salePercent = new BigNumber(WTokenTotal).minus(tokensOnSale).div(WTokenTotal).mul(100).toString();
                         token.crowdSaleInformation.tokensOnSale = tokensOnSale;
+                        token.crowdSaleInformation.tokensForSaleAmount = tokensForSaleAmount;
                         token.crowdSaleInformation.stageDiscount = stageDiscount;
                         token.crowdSaleInformation.stageEndDate = stageEndDate;
                         token.crowdSaleInformation.price = new BigNumber(tokenPrice).mul(100 - stageDiscount).div(100).toString();

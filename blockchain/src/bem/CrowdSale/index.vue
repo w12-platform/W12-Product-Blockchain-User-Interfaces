@@ -47,7 +47,7 @@
             </tr>
             <tr>
                 <td>{{ $t('InvestorDashboardTotalTokens') }}</td>
-                <td>{{ currentToken.crowdSaleInformation.WTokenTotal|decimals }}</td>
+                <td>{{ currentToken.crowdSaleInformation.WTokenTotal }}</td>
             </tr>
             <tr>
                 <td>{{ $t('InvestorDashboardTokensSold') }}</td>
@@ -59,7 +59,7 @@
             </tr>
             <tr>
                 <td>{{ $t('InvestorDashboardTokensOnSale') }}</td>
-                <td>{{ currentToken.crowdSaleInformation.tokensOnSale|decimals }}</td>
+                <td>{{ currentToken.crowdSaleInformation.tokensOnSale }}</td>
             </tr>
             <tr>
                 <td>{{ $t('InvestorDashboardPrice', {'WToken': currentToken.symbol }) }}</td>
@@ -95,6 +95,7 @@
 <script>
     import './default.scss';
     import {createNamespacedHelpers} from "vuex";
+    import { waitTransactionReceipt, formatNumber, toWeiDecimals, fromWeiDecimals, fromWeiDecimalsString} from 'lib/utils.js';
 
     const TokensListNS = createNamespacedHelpers("TokensList");
     import countdown from 'countdown';
@@ -102,7 +103,17 @@
     const moment = window.moment;
     const web3 = new Web3();
     const BigNumber = web3.BigNumber;
-
+    BigNumber.config({
+        DECIMAL_PLACES: 36,
+        FORMAT: {
+            decimalSeparator: '.',
+            groupSeparator: '',
+            groupSize: 3,
+            secondaryGroupSize: 0,
+            fractionGroupSeparator: ' ',
+            fractionGroupSize: 0
+        }
+    });
     export default {
         name: 'CrowdSale',
         template: '#CrowdsaleTemplate',
@@ -116,9 +127,6 @@
         filters: {
             dateFormat(value) {
                 return moment(value * 1000).utc().format("DD.MM.YYYY HH:mm");
-            },
-            decimals(value) {
-                return new BigNumber(value).toString();
             },
         },
         watch: {},
