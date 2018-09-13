@@ -19,7 +19,7 @@
 
                     <div v-if="currentAccountData.allowanceForSwap !== '0'" class="py-2">
                         {{ $t('ExchangeTokensProjectsMessagesBeforeSwap', {
-                        allowance: toEthDecimals(currentAccountData.allowanceForSwap),
+                        allowance: toEth(currentAccountData.allowanceForSwap),
                         WToken: currentProject.symbol,
                         Token: currentProject.tokenInformation.symbol,
                         })}}

@@ -93,17 +93,19 @@ export function formatNumber(textNumber) {
 }
 
 export function fromWeiDecimalsString(value, decimals) {
-    return new BigNumber(value)
+    return value ? new BigNumber(value)
         .div(new BigNumber(10).pow(decimals))
-        .toString();
+        .toString()
+        : null;
 }
 
 export function fromWeiDecimals(value, decimals) {
-    return new BigNumber(value)
-        .div(new BigNumber(10).pow(decimals));
+    return value ? new BigNumber(value)
+        .div(new BigNumber(10).pow(decimals))
+        : null;
 }
 
 export function toWeiDecimals(value, decimals) {
     const oneToken = new BigNumber(10).pow(decimals);
-    return new BigNumber(value).times(oneToken);
+    return value ? new BigNumber(value).times(oneToken): null;
 }

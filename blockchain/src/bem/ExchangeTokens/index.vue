@@ -114,18 +114,7 @@
         name: 'ExchangeTokens',
         template: '#ExchangeTokensTemplate',
         components: {},
-        filters: {
-            toEth(value) {
-                value = value ? new BigNumber(value) : 0;
-                return web3.fromWei(value, 'ether').toString();
-            },
-            decimals(value) {
-                const d = this.currentToken ? this.currentToken.decimals : 0;
-                const base = new BigNumber(10);
-                value = new BigNumber(value);
-                return value.div(base.pow(d)).toString();
-            },
-        },
+
         data() {
             return {
                 loading: false,
@@ -167,13 +156,13 @@
             }),
 
             balance() {
-                return fromWeiDecimalsString(this.currentAccountData.balance, this.currentProject.decimals);
+                return fromWeiDecimalsString(this.currentAccountData.balance, this.currentToken.decimals);
             },
             unVestingBalance() {
-                return fromWeiDecimalsString(this.currentAccountData.unVestingBalance, this.currentProject.decimals);
+                return fromWeiDecimalsString(this.currentAccountData.unVestingBalance, this.currentToken.decimals);
             },
             vestingBalance() {
-                return fromWeiDecimalsString(this.currentAccountData.vestingBalance, this.currentProject.decimals);
+                return fromWeiDecimalsString(this.currentAccountData.vestingBalance, this.currentToken.decimals);
             },
 
             isPendingTx() {
@@ -218,7 +207,7 @@
             },
             toEthDecimals(value) {
                 value = value ? new BigNumber(value) : 0;
-                return fromWeiDecimalsString(value, this.currentProject.decimals);
+                return fromWeiDecimalsString(value, this.currentToken.decimals);
             },
             async approveSwapToSpend() {
                 this.loading = true;
@@ -230,7 +219,7 @@
                     const swapAddress = (await W12Lister.methods.swap());
                     const tx = await W12Token.methods.approve(
                         swapAddress,
-                        toWeiDecimals(this.amount, this.currentProject.decimals),
+                        toWeiDecimals(this.amount, this.currentToken.decimals),
                         {from: this.currentAccount}
                     );
                     this.$store.commit(`Transactions/${UPDATE_TX}`, {

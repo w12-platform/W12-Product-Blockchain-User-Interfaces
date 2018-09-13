@@ -43,18 +43,6 @@
 
     export default {
         name: 'InvestorDashboardExchange',
-        filters: {
-            toEth(value) {
-                value = new BigNumber(value);
-                return web3.fromWei(value, 'ether').toString();
-            },
-            decimals(value) {
-                const d = this.currentToken ? this.currentToken.decimals : 0;
-                const base = new BigNumber(10);
-                value = new BigNumber(value);
-                return value.div(base.pow(d)).toString();
-            },
-        },
         components: {
             TokenSwitch,
             ExchangeTokens
@@ -111,8 +99,8 @@
                     await this.transactionsUpStatusTx();
                     await this.tokensListFetch();
                     await this.updateAccountData();
-                    window.dispatchEvent(new Event('resize'));
                     this.meta.loading = false;
+                    window.dispatchEvent(new Event('resize'));
                 }
             }
         },

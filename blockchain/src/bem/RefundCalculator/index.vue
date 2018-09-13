@@ -29,9 +29,13 @@
     import 'bem/RefundCalculator/default.scss';
     import Ledger from 'lib/Blockchain/ContractsLedger.js';
     import { RefundInformationModel } from 'bem/RefundInformation/shared.js';
+    import { waitTransactionReceipt, formatNumber, toWeiDecimals, fromWeiDecimals, fromWeiDecimalsString} from 'lib/utils.js';
 
     const web3 = new Web3();
     const BigNumber = web3.BigNumber.another({ EXPONENTIAL_AT: [-30, 30] });
+    import {createNamespacedHelpers} from "vuex";
+
+    const TokensListNS = createNamespacedHelpers("TokensList");
 
     export default {
         name: 'RefundCalculator',
@@ -98,6 +102,11 @@
                 },
             },
         },
+        computed: {
+            ...TokensListNS.mapState({
+                currentToken: "currentToken"
+            }),
+        },
         methods: {
             decimals (value) {
                 const d = this.refundInformation.tokenDecimals;
@@ -138,7 +147,7 @@
                         const {W12Fund} = this.helpers;
                         //const multiplier = new BigNumber(10).pow(this.tokenDecimals);
                         const value = await W12Fund.methods.getRefundAmount(
-                            web3.toWei(this.inputValue, 'ether'),
+                            toWeiDecimals(this.inputValue, this.currentToken.decimals),
                             //(new BigNumber(parseFloat() || 0)).mul(multiplier).toString(),
                             {from: this.accountAddress}
                         );
