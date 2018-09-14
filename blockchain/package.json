@@ -16,6 +16,7 @@
   "dependencies": {
     "@mdi/font": "^2.5.94",
     "axios": "^0.18.0",
+    "bootstrap": "^4.0.0-beta",
     "buefy": "^0.6.6",
     "countdown": "^2.6.0",
     "jsunicode": "^1.1.1",

@@ -1,0 +1,3 @@
+[submodule "stand"]
+	path = stand
+	url = https://github.com/w12-platform/W12-Product-Test-Stand

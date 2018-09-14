@@ -1,0 +1,15 @@
+.Header {
+  &__buytokens {
+    border: none;
+    &:hover {
+      color: #fff;
+    }
+    &:active {
+      background-image: -webkit-gradient(linear, left top, right top, from(#e88a00), to(#cf1a3c));
+      background-image: -webkit-linear-gradient(left, #e88a00, #cf1a3c);
+      background-image: -o-linear-gradient(left, #e88a00, #cf1a3c);
+      background-image: linear-gradient(to right, #e88a00, #cf1a3c);
+      border: none;
+    }
+  }
+}
