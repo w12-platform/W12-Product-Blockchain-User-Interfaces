@@ -35,9 +35,12 @@
     import './default.scss';
     import ProjectSwitch from 'bem/ProjectSwitch';
     import Receiving from 'bem/Receiving';
+    import {CONFIRM_TX} from "store/modules/Transactions.js";
 
     import {createNamespacedHelpers} from 'vuex';
+    import {isZeroAddress} from 'lib/utils';
 
+    const ConfigNS = createNamespacedHelpers('Config');
     const LedgerNS = createNamespacedHelpers("Ledger");
     const AccountNS = createNamespacedHelpers("Account");
     const ProjectNS = createNamespacedHelpers("Project");
@@ -65,6 +68,9 @@
             ...LangNS.mapState({
                 langMeta: 'meta'
             }),
+            ...ConfigNS.mapState({
+                W12Lister: "W12Lister"
+            }),
 
             isError() {
                 return this.ledgerMeta.loadingError || this.ProjectMeta.loadingProjectError || this.accountMeta.loadingError;
@@ -81,28 +87,138 @@
                 handler: 'handleCurrentAccountChange',
                 immediate: true
             },
-            'currentProject': {
-                handler: 'handleCurrentProjectChange',
-                immediate: true
+            'ProjectMeta': {
+                handler: 'handleProjectMetaChange',
+                deep: true,
             }
         },
         methods: {
+            ...LedgerNS.mapActions({
+                LedgerFetch: 'fetch',
+            }),
             ...AccountNS.mapActions({
                 watchCurrentAccount: 'watch',
                 updateAccountData: 'updateAccountData',
             }),
             ...ProjectNS.mapActions({
-                ProjectFetchList: "fetchList"
+                updateTokensApprovedToPlaceValue: 'updateTokensApprovedToPlaceValue',
+                updatePlacedTokenStatus: 'updatePlacedTokenStatus',
+                fetchProject: "fetchProject",
+                ProjectFetchList: "fetchList",
+                fetchCrowdSaleAddressAndInfo: "fetchCrowdSaleAddressAndInfo",
+                updateTokenInfo: "updateTokenInfo",
+                updateOwnerBalance: "updateOwnerBalance",
+                upTokenAfterEvent: "upTokenAfterEvent",
+                fetchCrowdSaleStagesList: "fetchCrowdSaleStagesList",
+                fetchCrowdSaleMilestonesList: "fetchCrowdSaleMilestonesList",
+                updateReceivingInformation: "updateReceivingInformation",
+                updateFundInformation: "updateFundInformation",
             }),
-
             async handleCurrentAccountChange(currentAccount) {
                 if(currentAccount){
                     await this.ProjectFetchList();
                 }
             },
-            async handleCurrentProjectChange() {
-                window.dispatchEvent(new Event('resize'));
-            }
+            async handleProjectMetaChange(meta) {
+                if(!meta.loadingProject) {
+                    await this.updateAccountData();
+                    this.unsubscribeFromEvents();
+                    await this.subscribeToEvents();
+                    window.dispatchEvent(new Event('resize'));
+                }
+            },
+            unsubscribeFromEvents() {
+                if (!this.subscribedEvents) return;
+
+                if (this.subscribedEvents.ApprovalW12Event) {
+                    this.subscribedEvents.ApprovalW12Event.stopWatching();
+                }
+                if (this.subscribedEvents.UnsoldTokenReturned) {
+                    this.subscribedEvents.UnsoldTokenReturned.stopWatching();
+                }
+                if (this.subscribedEvents.Exchange) {
+                    this.subscribedEvents.Exchange.stopWatching();
+                }
+
+                this.subscribedEvents = null;
+            },
+            async subscribeToEvents() {
+                if (!this.currentProject) return;
+                if (this.subscribedEvents) return;
+
+                this.subscribeToEventsLoading = true;
+
+                try {
+                    const {W12CrowdsaleFactory, W12ListerFactory, W12TokenFactory, W12AtomicSwapFactory} = await this.LedgerFetch();
+                    let ApprovalW12Event = null;
+                    let UnsoldTokenReturned = null;
+                    let Exchange = null;
+
+                    console.log("test");
+
+                    if (!isZeroAddress(this.currentProject.crowdsaleAddress)) {
+                        const W12Crowdsale = W12CrowdsaleFactory.at(this.currentProject.crowdsaleAddress);
+                        UnsoldTokenReturned = W12Crowdsale.events.UnsoldTokenReturned(null, null, this.onUnsoldTokenReturnedEvent);
+                        console.log("test3");
+                        const W12Lister = W12ListerFactory.at(this.W12Lister.address);
+                        const swapAddress = await W12Lister.methods.swap();
+                        const W12AtomicSwap = W12AtomicSwapFactory.at(swapAddress);
+                        Exchange = W12AtomicSwap.events.Exchange(null, null, this.onExchangeEvent);
+                        console.log("test2");
+                    }
+
+                    console.log(this.currentProject.wTokenAddress);
+                    if (!isZeroAddress(this.currentProject.wTokenAddress)) {
+                        console.log("test4");
+                        const W12Token = W12TokenFactory.at(this.currentProject.wTokenAddress);
+                        ApprovalW12Event = W12Token.events.Approval(null, null, this.onApprovalW12Event);
+                    }
+
+                    console.log("test5");
+                    this.subscribedEvents = {
+                        Exchange,
+                        ApprovalW12Event,
+                        UnsoldTokenReturned,
+                    };
+                } catch (e) {
+                    this.error = e.message;
+                }
+
+                this.subscribeToEventsLoading = false;
+            },
+
+            async onApprovalW12Event(error, result) {
+                if (!error) {
+                    const tx = result.transactionHash;
+                    await this.updateTokensApprovedToPlaceValue({Token: this.currentProject});
+                    await this.updateAccountData();
+                    this.$store.commit(`Transactions/${CONFIRM_TX}`, tx);
+                }
+            },
+            async onExchangeEvent(error, result){
+                if (!error) {
+                    await this.updateFundInformation({Token: this.currentProject});
+                    await this.updateAccountData();
+                    const tx = result.transactionHash;
+                    this.$store.commit(`Transactions/${CONFIRM_TX}`, tx);
+                }
+            },
+            async onTrancheReleasedEvent(error, result) {
+                if (!error) {
+                    await this.updateFundInformation({Token: this.currentProject});
+                    await this.updateAccountData();
+                    const tx = result.transactionHash;
+                    this.$store.commit(`Transactions/${CONFIRM_TX}`, tx);
+                }
+            },
+            async onUnsoldTokenReturnedEvent(error, result) {
+                if (!error) {
+                    await this.updateReceivingInformation({Token: this.currentProject});
+                    await this.updateAccountData();
+                    const tx = result.transactionHash;
+                    this.$store.commit(`Transactions/${CONFIRM_TX}`, tx);
+                }
+            },
         },
         async created() {
             await this.watchCurrentAccount();

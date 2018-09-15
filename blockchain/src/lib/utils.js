@@ -96,16 +96,16 @@ export function fromWeiDecimalsString(value, decimals) {
     return value ? new BigNumber(value)
         .div(new BigNumber(10).pow(decimals))
         .toString()
-        : null;
+        : "";
 }
 
 export function fromWeiDecimals(value, decimals) {
     return value ? new BigNumber(value)
         .div(new BigNumber(10).pow(decimals))
-        : null;
+        : "";
 }
 
 export function toWeiDecimals(value, decimals) {
     const oneToken = new BigNumber(10).pow(decimals);
-    return value ? new BigNumber(value).times(oneToken): null;
+    return value ? new BigNumber(value).times(oneToken): "";
 }

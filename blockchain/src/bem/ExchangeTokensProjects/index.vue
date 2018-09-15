@@ -19,7 +19,7 @@
 
                     <div v-if="currentAccountData.allowanceForSwap !== '0'" class="py-2">
                         {{ $t('ExchangeTokensProjectsMessagesBeforeSwap', {
-                        allowance: toEth(currentAccountData.allowanceForSwap),
+                        allowance: toEthDecimals(currentAccountData.allowanceForSwap),
                         WToken: currentProject.symbol,
                         Token: currentProject.tokenInformation.symbol,
                         })}}
@@ -150,7 +150,7 @@
 
                     const tx = await W12Token.methods.approve(
                         swapAddress,
-                        web3.toWei(this.balance, 'ether'),
+                        toWeiDecimals(this.balance, this.currentProject.decimals),
                         {from: this.currentAccount}
                     );
                     this.$store.commit(`Transactions/${UPDATE_TX}`, {
