@@ -300,7 +300,13 @@
             unsubscribeFromEvents() {
                 if (!this.subscribedEvents) return;
 
-                this.subscribedEvents.TokenPurchase.stopWatching();
+                if(this.subscribedEvents.ApprovalEvent){
+                    this.subscribedEvents.ApprovalEvent.stopWatching();
+                }
+                if(this.subscribedEvents.ExchangeEvent){
+                    this.subscribedEvents.ExchangeEvent.stopWatching();
+                }
+
                 this.subscribedEvents = null;
             },
             async subscribeToEvents() {
