@@ -154,27 +154,21 @@
                     let UnsoldTokenReturned = null;
                     let Exchange = null;
 
-                    console.log("test");
-
                     if (!isZeroAddress(this.currentProject.crowdsaleAddress)) {
                         const W12Crowdsale = W12CrowdsaleFactory.at(this.currentProject.crowdsaleAddress);
                         UnsoldTokenReturned = W12Crowdsale.events.UnsoldTokenReturned(null, null, this.onUnsoldTokenReturnedEvent);
-                        console.log("test3");
                         const W12Lister = W12ListerFactory.at(this.W12Lister.address);
                         const swapAddress = await W12Lister.methods.swap();
                         const W12AtomicSwap = W12AtomicSwapFactory.at(swapAddress);
                         Exchange = W12AtomicSwap.events.Exchange(null, null, this.onExchangeEvent);
-                        console.log("test2");
                     }
 
                     console.log(this.currentProject.wTokenAddress);
                     if (!isZeroAddress(this.currentProject.wTokenAddress)) {
-                        console.log("test4");
                         const W12Token = W12TokenFactory.at(this.currentProject.wTokenAddress);
                         ApprovalW12Event = W12Token.events.Approval(null, null, this.onApprovalW12Event);
                     }
 
-                    console.log("test5");
                     this.subscribedEvents = {
                         Exchange,
                         ApprovalW12Event,
