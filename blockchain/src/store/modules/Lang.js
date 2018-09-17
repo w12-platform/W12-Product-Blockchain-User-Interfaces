@@ -1,5 +1,7 @@
 import axios from "axios";
 
+import config from '../../config.js';
+
 export const LANG_UPDATE = "LANG_UPDATE";
 export const LANG_UPDATE_META = "LANG_UPDATE_META";
 const params = new URLSearchParams(window.location.search);
@@ -43,7 +45,7 @@ export default {
             } else {
                 if(!state.meta.lock){
                     commit(LANG_UPDATE_META, {lock: true});
-                    await axios.get("https://w12.io/ru/api/translate/w12translations.json").then((response) => {
+                    await axios.get(config.apiTranslate).then((response) => {
                         if (response.data) {
                             commit(LANG_UPDATE, {vocabulary: response.data});
                         }
