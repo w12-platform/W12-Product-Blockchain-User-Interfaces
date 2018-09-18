@@ -43,7 +43,7 @@ export class Connector {
                 await ethereum.enable();
                 return window.web3.currentProvider;
             } catch (error) {
-                // User denied account access...
+                throw new Error('User denied account access...');
             }
         } else if (typeof window.web3 !== 'undefined') {
             return window.web3.currentProvider;
