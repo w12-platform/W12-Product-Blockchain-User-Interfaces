@@ -18,7 +18,7 @@ export class W12CrowdsaleWrapper extends BaseWrapper {
                 const internalStageStructure = {
                     startDate: stage[0].toNumber(),
                     endDate: stage[1].toNumber(),
-                    discount: stage[2].toNumber(),
+                    discount: stage[2].toNumber() / 100,
                     vestingDate: stage[3].toNumber(),
                     bonusVolumes,
                     wasCreated: true
@@ -77,13 +77,12 @@ export class W12CrowdsaleWrapper extends BaseWrapper {
             dates.push(
                 [moment(stage.startDate, format(stage.endDate)).utc().unix(), moment(stage.endDate, format(stage.endDate)).utc().unix()]
             );
-            discounts.push(stage.discount);
+            discounts.push(Math.floor(stage.discount * 100));
             vestings.push(
                 moment(stage.vestingDate, format(stage.endDate)).utc().unix()
             );
         }
 
-        console.log(dates, discounts, vestings);
         return await this.methods.setStages(dates, discounts, vestings);
     }
 
@@ -99,7 +98,7 @@ export class W12CrowdsaleWrapper extends BaseWrapper {
                 milestone.endDate+1, //voteEndDate remove vote
                 milestone.withdrawalEndDate
             );
-            tranchePercents.push(Number.parseInt(milestone.tranchePercent));
+            tranchePercents.push(Math.floor(milestone.tranchePercent * 100));
             offsets.push(
                 countStringBytes(milestone.name),
                 countStringBytes(milestone.description),
@@ -131,7 +130,7 @@ export class W12CrowdsaleWrapper extends BaseWrapper {
                 const data = {
                     name: decodeStringFromBytes(milestone[4]),
                     description: decodeStringFromBytes(milestone[5]),
-                    tranchePercent: milestone[1].toString(),
+                    tranchePercent: milestone[1].toString() / 100,
                     endDate: milestone[0].toNumber(),
                     voteEndDate: milestone[2].toNumber(),
                     withdrawalEndDate: milestone[3].toNumber(),
