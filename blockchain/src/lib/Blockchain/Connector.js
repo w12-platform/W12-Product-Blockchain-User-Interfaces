@@ -36,7 +36,16 @@ export class Connector {
         await onLoad;
 
         // get metamask provider
-        if (typeof window.web3 !== 'undefined') {
+        if (window.ethereum) {
+            window.web3 = new Web3(ethereum);
+            try {
+                // Request account access if needed
+                await ethereum.enable();
+                return window.web3.currentProvider;
+            } catch (error) {
+                // User denied account access...
+            }
+        } else if (typeof window.web3 !== 'undefined') {
             return window.web3.currentProvider;
         } else if (config.useInfuraAsFallbackNet) {
             return new web3.providers.HttpProvider(`${config.infura.net}${config.infura.key}`);
