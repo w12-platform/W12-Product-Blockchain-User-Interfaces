@@ -16,35 +16,37 @@
     <link rel="stylesheet" href="//cdn.materialdesignicons.com/2.4.85/css/materialdesignicons.min.css">
 </head>
 <body>
-<header class="header">
-    <div class="header__line">
+<div id="app">
+    <header class="header">
+        <div class="header__line">
+            <div class="container">
+                <div class="header__content">
+                    <div class="logo"><a class="logo__link" href="/"><img class="logo__img" src="stand/html/img/logo.svg" alt=""></a></div>
+                    <div class="actions">
+                        <header-buy-w12-tokens></header-buy-w12-tokens>
+                        <lang-switch style="margin-left: 45px; width: 80px;"></lang-switch>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <main class="main">
         <div class="container">
-            <div class="header__content">
-                <div class="logo"><a class="logo__link" href="/"><img class="logo__img" src="stand/html/img/logo.svg" alt=""></a></div>
-                <div class="actions">
-                    <div id="HeaderBuyW12Tokens"></div>
-                    <div id="langSwitch" style="margin-left: 45px; width: 80px;"></div>
+            <div class="main__track">
+                <div class="content">
+                    <investor-dashboard-exchange></investor-dashboard-exchange>
+                </div>
+                <div class="sidebar" id="sidebar"><span class="toggle-mobile-btn"><i class="fa fa-arrow-up"></i></span>
+                    <div class="sidebar__inner">
+                        <sidebar-menu></sidebar-menu>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</header>
-<main class="main">
-    <div class="container">
-        <div class="main__track">
-            <div class="content">
-                <div id="appInvestorDashboardExchange"></div>
-            </div>
-            <div class="sidebar" id="sidebar"><span class="toggle-mobile-btn"><i class="fa fa-arrow-up"></i></span>
-                <div class="sidebar__inner">
-                    <div id="SidebarMenu"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-</main>
-<div class="sticky-footer"></div>
-<div id="appFooter"></div>
+    </main>
+    <div class="sticky-footer"></div>
+    <app-footer></app-footer>
+</div>
 <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 <link rel="stylesheet" href="stand/html/css/main.css">
 <script src="stand/html/libs/jquery/jquery-3.2.1.min.js"></script>
@@ -52,10 +54,6 @@
 <script src="stand/html/js/common.js"></script>
 <script src="blockchain/node_modules/moment/moment.js"></script>
 <script src="blockchain/node_modules/web3/dist/web3.js"></script>
-<script src="/blockchain/build/InvestorDashboardExchange.js"></script>
-<script src="/blockchain/build/LangSwitch.js"></script>
-<script src="/blockchain/build/SidebarMenu.js"></script>
-<script src="/blockchain/build/Footer.js"></script>
-<script src="/blockchain/build/HeaderBuyW12Tokens.js"></script>
+<script src="/blockchain/build/App.js"></script>
 </body>
 </html>

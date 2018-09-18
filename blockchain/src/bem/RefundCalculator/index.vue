@@ -141,14 +141,12 @@
                 this.calculation = true;
 
                 this.$emit('input', this.inputValue);
-
                 try {
                     if (this.helpers) {
                         const {W12Fund} = this.helpers;
-                        //const multiplier = new BigNumber(10).pow(this.tokenDecimals);
+
                         const value = await W12Fund.methods.getRefundAmount(
                             toWeiDecimals(this.inputValue, this.currentToken.decimals),
-                            //(new BigNumber(parseFloat() || 0)).mul(multiplier).toString(),
                             {from: this.accountAddress}
                         );
 
@@ -163,4 +161,3 @@
         },
     };
 </script>
-

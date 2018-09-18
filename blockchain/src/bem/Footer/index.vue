@@ -59,5 +59,8 @@
                 langMeta: 'meta'
             })
         },
+        async created() {
+            window.dispatchEvent(new Event('resize'));
+        },
     };
 </script>
