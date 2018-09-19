@@ -3,12 +3,12 @@ jobs:
   build:
     docker:
       - image: docker:dind
-
     working_directory: ~/code
-
     environment:
       GIT_SUBMODULE_STRATEGY: recursive
-
+    branches:
+      only:
+        - develop
     steps:
       - checkout
       - setup_remote_docker:
