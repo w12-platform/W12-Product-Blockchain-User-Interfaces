@@ -10,50 +10,50 @@
                 <span>{{ errorMessage }}</span>
             </div>
             <div v-if="!isLoading">
-                <crowdsdal-list :list="filteredTokensList"></crowdsdal-list>
-                <div
-                        class="card p-5"
-                        v-for="token in filteredTokensList"
-                        :key="token.tokenAddress"
-                >
-                    <p>Token address: {{ token.tokenAddress }}</p>
-                    <p>Token name: {{ token.name }}</p>
-                    <p>Token symbol: {{ token.symbol }}</p>
-                    <converter
-                            :tokenPrice="token.tokenPrice"
-                            :bonusConditions="token.bonusVolumes"
-                            :fixedDiscountPercent="token.stageDiscount"
-                            @change="handleConverterChange(token.tokenAddress, $event)"
-                    ></converter>
-                    <p>Total buy: {{ preparedBuyAmountByTokenAddress[token.tokenAddress] }} ETH</p>
-                    <button class="btn btn-primary btn-sm" @click="handleBuyClick(token.tokenAddress)">
-                        Buy
-                    </button>
-                </div>
+                <crowdsdal-switch :list="filteredTokensList"></crowdsdal-switch>
+                <crowdsdal></crowdsdal>
+
+                <h2>Скидки</h2>
+                <sale-table></sale-table>
+
+                <h2>Купить токены {{ selected.symbolW }}</h2>
+                <calculator></calculator>
             </div>
         </section>
     </div>
 </template>
 
 <script>
+    import './default.scss';
+    import { createNamespacedHelpers } from "vuex";
     import Ledger from '../../lib/Blockchain/ContractsLedger.js';
-    import config from '../../config.js';
     import {
         UNKNOWN_ERROR_WHILE_FETCH_TOKENS_LIST
     } from '../../errors.js';
     import Converter from '../Converter';
-    import CrowdsdalList from '../CrowdsdalList';
+    import CrowdsdalSwitch from '../CrowdsdalSwitch';
+    import Crowdsdal from '../Crowdsdal';
+
+    const configStore = createNamespacedHelpers("config");
+    const crowdsdalListStore = createNamespacedHelpers("crowdsdalList");
+
 
     const moment = window.moment;
     const web3 = new Web3();
     const BigNumber = web3.BigNumber;
+
+    import SaleTable from '../SaleTable'
+    import Calculator from '../Calculator'
 
     export default {
         name: 'InvestorDashboard',
         template: '#InvestorDashboardTemplate',
         components: {
             Converter,
-            CrowdsdalList
+            Crowdsdal,
+            CrowdsdalSwitch,
+            SaleTable,
+            Calculator
         },
         data () {
             return {
@@ -63,17 +63,17 @@
                 tokensList: [],
                 crawdsaleInformationByTokenAddress: {},
                 tokenInformationByTokenAddress: {},
-                preparedBuyAmountByTokenAddress: {},
                 currentDateUnix: moment.utc().unix()
             };
         },
-        watch: {
-            filteredTokensList: {
-                handler: 'handleFilteredTokensListChange',
-                immediate: true
-            }
-        },
         computed: {
+            ...configStore.mapState({
+                W12Lister: "W12Lister"
+            }),
+            ...crowdsdalListStore.mapState({
+                selected: "selected"
+            }),
+
             isLoading () {
                 return !!(
                     this.loadingLedger
@@ -98,7 +98,8 @@
                         tokenPrice,
                         startDate,
                         stages,
-                        WTokenAddress
+                        WTokenAddress,
+                        crowdsaleAddress
                     } = crowdsaleInformation;
 
                     const {
@@ -161,8 +162,6 @@
                         }
                     }
 
-                    //console.log(timeLeft);
-
                     return {
                         WTokenTotal,
                         WTokenOnSale,
@@ -182,7 +181,8 @@
                         endDate,
                         status,
                         total,
-                        stages
+                        stages,
+                        crowdsaleAddress
                     };
                 });
 
@@ -234,9 +234,7 @@
 
                 if (W12ListerFactory) {
                     try {
-
-
-                        const W12Lister = W12ListerFactory.at(config.contracts.W12Lister.address);
+                        const W12Lister = W12ListerFactory.at(this.W12Lister.address);
                         let list = await W12Lister.fetchAllTokensComposedInformation();
 
                         list = list.filter(({ token }) => Boolean(token.crowdsaleAddress));
@@ -270,33 +268,6 @@
                     });
                 }
             },
-
-            handleFilteredTokensListChange(value) {
-                this.preparedBuyAmountByTokenAddress = {};
-
-                for (let token of value) {
-                    this.$set(this.preparedBuyAmountByTokenAddress, token.tokenAddress, '0');
-                }
-            },
-            handleConverterChange(tokenAddress, { tokens, ETHs }) {
-                this.preparedBuyAmountByTokenAddress[tokenAddress] = ETHs;
-            },
-            async buy(tokenAddress, amount) {
-                const crowdsaleInformation = this.crawdsaleInformationByTokenAddress[tokenAddress];
-
-                const {W12CrowdsaleFactory} = await this.loadLedger();
-
-                const W12Crowdsale = W12CrowdsaleFactory.at(crowdsaleInformation.crowdsaleAddress);
-
-                await W12Crowdsale.methods.buyTokens({ value: web3.toWei(amount, 'ether') });
-            },
-            handleBuyClick(tokenAddress) {
-                const amount = new BigNumber(this.preparedBuyAmountByTokenAddress[tokenAddress]);
-
-                if (amount.greaterThan(0)) {
-                    this.buy(tokenAddress, amount);
-                }
-            }
         },
         errorCaptured(error, vm, info) {
             this.errorMessage = info || error.message;
@@ -305,6 +276,8 @@
             await this.fetchTokensList();
             await this.fetchTokensInfo();
             await this.fetchCrawdsaleInformationForEachToken();
+
+            setInterval(()=>{ this.currentDateUnix = moment.utc().unix() }, 1000);
         }
     };
 

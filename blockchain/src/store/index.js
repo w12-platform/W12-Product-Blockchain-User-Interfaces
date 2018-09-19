@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import config from "./modules/config";
+import crowdsdalList from "./modules/crowdsdalList";
 import PersistedStatePlugin from "vuex-persistedstate";
 
 Vue.use(Vuex);
@@ -11,12 +12,14 @@ const store = {
     mutations: {},
     getters: {},
     modules: {
-        config
+        config,
+        crowdsdalList
     },
     plugins: [
         PersistedStatePlugin({
             paths: [
                 "config.W12Lister.address",
+                "crowdsdalList.selected",
             ]
         })
     ]

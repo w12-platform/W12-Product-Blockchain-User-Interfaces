@@ -1,3 +1,18 @@
 .Calculator {
+  &__inputs {
+    display: flex;
+    margin-bottom: 20px;
+  }
+  &__inputTokens {
+    margin-left: 5px;
+  }
+  &__inputEth {
+    margin-left: 5px;
+  }
+  &__info {
 
+  }
+  &__buy {
+    margin: 10px auto;
+  }
 }
