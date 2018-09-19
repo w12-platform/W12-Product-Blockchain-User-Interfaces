@@ -23,7 +23,6 @@ jobs:
   deploy:
     <<: *defaults
     steps:
-      - checkout
       - setup_remote_docker:
           docker_layer_caching: true
       - run:
