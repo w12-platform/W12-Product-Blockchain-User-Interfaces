@@ -286,6 +286,8 @@
                 if (!this.subscribedEvents) return;
 
                 this.subscribedEvents.FundsRefunded.stopWatching();
+                this.subscribedEvents.ApprovalW12Event.stopWatching();
+
                 this.subscribedEvents = null;
             },
             async subscribeToEvents() {
@@ -295,12 +297,16 @@
                 this.subscribeToEventsLoading = true;
 
                 try {
-                    const {W12FundFactory} = await this.ledgerFetch();
+                    const {W12FundFactory, W12TokenFactory} = await this.ledgerFetch();
                     const fundAddress = this.currentToken.crowdSaleInformation.fund.W12FundAddress;
                     const W12Fund = W12FundFactory.at(fundAddress);
                     const FundsRefunded = W12Fund.events.FundsRefunded(null, null, this.onFundsRefundedEvent);
 
+                    const W12Token = W12TokenFactory.at(this.currentToken.wTokenAddress);
+                    const ApprovalW12Event = W12Token.events.Approval(null, null, this.onApprovalW12Event);
+
                     this.subscribedEvents = {
+                        ApprovalW12Event,
                         FundsRefunded,
                     };
                 } catch (e) {
@@ -314,6 +320,14 @@
                     const tx = result.transactionHash;
                     await this.updateAccountData();
                     await this.tokensListUpdate({Index: this.currentToken.index});
+                    this.$store.commit(`Transactions/${CONFIRM_TX}`, tx);
+                }
+            },
+            async onApprovalW12Event(error, result) {
+                if (!error) {
+                    const tx = result.transactionHash;
+                    await this.tokensListUpdate({Index: this.currentToken.index});
+                    await this.updateAccountData();
                     this.$store.commit(`Transactions/${CONFIRM_TX}`, tx);
                 }
             },
