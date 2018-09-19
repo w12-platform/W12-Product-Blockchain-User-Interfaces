@@ -8,6 +8,7 @@ jobs:
       GIT_SUBMODULE_STRATEGY: recursive
     branches:
       only:
+        - master
         - develop
     steps:
       - checkout
