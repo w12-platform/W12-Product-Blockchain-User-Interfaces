@@ -1,15 +1,27 @@
+# jobs
+defaults: &defaults
+  docker:
+    - image: docker:dind
+  working_directory: ~/code
+  environment:
+    GIT_SUBMODULE_STRATEGY: recursive
+
 version: 2
 jobs:
   build:
-    docker:
-      - image: docker:dind
-    working_directory: ~/code
-    environment:
-      GIT_SUBMODULE_STRATEGY: recursive
-    branches:
-      only:
-        - master
-        - develop
+    <<: *defaults
+    steps:
+      - checkout
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+          name: build image
+          command: |
+              docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
+              docker build --pull  -t "$DOCKERHUB_USERNAME/$CI_REGISTRY_IMAGE" .
+              docker push "$DOCKERHUB_USERNAME/$CI_REGISTRY_IMAGE"
+  deploy:
+    <<: *defaults
     steps:
       - checkout
       - setup_remote_docker:
@@ -17,16 +29,28 @@ jobs:
       - run:
           name: setup
           command: |
-              apk add --no-cache openssh-client
-              eval $(ssh-agent -s)
-      - run:
-          name: build image
-          command: |
-              docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
-              docker build --pull  -t "$DOCKERHUB_USERNAME/$CI_REGISTRY_IMAGE" .
-              docker push "$DOCKERHUB_USERNAME/$CI_REGISTRY_IMAGE"
+            apk add --no-cache openssh-client
+            eval $(ssh-agent -s)
       - run:
           name: deploy
           command: |
-              ssh -o StrictHostKeyChecking=no "$DEPLOY_USER@$DEPLOY_SERVER" docker login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_PASSWORD"
-              ssh -o StrictHostKeyChecking=no "$DEPLOY_USER@$DEPLOY_SERVER" "cd /opt/servers/ && docker-compose -f docker-compose-w12-product.yml pull && docker-compose -f docker-compose-w12-product.yml up -d"
+            ssh -o StrictHostKeyChecking=no "$DEPLOY_USER@$DEPLOY_SERVER" docker login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_PASSWORD"
+            ssh -o StrictHostKeyChecking=no "$DEPLOY_USER@$DEPLOY_SERVER" "cd /opt/servers/ && docker-compose -f docker-compose-w12-product.yml pull && docker-compose -f docker-compose-w12-product.yml up -d"
+
+# workflows
+default_filters: &default_filters
+  filters:
+    branches:
+      only:
+        - develop
+
+workflows:
+  version: 2
+  build_deploy:
+    jobs:
+      - build:
+          <<: *default_filters
+      - deploy:
+          <<: *default_filters
+          requires:
+            - build
