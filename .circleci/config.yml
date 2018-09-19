@@ -3,8 +3,6 @@ defaults: &defaults
   docker:
     - image: docker:dind
   working_directory: ~/code
-  environment:
-    GIT_SUBMODULE_STRATEGY: recursive
 
 version: 2
 jobs:
@@ -14,6 +12,12 @@ jobs:
       - checkout
       - setup_remote_docker:
           docker_layer_caching: true
+      - run:
+          name: pull submodules
+          command: |
+              apk add --no-cache git
+              git submodule sync --recursive
+              git submodule update --init --recursive
       - run:
           name: build image
           command: |
