@@ -326,25 +326,49 @@
 //         "en": "How it Works",
 //         "ru": "Как это работает"
 //     },
+//     "FooterMenu2Url": {
+//         "en": "#",
+//         "ru": "#"
+//     },
 //     "FooterMenu3": {
 //         "en": "Whitepaper",
 //         "ru": "Белая бумага"
+//     },
+//     "FooterMenu3Url": {
+//         "en": "#",
+//         "ru": "#"
 //     },
 //     "FooterMenu4": {
 //         "en": "GitHub",
 //         "ru": "GitHub"
 //     },
+//     "FooterMenu4Url": {
+//         "en": "#",
+//         "ru": "#"
+//     },
 //     "FooterMenu5": {
 //         "en": "Privacy Policy",
 //         "ru": "Политика конфиденциальности"
+//     },
+//     "FooterMenu5Url": {
+//         "en": "#",
+//         "ru": "#"
 //     },
 //     "FooterMenu6": {
 //         "en": "Terms & Conditions",
 //         "ru": "Условия и положения"
 //     },
+//     "FooterMenu6Url": {
+//         "en": "#",
+//         "ru": "#"
+//     },
 //     "FooterMenu7": {
 //         "en": "W12 logos",
 //         "ru": "W12 логотипы"
+//     },
+//     "FooterMenu7Url": {
+//         "en": "#",
+//         "ru": "#"
 //     },
 //     "FooterMenu8": {
 //         "en": "Help",
@@ -354,37 +378,73 @@
 //         "en": "Support",
 //         "ru": "Поддержка"
 //     },
+//     "FooterMenu9Url": {
+//         "en": "#",
+//         "ru": "#"
+//     },
 //     "FooterMenu10": {
 //         "en": "Upcoming pre-ICOs",
 //         "ru": "Предстоящие до-ИОС"
+//     },
+//     "FooterMenu10Url": {
+//         "en": "#",
+//         "ru": "#"
 //     },
 //     "FooterMenu11": {
 //         "en": "Upcoming ICOs",
 //         "ru": "Предстоящие ICO"
 //     },
+//     "FooterMenu11Url": {
+//         "en": "#",
+//         "ru": "#"
+//     },
 //     "FooterMenu12": {
 //         "en": "Blockchain project ICOs",
 //         "ru": "Проект Blockchain ICOs"
+//     },
+//     "FooterMenu12Url": {
+//         "en": "#",
+//         "ru": "#"
 //     },
 //     "FooterMenu13": {
 //         "en": "All projects",
 //         "ru": "Все проекты"
 //     },
+//     "FooterMenu13Url": {
+//         "en": "#",
+//         "ru": "#"
+//     },
 //     "FooterActionsBrowseProjects": {
 //         "en": "Browse projects",
 //         "ru": "Просмотр проектов"
+//     },
+//     "FooterActionsBrowseProjectsUrl": {
+//         "en": "#",
+//         "ru": "#"
 //     },
 //     "FooterActionsStartProject": {
 //         "en": "Start a project",
 //         "ru": "Начать проект"
 //     },
+//     "FooterActionsStartProjectUrl": {
+//         "en": "#",
+//         "ru": "#"
+//     },
 //     "FooterActionsLogIn": {
 //         "en": "Log in",
 //         "ru": "Вход"
 //     },
+//     "FooterActionsLogInUrl": {
+//         "en": "#",
+//         "ru": "#"
+//     },
 //     "FooterActionsSignUp": {
 //         "en": "Sign up",
 //         "ru": "Решистрация"
+//     },
+//     "FooterActionsSignUpUrl": {
+//         "en": "#",
+//         "ru": "#"
 //     },
 //     "FooterForm1": {
 //         "en": "SIGN UP FOR SPECIAL OFFERS",
@@ -405,6 +465,26 @@
 //     "FooterFollow": {
 //         "en": "follow us",
 //         "ru": "Подписывайтесь"
+//     },
+//     "FooterFollowFacebook": {
+//         "en": "#",
+//         "ru": "#"
+//     },
+//     "FooterFollowTelegram": {
+//         "en": "#",
+//         "ru": "#"
+//     },
+//     "FooterFollowTwitter": {
+//         "en": "#",
+//         "ru": "#"
+//     },
+//     "FooterFollowMedium": {
+//         "en": "#",
+//         "ru": "#"
+//     },
+//     "FooterFollowEnvelope": {
+//         "en": "#",
+//         "ru": "#"
 //     },
 //     //---
 //
