@@ -22,8 +22,8 @@ jobs:
           name: build image
           command: |
               docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
-              docker build --pull  -t "$DOCKERHUB_USERNAME/$CI_REGISTRY_IMAGE" .
-              docker push "$DOCKERHUB_USERNAME/$CI_REGISTRY_IMAGE"
+              docker build --pull  -t "$DOCKERHUB_USERNAME/$CI_REGISTRY_IMAGE:stage" .
+              docker push "$DOCKERHUB_USERNAME/$CI_REGISTRY_IMAGE:stage"
   deploy:
     <<: *defaults
     steps:
@@ -37,15 +37,15 @@ jobs:
       - run:
           name: deploy
           command: |
-            ssh -o StrictHostKeyChecking=no "$DEPLOY_USER@$DEPLOY_SERVER" docker login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_PASSWORD"
-            ssh -o StrictHostKeyChecking=no "$DEPLOY_USER@$DEPLOY_SERVER" "cd /opt/servers/ && docker-compose -f docker-compose-w12-product.yml pull && docker-compose -f docker-compose-w12-product.yml up -d"
+            ssh -o StrictHostKeyChecking=no "$DEPLOY_USER_STAGE@$DEPLOY_SERVER_STAGE" docker login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_PASSWORD"
+            ssh -o StrictHostKeyChecking=no "$DEPLOY_USER_STAGE@$DEPLOY_SERVER_STAGE" "cd /opt/servers/ && docker-compose -f docker-compose-w12-stage.yml pull && docker-compose -f docker-compose-w12-stage.yml up -d"
 
 # workflows
 default_filters: &default_filters
   filters:
     branches:
       only:
-        - develop
+        - stage
 
 workflows:
   version: 2
