@@ -3,13 +3,13 @@
         <section class="container">
             <h2>{{ $t('InvestorDashboard') }}</h2>
 
-            <b-notification class="InvestorDashboardRefund__error" v-if="isError && !isLoading" type="is-danger" has-icon>
+            <b-notification class="InvestorDashboardRefund__error" v-if="isError" type="is-danger" has-icon>
                 <span v-if="ledgerMeta.loadingError">{{ ledgerMeta.loadingError }}</span>
                 <span v-if="tokensListMeta.loadingError">{{ tokensListMeta.loadingError }}</span>
                 <span v-if="accountMeta.loadingError">{{ accountMeta.loadingError }}</span>
             </b-notification>
 
-            <b-notification v-if="isLoading" :closable="false" class="InvestorDashboardRefund__loader">
+            <b-notification v-if="isLoading && !isError" :closable="false" class="InvestorDashboardRefund__loader">
                 <span v-if="ledgerMeta.loading">{{ $t('InvestorDashboardLoadLedger') }}<br></span>
                 <span v-if="tokensListMeta.loading">{{ $t('InvestorDashboardLoadTokens') }}<br></span>
 
