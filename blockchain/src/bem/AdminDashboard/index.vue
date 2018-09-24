@@ -3,6 +3,8 @@
         <section class="container">
             <h2>{{ $t('AdminDashboard') }}</h2>
 
+            <ListerSwitch></ListerSwitch>
+
             <b-notification class="AdminDashboard__error" v-if="isError && !isLoading" type="is-danger" :closable="false" has-icon>
                 <span v-if="ledgerMeta.loadingError">{{ ledgerMeta.loadingError }}</span>
                 <span v-if="tokensListMeta.loadingError">{{ tokensListMeta.loadingError }}</span>
@@ -17,8 +19,8 @@
             </b-notification>
 
             <div v-if="!isLoading && this.currentAccount">
-                <WhiteListTable></WhiteListTable>
-                <WhiteListForm></WhiteListForm>
+                <WhiteListTable :is="WhiteListTableVersion"></WhiteListTable>
+                <WhiteListForm :is="WhiteListFormVersion"></WhiteListForm>
             </div>
         </section>
     </div>
@@ -27,8 +29,8 @@
 <script>
     import './default.scss';
 
-    import WhiteListTable from 'bem/WhiteListTable';
-    import WhiteListForm from 'bem/WhiteListForm';
+    import ListerSwitch from 'bem/ListerSwitch';
+    import {version} from 'lib/utils.js';
 
     import {createNamespacedHelpers} from "vuex";
 
@@ -36,13 +38,13 @@
     const AccountNS = createNamespacedHelpers("Account");
     const WhitelistNS = createNamespacedHelpers("Whitelist");
     const LangNS = createNamespacedHelpers("Lang");
+    const ConfigNS = createNamespacedHelpers("Config");
 
     export default {
         name: 'AdminDashboard',
         template: '#AdminDashboardTemplate',
         components: {
-            WhiteListTable,
-            WhiteListForm
+            ListerSwitch,
         },
         data() {
             return {
@@ -66,6 +68,9 @@
             ...LangNS.mapState({
                 langMeta: 'meta'
             }),
+            ...ConfigNS.mapState({
+                W12Lister: 'W12Lister'
+            }),
 
             isLoading() {
                 return this.tokensListMeta.loading && this.meta.loading;
@@ -73,6 +78,13 @@
             isError() {
                 return this.ledgerMeta.loadingError || this.tokensListMeta.loadingError || this.accountMeta.loadingError;
             },
+
+            WhiteListTableVersion(){
+                return version('WhiteListTable', this.W12Lister.version);
+            },
+            WhiteListFormVersion(){
+                return version('WhiteListForm', this.W12Lister.version);
+            }
         },
         methods: {
             ...WhitelistNS.mapActions({
@@ -81,6 +93,15 @@
             ...AccountNS.mapActions({
                 watchCurrentAccount: 'watch',
             }),
+
+            async handleW12ListerChange(){
+                await this.whitelistFetch();
+            }
+        },
+        watch: {
+            'W12Lister': {
+                handler: 'handleW12ListerChange'
+            },
         },
         async created() {
             this.meta.loading = true;

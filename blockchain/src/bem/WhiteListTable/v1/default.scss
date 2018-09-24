@@ -1,0 +1,15 @@
+.WhiteListTable_v1 {
+  font-size: 12px;
+
+  table {
+    td {
+      vertical-align: middle !important;
+    }
+  }
+  &__detailField {
+    margin-bottom: 5px;
+  }
+  &__detailOwner {
+    margin-bottom: 2px;
+  }
+}

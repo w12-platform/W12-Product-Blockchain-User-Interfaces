@@ -1,30 +1,43 @@
 <template>
-    <div class="ConfigDashboad">
+    <div class="ConfigDashboad buefy">
         <section class="container">
             <h2>{{ $t('ConfigDashboardTitle') }}</h2>
             <div>
                 <div class="form-group">
-                    <label for="W12ListerAddress">W12Lister<span class="ConfigDashboad__address" v-if="W12Lister.address"> - {{ W12Lister.address }}</span></label>
-                    <input
-                            type="text"
-                            class="form-control"
-                            id="W12ListerAddress"
-                            @keyup.enter="saveConfig"
-                            v-model="address">
+                    <label class="mt-4">W12ListerList</label>
+                    <div class="ConfigDashboad__W12ListerList row mb-2" v-for="(elem, idx) in list" :key="idx">
+                        <div class="col-md-9">
+                            <input type="text"
+                                   class="form-control"
+                                   @keyup.enter="saveConfig"
+                                   v-model="elem.address">
+                        </div>
+                        <div class="col-md-2 my-1">
+                            <span v-if="elem.version">v: {{ elem.version }}</span>
+                        </div>
+                        <div class="col-md-1">
+                            <a class="delete is-large" @click="deleteElemList(idx)">удалить</a>
+                        </div>
+                    </div>
                 </div>
+                <div>
+                    <button class="btn btn-primary" @click="addList">Add list</button>
+                    <button class="btn btn-primary" @click="saveW12ListerList">{{ $t('ConfigDashboardSave') }}</button>
+                </div>
+
                 <div class="form-group">
-                    <label for="W12ListerAddress">FactoryTokens<span class="ConfigDashboad__address" v-if="FactoryTokens.address"> - {{ FactoryTokens.address }}</span></label>
+                    <label class="mt-4">FactoryTokens<span class="ConfigDashboad__address" v-if="FactoryTokens.address"> - {{ FactoryTokens.address }}</span></label>
                     <input
                             type="text"
                             class="form-control"
-                            id="FactoryTokensAddress"
                             @keyup.enter="saveConfig"
                             v-model="factory">
                 </div>
                 <div>
-                    <button class="btn btn-primary" @click="saveConfig">{{ $t('ConfigDashboardSave') }}</button>
+                    <button class="btn btn-primary" @click="saveFactory">{{ $t('ConfigDashboardSave') }}</button>
                 </div>
             </div>
+            <b-loading :is-full-page="false" :active.sync="loading" :can-cancel="true"></b-loading>
         </section>
     </div>
 </template>
@@ -37,20 +50,35 @@
     const ConfigNS = createNamespacedHelpers('Config');
     const TokensListNS = createNamespacedHelpers('TokensList');
     const FactoryNS = createNamespacedHelpers('Factory');
+    const LedgerNS = createNamespacedHelpers("Ledger");
+
+    const web3 = new Web3();
+    const BigNumber = web3.BigNumber;
 
     export default {
         name: 'ConfigDashboard',
         template: '#ConfigDashboardTemplate',
         data () {
             return {
-                address: null,
+                loading: false,
                 factory: null,
+                list: [{
+                    address: "",
+                    version: ""
+                }]
             };
+        },
+        watch: {
+            'W12ListerList': {
+                handler: 'handleW12ListerListChange',
+                immediate: true
+            },
         },
         computed: {
             ...ConfigNS.mapState({
                 W12Lister: "W12Lister",
-                FactoryTokens: "FactoryTokens"
+                FactoryTokens: "FactoryTokens",
+                W12ListerList: "W12ListerList"
             }),
         },
         methods: {
@@ -60,16 +88,37 @@
             ...FactoryNS.mapActions({
                 FactoryReset: 'reset'
             }),
-
-            saveConfig () {
-                this.$store.commit(`Config/${CONFIG_UPDATE}`, {
-                    W12Lister: { address: this.address },
-                    FactoryTokens: { address: this.factory }
+            ...LedgerNS.mapActions({
+                ledgerFetch: "fetch"
+            }),
+            async saveW12ListerList () {
+                this.loading = true;
+                const ListSave = this.list.map(async(item) => {
+                    const {VersionableFactory} = await this.ledgerFetch();
+                    const Versionable = VersionableFactory.at(item.address);
+                    const version = await Versionable.methods.version();
+                    item.version = await new BigNumber(version).toString();
+                    return item;
                 });
-                this.reset();
-                this.FactoryReset();
-                this.address = null;
-                this.factory = null;
+                Promise.all(ListSave).then((completed) => {
+                    this.$store.commit(`Config/${CONFIG_UPDATE}`, {"W12ListerList": completed});
+                });
+                this.loading = false;
+            },
+            saveFactory () {
+                this.$store.commit(`Config/${CONFIG_UPDATE}`, {FactoryTokens: { address: this.factory }});
+            },
+            addList(){
+                this.list.push({
+                    address: "",
+                    version: ""
+                });
+            },
+            deleteElemList(id) {
+                this.list.splice(id, 1);
+            },
+            async handleW12ListerListChange(value) {
+                this.list = value;
             },
         },
     };
