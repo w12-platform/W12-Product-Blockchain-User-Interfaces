@@ -37,8 +37,8 @@ jobs:
       - run:
           name: deploy
           command: |
-            ssh -o StrictHostKeyChecking=no "$DEPLOY_USER_STAGE@$DEPLOY_SERVER_STAGE" docker login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_PASSWORD"
-            ssh -o StrictHostKeyChecking=no "$DEPLOY_USER_STAGE@$DEPLOY_SERVER_STAGE" "cd /opt/servers/ && docker-compose -f docker-compose-w12-stage.yml pull && docker-compose -f docker-compose-w12-stage.yml up -d"
+            ssh -o StrictHostKeyChecking=no "$DEPLOY_USER_STAGE@$DEPLOY_SERVER_STAGE" "sudo docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD"
+            ssh -o StrictHostKeyChecking=no "$DEPLOY_USER_STAGE@$DEPLOY_SERVER_STAGE" "cd /var/apps/w12-stage/ && sudo docker-compose -f docker-compose-w12-stage.yml pull && sudo docker-compose -f docker-compose-w12-stage.yml up -d"
 
 # workflows
 default_filters: &default_filters
