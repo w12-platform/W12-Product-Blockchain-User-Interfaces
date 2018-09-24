@@ -34,10 +34,10 @@
 <script>
     import './default.scss';
     import ProjectSwitch from 'bem/ProjectSwitch';
-    import TokenInfo from 'bem/TokenInfo';
-    import ProjectStages from 'bem/ProjectStages';
+    //import TokenInfo from 'bem/TokenInfo';
+    //import ProjectStages from 'bem/ProjectStages';
     import Receiving from 'bem/Receiving';
-    import Milestones from 'bem/Milestones';
+    //import Milestones from 'bem/Milestones';
     import TrancheInformation from 'bem/TrancheInformation';
 
     import {CONFIRM_TX} from "store/modules/Transactions.js";
@@ -54,9 +54,9 @@
         name: 'ProjectDashboardTranche',
         components: {
             ProjectSwitch,
-            TokenInfo,
-            ProjectStages,
-            Milestones,
+            //TokenInfo,
+            //ProjectStages,
+            //Milestones,
             Receiving,
             TrancheInformation,
         },

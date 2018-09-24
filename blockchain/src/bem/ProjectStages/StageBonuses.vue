@@ -229,6 +229,7 @@
                 handler(value) {
                     this.tokenCrowdSaleStages = value;
                 },
+                immediate: true
             },
         },
         computed: {

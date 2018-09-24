@@ -1,5 +1,5 @@
 <template>
-    <div class="Calculator byefy" v-if="currentToken.crowdSaleInformation.status">
+    <div class="Calculator byefy" v-if="currentToken && currentToken.crowdSaleInformation && currentToken.crowdSaleInformation.status">
         <h2>{{ $t('InvestorDashboardCalculator', {WToken:currentToken.symbol}) }}</h2>
 
         <div class="Calculator__content">
@@ -276,13 +276,12 @@
 
                 return new BigNumber(amount).div(price);
             },
-
             handleTokensChange(value, prevValue) {
                 value = isNaN(parseFloat(value))
                     ? '0'
                     : value;
 
-                if (this.blockChangeETHs) {
+                if (this.blockChangeETHs || !this.currentToken.crowdSaleInformation) {
                     return;
                 }
 
@@ -307,7 +306,7 @@
                     ? '0'
                     : value;
 
-                if (this.blockChangeTokens) {
+                if (this.blockChangeTokens || !this.currentToken.crowdSaleInformation) {
                     return;
                 }
 
@@ -327,7 +326,6 @@
                     this.blockChangeETHs = false;
                 });
             },
-
             async buy() {
                 if(this.disable) return;
 
@@ -351,7 +349,6 @@
                 }
                 this.loading = false;
             },
-
             async handleSelectedChange(newSelected, oldSelected) {
                 if (newSelected && oldSelected && newSelected.name !== oldSelected.name) {
                     this.total = 0;
@@ -362,7 +359,6 @@
                 this.unsubscribeFromEvents();
                 await this.subscribeToEvents();
             },
-
             unsubscribeFromEvents() {
                 if (!this.subscribedEvents) return;
 
@@ -389,7 +385,6 @@
 
                 this.subscribeToEventsLoading = false;
             },
-
             async onTokenPurchaseEvent(error, result) {
                 if (!error) {
                     const tx = result.transactionHash;

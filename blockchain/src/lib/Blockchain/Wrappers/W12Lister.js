@@ -13,7 +13,7 @@ export class W12ListerWrapper extends BaseWrapper {
         W12CrowdsaleFactory,
         ERC20Factory,
         DetailedERC20Factory,
-        W12TokenLedgerFactory
+        W12TokenLedgerFactory,
     }) {
         this.W12CrowdsaleFactory = W12CrowdsaleFactory;
         this.ERC20Factory = ERC20Factory;
@@ -28,6 +28,8 @@ export class W12ListerWrapper extends BaseWrapper {
         const listedToken = (await this.methods.approvedTokens(Token.index));
         const wTokenAddress = await W12TokenLedger.methods.getWTokenByToken(listedToken[10].toString());
         return {
+            version: (await this.methods.version()).toString(),
+            listerAddress: this.instance.address,
             index: Token.index,
             ledgerAddress,
             wTokenAddress,
@@ -51,7 +53,6 @@ export class W12ListerWrapper extends BaseWrapper {
 
         const ledgerAddress = await this.methods.ledger();
         const W12TokenLedger = W12TokenLedgerFactory.at(ledgerAddress);
-
         let list = [];
         let uniqTokenAddress = [];
         const length = (await this.methods.approvedTokensLength());
@@ -62,6 +63,8 @@ export class W12ListerWrapper extends BaseWrapper {
             if(uniqTokenAddress.indexOf(tokenAddress) === -1){
                 uniqTokenAddress.push(tokenAddress);
                 list.push({
+                    version: (await this.methods.version()).toString(),
+                    listerAddress: this.instance.address,
                     index: i,
                     ledgerAddress,
                     wTokenAddress,

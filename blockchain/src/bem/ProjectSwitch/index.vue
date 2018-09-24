@@ -2,7 +2,7 @@
     <b-field class="ProjectSwitch">
         <b-select @input="FetchProject" :placeholder="$t('ProjectDashboardSelectToken')" expanded>
             <option v-for="(project, idx) in projectsForCurrentAccount" :key="idx" :value="project">
-                {{ project.symbol }} - {{ project.tokenAddress }}
+                {{ project.symbol }} - {{ project.tokenAddress }} - v{{ project.version }}
             </option>
         </b-select>
     </b-field>

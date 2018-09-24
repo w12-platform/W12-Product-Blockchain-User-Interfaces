@@ -25,7 +25,7 @@ export class W12ListerFactoryStrategy extends BaseFactoryStrategy {
         origin.setFactories({
             W12CrowdsaleFactory: this.W12CrowdsaleFactory,
             ERC20Factory: this.ERC20Factory,
-            W12TokenLedgerFactory: this.W12TokenLedgerFactory
+            W12TokenLedgerFactory: this.W12TokenLedgerFactory,
         });
 
         return origin;

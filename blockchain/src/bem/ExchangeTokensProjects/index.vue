@@ -143,7 +143,7 @@
                 this.loading = true;
                 try {
                     const {W12TokenFactory, W12ListerFactory} = await this.ledgerFetch();
-                    const W12Lister = W12ListerFactory.at(this.configW12Lister.address);
+                    const W12Lister = W12ListerFactory.at(this.currentProject.listerAddress);
                     const {web3} = await Connector.connect();
                     const W12Token = W12TokenFactory.at(this.currentProject.wTokenAddress);
                     const swapAddress = (await W12Lister.methods.swap());
@@ -171,7 +171,7 @@
                 this.loading = true;
                 try {
                     const {W12TokenFactory, W12ListerFactory} = await this.ledgerFetch();
-                    const W12Lister = W12ListerFactory.at(this.configW12Lister.address);
+                    const W12Lister = W12ListerFactory.at(this.currentProject.listerAddress);
                     const {web3} = await Connector.connect();
                     const W12Token = W12TokenFactory.at(this.currentProject.wTokenAddress);
                     const swapAddress = (await W12Lister.methods.swap());
@@ -197,7 +197,7 @@
                 this.loading = true;
                 try {
                     const {W12AtomicSwapFactory, W12ListerFactory} = await this.ledgerFetch();
-                    const W12Lister = W12ListerFactory.at(this.configW12Lister.address);
+                    const W12Lister = W12ListerFactory.at(this.currentProject.listerAddress);
                     const {web3} = await Connector.connect();
                     const swapAddress = (await W12Lister.methods.swap());
                     const W12AtomicSwap = W12AtomicSwapFactory.at(swapAddress);
