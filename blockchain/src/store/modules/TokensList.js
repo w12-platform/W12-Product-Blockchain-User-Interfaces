@@ -70,9 +70,12 @@ export default {
                 });
                 Promise.all(listPromise).then(async(completed) => {
                     let list = [];
-                    let index =
                     completed.forEach((item)=>{
                         list = list.concat(item);
+                    });
+                    let index = 1;
+                    list.map((item)=>{
+                        item.index = index++;
                     });
                     list = list.filter((token) => !isZeroAddress(token.crowdsaleAddress));
                     list = await map(list, async token => {
