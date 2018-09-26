@@ -431,7 +431,7 @@ export default {
                 commit(UPDATE_META, {loadingProjectError: e.message});
             }
         },
-        async updateFundInformation({commit}, {Token}) {
+        async updateFundInformation({commit, state}, {Token}) {
             try {
                 const {W12CrowdsaleFactory, W12FundFactory} = await this.dispatch('Ledger/fetch');
                 const W12Crowdsale = W12CrowdsaleFactory.at(Token.crowdsaleAddress);
@@ -442,11 +442,15 @@ export default {
                 const fundData = {
                     address: fundAddress,
                     balanceWei: (await getBalance(fundAddress)).toString(),
-                    trancheAmount: (await W12Fund.methods.getTrancheAmount()).toString(),
                 };
+                if(state.currentProject.crowdSaleInformation.isStartCrowdSale) {
+                    fundData.trancheAmount = (await W12Fund.methods.getTrancheAmount()).toString();
+                } else {
+                    fundData.trancheAmount = 0;
+                }
                 commit(UPDATE_FUND_DATA, fundData);
             } catch (e) {
-                //commit(UPDATE_META, {loadingProjectError: e.message});
+                commit(UPDATE_META, {loadingProjectError: e.message});
             }
         },
     }

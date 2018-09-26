@@ -13,10 +13,10 @@
                         <p class="py-2">{{ $t('WaitingConfirm') }}:</p>
                         <b-tag class="py-2">{{isPendingTx.hash}}</b-tag>
                     </div>
-                    <b-collapse class="ProjectDashboard__bonuses card" v-if="!isPendingTx">
+                    <div class="ProjectDashboard__bonuses card" v-if="!isPendingTx">
                         <div class="card-content">
                             <div class="content" v-if="tokenCrowdSaleStages.length">
-                                <b-collapse class="ProjectDashboard__stageBonus card"
+                                <div class="ProjectDashboard__stageBonus card"
                                             v-for="(stage, stageIndex) in tokenCrowdSaleStages" :key="stageIndex">
                                     <div class="col-12 pb-4">
                                         <div class="p-3 row align-items-center justify-content-between">
@@ -163,7 +163,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                </b-collapse>
+                                </div>
 
                                 <b-notification class="ProjectStages__errorStage" v-if="error" @close="error = false"
                                                 type="is-danger" has-icon>{{ error }}
@@ -182,7 +182,7 @@
                             </footer>
                         </div>
 
-                    </b-collapse>
+                    </div>
 
                 </div>
             </div>

@@ -6,7 +6,7 @@
             <p class="py-2">{{ $t('WaitingConfirm') }}:</p>
             <b-tag class="py-2">{{isPendingTx.hash}}</b-tag>
         </div>
-        <b-collapse class="card" v-if="!isPendingTx">
+        <div class="card" v-if="!isPendingTx">
             <div class="card-content" v-if="tokenCrowdSaleMilestones.length">
                 <div class="">
                     <div v-for="(item, idx) in tokenCrowdSaleMilestones">
@@ -36,7 +36,7 @@
             </footer>
 
             <b-loading :is-full-page="false" :active.sync="saveMilestonesLoading" :can-cancel="true"></b-loading>
-        </b-collapse>
+        </div>
     </div>
 </template>
 

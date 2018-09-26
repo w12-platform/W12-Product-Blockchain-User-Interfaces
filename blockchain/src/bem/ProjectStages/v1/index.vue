@@ -98,16 +98,16 @@
                 if(this.subscribedEvents.StagesUpdated){
                     this.subscribedEvents.StagesUpdated.stopWatching();
                 }
-                if(this.subscribedEvents.StagesUpdated){
+                if(this.subscribedEvents.MilestonesUpdated){
                     this.subscribedEvents.MilestonesUpdated.stopWatching();
                 }
-                if(this.subscribedEvents.StagesUpdated){
+                if(this.subscribedEvents.UnsoldTokenReturned){
                     this.subscribedEvents.UnsoldTokenReturned.stopWatching();
                 }
-                if(this.subscribedEvents.StagesUpdated){
+                if(this.subscribedEvents.CrowdsaleTokenMinted){
                     this.subscribedEvents.CrowdsaleTokenMinted.stopWatching();
                 }
-                if(this.subscribedEvents.StagesUpdated){
+                if(this.subscribedEvents.TrancheReleased){
                     this.subscribedEvents.TrancheReleased.stopWatching();
                 }
 
@@ -151,9 +151,7 @@
                     const ApprovalEvent = ERC20.events.Approval(null, null, this.onApprovalEvent);
                     const TokenPlaced = W12Lister.events.TokenPlaced(null, null, this.onTokenPlacedEvent);
                     const CrowdsaleInitialized = W12Lister.events.CrowdsaleInitialized(null, null, this.onCrowdsaleInitializedEvent);
-                    const CrowdsaleTokenMinted = W12Lister.events.CrowdsaleTokenMinted(null, null, this.onCrowdsaleTokenMintedEvent);
-
-
+                    //const CrowdsaleTokenMinted = W12Lister.events.CrowdsaleTokenMinted(null, null, this.onCrowdsaleTokenMintedEvent);
 
                     this.subscribedEvents = {
                         ApprovalEvent,
@@ -164,7 +162,7 @@
                         StageUpdated,
                         MilestonesUpdated,
                         UnsoldTokenReturned,
-                        CrowdsaleTokenMinted,
+                        // CrowdsaleTokenMinted,
                         TrancheReleased
                     };
                 } catch (e) {
