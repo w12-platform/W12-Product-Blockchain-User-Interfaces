@@ -15,6 +15,7 @@
 
     const ProjectNS = createNamespacedHelpers("Project");
     const AccountNS = createNamespacedHelpers("Account");
+    const LedgerNS = createNamespacedHelpers("Ledger");
 
     export default {
         name: 'ProjectSwitch',
@@ -24,6 +25,9 @@
         computed: {
             ...ProjectNS.mapState({
                 ProjectList: "list"
+            }),
+            ...LedgerNS.mapState({
+                ledgerMeta: 'meta',
             }),
             ...AccountNS.mapState({
                 currentAccount: "currentAccount",

@@ -27,14 +27,14 @@
 </template>
 <script>
     import 'bem/RefundCalculator/default.scss';
-    import Ledger from 'lib/Blockchain/ContractsLedger_v1.js';
     import { RefundInformationModel } from 'bem/RefundInformation/shared.js';
-    import { waitTransactionReceipt, formatNumber, toWeiDecimals, fromWeiDecimals, fromWeiDecimalsString} from 'lib/utils.js';
+    import { toWeiDecimals } from 'lib/utils.js';
 
     const web3 = new Web3();
     const BigNumber = web3.BigNumber.another({ EXPONENTIAL_AT: [-30, 30] });
     import {createNamespacedHelpers} from "vuex";
 
+    const LedgerNS = createNamespacedHelpers("Ledger");
     const TokensListNS = createNamespacedHelpers("TokensList");
 
     export default {
@@ -108,6 +108,9 @@
             }),
         },
         methods: {
+            ...LedgerNS.mapActions({
+                ledgerFetch: "fetch"
+            }),
             decimals (value) {
                 const d = this.refundInformation.tokenDecimals;
                 const base = new BigNumber(10);
@@ -115,14 +118,10 @@
                 return value.div(base.pow(d)).toString();
             },
             async updateHelpers() {
-                let ledger;
-
                 this.loadingLedger = true;
 
                 try {
-                    ledger = await Ledger;
-
-                    const {W12FundFactory} = ledger;
+                    const {W12FundFactory} = await this.ledgerFetch(this.currentToken.version);
 
                     if (this.fundAddress) {
                         this.helpers = {
@@ -130,12 +129,10 @@
                         };
                     }
                 } catch (e) {
-                    this.setErrorMessage(e.message);
+                    console.log(e);
                 }
 
                 this.loadingLedger = false;
-
-                return ledger;
             },
             async calculate() {
                 this.calculation = true;
