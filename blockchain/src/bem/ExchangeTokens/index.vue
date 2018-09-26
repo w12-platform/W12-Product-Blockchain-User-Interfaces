@@ -212,7 +212,7 @@
             async approveSwapToSpend() {
                 this.loading = true;
                 try {
-                    const {W12TokenFactory, W12ListerFactory} = await this.ledgerFetch();
+                    const {W12TokenFactory, W12ListerFactory} = await this.ledgerFetch(this.currentToken.version);
                     const W12Lister = W12ListerFactory.at(this.currentToken.listerAddress);
                     const {web3} = await Connector.connect();
                     const W12Token = W12TokenFactory.at(this.currentToken.crowdSaleInformation.WTokenAddress);
@@ -239,7 +239,7 @@
             async decreaseSwapApprovalToSpend() {
                 this.loading = true;
                 try {
-                    const {W12TokenFactory, W12ListerFactory} = await this.ledgerFetch();
+                    const {W12TokenFactory, W12ListerFactory} = await this.ledgerFetch(this.currentToken.version);
                     const W12Lister = W12ListerFactory.at(this.currentToken.listerAddress);
                     const {web3} = await Connector.connect();
                     const W12Token = W12TokenFactory.at(this.currentToken.crowdSaleInformation.WTokenAddress);
@@ -267,7 +267,7 @@
             async exchange() {
                 this.loading = true;
                 try {
-                    const {W12AtomicSwapFactory, W12ListerFactory} = await this.ledgerFetch();
+                    const {W12AtomicSwapFactory, W12ListerFactory} = await this.ledgerFetch(this.currentToken.version);
                     const W12Lister = W12ListerFactory.at(this.currentToken.listerAddress);
                     const {web3} = await Connector.connect();
                     const swapAddress = (await W12Lister.methods.swap());
@@ -316,7 +316,7 @@
                 this.subscribeToEventsLoading = true;
 
                 try {
-                    const {ERC20Factory, W12AtomicSwapFactory, W12ListerFactory} = await this.ledgerFetch();
+                    const {ERC20Factory, W12AtomicSwapFactory, W12ListerFactory} = await this.ledgerFetch(this.currentToken.version);
                     const ERC20 = ERC20Factory.at(this.currentToken.crowdSaleInformation.WTokenAddress);
                     const W12Lister = W12ListerFactory.at(this.currentToken.listerAddress);
                     const swapAddress = (await W12Lister.methods.swap());

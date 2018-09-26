@@ -62,9 +62,9 @@ export default {
         async fetch({commit}) {
             commit(UPDATE_META, {loading: true});
             try {
-                const {DetailedERC20Factory, W12CrowdsaleFactory, W12TokenFactory, W12FundFactory} = await this.dispatch('Ledger/fetch');
+                const {DetailedERC20Factory, W12CrowdsaleFactory, W12TokenFactory, W12FundFactory} = await this.dispatch('Ledger/fetch', this.state.Config.W12Lister.version);
                 const listPromise = this.state.Config.W12ListerList.map(async (Lister)=>{
-                    const {W12ListerFactory} = await this.dispatch('Ledger/fetch');
+                    const {W12ListerFactory} = await this.dispatch('Ledger/fetch', Lister.version);
                     const W12Lister = W12ListerFactory.at(Lister.address);
                     return await W12Lister.fetchAllTokensComposedInformation();
                 });
@@ -192,11 +192,11 @@ export default {
         async update({commit}, {Index}) {
             commit(UPDATE_META, {updated: true});
             try {
-                const {W12CrowdsaleFactory, W12TokenFactory} = await this.dispatch('Ledger/fetch');
                 let list = this.state.TokensList.list;
                 list = await map(list, async token => {
                     if (token && token.index === Index) {
                         const {web3} = await Connector.connect();
+                        const {W12CrowdsaleFactory, W12TokenFactory} = await this.dispatch('Ledger/fetch', token.version);
                         const W12Crowdsale = W12CrowdsaleFactory.at(token.crowdsaleAddress);
                         const WTokenAddress = (await W12Crowdsale.methods.token());
                         const W12Token = W12TokenFactory.at(WTokenAddress);

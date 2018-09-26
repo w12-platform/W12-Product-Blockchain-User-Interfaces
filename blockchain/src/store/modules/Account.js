@@ -120,8 +120,9 @@ export default {
             commit(UPDATE_META, {updated: true});
 
             const listerAddress = selectedToken ? selectedToken.listerAddress : currentProject.listerAddress;
+            const version = selectedToken ? selectedToken.version : currentProject.version;
             try {
-                const {W12TokenFactory, W12FundFactory, W12ListerFactory} = await this.dispatch('Ledger/fetch');
+                const {W12TokenFactory, W12FundFactory, W12ListerFactory} = await this.dispatch('Ledger/fetch', version);
                 const W12Lister = W12ListerFactory.at(listerAddress);
                 const wTokenAddress = selectedToken ? selectedToken.crowdSaleInformation.WTokenAddress : currentProject.wTokenAddress;
                 const fundAddress = selectedToken ? selectedToken.crowdSaleInformation.fund.W12FundAddress : currentProject.fundData.address;

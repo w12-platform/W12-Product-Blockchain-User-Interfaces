@@ -197,7 +197,7 @@
                 this.placeTokensLoading = true;
 
                 try {
-                    const {W12ListerFactory} = await this.LedgerFetch();
+                    const {W12ListerFactory} = await this.LedgerFetch(this.currentProject.version);
                     const W12Lister = W12ListerFactory.at(this.currentProject.listerAddress);
                     const connectedWeb3 = (await Connector.connect()).web3;
                     const tx = await W12Lister.methods.placeToken(

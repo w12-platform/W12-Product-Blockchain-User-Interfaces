@@ -97,9 +97,6 @@
             },
         },
         methods: {
-            ...LedgerNS.mapActions({
-                ledgerFetch: "fetch"
-            }),
             ...TokensListNS.mapActions({
                 tokensListFetch: "fetch",
                 tokensListWatch: "watch"

@@ -27,7 +27,7 @@
 </template>
 <script>
     import 'bem/RefundCalculator/default.scss';
-    import Ledger from 'lib/Blockchain/ContractsLedger.js';
+    import Ledger from 'lib/Blockchain/ContractsLedger_v1.js';
     import { RefundInformationModel } from 'bem/RefundInformation/shared.js';
     import { waitTransactionReceipt, formatNumber, toWeiDecimals, fromWeiDecimals, fromWeiDecimalsString} from 'lib/utils.js';
 

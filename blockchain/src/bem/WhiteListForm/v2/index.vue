@@ -288,7 +288,7 @@
             },
             async whiteListToken(data) {
                 this.whitelistingToken = true;
-                const {W12ListerFactory} = await this.ledgerFetch();
+                const {W12ListerFactory} = await this.ledgerFetch(this.W12Lister.version);
 
                 if (W12ListerFactory) {
                     try {
@@ -325,7 +325,7 @@
                 if (address) {
                     this.checkingToken = true;
 
-                    const {DetailedERC20Factory} = await this.ledgerFetch();
+                    const {DetailedERC20Factory} = await this.ledgerFetch(this.W12Lister.version);
                     const DetailedERC20 = DetailedERC20Factory.at(address);
                     const isExists = await DetailedERC20.isCurrentAddressСompatibleWithToken();
 
@@ -340,7 +340,7 @@
                 const currentAccount = (await getAccounts())[0];
 
                 if (this.isTokenExists) {
-                    const {DetailedERC20Factory} = await this.ledgerFetch();
+                    const {DetailedERC20Factory} = await this.ledgerFetch(this.W12Lister.version);
                     const DetailedERC20 = DetailedERC20Factory.at(address);
                     const tokenInformation = await DetailedERC20.getDescription();
                     const {name, symbol, decimals} = tokenInformation;
@@ -359,7 +359,7 @@
             },
             async createEventsHelpers() {
                 if (!this.EventHelpers) {
-                    const {W12ListerFactory} = await this.ledgerFetch();
+                    const {W12ListerFactory} = await this.ledgerFetch(this.W12Lister.version);
 
                     if (W12ListerFactory) {
                         try {

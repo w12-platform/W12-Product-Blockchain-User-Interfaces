@@ -188,7 +188,7 @@
                 this.approveTokensToSpendLoading = true;
 
                 try {
-                    const {ERC20Factory} = await this.LedgerFetch();
+                    const {ERC20Factory} = await this.LedgerFetch(this.currentProject.version);
                     const ERC20 = ERC20Factory.at(this.currentProject.tokenAddress);
                     const connectedWeb3 = (await Connector.connect()).web3;
                     const tx = await ERC20.methods.approve(this.currentProject.listerAddress, value);

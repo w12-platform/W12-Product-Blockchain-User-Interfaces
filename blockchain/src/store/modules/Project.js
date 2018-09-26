@@ -223,7 +223,7 @@ export default {
             commit(UPDATE_META, {loading: true});
             try {
                 const listPromise = this.state.Config.W12ListerList.map(async (Lister)=>{
-                    const {W12ListerFactory} = await this.dispatch('Ledger/fetch');
+                    const {W12ListerFactory} = await this.dispatch('Ledger/fetch', Lister.version);
                     const W12Lister = W12ListerFactory.at(Lister.address);
                     return await W12Lister.fetchAllTokensInWhiteList();
                 });
@@ -264,7 +264,7 @@ export default {
                             await this.dispatch('Project/updateFundInformation', {Token: state.currentProject});
                         }
                     }
-                    await this.dispatch('Account/updateAccountData');
+                    // await this.dispatch('Account/updateAccountData');
                 } else {
                     commit(UPDATE_META, {loadingProject: false, loadingProjectError: "ERROR_FETCH_PROJECT"});
                 }
@@ -275,7 +275,7 @@ export default {
         async updateTokenInfo({commit}, {Token}) {
             try {
                 if (Token.tokenAddress) {
-                    const {W12ListerFactory, DetailedERC20Factory} = await this.dispatch('Ledger/fetch');
+                    const {W12ListerFactory, DetailedERC20Factory} = await this.dispatch('Ledger/fetch', Token.version);
                     const W12Lister = W12ListerFactory.at(Token.listerAddress);
                     let token = await W12Lister.fetchComposedTokenInformationByTokenAddress(Token);
                     const DetailedERC20 = DetailedERC20Factory.at(token.tokenAddress);
@@ -291,7 +291,7 @@ export default {
         },
         async updateTokensApprovedToPlaceValue({commit}, {Token}) {
             try {
-                const {ERC20Factory} = await this.dispatch('Ledger/fetch');
+                const {ERC20Factory} = await this.dispatch('Ledger/fetch', Token.version);
                 const ERC20 = ERC20Factory.at(Token.tokenAddress);
 
                 const allowance = (await ERC20.methods.allowance(
@@ -306,7 +306,7 @@ export default {
         },
         async updatePlacedTokenStatus({commit}, {Token}) {
             try {
-                const {W12TokenLedgerFactory} = await this.dispatch('Ledger/fetch');
+                const {W12TokenLedgerFactory} = await this.dispatch('Ledger/fetch', Token.version);
                 const W12TokenLedger = W12TokenLedgerFactory.at(Token.ledgerAddress);
 
                 const placedTokenAddress = await W12TokenLedger.methods.getWTokenByToken(Token.tokenAddress);
@@ -323,7 +323,7 @@ export default {
         },
         async updateOwnerBalance({commit}, {Token}) {
             try {
-                const {ERC20Factory} = await this.dispatch('Ledger/fetch');
+                const {ERC20Factory} = await this.dispatch('Ledger/fetch', Token.version);
                 const ERC20 = ERC20Factory.at(Token.tokenAddress);
 
                 const balance = (new BigNumber(await ERC20.methods.balanceOf(this.state.Account.currentAccount))
@@ -336,7 +336,7 @@ export default {
         },
         async fetchCrowdSaleAddressAndInfo({commit}, {Token}) {
             try {
-                const {W12ListerFactory, W12CrowdsaleFactory} = await this.dispatch('Ledger/fetch');
+                const {W12ListerFactory, W12CrowdsaleFactory} = await this.dispatch('Ledger/fetch', Token.version);
                 const W12Lister = W12ListerFactory.at(Token.listerAddress);
 
                 try {
@@ -366,7 +366,7 @@ export default {
         },
         async fetchCrowdSaleStagesList({commit}, {Token}) {
             try {
-                const {W12CrowdsaleFactory} = await this.dispatch('Ledger/fetch');
+                const {W12CrowdsaleFactory} = await this.dispatch('Ledger/fetch', Token.version);
                 const W12Crowdsale = W12CrowdsaleFactory.at(Token.tokenCrowdsaleAddress);
 
                 const list = await W12Crowdsale.getStagesList();
@@ -386,7 +386,7 @@ export default {
         async upCrowdSaleStart({commit}, {Token}) {
             try {
                 if (Token.crowdSaleInformation.tokenCrowdSaleStages.length) {
-                    const {W12CrowdsaleFactory} = await this.dispatch('Ledger/fetch');
+                    const {W12CrowdsaleFactory} = await this.dispatch('Ledger/fetch', Token.version);
                     const W12Crowdsale = W12CrowdsaleFactory.at(Token.tokenCrowdsaleAddress);
                     const isSaleActive = await W12Crowdsale.methods.isSaleActive();
                     const isEnded = await W12Crowdsale.methods.isEnded();
@@ -401,7 +401,7 @@ export default {
         },
         async fetchCrowdSaleMilestonesList({commit}, {Token}) {
             try {
-                const {W12CrowdsaleFactory} = await this.dispatch('Ledger/fetch');
+                const {W12CrowdsaleFactory} = await this.dispatch('Ledger/fetch', Token.version);
                 const W12Crowdsale = W12CrowdsaleFactory.at(Token.tokenCrowdsaleAddress);
                 if(Token.tokenCrowdsaleAddress) {
                     const milestones = await W12Crowdsale.getMilestones();
@@ -416,7 +416,7 @@ export default {
         },
         async updateReceivingInformation({commit, state}, {Token}) {
             try {
-                const {W12TokenFactory, DetailedERC20Factory} = await this.dispatch('Ledger/fetch');
+                const {W12TokenFactory, DetailedERC20Factory} = await this.dispatch('Ledger/fetch', Token.version);
                 const W12Token = W12TokenFactory.at(Token.wTokenAddress);
                 const DetailedERC20 = DetailedERC20Factory.at(Token.tokenAddress);
                 const token = await DetailedERC20.getDescription();
@@ -436,7 +436,7 @@ export default {
         },
         async updateFundInformation({commit, state}, {Token}) {
             try {
-                const {W12CrowdsaleFactory, W12FundFactory} = await this.dispatch('Ledger/fetch');
+                const {W12CrowdsaleFactory, W12FundFactory} = await this.dispatch('Ledger/fetch', Token.version);
                 const W12Crowdsale = W12CrowdsaleFactory.at(Token.crowdsaleAddress);
                 const fundAddress = await W12Crowdsale.methods.fund();
                 const W12Fund = W12FundFactory.at(fundAddress);

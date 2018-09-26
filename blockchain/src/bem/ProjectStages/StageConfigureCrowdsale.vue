@@ -253,7 +253,7 @@
                 this.initCrawdsaleLoading = true;
 
                 try {
-                    const {W12ListerFactory} = await this.LedgerFetch();
+                    const {W12ListerFactory} = await this.LedgerFetch(this.currentProject.version);
                     const W12Lister = W12ListerFactory.at(this.currentProject.listerAddress);
 
                     const connectedWeb3 = (await Connector.connect()).web3;
@@ -285,7 +285,7 @@
                     this.initCrawdsaleLoading = true;
 
                     try {
-                        const {W12ListerFactory} = await this.LedgerFetch();
+                        const {W12ListerFactory} = await this.LedgerFetch(this.currentProject.version);
                         const W12Lister = W12ListerFactory.at(this.currentProject.listerAddress);
 
                         const connectedWeb3 = (await Connector.connect()).web3;

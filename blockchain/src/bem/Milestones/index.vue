@@ -173,7 +173,7 @@
             async saveMilestones() {
                 this.saveMilestonesLoading = true;
                 try {
-                    const {W12CrowdsaleFactory} = await this.ledgerFetch();
+                    const {W12CrowdsaleFactory} = await this.ledgerFetch(this.currentProject.version);
                     const W12Crowdsale = W12CrowdsaleFactory.at(this.currentProject.crowdsaleAddress);
                     const tx = await W12Crowdsale.setMilestones(this.tokenCrowdSaleMilestones);
                     this.$store.commit(`Transactions/${UPDATE_TX}`, {

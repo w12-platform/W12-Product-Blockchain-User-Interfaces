@@ -313,7 +313,7 @@
 
                 this.setStagesLoading = true;
                 try {
-                    const {W12CrowdsaleFactory} = await this.LedgerFetch();
+                    const {W12CrowdsaleFactory} = await this.LedgerFetch(this.currentProject.version);
                     const W12Crowdsale = W12CrowdsaleFactory.at(this.currentProject.crowdsaleAddress);
                     const tx = await W12Crowdsale.setStages(stages);
                     const connectedWeb3 = (await Connector.connect()).web3;
@@ -354,7 +354,7 @@
                 if (!this.isCrowdsaleInited) return;
                 this.setStagesLoading = true;
                 try {
-                    const {W12CrowdsaleFactory} = await this.LedgerFetch();
+                    const {W12CrowdsaleFactory} = await this.LedgerFetch(this.currentProject.version);
                     const W12Crowdsale = W12CrowdsaleFactory.at(this.currentProject.crowdsaleAddress);
 
                     const tx = await W12Crowdsale.setBonusVolumes(stageIndex, list);

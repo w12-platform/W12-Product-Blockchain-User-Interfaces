@@ -148,7 +148,7 @@
                 this.subscribeToEventsLoading = true;
 
                 try {
-                    const {W12CrowdsaleFactory, W12FundFactory} = await this.LedgerFetch();
+                    const {W12CrowdsaleFactory, W12FundFactory} = await this.LedgerFetch(this.currentProject.version);
                     let TrancheReleased = null;
 
                     if (!isZeroAddress(this.currentProject.crowdsaleAddress)) {

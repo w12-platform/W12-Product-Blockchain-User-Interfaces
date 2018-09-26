@@ -149,7 +149,7 @@
                 this.subscribeToEventsLoading = true;
 
                 try {
-                    const {W12CrowdsaleFactory, W12ListerFactory, W12TokenFactory, W12AtomicSwapFactory} = await this.LedgerFetch();
+                    const {W12CrowdsaleFactory, W12ListerFactory, W12TokenFactory, W12AtomicSwapFactory} = await this.LedgerFetch(this.currentProject.version);
                     let ApprovalW12Event = null;
                     let UnsoldTokenReturned = null;
                     let Exchange = null;

@@ -123,7 +123,7 @@
                 this.subscribeToEventsLoading = true;
 
                 try {
-                    const {ERC20Factory, W12ListerFactory, W12CrowdsaleFactory, W12TokenFactory, W12FundFactory} = await this.LedgerFetch();
+                    const {ERC20Factory, W12ListerFactory, W12CrowdsaleFactory, W12TokenFactory, W12FundFactory} = await this.LedgerFetch(this.currentProject.version);
                     const ERC20 = ERC20Factory.at(this.currentProject.tokenAddress);
                     const W12Lister = W12ListerFactory.at(this.currentProject.listerAddress);
                     let ApprovalW12Event = null;
@@ -256,6 +256,7 @@
                     if (tokenAddress.toString() === this.currentProject.tokenAddress) {
                         await this.updateProject(this.currentProject);
                     }
+
                     this.$store.commit(`Transactions/${CONFIRM_TX}`, tx);
                 }
             },

@@ -333,7 +333,7 @@
 
                 this.loading = true;
                 try {
-                    const {W12CrowdsaleFactory} = await this.ledgerFetch();
+                    const {W12CrowdsaleFactory} = await this.ledgerFetch(this.currentToken.version);
                     const connectedWeb3 = (await Connector.connect()).web3;
                     const W12Crowdsale = W12CrowdsaleFactory.at(this.currentToken.crowdSaleInformation.crowdsaleAddress);
                     const tx = await W12Crowdsale.methods.buyTokens({value: web3.toWei(amount.toFixed(18), 'ether')}); //amount.toFixed(6)
@@ -372,7 +372,7 @@
                 this.subscribeToEventsLoading = true;
 
                 try {
-                    const {W12CrowdsaleFactory} = await this.ledgerFetch();
+                    const {W12CrowdsaleFactory} = await this.ledgerFetch(this.currentToken.version);
                     const W12Crowdsale = W12CrowdsaleFactory.at(this.currentToken.crowdSaleInformation.crowdsaleAddress);
                     const TokenPurchase = W12Crowdsale.events.TokenPurchase(null, null, this.onTokenPurchaseEvent);
 

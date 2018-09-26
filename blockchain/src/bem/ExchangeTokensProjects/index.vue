@@ -142,7 +142,7 @@
             async approveSwapToSpend() {
                 this.loading = true;
                 try {
-                    const {W12TokenFactory, W12ListerFactory} = await this.ledgerFetch();
+                    const {W12TokenFactory, W12ListerFactory} = await this.ledgerFetch(this.currentProject.version);
                     const W12Lister = W12ListerFactory.at(this.currentProject.listerAddress);
                     const {web3} = await Connector.connect();
                     const W12Token = W12TokenFactory.at(this.currentProject.wTokenAddress);
@@ -170,7 +170,7 @@
             async decreaseSwapApprovalToSpend() {
                 this.loading = true;
                 try {
-                    const {W12TokenFactory, W12ListerFactory} = await this.ledgerFetch();
+                    const {W12TokenFactory, W12ListerFactory} = await this.ledgerFetch(this.currentProject.version);
                     const W12Lister = W12ListerFactory.at(this.currentProject.listerAddress);
                     const {web3} = await Connector.connect();
                     const W12Token = W12TokenFactory.at(this.currentProject.wTokenAddress);
@@ -196,7 +196,7 @@
             async exchange() {
                 this.loading = true;
                 try {
-                    const {W12AtomicSwapFactory, W12ListerFactory} = await this.ledgerFetch();
+                    const {W12AtomicSwapFactory, W12ListerFactory} = await this.ledgerFetch(this.currentProject.version);
                     const W12Lister = W12ListerFactory.at(this.currentProject.listerAddress);
                     const {web3} = await Connector.connect();
                     const swapAddress = (await W12Lister.methods.swap());
