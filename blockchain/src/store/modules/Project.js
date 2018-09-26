@@ -239,8 +239,12 @@ export default {
                 commit(UPDATE_META, {loading: false, loadingError: e.message});
             }
         },
-        async fetchProject({commit, getters, state}, Token) {
+        async fetchProject({commit}, Token) {
             commit(UPDATE_META, {loadingProject: true});
+            await this.dispatch('Project/updateProject', Token);
+            commit(UPDATE_META, {loadingProject: false});
+        },
+        async updateProject({commit, getters, state}, Token) {
             try {
                 if (Token.tokenAddress && Token.tokenOwners) {
                     await this.dispatch('Project/updateTokenInfo', {Token});
@@ -267,7 +271,6 @@ export default {
             } catch (e) {
                 commit(UPDATE_META, {loadingProject: false, loadingProjectError: e.message});
             }
-            commit(UPDATE_META, {loadingProject: false});
         },
         async updateTokenInfo({commit}, {Token}) {
             try {
@@ -443,7 +446,7 @@ export default {
                     address: fundAddress,
                     balanceWei: (await getBalance(fundAddress)).toString(),
                 };
-                if(state.currentProject.crowdSaleInformation.isStartCrowdSale) {
+                if(state.currentProject && state.currentProject.crowdSaleInformation && state.currentProject.crowdSaleInformation.isStartCrowdSale) {
                     fundData.trancheAmount = (await W12Fund.methods.getTrancheAmount()).toString();
                 } else {
                     fundData.trancheAmount = 0;

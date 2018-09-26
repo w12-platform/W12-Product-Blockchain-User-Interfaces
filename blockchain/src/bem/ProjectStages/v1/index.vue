@@ -80,6 +80,7 @@
                 fetchCrowdSaleMilestonesList: "fetchCrowdSaleMilestonesList",
                 updateReceivingInformation: "updateReceivingInformation",
                 updateFundInformation: "updateFundInformation",
+                updateProject: "updateProject"
             }),
 
             async handleProjectChange() {
@@ -151,7 +152,7 @@
                     const ApprovalEvent = ERC20.events.Approval(null, null, this.onApprovalEvent);
                     const TokenPlaced = W12Lister.events.TokenPlaced(null, null, this.onTokenPlacedEvent);
                     const CrowdsaleInitialized = W12Lister.events.CrowdsaleInitialized(null, null, this.onCrowdsaleInitializedEvent);
-                    //const CrowdsaleTokenMinted = W12Lister.events.CrowdsaleTokenMinted(null, null, this.onCrowdsaleTokenMintedEvent);
+                    const CrowdsaleTokenMinted = W12Lister.events.CrowdsaleTokenMinted(null, null, this.onCrowdsaleTokenMintedEvent);
 
                     this.subscribedEvents = {
                         ApprovalEvent,
@@ -162,7 +163,7 @@
                         StageUpdated,
                         MilestonesUpdated,
                         UnsoldTokenReturned,
-                        // CrowdsaleTokenMinted,
+                        CrowdsaleTokenMinted,
                         TrancheReleased
                     };
                 } catch (e) {
@@ -253,7 +254,7 @@
 
                     const tx = result.transactionHash;
                     if (tokenAddress.toString() === this.currentProject.tokenAddress) {
-                        await this.fetchProject(this.currentProject);
+                        await this.updateProject(this.currentProject);
                     }
                     this.$store.commit(`Transactions/${CONFIRM_TX}`, tx);
                 }
