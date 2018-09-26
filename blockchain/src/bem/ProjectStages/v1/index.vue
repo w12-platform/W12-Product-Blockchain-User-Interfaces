@@ -1,5 +1,5 @@
 <template>
-    <div class="ProjectStages ProjectStages_v2" v-if="currentProject && currentAccount">
+    <div class="ProjectStages ProjectStages_v1" v-if="currentProject && currentAccount">
         <StageWhiteList></StageWhiteList>
         <StageApprove></StageApprove>
         <StagePlace></StagePlace>
@@ -37,8 +37,8 @@
             StageBonuses
         },
         watch: {
-            'currentProject.tokenAddress': {
-                handler: 'handleProjectChange'
+            'ProjectMeta.loadingProject': {
+                handler: 'handleProjectChange',
             },
         },
         data() {
@@ -212,7 +212,6 @@
                 }
             },
             async onApprovalEvent(error, result) {
-                console.log("ttt");
                 if (!error) {
                     const tx = result.transactionHash;
                     await this.updateTokensApprovedToPlaceValue({Token: this.currentProject});

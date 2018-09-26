@@ -437,8 +437,6 @@ export default {
                 const W12Crowdsale = W12CrowdsaleFactory.at(Token.crowdsaleAddress);
                 const fundAddress = await W12Crowdsale.methods.fund();
                 const W12Fund = W12FundFactory.at(fundAddress);
-                console.log(fundAddress);
-                console.log(W12Fund);
                 const {web3} = await Connector.connect();
                 const getBalance = promisify(web3.eth.getBalance.bind(web3.eth));
                 const fundData = {

@@ -37,8 +37,8 @@
             StageBonuses
         },
         watch: {
-            'currentProject.tokenAddress': {
-                handler: 'handleProjectChange'
+            'ProjectMeta.loadingProject': {
+                handler: 'handleProjectChange',
             },
         },
         data() {
@@ -212,7 +212,6 @@
                 }
             },
             async onApprovalEvent(error, result) {
-                console.log("ttt555");
                 if (!error) {
                     const tx = result.transactionHash;
                     await this.updateTokensApprovedToPlaceValue({Token: this.currentProject});
