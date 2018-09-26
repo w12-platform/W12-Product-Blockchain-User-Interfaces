@@ -437,12 +437,14 @@ export default {
                 const W12Crowdsale = W12CrowdsaleFactory.at(Token.crowdsaleAddress);
                 const fundAddress = await W12Crowdsale.methods.fund();
                 const W12Fund = W12FundFactory.at(fundAddress);
+                console.log(fundAddress);
+                console.log(W12Fund);
                 const {web3} = await Connector.connect();
                 const getBalance = promisify(web3.eth.getBalance.bind(web3.eth));
                 const fundData = {
                     address: fundAddress,
                     balanceWei: (await getBalance(fundAddress)).toString(),
-                    //trancheAmount: (await W12Fund.methods.getTrancheAmount()).toString(),
+                    trancheAmount: (await W12Fund.methods.getTrancheAmount()).toString(),
                 };
                 commit(UPDATE_FUND_DATA, fundData);
             } catch (e) {

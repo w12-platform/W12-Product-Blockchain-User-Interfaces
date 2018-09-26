@@ -163,7 +163,6 @@
                         Exchange = W12AtomicSwap.events.Exchange(null, null, this.onExchangeEvent);
                     }
 
-                    console.log(this.currentProject.wTokenAddress);
                     if (!isZeroAddress(this.currentProject.wTokenAddress)) {
                         const W12Token = W12TokenFactory.at(this.currentProject.wTokenAddress);
                         ApprovalW12Event = W12Token.events.Approval(null, null, this.onApprovalW12Event);

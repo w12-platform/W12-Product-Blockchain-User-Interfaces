@@ -1,5 +1,5 @@
 <template>
-    <div class="WhiteListTable_v1 buefy">
+    <div class="WhiteListTable WhiteListTable_v1 buefy">
         <b-table
                 detailed
                 :data="tokensList"
