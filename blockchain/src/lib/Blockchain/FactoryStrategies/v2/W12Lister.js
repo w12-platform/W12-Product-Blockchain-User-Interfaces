@@ -1,6 +1,5 @@
 import { BaseFactoryStrategy } from './BaseFactoryStrategy.js';
 
-
 export class W12ListerFactoryStrategy extends BaseFactoryStrategy {
     constructor(
         contractArtifacts,
