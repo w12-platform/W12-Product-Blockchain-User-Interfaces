@@ -30,6 +30,7 @@
                         <a :href="$t('FooterActionsLogInUrl')">{{ $t('FooterActionsLogIn') }}</a>
                         <a :href="$t('FooterActionsSignUpUrl')">{{ $t('FooterActionsSignUp') }}</a>
                     </div>
+                    <!--
                     <form class="footer-form">
                         <label class="footer-form__label">{{ $t('FooterForm1') }}</label>
                         <div class="footer-form__row">
@@ -37,6 +38,7 @@
                             <button type="submit">{{ $t('FooterForm3') }}</button>
                         </div><span class="footer-form__tags">{{ $t('FooterForm4') }}</span>
                     </form>
+                    -->
                     <div class="footer-follow"><span class="footer-follow__heading">{{ $t('FooterFollow') }}</span>
                         <div class="footer-follow__social">
                             <a :href="$t('FooterFollowFacebook')"><i class="fa fa-facebook"></i></a>
