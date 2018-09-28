@@ -36,6 +36,18 @@
                 <div>
                     <button class="btn btn-primary" @click="saveFactory">{{ $t('ConfigDashboardSave') }}</button>
                 </div>
+
+                <div class="form-group">
+                    <label class="mt-4">Rates<span class="ConfigDashboad__address" v-if="Rates.address"> - {{ Rates.address }}</span></label>
+                    <input
+                            type="text"
+                            class="form-control"
+                            @keyup.enter="saveRates"
+                            v-model="rates">
+                </div>
+                <div>
+                    <button class="btn btn-primary" @click="saveFactory">{{ $t('ConfigDashboardSave') }}</button>
+                </div>
             </div>
             <b-loading :is-full-page="false" :active.sync="loading" :can-cancel="true"></b-loading>
         </section>
@@ -46,6 +58,7 @@
     import "./default.scss";
     import { createNamespacedHelpers } from "vuex";
     import { CONFIG_UPDATE } from "store/modules/Config.js";
+    import { decode } from '@redtea/semint';
 
     const ConfigNS = createNamespacedHelpers('Config');
     const TokensListNS = createNamespacedHelpers('TokensList');
@@ -62,6 +75,7 @@
             return {
                 loading: false,
                 factory: null,
+                rates: null,
                 list: [{
                     address: "",
                     version: ""
@@ -78,7 +92,9 @@
             ...ConfigNS.mapState({
                 W12Lister: "W12Lister",
                 FactoryTokens: "FactoryTokens",
-                W12ListerList: "W12ListerList"
+                W12ListerList: "W12ListerList",
+                Rates: "Rates",
+                Default: "Default"
             }),
         },
         methods: {
@@ -94,10 +110,9 @@
             async saveW12ListerList () {
                 this.loading = true;
                 const ListSave = this.list.map(async(item) => {
-                    const {VersionableFactory} = await this.ledgerFetch();
+                    const {VersionableFactory} = await this.ledgerFetch(this.Default.version);
                     const Versionable = VersionableFactory.at(item.address);
-                    const version = await Versionable.methods.version();
-                    item.version = await new BigNumber(version).toString();
+                    item.version = decode(parseInt(await new BigNumber(await Versionable.methods.version()).toString()), 4);
                     return item;
                 });
                 Promise.all(ListSave).then((completed) => {
@@ -107,6 +122,9 @@
             },
             saveFactory () {
                 this.$store.commit(`Config/${CONFIG_UPDATE}`, {FactoryTokens: { address: this.factory }});
+            },
+            saveRates () {
+                this.$store.commit(`Config/${CONFIG_UPDATE}`, {Rates: { address: this.rates }});
             },
             addList(){
                 this.list.push({

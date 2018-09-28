@@ -4,7 +4,6 @@ import Connector from './DefaultConnector.js';
 import { ContractWrappersFactory } from './Factory.js';
 
 export async function loadContracts(v) {
-
     const {DetailedERC20FactoryStrategy} = await dynamicImport("FactoryStrategies", v, "DetailedERC20");
     const {ERC20FactoryStrategy} = await dynamicImport("FactoryStrategies", v, "ERC20");
     const {W12CrowdsaleFactoryStrategy} = await dynamicImport("FactoryStrategies", v, "W12Crowdsale");

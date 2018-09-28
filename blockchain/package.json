@@ -18,6 +18,7 @@
     "url": "https://github.com/w12-platform/W12-Product-Blockchain-User-Interfaces"
   },
   "dependencies": {
+    "@redtea/semint": "^1.0.1",
     "ajv": "^6.5.4",
     "axios": "^0.18.0",
     "bootstrap": "^4.1.3",

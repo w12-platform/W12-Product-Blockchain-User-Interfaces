@@ -111,12 +111,12 @@ export function toWeiDecimals(value, decimals) {
 }
 
 export function version(block, version) {
-    return () => import("bem/" + block + "/v" + version);
+    return () => import("bem/" + block + "/" + version);
 }
 
 export async function dynamicImport(type, version, name) {
-    return import("lib/Blockchain/" + type + "/v" + version + "/" + name + ".js");
+    return import("lib/Blockchain/" + type + "/" + version + "/" + name + ".js");
 }
 export async function jsonLoader(version, name) {
-    return await fetch("/blockchain/src/lib/Blockchain/contracts/v" + version + "/" + name + ".json").then(data => data.json());
+    return await fetch("/blockchain/src/lib/Blockchain/contracts/" + version + "/" + name + ".json").then(data => data.json());
 }
