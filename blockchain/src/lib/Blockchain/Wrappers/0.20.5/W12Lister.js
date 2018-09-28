@@ -1,5 +1,8 @@
 import { BaseWrapper } from './BaseWrapper.js';
+import { decode } from '@redtea/semint';
 
+const web3 = new Web3();
+const BigNumber = web3.BigNumber;
 
 export class W12ListerWrapper extends BaseWrapper {
     constructor(contractArtifacts, instance) {
@@ -27,7 +30,7 @@ export class W12ListerWrapper extends BaseWrapper {
         const listedToken = (await this.methods.approvedTokens(Token.index));
         const wTokenAddress = await W12TokenLedger.methods.getWTokenByToken(listedToken[10].toString());
         return {
-            version: (await this.methods.version()).toString(),
+            version: decode(parseInt(await new BigNumber(await this.methods.version()).toString()), 4),
             listerAddress: this.instance.address,
             index: Token.index,
             ledgerAddress,
@@ -62,7 +65,7 @@ export class W12ListerWrapper extends BaseWrapper {
             if(uniqTokenAddress.indexOf(tokenAddress) === -1){
                 uniqTokenAddress.push(tokenAddress);
                 list.push({
-                    version: (await this.methods.version()).toString(),
+                    version: decode(parseInt(await new BigNumber(await this.methods.version()).toString()), 4),
                     listerAddress: this.instance.address,
                     index: i,
                     ledgerAddress,
