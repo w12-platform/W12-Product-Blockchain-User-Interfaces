@@ -118,5 +118,5 @@ export async function dynamicImport(type, version, name) {
     return import("lib/Blockchain/" + type + "/" + version + "/" + name + ".js");
 }
 export async function jsonLoader(version, name) {
-    return await fetch("/blockchain/src/lib/Blockchain/contracts/" + version + "/" + name + ".json").then(data => data.json());
+    return await fetch("/protocol/abi/" + version + "/" + name + ".json").then(data => data.json());
 }
