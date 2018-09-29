@@ -264,7 +264,7 @@ export default {
                             await this.dispatch('Project/updateFundInformation', {Token: state.currentProject});
                         }
                     }
-                    // await this.dispatch('Account/updateAccountData');
+                    await this.dispatch('Account/updateAccountData');
                 } else {
                     commit(UPDATE_META, {loadingProject: false, loadingProjectError: "ERROR_FETCH_PROJECT"});
                 }
