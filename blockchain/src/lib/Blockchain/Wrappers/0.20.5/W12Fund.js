@@ -1,5 +1,4 @@
-import { BaseWrapper } from './BaseWrapper.js';
-
+import { BaseWrapper } from 'lib/Blockchain/Wrappers/NoVersion/BaseWrapper.js';
 
 export class W12FundWrapper extends BaseWrapper {
     setFactories ({

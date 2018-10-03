@@ -1,5 +1,5 @@
 import { countStringBytes, decodeStringFromBytes, encodeStringToBytes, promisify } from 'lib/utils.js';
-import { BaseWrapper } from './BaseWrapper.js';
+import { BaseWrapper } from 'lib/Blockchain/Wrappers/NoVersion/BaseWrapper.js';
 
 const moment = window.moment;
 const DATE_FORMAT = 'YYYY-MM-DD';

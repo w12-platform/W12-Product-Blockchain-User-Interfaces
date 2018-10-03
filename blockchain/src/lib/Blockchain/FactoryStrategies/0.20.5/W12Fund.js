@@ -1,5 +1,4 @@
-import { BaseFactoryStrategy } from './BaseFactoryStrategy.js';
-
+import { BaseFactoryStrategy } from 'lib/Blockchain/FactoryStrategies/NoVersion/BaseFactoryStrategy.js';
 
 export class W12FundFactoryStrategy extends BaseFactoryStrategy {
     constructor (

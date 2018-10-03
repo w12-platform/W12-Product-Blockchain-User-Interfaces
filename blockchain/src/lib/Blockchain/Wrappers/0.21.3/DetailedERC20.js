@@ -1,5 +1,4 @@
-import { BaseWrapper } from './BaseWrapper.js';
-
+import { BaseWrapper } from 'lib/Blockchain/Wrappers/NoVersion/BaseWrapper.js';
 
 export class DetailedERC20Wrapper extends BaseWrapper {
     async getDescription() {

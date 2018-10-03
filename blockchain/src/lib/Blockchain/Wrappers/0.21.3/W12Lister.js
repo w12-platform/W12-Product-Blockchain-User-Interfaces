@@ -1,4 +1,4 @@
-import { BaseWrapper } from './BaseWrapper.js';
+import { BaseWrapper } from 'lib/Blockchain/Wrappers/NoVersion/BaseWrapper.js';
 import { decode } from '@redtea/semint';
 
 const web3 = new Web3();
