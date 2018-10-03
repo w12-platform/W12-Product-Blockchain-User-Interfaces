@@ -99,6 +99,10 @@
                     window.dispatchEvent(new Event('resize'));
                     this.meta.loading = false;
                 }
+            },
+
+            async handleCurrentTokenChange(currentToken) {
+                await this.updateAccountData();
             }
         },
         watch: {
@@ -106,6 +110,10 @@
                 handler: 'handleCurrentAccountChange',
                 immediate: true
             },
+            'currentToken': {
+                handler: 'handleCurrentTokenChange',
+                immediate: true
+            }
         },
         async created() {
             this.meta.loading = true;

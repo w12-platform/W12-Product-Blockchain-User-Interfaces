@@ -6,7 +6,7 @@
             <p class="py-2">{{ $t('WaitingConfirm') }}:</p>
             <b-tag class="py-2">{{isPendingTx.hash}}</b-tag>
         </div>
-        <b-collapse class="card" v-if="!isPendingTx">
+        <div class="card" v-if="!isPendingTx">
             <div class="card-content" v-if="tokenCrowdSaleMilestones.length">
                 <div class="">
                     <div v-for="(item, idx) in tokenCrowdSaleMilestones">
@@ -36,7 +36,7 @@
             </footer>
 
             <b-loading :is-full-page="false" :active.sync="saveMilestonesLoading" :can-cancel="true"></b-loading>
-        </b-collapse>
+        </div>
     </div>
 </template>
 
@@ -173,7 +173,7 @@
             async saveMilestones() {
                 this.saveMilestonesLoading = true;
                 try {
-                    const {W12CrowdsaleFactory} = await this.ledgerFetch();
+                    const {W12CrowdsaleFactory} = await this.ledgerFetch(this.currentProject.version);
                     const W12Crowdsale = W12CrowdsaleFactory.at(this.currentProject.crowdsaleAddress);
                     const tx = await W12Crowdsale.setMilestones(this.tokenCrowdSaleMilestones);
                     this.$store.commit(`Transactions/${UPDATE_TX}`, {

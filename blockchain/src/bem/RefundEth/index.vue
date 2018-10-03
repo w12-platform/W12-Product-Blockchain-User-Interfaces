@@ -202,7 +202,7 @@
             async approveTheFundToSpend() {
                 this.loading = true;
                 try {
-                    const {W12TokenFactory} = await this.ledgerFetch();
+                    const {W12TokenFactory} = await this.ledgerFetch(this.currentToken.version);
                     const {web3} = await Connector.connect();
                     const W12Token = W12TokenFactory.at(this.currentToken.crowdSaleInformation.WTokenAddress);
 
@@ -228,7 +228,7 @@
                 this.loading = true;
                 try {
                     const value = new BigNumber(this.currentAccountData.allowanceForTheFund);
-                    const {W12TokenFactory} = await this.ledgerFetch();
+                    const {W12TokenFactory} = await this.ledgerFetch(this.currentToken.version);
                     const {web3} = await Connector.connect();
                     const W12Token = W12TokenFactory.at(this.currentToken.crowdSaleInformation.WTokenAddress);
 
@@ -256,7 +256,7 @@
                     const value = new BigNumber(this.currentAccountData.allowanceForTheFund);
 
                     if (value.gt(0)) {
-                        const {W12FundFactory} = await this.ledgerFetch();
+                        const {W12FundFactory} = await this.ledgerFetch(this.currentToken.version);
                         const {web3} = await Connector.connect();
                         const W12Fund = W12FundFactory.at(this.currentToken.crowdSaleInformation.fund.W12FundAddress);
 
@@ -297,7 +297,7 @@
                 this.subscribeToEventsLoading = true;
 
                 try {
-                    const {W12FundFactory, W12TokenFactory} = await this.ledgerFetch();
+                    const {W12FundFactory, W12TokenFactory} = await this.ledgerFetch(this.currentToken.version);
                     const fundAddress = this.currentToken.crowdSaleInformation.fund.W12FundAddress;
                     const W12Fund = W12FundFactory.at(fundAddress);
                     const FundsRefunded = W12Fund.events.FundsRefunded(null, null, this.onFundsRefundedEvent);

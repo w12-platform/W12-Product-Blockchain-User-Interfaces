@@ -1,11 +1,7 @@
 import Connector from 'lib/Blockchain/DefaultConnector.js';
-import {promisify, isZeroAddress} from "lib/utils";
 import {map} from 'p-iteration';
-import {UPDATE_TOKENS_APPROVED} from "./Project";
 
 const moment = window.moment;
-const web3 = new Web3();
-const BigNumber = web3.BigNumber;
 
 export const UPDATE_TX = "UPDATE_TX";
 export const CONFIRM_TX = "CONFIRM_TX";

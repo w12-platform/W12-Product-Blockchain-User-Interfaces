@@ -184,7 +184,8 @@
                 ledgerMeta: 'meta',
             }),
             ...ConfigNS.mapState({
-                FactoryTokens: "FactoryTokens"
+                FactoryTokens: "FactoryTokens",
+                Default: "Default"
             }),
             ...AccountNS.mapState({
                 currentAccount: "currentAccount",
@@ -292,7 +293,7 @@
             async create() {
                 this.meta.creating = true;
                 try {
-                    const {WTokenTestHelperFactory} = await this.ledgerFetch();
+                    const {WTokenTestHelperFactory} = await this.ledgerFetch(this.Default.version);
                     const WTokenTestHelper = WTokenTestHelperFactory.at(this.FactoryTokens.address);
                     const connectedWeb3 = (await Connector.connect()).web3;
 
@@ -319,7 +320,7 @@
             },
             async fetchList() {
                 try {
-                    const {DetailedERC20Factory} = await this.ledgerFetch();
+                    const {DetailedERC20Factory} = await this.ledgerFetch(this.Default.version);
                     let listInfo = [];
                     await this.FactoryList.forEach(async (address) => {
                         const DetailedERC20 = DetailedERC20Factory.at(address);
@@ -343,7 +344,7 @@
                 this.subscribeToEventsLoading = true;
 
                 try {
-                    const {WTokenTestHelperFactory} = await this.ledgerFetch();
+                    const {WTokenTestHelperFactory} = await this.ledgerFetch(this.Default.version);
                     const WTokenTestHelper = WTokenTestHelperFactory.at(this.FactoryTokens.address);
                     const NewToken = WTokenTestHelper.events.NewToken(null, null, this.onNewTokenEvent);
 

@@ -134,7 +134,7 @@
                 this.loading = true;
                 try {
                     const fundAddress = this.currentProject.fundData.address;
-                    const {W12FundFactory} = await this.ledgerFetch();
+                    const {W12FundFactory} = await this.ledgerFetch(this.currentProject.version);
                     const {web3} = await Connector.connect();
                     const W12Fund = W12FundFactory.at(fundAddress);
                     const tx = await W12Fund.methods.tranche({from: this.currentAccount});

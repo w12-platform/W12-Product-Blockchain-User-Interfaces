@@ -109,3 +109,14 @@ export function toWeiDecimals(value, decimals) {
     const oneToken = new BigNumber(10).pow(decimals);
     return value ? new BigNumber(value).times(oneToken): "";
 }
+
+export function version(block, version) {
+    return () => import("bem/" + block + "/" + version);
+}
+
+export async function dynamicImport(type, version, name) {
+    return import("lib/Blockchain/" + type + "/" + version + "/" + name + ".js");
+}
+export async function jsonLoader(version, name) {
+    return await fetch("/protocol/abi/" + version + "/" + name + ".json").then(data => data.json());
+}

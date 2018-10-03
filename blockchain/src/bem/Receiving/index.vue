@@ -110,7 +110,7 @@
             async claimRemainingTokens() {
                 this.loadingClaim = true;
                 try {
-                    const {W12CrowdsaleFactory} = await this.LedgerFetch();
+                    const {W12CrowdsaleFactory} = await this.LedgerFetch(this.currentProject.version);
                     const W12Crowdsale = W12CrowdsaleFactory.at(this.currentProject.crowdsaleAddress);
                     const connectedWeb3 = (await Connector.connect()).web3;
                     const tx = await W12Crowdsale.methods.claimRemainingTokens();

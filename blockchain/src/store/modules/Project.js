@@ -222,17 +222,29 @@ export default {
         async fetchList({commit}) {
             commit(UPDATE_META, {loading: true});
             try {
-                const {W12ListerFactory} = await this.dispatch('Ledger/fetch');
-                const W12Lister = W12ListerFactory.at(this.state.Config.W12Lister.address);
-                const list = await W12Lister.fetchAllTokensInWhiteList();
-                commit(UPDATE, {list});
+                const listPromise = this.state.Config.W12ListerList.map(async (Lister)=>{
+                    const {W12ListerFactory} = await this.dispatch('Ledger/fetch', Lister.version);
+                    const W12Lister = W12ListerFactory.at(Lister.address);
+                    return await W12Lister.fetchAllTokensInWhiteList();
+                });
+                Promise.all(listPromise).then((completed) => {
+                    let list = [];
+                    completed.forEach((item)=>{
+                        list = list.concat(item);
+                    });
+                    commit(UPDATE, {list});
+                    commit(UPDATE_META, {loading: false});
+                });
             } catch (e) {
                 commit(UPDATE_META, {loading: false, loadingError: e.message});
             }
-            commit(UPDATE_META, {loading: false});
         },
-        async fetchProject({commit, getters, state}, Token) {
+        async fetchProject({commit}, Token) {
             commit(UPDATE_META, {loadingProject: true});
+            await this.dispatch('Project/updateProject', Token);
+            commit(UPDATE_META, {loadingProject: false});
+        },
+        async updateProject({commit, getters, state}, Token) {
             try {
                 if (Token.tokenAddress && Token.tokenOwners) {
                     await this.dispatch('Project/updateTokenInfo', {Token});
@@ -259,14 +271,12 @@ export default {
             } catch (e) {
                 commit(UPDATE_META, {loadingProject: false, loadingProjectError: e.message});
             }
-            commit(UPDATE_META, {loadingProject: false});
         },
         async updateTokenInfo({commit}, {Token}) {
             try {
                 if (Token.tokenAddress) {
-                    const {W12ListerFactory, DetailedERC20Factory} = await this.dispatch('Ledger/fetch');
-                    const W12Lister = W12ListerFactory.at(this.state.Config.W12Lister.address);
-
+                    const {W12ListerFactory, DetailedERC20Factory} = await this.dispatch('Ledger/fetch', Token.version);
+                    const W12Lister = W12ListerFactory.at(Token.listerAddress);
                     let token = await W12Lister.fetchComposedTokenInformationByTokenAddress(Token);
                     const DetailedERC20 = DetailedERC20Factory.at(token.tokenAddress);
                     token.tokenInformation = (await DetailedERC20.getDescription());
@@ -281,12 +291,12 @@ export default {
         },
         async updateTokensApprovedToPlaceValue({commit}, {Token}) {
             try {
-                const {ERC20Factory} = await this.dispatch('Ledger/fetch');
+                const {ERC20Factory} = await this.dispatch('Ledger/fetch', Token.version);
                 const ERC20 = ERC20Factory.at(Token.tokenAddress);
 
                 const allowance = (await ERC20.methods.allowance(
                         this.state.Account.currentAccount,
-                        this.state.Config.W12Lister.address)
+                        Token.listerAddress)
                 ).toString();
 
                 commit(UPDATE_TOKENS_APPROVED, {allowance});
@@ -296,7 +306,7 @@ export default {
         },
         async updatePlacedTokenStatus({commit}, {Token}) {
             try {
-                const {W12TokenLedgerFactory} = await this.dispatch('Ledger/fetch');
+                const {W12TokenLedgerFactory} = await this.dispatch('Ledger/fetch', Token.version);
                 const W12TokenLedger = W12TokenLedgerFactory.at(Token.ledgerAddress);
 
                 const placedTokenAddress = await W12TokenLedger.methods.getWTokenByToken(Token.tokenAddress);
@@ -313,7 +323,7 @@ export default {
         },
         async updateOwnerBalance({commit}, {Token}) {
             try {
-                const {ERC20Factory} = await this.dispatch('Ledger/fetch');
+                const {ERC20Factory} = await this.dispatch('Ledger/fetch', Token.version);
                 const ERC20 = ERC20Factory.at(Token.tokenAddress);
 
                 const balance = (new BigNumber(await ERC20.methods.balanceOf(this.state.Account.currentAccount))
@@ -326,8 +336,8 @@ export default {
         },
         async fetchCrowdSaleAddressAndInfo({commit}, {Token}) {
             try {
-                const {W12ListerFactory, W12CrowdsaleFactory} = await this.dispatch('Ledger/fetch');
-                const W12Lister = W12ListerFactory.at(this.state.Config.W12Lister.address);
+                const {W12ListerFactory, W12CrowdsaleFactory} = await this.dispatch('Ledger/fetch', Token.version);
+                const W12Lister = W12ListerFactory.at(Token.listerAddress);
 
                 try {
                     const address = await W12Lister.methods.getTokenCrowdsale(
@@ -356,7 +366,7 @@ export default {
         },
         async fetchCrowdSaleStagesList({commit}, {Token}) {
             try {
-                const {W12CrowdsaleFactory} = await this.dispatch('Ledger/fetch');
+                const {W12CrowdsaleFactory} = await this.dispatch('Ledger/fetch', Token.version);
                 const W12Crowdsale = W12CrowdsaleFactory.at(Token.tokenCrowdsaleAddress);
 
                 const list = await W12Crowdsale.getStagesList();
@@ -376,7 +386,7 @@ export default {
         async upCrowdSaleStart({commit}, {Token}) {
             try {
                 if (Token.crowdSaleInformation.tokenCrowdSaleStages.length) {
-                    const {W12CrowdsaleFactory} = await this.dispatch('Ledger/fetch');
+                    const {W12CrowdsaleFactory} = await this.dispatch('Ledger/fetch', Token.version);
                     const W12Crowdsale = W12CrowdsaleFactory.at(Token.tokenCrowdsaleAddress);
                     const isSaleActive = await W12Crowdsale.methods.isSaleActive();
                     const isEnded = await W12Crowdsale.methods.isEnded();
@@ -391,7 +401,7 @@ export default {
         },
         async fetchCrowdSaleMilestonesList({commit}, {Token}) {
             try {
-                const {W12CrowdsaleFactory} = await this.dispatch('Ledger/fetch');
+                const {W12CrowdsaleFactory} = await this.dispatch('Ledger/fetch', Token.version);
                 const W12Crowdsale = W12CrowdsaleFactory.at(Token.tokenCrowdsaleAddress);
                 if(Token.tokenCrowdsaleAddress) {
                     const milestones = await W12Crowdsale.getMilestones();
@@ -406,7 +416,7 @@ export default {
         },
         async updateReceivingInformation({commit, state}, {Token}) {
             try {
-                const {W12TokenFactory, DetailedERC20Factory} = await this.dispatch('Ledger/fetch');
+                const {W12TokenFactory, DetailedERC20Factory} = await this.dispatch('Ledger/fetch', Token.version);
                 const W12Token = W12TokenFactory.at(Token.wTokenAddress);
                 const DetailedERC20 = DetailedERC20Factory.at(Token.tokenAddress);
                 const token = await DetailedERC20.getDescription();
@@ -424,9 +434,9 @@ export default {
                 commit(UPDATE_META, {loadingProjectError: e.message});
             }
         },
-        async updateFundInformation({commit}, {Token}) {
+        async updateFundInformation({commit, state}, {Token}) {
             try {
-                const {W12CrowdsaleFactory, W12FundFactory} = await this.dispatch('Ledger/fetch');
+                const {W12CrowdsaleFactory, W12FundFactory} = await this.dispatch('Ledger/fetch', Token.version);
                 const W12Crowdsale = W12CrowdsaleFactory.at(Token.crowdsaleAddress);
                 const fundAddress = await W12Crowdsale.methods.fund();
                 const W12Fund = W12FundFactory.at(fundAddress);
@@ -435,11 +445,15 @@ export default {
                 const fundData = {
                     address: fundAddress,
                     balanceWei: (await getBalance(fundAddress)).toString(),
-                    trancheAmount: (await W12Fund.methods.getTrancheAmount()).toString(),
                 };
+                if(state.currentProject && state.currentProject.crowdSaleInformation && state.currentProject.crowdSaleInformation.isStartCrowdSale) {
+                    fundData.trancheAmount = (await W12Fund.methods.getTrancheAmount()).toString();
+                } else {
+                    fundData.trancheAmount = 0;
+                }
                 commit(UPDATE_FUND_DATA, fundData);
             } catch (e) {
-                //commit(UPDATE_META, {loadingProjectError: e.message});
+                commit(UPDATE_META, {loadingProjectError: e.message});
             }
         },
     }
