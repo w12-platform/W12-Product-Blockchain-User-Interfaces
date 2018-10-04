@@ -59,7 +59,14 @@
                     <p class="py-2">{{ $t('WaitingConfirm') }}:</p>
                     <b-tag class="py-2">{{isPendingTx.hash}}</b-tag>
                 </div>
-                <div v-if="!isPendingTx">
+                <div class="pm-2" v-if="isErrorTx">
+                    <p class="py-2">{{ $t('TransactionFailed') }}:</p>
+                    <b-tag class="py-2">{{isErrorTx.hash}}</b-tag>
+                    <div class="pt-2 text-left">
+                        <button class="btn btn-primary btn-sm" @click="TransactionsRetry(isErrorTx)">{{ $t('ToRetry') }}</button>
+                    </div>
+                </div>
+                <div v-if="!isPendingTx && !isErrorTx">
                     <div class="form-group">
                         <label for="FactoryName">{{ $t('TokensFactoryCreateFormName') }}</label>
                         <b-field id="FactoryName">
@@ -251,6 +258,19 @@
                     max: this.maxAmountPrecision,
                 });
             },
+            isErrorTx() {
+                return this.TransactionsList && this.TransactionsList.length
+                    ? this.TransactionsList.find((tr) => {
+                        return tr.name
+                        && tr.hash
+                        && tr.status
+                        && tr.name === "createToken"
+                        && tr.status === "error"
+                            ? tr
+                            : false
+                    })
+                    : false;
+            },
             isPendingTx() {
                 return this.TransactionsList && this.TransactionsList.length
                     ? this.TransactionsList.find((tr) => {
@@ -287,7 +307,8 @@
                 ledgerFetch: "fetch"
             }),
             ...TransactionsNS.mapActions({
-                transactionsUpStatusTx: "updateStatusTx"
+                transactionsUpStatusTx: "updateStatusTx",
+                TransactionsRetry: "retry"
             }),
 
             async create() {

@@ -29,13 +29,22 @@ export default {
             state.list.forEach(async (tr) => {
                 if (tr.hash) {
                     const connectedWeb3 = (await Connector.connect()).web3;
-                    connectedWeb3.eth.getTransaction(tr.hash, function (err, receipt) {
-                        if (receipt && receipt.blockNumber && receipt.hash || (!err && !receipt)) {
-                            commit(CONFIRM_TX, tr.hash);
+                    connectedWeb3.eth.getTransactionReceipt(tr.hash, function (err, receipt) {
+                        if(receipt && receipt.blockNumber){
+                            if (receipt.status === '0x1' || receipt.status === 1) {
+                                commit(CONFIRM_TX, tr.hash);
+                            } else {
+                                commit(CONFIRM_TX, tr.hash);
+                                tr.status = "error";
+                                commit(UPDATE_TX, tr);
+                            }
                         }
                     });
                 }
             });
+        },
+        async retry({commit, state}, tr){
+            commit(CONFIRM_TX, tr.hash);
         }
     }
 };
