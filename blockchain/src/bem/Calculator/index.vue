@@ -63,8 +63,15 @@
                 <p class="py-2">{{ $t('WaitingConfirm') }}:</p>
                 <b-tag class="py-2">{{isPendingTx.hash}}</b-tag>
             </div>
+            <div class="pm-2" v-if="isErrorTx">
+                <p class="py-2">{{ $t('TransactionFailed') }}:</p>
+                <b-tag class="py-2">{{isErrorTx.hash}}</b-tag>
+                <div class="pt-2 text-left">
+                    <button class="btn btn-primary btn-sm" @click="TransactionsRetry(isErrorTx)">{{ $t('ToRetry') }}</button>
+                </div>
+            </div>
 
-            <div class="Calculator__buy" v-if="!isPendingTx">
+            <div class="Calculator__buy" v-if="!isPendingTx && !isErrorTx">
                 <button class="btn btn-primary" :disabled="disable" @click="buy">{{$t('InvestorDashboardCalculatorBuy')}}</button>
             </div>
         </div>
@@ -170,6 +177,21 @@
 
                 return new BigNumber(amount).mul(bonusMultiplier).div(price).toFixed(2).toString();
             },
+            isErrorTx() {
+                return this.TransactionsList && this.TransactionsList.length
+                    ? this.TransactionsList.find((tr) => {
+                        return tr.token
+                        && tr.name
+                        && tr.hash
+                        && tr.status
+                        && tr.token === this.currentToken.crowdSaleInformation.WTokenAddress
+                        && tr.name === "buy"
+                        && tr.status === "error"
+                            ? tr
+                            : false
+                    })
+                    : false;
+            },
             isPendingTx() {
                 return this.TransactionsList && this.TransactionsList.length
                     ? this.TransactionsList.find((tr) => {
@@ -198,7 +220,8 @@
                 updateAccountData: 'updateAccountData'
             }),
             ...TokensListNS.mapActions({
-                tokensListUpdate: "update"
+                tokensListUpdate: "update",
+                TransactionsRetry: "retry"
             }),
             findMatchBonusRange(eth) {
                 const ranges = this.bonusConditions.reduce(

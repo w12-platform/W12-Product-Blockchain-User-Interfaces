@@ -14,16 +14,23 @@
                 <b-tag v-else type="is-success">{{ $t('ProjectDashboardStageApproveStatusApproved') }}</b-tag>
             </div>
             <div class="col-sm text-right">
-                <span v-if="hasAllowance && !isPendingTx">{{ tokensAmountThatApprovedToPlaceByTokenOwnerToNumber }}</span>
+                <span v-if="hasAllowance && !isPendingTx && !isErrorTx">{{ tokensAmountThatApprovedToPlaceByTokenOwnerToNumber }}</span>
                 <div v-else class="text-left">
                     <div class="pm-2" v-if="isPendingTx">
                         <p class="py-2">{{ $t('WaitingConfirm') }}:</p>
                         <b-tag class="py-2">{{isPendingTx.hash}}</b-tag>
                     </div>
-                    <b-tag class="ProjectDashboard__approveInfo" type="is-info" v-if="!isPendingTx">
+                    <div class="pm-2" v-if="isErrorTx">
+                        <p class="py-2">{{ $t('TransactionFailed') }}:</p>
+                        <b-tag class="py-2">{{isErrorTx.hash}}</b-tag>
+                        <div class="pt-2 text-left">
+                            <button class="btn btn-primary btn-sm" @click="TransactionsRetry(isErrorTx)">{{ $t('ToRetry') }}</button>
+                        </div>
+                    </div>
+                    <b-tag class="ProjectDashboard__approveInfo" type="is-info" v-if="!isPendingTx && !isErrorTx">
                         {{ $t('ProjectDashboardStageApproveSpendFrom') }} {{ currentAccount }}
                     </b-tag>
-                    <div v-if="!isPendingTx">
+                    <div v-if="!isPendingTx && !isErrorTx">
                         <div v-if="ownerBalance === '0'">
                             <b-tag class="ProjectDashboard__approveNoTokens" type="is-danger">
                                 {{ $t('ProjectDashboardStageApproveNoTokens') }}
@@ -159,6 +166,21 @@
                 const balance = this.currentProject.ownerBalance ? new BigNumber(this.currentProject.ownerBalance) : null;
                 return value && balance ? !(value.gt(0) && value.lte(balance)) : true;
             },
+            isErrorTx() {
+                return this.TransactionsList && this.TransactionsList.length
+                    ? this.TransactionsList.find((tr) => {
+                        return tr.token
+                        && tr.name
+                        && tr.hash
+                        && tr.status
+                        && tr.token === this.currentProject.tokenAddress
+                        && tr.name === "ApproveTokens"
+                        && tr.status === "error"
+                            ? tr
+                            : false
+                    })
+                    : false;
+            },
             isPendingTx() {
                 return this.TransactionsList && this.TransactionsList.length
                     ? this.TransactionsList.find((tr) => {
@@ -179,7 +201,9 @@
             ...LedgerNS.mapActions({
                 LedgerFetch: 'fetch',
             }),
-
+            ...TransactionsNS.mapActions({
+                TransactionsRetry: "retry"
+            }),
             async approveTokensToSpend() {
                 if(this.disable) return;
 

@@ -146,6 +146,13 @@
                 <p class="py-2">{{ $t('WaitingConfirm') }}:</p>
                 <b-tag class="py-2">{{isPendingTx.hash}}</b-tag>
             </div>
+            <div class="pm-2" v-if="isErrorTx">
+                <p class="py-2">{{ $t('TransactionFailed') }}:</p>
+                <b-tag class="py-2">{{isErrorTx.hash}}</b-tag>
+                <div class="pt-2 text-left">
+                    <button class="btn btn-primary btn-sm" @click="TransactionsRetry(isErrorTx)">{{ $t('ToRetry') }}</button>
+                </div>
+            </div>
             <button class="btn btn-primary py-2 my-2" @click="tryWhiteListToken" :disabled="disableWhiteListButton">{{
                 $t('AdminDashboardWhitelist') }}
             </button>
@@ -233,6 +240,19 @@
             isLoading() {
                 return this.whiteMeta.loading || this.meta.loading;
             },
+            isErrorTx() {
+                return this.TransactionsList && this.TransactionsList.length
+                    ? this.TransactionsList.find((tr) => {
+                        return tr.name
+                        && tr.hash
+                        && tr.status
+                        && tr.name === "whitelistToken"
+                        && tr.status === "error"
+                            ? tr
+                            : false
+                    })
+                    : false;
+            },
             isPendingTx() {
                 return this.TransactionsList && this.TransactionsList.length
                     ? this.TransactionsList.find((tr) => {
@@ -263,7 +283,8 @@
                 whitelistFetch: "fetch",
             }),
             ...TransactionsNS.mapActions({
-                updateStatusTx: "updateStatusTx"
+                updateStatusTx: "updateStatusTx",
+                TransactionsRetry: "retry"
             }),
             async tryWhiteListToken() {
                 this.clearErrorMessage();

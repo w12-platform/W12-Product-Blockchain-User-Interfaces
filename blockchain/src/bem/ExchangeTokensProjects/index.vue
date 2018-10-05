@@ -6,10 +6,17 @@
             <p class="py-2">{{ $t('WaitingConfirm') }}:</p>
             <b-tag class="py-2">{{isPendingTx.hash}}</b-tag>
         </div>
+        <div class="pm-2" v-if="isErrorTx">
+            <p class="py-2">{{ $t('TransactionFailed') }}:</p>
+            <b-tag class="py-2">{{isErrorTx.hash}}</b-tag>
+            <div class="pt-2 text-left">
+                <button class="btn btn-primary btn-sm" @click="TransactionsRetry(isErrorTx)">{{ $t('ToRetry') }}</button>
+            </div>
+        </div>
         <b-notification class="" v-if="error" @close="error = false" type="is-danger" has-icon>
             {{ error }}
         </b-notification>
-        <div class="ExchangeTokens__content" v-if="!isPendingTx">
+        <div class="ExchangeTokens__content" v-if="!isPendingTx && !isErrorTx">
             <div class="ExchangeTokens__form">
                 <div class="ExchangeTokens__exchange py-2">
                     <button class="btn btn-primary py-2"
@@ -107,7 +114,21 @@
             vestingBalance() {
                 return fromWeiDecimalsString(this.currentAccountData.vestingBalance, this.currentProject.decimals);
             },
-
+            isErrorTx() {
+                return this.TransactionsList && this.TransactionsList.length
+                    ? this.TransactionsList.find((tr) => {
+                        return tr.token
+                        && tr.name
+                        && tr.hash
+                        && tr.status
+                        && tr.token === this.currentProject.wTokenAddress
+                        && tr.name === "exchangeProject"
+                        && tr.status === "error"
+                            ? tr
+                            : false
+                    })
+                    : false;
+            },
             isPendingTx() {
                 return this.TransactionsList && this.TransactionsList.length
                     ? this.TransactionsList.find((tr) => {
@@ -130,6 +151,9 @@
             }),
             ...AccountNS.mapActions({
                 updateAccountData: 'updateAccountData',
+            }),
+            ...TransactionsNS.mapActions({
+                TransactionsRetry: "retry"
             }),
             toEth(value) {
                 value = value ? new BigNumber(value) : 0;

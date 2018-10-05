@@ -6,7 +6,14 @@
             <p class="py-2">{{ $t('WaitingConfirm') }}:</p>
             <b-tag class="py-2">{{isPendingTx.hash}}</b-tag>
         </div>
-        <table v-if="!isPendingTx" class="table table-striped table-bordered table-hover table-responsive-sm">
+        <div class="pm-2" v-if="isErrorTx">
+            <p class="py-2">{{ $t('TransactionFailed') }}:</p>
+            <b-tag class="py-2">{{isErrorTx.hash}}</b-tag>
+            <div class="pt-2 text-left">
+                <button class="btn btn-primary btn-sm" @click="TransactionsRetry(isErrorTx)">{{ $t('ToRetry') }}</button>
+            </div>
+        </div>
+        <table v-if="!isPendingTx && !isErrorTx" class="table table-striped table-bordered table-hover table-responsive-sm">
             <tbody>
             <tr>
                 <td>{{ $t('trancheInformationFundBalance') }}</td>
@@ -27,7 +34,7 @@
             {{ error }}
         </b-notification>
 
-        <button v-if="!isPendingTx" class="btn btn-primary py-2 my-2" :disabled="disable" @click="tryTranche">{{
+        <button v-if="!isPendingTx && !isErrorTx" class="btn btn-primary py-2 my-2" :disabled="disable" @click="tryTranche">{{
             $t('trancheInformationReceive') }}
         </button>
         <b-loading :is-full-page="false" :active.sync="loading" :can-cancel="true"></b-loading>
@@ -72,6 +79,21 @@
             ...TransactionsNS.mapState({
                 TransactionsList: "list"
             }),
+            isErrorTx() {
+                return this.TransactionsList && this.TransactionsList.length
+                    ? this.TransactionsList.find((tr) => {
+                        return tr.fund
+                        && tr.name
+                        && tr.hash
+                        && tr.status
+                        && tr.fund === this.currentProject.fundData.address
+                        && tr.name === "tranche"
+                        && tr.status === "error"
+                            ? tr
+                            : false
+                    })
+                    : false;
+            },
             isPendingTx() {
                 return this.TransactionsList && this.TransactionsList.length
                     ? this.TransactionsList.find((tr) => {
@@ -129,7 +151,9 @@
             ...LedgerNS.mapActions({
                 ledgerFetch: "fetch"
             }),
-
+            ...TransactionsNS.mapActions({
+                TransactionsRetry: "retry"
+            }),
             async tryTranche() {
                 this.loading = true;
                 try {
