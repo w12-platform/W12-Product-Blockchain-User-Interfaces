@@ -34,7 +34,6 @@ const store = {
     plugins: [
         PersistedStatePlugin({
             paths: [
-                "Config",
                 "W12Lister",
                 "Transactions.list",
                 "Lang.current",
