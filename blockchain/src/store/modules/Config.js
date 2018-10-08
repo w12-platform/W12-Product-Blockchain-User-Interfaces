@@ -4,7 +4,7 @@ export default {
     namespaced: true,
     state: {
         W12Lister: {
-            address: "0x090fd7807410455b59b95c492fda165c4b5b5679"
+            address: "0x0d60b4c74be0670166dc8f5588d35c8d50f4929d"
         },
         FactoryTokens: {
             address: "0x15bfbebcace798a18c42c2ff1f23388449355ea4"
