@@ -3,8 +3,6 @@
         <section class="container">
             <h2>{{ $t('AdminDashboard') }}</h2>
 
-            <ListerSwitch :disabled="true"></ListerSwitch>
-
             <b-notification class="AdminDashboard__error" v-if="isError && !isLoading" type="is-danger" :closable="false" has-icon>
                 <span v-if="ledgerMeta.loadingError">{{ ledgerMeta.loadingError }}</span>
                 <span v-if="tokensListMeta.loadingError">{{ tokensListMeta.loadingError }}</span>
@@ -29,7 +27,6 @@
 <script>
     import './default.scss';
 
-    import ListerSwitch from 'bem/ListerSwitch';
     import {version} from 'lib/utils.js';
 
     import {createNamespacedHelpers} from "vuex";
