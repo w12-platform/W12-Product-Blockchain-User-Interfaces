@@ -7,7 +7,14 @@
             <p class="py-2">{{ $t('WaitingConfirm') }}:</p>
             <b-tag class="py-2">{{isPendingTx.hash}}</b-tag>
         </div>
-        <table v-if="!isPendingTx" class="table table-striped table-bordered table-hover table-responsive-sm">
+        <div class="pm-2" v-if="isErrorTx">
+            <p class="py-2">{{ $t('TransactionFailed') }}:</p>
+            <b-tag class="py-2">{{isErrorTx.hash}}</b-tag>
+            <div class="pt-2 text-left">
+                <button class="btn btn-primary btn-sm" @click="TransactionsRetry(isErrorTx)">{{ $t('ToRetry') }}</button>
+            </div>
+        </div>
+        <table v-if="!isPendingTx && !isErrorTx" class="table table-striped table-bordered table-hover table-responsive-sm">
             <tbody>
             <tr>
                 <td>{{ $t('ReceivingUnsold', {Token:currentProject.receiving.symbol})}}</td>
@@ -33,13 +40,13 @@
             {{ error }}
         </b-notification>
         <button
-                v-if="!isPendingTx && currentProject.receiving.amountUnSold !== '0'"
+                v-if="!isPendingTx && !isErrorTx && currentProject.receiving.amountUnSold !== '0'"
                 class="btn btn-primary py-2 my-2"
                 @click="claimRemainingTokens"
                 :disabled="!currentProject.receiving.amountUnSold">{{
             $t('ReceivingGetUnsold',{WToken:currentProject.receiving.symbolW})}}
         </button>
-        <ExchangeTokensProjects v-if="!isPendingTx"></ExchangeTokensProjects>
+        <ExchangeTokensProjects v-if="!isPendingTx && !isErrorTx"></ExchangeTokensProjects>
         <b-loading :is-full-page="false" :active.sync="loadingClaim" :can-cancel="true"></b-loading>
     </div>
 </template>
@@ -74,6 +81,21 @@
                 currentAccount: "currentAccount",
                 currentAccountData: "currentAccountData",
             }),
+            isErrorTx() {
+                return this.TransactionsList && this.TransactionsList.length
+                    ? this.TransactionsList.find((tr) => {
+                        return tr.token
+                        && tr.name
+                        && tr.hash
+                        && tr.status
+                        && tr.token === this.currentProject.tokenAddress
+                        && tr.name === "claimRemainingTokens"
+                        && tr.status === "error"
+                            ? tr
+                            : false
+                    })
+                    : false;
+            },
             isPendingTx() {
                 return this.TransactionsList && this.TransactionsList.length
                     ? this.TransactionsList.find((tr) => {
@@ -107,10 +129,13 @@
             ...LedgerNS.mapActions({
                 LedgerFetch: 'fetch',
             }),
+            ...TransactionsNS.mapActions({
+                TransactionsRetry: "retry"
+            }),
             async claimRemainingTokens() {
                 this.loadingClaim = true;
                 try {
-                    const {W12CrowdsaleFactory} = await this.LedgerFetch();
+                    const {W12CrowdsaleFactory} = await this.LedgerFetch(this.currentProject.version);
                     const W12Crowdsale = W12CrowdsaleFactory.at(this.currentProject.crowdsaleAddress);
                     const connectedWeb3 = (await Connector.connect()).web3;
                     const tx = await W12Crowdsale.methods.claimRemainingTokens();

@@ -75,6 +75,9 @@
             </div>
         </div>
         <div class="tech-adv">
+            <div class="mobile-btn">
+              <a class="btn actions__buytokens" href="https://w12.io/buy-w12/?utm_source=test-net&amp;utm_medium=demo_page" target="_blank">{{ $t('HeaderByuW12Tokens') }}</a>
+            </div>
             <h3 class="tech-adv__heading">{{ $t('HomeBenefits') }}</h3>
             <h4 class="tech-adv__subheading">{{ $t('HomeBenefitsMaxFlexibility') }}</h4>
             <p class="tech-adv__text">{{ $t('HomeBenefits1') }}</p>
@@ -89,6 +92,9 @@
             <p class="tech-adv__text no-points">{{ $t('HomeBenefits10') }}</p>
         </div>
         <div class="versions">
+            <div class="mobile-btn">
+              <a class="btn actions__buytokens" href="https://w12.io/buy-w12/?utm_source=test-net&amp;utm_medium=demo_page" target="_blank">{{ $t('HeaderByuW12Tokens') }}</a>
+            </div>
             <h3 class="versions__heading">{{ $t('HomeVersions') }}</h3>
             <div class="table-wrap">
                 <div class="versions__table">
@@ -180,11 +186,15 @@
                     </div>
                 </div>
             </div>
+            <div class="mobile-btn">
+              <a class="btn actions__buytokens" href="https://w12.io/buy-w12/?utm_source=test-net&amp;utm_medium=demo_page" target="_blank">{{ $t('HeaderByuW12Tokens') }}</a>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
+    import './default.scss';
     import {createNamespacedHelpers} from "vuex";
 
     const LangNS = createNamespacedHelpers("Lang");

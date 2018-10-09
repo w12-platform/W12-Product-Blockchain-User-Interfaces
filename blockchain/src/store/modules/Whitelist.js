@@ -1,10 +1,6 @@
-import Connector from "lib/Blockchain/DefaultConnector";
-import {promisify} from "lib/utils";
 import {map} from 'p-iteration';
 
 const moment = window.moment;
-const web3 = new Web3();
-const BigNumber = web3.BigNumber;
 
 export const ERROR_FETCH_TOKENS_LIST = 'An unknown error while trying get tokens';
 
@@ -41,7 +37,7 @@ export default {
         async fetch({commit}) {
             commit(UPDATE_META, {loading: true});
             try {
-                const {W12ListerFactory} = await this.dispatch('Ledger/fetch');
+                const {W12ListerFactory} = await this.dispatch('Ledger/fetch', this.state.Config.W12Lister.version);
                 const W12Lister = W12ListerFactory.at(this.state.Config.W12Lister.address);
                 let list = (await W12Lister.fetchAllTokensComposedInformation());
                 list = list.filter((token) => Boolean(token.tokenAddress));

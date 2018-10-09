@@ -21,9 +21,9 @@
                     {{ ProjectMeta.loadingProjectError }}
                 </b-notification>
 
-                <div class="ProjectDashboard__project" v-if="!ProjectMeta.loadingProjectError">
-                    <TokenInfo></TokenInfo>
-                    <ProjectStages></ProjectStages>
+                <div class="ProjectDashboard__project" v-if="!ProjectMeta.loadingProjectError && currentProject && currentProject.version">
+                    <TokenInfo :is="TokenInfoVersion"></TokenInfo>
+                    <ProjectStages :is="ProjectStagesVersion"></ProjectStages>
                     <Milestones></Milestones>
 
                     <b-loading :is-full-page="false" :active.sync="ProjectMeta.loadingProject" :can-cancel="true"></b-loading>
@@ -35,9 +35,8 @@
 
 <script>
     import './default.scss';
+    import {version} from 'lib/utils.js';
     import ProjectSwitch from 'bem/ProjectSwitch';
-    import TokenInfo from 'bem/TokenInfo';
-    import ProjectStages from 'bem/ProjectStages';
     import Milestones from 'bem/Milestones';
 
     import {createNamespacedHelpers} from 'vuex';
@@ -51,9 +50,7 @@
         name: 'ProjectDashboard',
         components: {
             ProjectSwitch,
-            TokenInfo,
-            ProjectStages,
-            Milestones,
+            Milestones
         },
         computed: {
             ...LedgerNS.mapState({
@@ -79,6 +76,12 @@
                     this.accountMeta.loading
                     || this.ProjectMeta.loading
                 );
+            },
+            TokenInfoVersion(){
+                return version('TokenInfo', this.currentProject.version);
+            },
+            ProjectStagesVersion(){
+                return version('ProjectStages', this.currentProject.version);
             },
         },
         watch: {

@@ -1,5 +1,5 @@
 <template>
-    <div class="Calculator byefy" v-if="currentToken.crowdSaleInformation.status">
+    <div class="Calculator byefy" v-if="currentToken && currentToken.crowdSaleInformation && currentToken.crowdSaleInformation.status">
         <h2>{{ $t('InvestorDashboardCalculator', {WToken:currentToken.symbol}) }}</h2>
 
         <div class="Calculator__content">
@@ -63,8 +63,15 @@
                 <p class="py-2">{{ $t('WaitingConfirm') }}:</p>
                 <b-tag class="py-2">{{isPendingTx.hash}}</b-tag>
             </div>
+            <div class="pm-2" v-if="isErrorTx">
+                <p class="py-2">{{ $t('TransactionFailed') }}:</p>
+                <b-tag class="py-2">{{isErrorTx.hash}}</b-tag>
+                <div class="pt-2 text-left">
+                    <button class="btn btn-primary btn-sm" @click="TransactionsRetry(isErrorTx)">{{ $t('ToRetry') }}</button>
+                </div>
+            </div>
 
-            <div class="Calculator__buy" v-if="!isPendingTx">
+            <div class="Calculator__buy" v-if="!isPendingTx && !isErrorTx">
                 <button class="btn btn-primary" :disabled="disable" @click="buy">{{$t('InvestorDashboardCalculatorBuy')}}</button>
             </div>
         </div>
@@ -170,6 +177,21 @@
 
                 return new BigNumber(amount).mul(bonusMultiplier).div(price).toFixed(2).toString();
             },
+            isErrorTx() {
+                return this.TransactionsList && this.TransactionsList.length
+                    ? this.TransactionsList.find((tr) => {
+                        return tr.token
+                        && tr.name
+                        && tr.hash
+                        && tr.status
+                        && tr.token === this.currentToken.crowdSaleInformation.WTokenAddress
+                        && tr.name === "buy"
+                        && tr.status === "error"
+                            ? tr
+                            : false
+                    })
+                    : false;
+            },
             isPendingTx() {
                 return this.TransactionsList && this.TransactionsList.length
                     ? this.TransactionsList.find((tr) => {
@@ -198,7 +220,8 @@
                 updateAccountData: 'updateAccountData'
             }),
             ...TokensListNS.mapActions({
-                tokensListUpdate: "update"
+                tokensListUpdate: "update",
+                TransactionsRetry: "retry"
             }),
             findMatchBonusRange(eth) {
                 const ranges = this.bonusConditions.reduce(
@@ -276,13 +299,12 @@
 
                 return new BigNumber(amount).div(price);
             },
-
             handleTokensChange(value, prevValue) {
                 value = isNaN(parseFloat(value))
                     ? '0'
                     : value;
 
-                if (this.blockChangeETHs) {
+                if (this.blockChangeETHs || !this.currentToken.crowdSaleInformation) {
                     return;
                 }
 
@@ -307,7 +329,7 @@
                     ? '0'
                     : value;
 
-                if (this.blockChangeTokens) {
+                if (this.blockChangeTokens || !this.currentToken.crowdSaleInformation) {
                     return;
                 }
 
@@ -327,7 +349,6 @@
                     this.blockChangeETHs = false;
                 });
             },
-
             async buy() {
                 if(this.disable) return;
 
@@ -335,7 +356,7 @@
 
                 this.loading = true;
                 try {
-                    const {W12CrowdsaleFactory} = await this.ledgerFetch();
+                    const {W12CrowdsaleFactory} = await this.ledgerFetch(this.currentToken.version);
                     const connectedWeb3 = (await Connector.connect()).web3;
                     const W12Crowdsale = W12CrowdsaleFactory.at(this.currentToken.crowdSaleInformation.crowdsaleAddress);
                     const tx = await W12Crowdsale.methods.buyTokens({value: web3.toWei(amount.toFixed(18), 'ether')}); //amount.toFixed(6)
@@ -351,7 +372,6 @@
                 }
                 this.loading = false;
             },
-
             async handleSelectedChange(newSelected, oldSelected) {
                 if (newSelected && oldSelected && newSelected.name !== oldSelected.name) {
                     this.total = 0;
@@ -362,7 +382,6 @@
                 this.unsubscribeFromEvents();
                 await this.subscribeToEvents();
             },
-
             unsubscribeFromEvents() {
                 if (!this.subscribedEvents) return;
 
@@ -376,7 +395,7 @@
                 this.subscribeToEventsLoading = true;
 
                 try {
-                    const {W12CrowdsaleFactory} = await this.ledgerFetch();
+                    const {W12CrowdsaleFactory} = await this.ledgerFetch(this.currentToken.version);
                     const W12Crowdsale = W12CrowdsaleFactory.at(this.currentToken.crowdSaleInformation.crowdsaleAddress);
                     const TokenPurchase = W12Crowdsale.events.TokenPurchase(null, null, this.onTokenPurchaseEvent);
 
@@ -389,7 +408,6 @@
 
                 this.subscribeToEventsLoading = false;
             },
-
             async onTokenPurchaseEvent(error, result) {
                 if (!error) {
                     const tx = result.transactionHash;

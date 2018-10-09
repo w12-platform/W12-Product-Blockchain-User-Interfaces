@@ -1,4 +1,4 @@
-import Ledger from "lib/Blockchain/ContractsLedger.js";
+import {loadContracts} from "lib/Blockchain/ContractsLedger.js";
 
 export const ERROR_FETCH_LEDGER = 'LoadLedger: An unknown error';
 export const UPDATE_META = "UPDATE_META";
@@ -19,13 +19,13 @@ export default {
         },
     },
     actions: {
-        async fetch({commit}) {
+        async fetch({commit, state}, version) {
             commit(UPDATE_META, {loading: true, loadingError: false});
 
             let ledger;
 
             try {
-                ledger = await Ledger;
+                ledger = await loadContracts(version);
             } catch (e) {
                 commit(UPDATE_META, {loading: false, loadingError: e.message || ERROR_FETCH_LEDGER});
             }

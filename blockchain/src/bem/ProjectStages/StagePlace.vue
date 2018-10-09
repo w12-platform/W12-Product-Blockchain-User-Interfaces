@@ -18,11 +18,18 @@
                     <p class="py-2">{{ $t('WaitingConfirm') }}:</p>
                     <b-tag class="py-2">{{isPendingTx.hash}}</b-tag>
                 </div>
+                <div class="pm-2" v-if="isErrorTx">
+                    <p class="py-2">{{ $t('TransactionFailed') }}:</p>
+                    <b-tag class="py-2">{{isErrorTx.hash}}</b-tag>
+                    <div class="pt-2 text-left">
+                        <button class="btn btn-primary btn-sm" @click="TransactionsRetry(isErrorTx)">{{ $t('ToRetry') }}</button>
+                    </div>
+                </div>
                 <b-tag class="ProjectDashboard__placedWTokenAddress" v-if="hasPlacedWTokenAddress"
                        type="is-info">{{ currentProject.placedTokenAddress }}
                 </b-tag>
             </div>
-            <div class="ProjectDashboard__placeForm col-12 text-right" v-if="!isPendingTx">
+            <div class="ProjectDashboard__placeForm col-12 text-right" v-if="!isPendingTx && !isErrorTx">
                 <div v-if="hasAllowance" class="text-left">
                     <div class="form-group">
                         <label for="PlaceAmount">{{ $t('ProjectDashboardStagePlaceAmountLabel') }}</label>
@@ -160,6 +167,21 @@
                 }
                 return true;
             },
+            isErrorTx() {
+                return this.TransactionsList && this.TransactionsList.length
+                    ? this.TransactionsList.find((tr) => {
+                        return tr.token
+                        && tr.name
+                        && tr.hash
+                        && tr.status
+                        && tr.token === this.currentProject.tokenAddress
+                        && tr.name === "PlaceTokens"
+                        && tr.status === "error"
+                            ? tr
+                            : false
+                    })
+                    : false;
+            },
             isPendingTx() {
                 return this.TransactionsList && this.TransactionsList.length
                     ? this.TransactionsList.find((tr) => {
@@ -183,7 +205,9 @@
             ...LedgerNS.mapActions({
                 LedgerFetch: 'fetch',
             }),
-
+            ...TransactionsNS.mapActions({
+                TransactionsRetry: "retry"
+            }),
             async placeTokens() {
                 if(this.disable) return;
 
@@ -197,8 +221,8 @@
                 this.placeTokensLoading = true;
 
                 try {
-                    const {W12ListerFactory} = await this.LedgerFetch();
-                    const W12Lister = W12ListerFactory.at(this.W12Lister.address);
+                    const {W12ListerFactory} = await this.LedgerFetch(this.currentProject.version);
+                    const W12Lister = W12ListerFactory.at(this.currentProject.listerAddress);
                     const connectedWeb3 = (await Connector.connect()).web3;
                     const tx = await W12Lister.methods.placeToken(
                         this.currentProject.tokenAddress,

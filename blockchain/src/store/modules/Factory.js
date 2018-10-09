@@ -1,5 +1,3 @@
-import {RESET} from "./TokensList";
-
 export const FACTORY_ADD = "FACTORY_ADD";
 export const FACTORY_RESET = "FACTORY_RESET";
 

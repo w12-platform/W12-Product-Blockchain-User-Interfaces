@@ -1,102 +1,100 @@
+import { dynamicImport, jsonLoader } from 'lib/utils.js';
+
 import Connector from './DefaultConnector.js';
 import { ContractWrappersFactory } from './Factory.js';
-import { DetailedERC20FactoryStrategy } from './FactoryStrategies/DetailedERC20.js';
-import { ERC20FactoryStrategy } from './FactoryStrategies/ERC20.js';
-import { W12CrowdsaleFactoryStrategy } from './FactoryStrategies/W12Crowdsale.js';
-import { W12CrowdsaleFactoryFactoryStrategy } from './FactoryStrategies/W12CrowdsaleFactory.js';
-import { W12ListerFactoryStrategy } from './FactoryStrategies/W12Lister.js';
-import { W12TokenFactoryStrategy } from './FactoryStrategies/W12Token.js';
-import { W12TokenLedgerFactoryStrategy } from './FactoryStrategies/W12TokenLedger.js';
-import { W12FundFactoryStrategy } from './FactoryStrategies/W12Fund.js';
-import { WTokenTestHelperFactoryStrategy } from './FactoryStrategies/WTokenTestHelper.js';
-import { WTokenTestHelperWrapper } from './Wrappers/WTokenTestHelper.js';
-import { DetailedERC20Wrapper } from './Wrappers/DetailedERC20.js';
-import { ERC20Wrapper } from './Wrappers/ERC20.js';
-import { W12CrowdsaleWrapper } from './Wrappers/W12Crowdsale.js';
-import { W12CrowdsaleFactoryWrapper } from './Wrappers/W12CrowdsaleFactory.js';
-import { W12ListerWrapper } from './Wrappers/W12Lister.js';
-import { W12TokenWrapper } from './Wrappers/W12Token.js';
-import { W12TokenLedgerWrapper } from './Wrappers/W12TokenLedger.js';
-import { W12FundWrapper } from './Wrappers/W12Fund.js';
-import { W12AtomicSwapWrapper } from './Wrappers/W12AtomicSwap.js';
-import {W12AtomicSwapFactoryStrategy} from "./FactoryStrategies/W12AtomicSwap";
 
+export async function loadContracts(v) {
+    const {DetailedERC20FactoryStrategy} = await dynamicImport("FactoryStrategies", v, "DetailedERC20");
+    const {ERC20FactoryStrategy} = await dynamicImport("FactoryStrategies", v, "ERC20");
+    const {W12CrowdsaleFactoryStrategy} = await dynamicImport("FactoryStrategies", v, "W12Crowdsale");
+    const {W12CrowdsaleFactoryFactoryStrategy} = await dynamicImport("FactoryStrategies", v, "W12CrowdsaleFactory");
+    const {W12ListerFactoryStrategy} = await dynamicImport("FactoryStrategies", v, "W12Lister");
+    const {W12TokenFactoryStrategy} = await dynamicImport("FactoryStrategies", v, "W12Token");
+    const {W12TokenLedgerFactoryStrategy} = await dynamicImport("FactoryStrategies", v, "W12TokenLedger");
+    const {W12FundFactoryStrategy} = await dynamicImport("FactoryStrategies", v, "W12Fund");
+    const {WTokenTestHelperFactoryStrategy} = await dynamicImport("FactoryStrategies", v, "WTokenTestHelper");
+    const {W12AtomicSwapFactoryStrategy} = await dynamicImport("FactoryStrategies", v, "W12AtomicSwap");
 
-async function loadContracts() {
-    const ERC20Artifacts = await fetch('/blockchain/src/lib/Blockchain/contracts/ERC20.json')
-        .then(data => data.json());
+    const {WTokenTestHelperWrapper} = await dynamicImport("Wrappers", v, "WTokenTestHelper");
+    const {DetailedERC20Wrapper} = await dynamicImport("Wrappers", v, "DetailedERC20");
+    const {ERC20Wrapper} = await dynamicImport("Wrappers", v, "ERC20");
+    const {W12CrowdsaleWrapper} = await dynamicImport("Wrappers", v, "W12Crowdsale");
+    const {W12CrowdsaleFactoryWrapper} = await dynamicImport("Wrappers", v, "W12CrowdsaleFactory");
+    const {W12ListerWrapper} = await dynamicImport("Wrappers", v, "W12Lister");
+    const {W12TokenWrapper} = await dynamicImport("Wrappers", v, "W12Token");
+    const {VersionsLedgerWrapper} = await dynamicImport("Wrappers", v, "VersionsLedger");
+    const {VersionableWrapper} = await dynamicImport("Wrappers", v, "Versionable");
+    const {W12TokenLedgerWrapper} = await dynamicImport("Wrappers", v, "W12TokenLedger");
+    const {W12FundWrapper} = await dynamicImport("Wrappers", v, "W12Fund");
+    const {W12AtomicSwapWrapper} = await dynamicImport("Wrappers", v, "W12AtomicSwap");
 
-    const DetailedERC20Artifacts = await fetch('/blockchain/src/lib/Blockchain/contracts/DetailedERC20.json')
-        .then(data => data.json());
+    const VersionableArtifacts = await jsonLoader(v, "Versionable");
+    const VersionsLedgerArtifacts = await jsonLoader(v, "VersionsLedger");
+    const ERC20Artifacts = await jsonLoader(v, "ERC20");
+    const DetailedERC20Artifacts = await jsonLoader(v, "DetailedERC20");
+    const W12ListerArtifacts = await jsonLoader(v, "W12Lister");
+    const W12CrowdsaleFactoryArtifacts = await jsonLoader(v, "W12CrowdsaleFactory");
+    const W12TokenArtifacts = await jsonLoader(v, "WToken");
+    const W12TokenLedgerArtifacts = await jsonLoader(v, "W12TokenLedger");
+    const W12CrowdsaleArtifacts = await jsonLoader(v, "W12Crowdsale");
+    const W12FundArtifacts = await jsonLoader(v, "W12Fund");
+    const W12AtomicSwapArtifacts = await jsonLoader(v, "W12AtomicSwap");
+    const WTokenTestHelperArtifacts = await jsonLoader(v, "WTokenTestHelper");
 
-    const W12ListerArtifacts = await fetch('/blockchain/src/lib/Blockchain/contracts/W12Lister.json')
-        .then(data => data.json());
+    const Versionable = new ContractWrappersFactory(
+        new W12TokenFactoryStrategy(VersionableArtifacts, VersionableWrapper, Connector)
+    );
+    await Versionable.init();
 
-    const W12CrowdsaleFactoryArtifacts = await fetch('/blockchain/src/lib/Blockchain/contracts/W12CrowdsaleFactory.json')
-        .then(data => data.json());
-
-    const W12TokenArtifacts = await fetch('/blockchain/src/lib/Blockchain/contracts/WToken.json')
-        .then(data => data.json());
-
-    const W12TokenLedgerArtifacts = await fetch('/blockchain/src/lib/Blockchain/contracts/W12TokenLedger.json')
-        .then(data => data.json());
-
-    const W12CrowdsaleArtifacts = await fetch('/blockchain/src/lib/Blockchain/contracts/W12Crowdsale.json')
-        .then(data => data.json());
-
-    const W12FundArtifacts = await fetch('/blockchain/src/lib/Blockchain/contracts/W12Fund.json')
-        .then(data => data.json());
-
-    const W12AtomicSwapArtifacts = await fetch('/blockchain/src/lib/Blockchain/contracts/W12AtomicSwap.json')
-        .then(data => data.json());
-
-    const WTokenTestHelperArtifacts = await fetch('/blockchain/src/lib/Blockchain/contracts/WTokenTestHelper.json')
-        .then(data => data.json());
+    const VersionsLedger = new ContractWrappersFactory(
+        new W12TokenFactoryStrategy(VersionsLedgerArtifacts, VersionsLedgerWrapper, Connector)
+    );
+    await VersionsLedger.init();
 
     const W12Token = new ContractWrappersFactory(
         new W12TokenFactoryStrategy(W12TokenArtifacts, W12TokenWrapper, Connector)
     );
-        await W12Token.init();
+    await W12Token.init();
 
     const W12TokenLedger = new ContractWrappersFactory(
         new W12TokenLedgerFactoryStrategy(W12TokenLedgerArtifacts, W12TokenLedgerWrapper, Connector)
     );
-        await W12TokenLedger.init();
+    await W12TokenLedger.init();
 
     const ERC20 = new ContractWrappersFactory(
         new ERC20FactoryStrategy(ERC20Artifacts, ERC20Wrapper, Connector)
     );
-        await ERC20.init();
+    await ERC20.init();
 
     const DetailedERC20 = new ContractWrappersFactory(
         new DetailedERC20FactoryStrategy(DetailedERC20Artifacts, DetailedERC20Wrapper, Connector)
     );
-        await DetailedERC20.init();
+    await DetailedERC20.init();
 
     const W12Crowdsale = new ContractWrappersFactory(
         new W12CrowdsaleFactoryStrategy(W12CrowdsaleArtifacts, W12CrowdsaleWrapper, Connector)
     );
-        await W12Crowdsale.init();
+    await W12Crowdsale.init();
 
     const W12CrowdsaleFactoryInst = new ContractWrappersFactory(
         new W12CrowdsaleFactoryFactoryStrategy(W12CrowdsaleFactoryArtifacts, W12CrowdsaleFactoryWrapper, Connector)
     );
-        await W12CrowdsaleFactoryInst.init();
+    await W12CrowdsaleFactoryInst.init();
 
     const W12Fund = new ContractWrappersFactory(
         new W12FundFactoryStrategy(W12FundArtifacts, W12FundWrapper, Connector, W12Crowdsale)
     );
-        await W12Fund.init();
+    await W12Fund.init();
 
     const W12AtomicSwap = new ContractWrappersFactory(
         new W12AtomicSwapFactoryStrategy(W12AtomicSwapArtifacts, W12AtomicSwapWrapper, Connector)
     );
-        await W12AtomicSwap.init();
+    await W12AtomicSwap.init();
 
     const WTokenTestHelper = new ContractWrappersFactory(
         new WTokenTestHelperFactoryStrategy(WTokenTestHelperArtifacts, WTokenTestHelperWrapper, Connector)
     );
-        await WTokenTestHelper.init();
+    await WTokenTestHelper.init();
 
     const W12Lister = new ContractWrappersFactory(
         new W12ListerFactoryStrategy(
@@ -109,7 +107,7 @@ async function loadContracts() {
             W12TokenLedger
         )
     );
-        await W12Lister.init();
+    await W12Lister.init();
 
     return {
         W12ListerFactory: W12Lister,
@@ -122,9 +120,7 @@ async function loadContracts() {
         W12FundFactory: W12Fund,
         W12AtomicSwapFactory: W12AtomicSwap,
         WTokenTestHelperFactory: WTokenTestHelper,
+        VersionsLedgerFactory: VersionsLedger,
+        VersionableFactory: Versionable
     };
 }
-
-const ledger = loadContracts();
-
-export default ledger;

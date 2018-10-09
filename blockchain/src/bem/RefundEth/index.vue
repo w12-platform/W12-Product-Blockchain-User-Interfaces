@@ -10,7 +10,14 @@
             <p class="py-2">{{ $t('WaitingConfirm') }}:</p>
             <b-tag class="py-2">{{isPendingTx.hash}}</b-tag>
         </div>
-        <div v-if="refundInformation && !isPendingTx">
+        <div class="pm-2" v-if="isErrorTx">
+            <p class="py-2">{{ $t('TransactionFailed') }}:</p>
+            <b-tag class="py-2">{{isErrorTx.hash}}</b-tag>
+            <div class="pt-2 text-left">
+                <button class="btn btn-primary btn-sm" @click="TransactionsRetry(isErrorTx)">{{ $t('ToRetry') }}</button>
+            </div>
+        </div>
+        <div v-if="refundInformation && !isPendingTx && !isErrorTx">
             <RefundCalculator v-if="refundInformation.currentWalletBalanceInRefundAmount"
                               v-model="refundValueInTokens"
                               :refundInformation="refundInformation"
@@ -163,6 +170,21 @@
                 return value.mul(new BigNumber(10).pow(decimals)).toString();
             },
 
+            isErrorTx() {
+                return this.TransactionsList && this.TransactionsList.length
+                    ? this.TransactionsList.find((tr) => {
+                        return tr.token
+                        && tr.name
+                        && tr.hash
+                        && tr.status
+                        && tr.token === this.currentToken.crowdSaleInformation.WTokenAddress
+                        && tr.name === "refund"
+                        && tr.status === "error"
+                            ? tr
+                            : false
+                    })
+                    : false;
+            },
             isPendingTx() {
                 return this.TransactionsList && this.TransactionsList.length
                     ? this.TransactionsList.find((tr) => {
@@ -194,7 +216,9 @@
             ...AccountNS.mapActions({
                 updateAccountData: 'updateAccountData',
             }),
-
+            ...TransactionsNS.mapActions({
+                TransactionsRetry: "retry"
+            }),
             toEth(value) {
                 value = value ? new BigNumber(value):0;
                 return web3.fromWei(value, 'ether').toString();
@@ -202,7 +226,7 @@
             async approveTheFundToSpend() {
                 this.loading = true;
                 try {
-                    const {W12TokenFactory} = await this.ledgerFetch();
+                    const {W12TokenFactory} = await this.ledgerFetch(this.currentToken.version);
                     const {web3} = await Connector.connect();
                     const W12Token = W12TokenFactory.at(this.currentToken.crowdSaleInformation.WTokenAddress);
 
@@ -228,7 +252,7 @@
                 this.loading = true;
                 try {
                     const value = new BigNumber(this.currentAccountData.allowanceForTheFund);
-                    const {W12TokenFactory} = await this.ledgerFetch();
+                    const {W12TokenFactory} = await this.ledgerFetch(this.currentToken.version);
                     const {web3} = await Connector.connect();
                     const W12Token = W12TokenFactory.at(this.currentToken.crowdSaleInformation.WTokenAddress);
 
@@ -256,7 +280,7 @@
                     const value = new BigNumber(this.currentAccountData.allowanceForTheFund);
 
                     if (value.gt(0)) {
-                        const {W12FundFactory} = await this.ledgerFetch();
+                        const {W12FundFactory} = await this.ledgerFetch(this.currentToken.version);
                         const {web3} = await Connector.connect();
                         const W12Fund = W12FundFactory.at(this.currentToken.crowdSaleInformation.fund.W12FundAddress);
 
@@ -297,7 +321,7 @@
                 this.subscribeToEventsLoading = true;
 
                 try {
-                    const {W12FundFactory, W12TokenFactory} = await this.ledgerFetch();
+                    const {W12FundFactory, W12TokenFactory} = await this.ledgerFetch(this.currentToken.version);
                     const fundAddress = this.currentToken.crowdSaleInformation.fund.W12FundAddress;
                     const W12Fund = W12FundFactory.at(fundAddress);
                     const FundsRefunded = W12Fund.events.FundsRefunded(null, null, this.onFundsRefundedEvent);

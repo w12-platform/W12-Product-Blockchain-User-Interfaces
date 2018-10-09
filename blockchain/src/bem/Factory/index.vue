@@ -59,7 +59,14 @@
                     <p class="py-2">{{ $t('WaitingConfirm') }}:</p>
                     <b-tag class="py-2">{{isPendingTx.hash}}</b-tag>
                 </div>
-                <div v-if="!isPendingTx">
+                <div class="pm-2" v-if="isErrorTx">
+                    <p class="py-2">{{ $t('TransactionFailed') }}:</p>
+                    <b-tag class="py-2">{{isErrorTx.hash}}</b-tag>
+                    <div class="pt-2 text-left">
+                        <button class="btn btn-primary btn-sm" @click="TransactionsRetry(isErrorTx)">{{ $t('ToRetry') }}</button>
+                    </div>
+                </div>
+                <div v-if="!isPendingTx && !isErrorTx">
                     <div class="form-group">
                         <label for="FactoryName">{{ $t('TokensFactoryCreateFormName') }}</label>
                         <b-field id="FactoryName">
@@ -184,7 +191,8 @@
                 ledgerMeta: 'meta',
             }),
             ...ConfigNS.mapState({
-                FactoryTokens: "FactoryTokens"
+                FactoryTokens: "FactoryTokens",
+                Default: "Default"
             }),
             ...AccountNS.mapState({
                 currentAccount: "currentAccount",
@@ -250,6 +258,19 @@
                     max: this.maxAmountPrecision,
                 });
             },
+            isErrorTx() {
+                return this.TransactionsList && this.TransactionsList.length
+                    ? this.TransactionsList.find((tr) => {
+                        return tr.name
+                        && tr.hash
+                        && tr.status
+                        && tr.name === "createToken"
+                        && tr.status === "error"
+                            ? tr
+                            : false
+                    })
+                    : false;
+            },
             isPendingTx() {
                 return this.TransactionsList && this.TransactionsList.length
                     ? this.TransactionsList.find((tr) => {
@@ -286,13 +307,14 @@
                 ledgerFetch: "fetch"
             }),
             ...TransactionsNS.mapActions({
-                transactionsUpStatusTx: "updateStatusTx"
+                transactionsUpStatusTx: "updateStatusTx",
+                TransactionsRetry: "retry"
             }),
 
             async create() {
                 this.meta.creating = true;
                 try {
-                    const {WTokenTestHelperFactory} = await this.ledgerFetch();
+                    const {WTokenTestHelperFactory} = await this.ledgerFetch(this.Default.version);
                     const WTokenTestHelper = WTokenTestHelperFactory.at(this.FactoryTokens.address);
                     const connectedWeb3 = (await Connector.connect()).web3;
 
@@ -319,7 +341,7 @@
             },
             async fetchList() {
                 try {
-                    const {DetailedERC20Factory} = await this.ledgerFetch();
+                    const {DetailedERC20Factory} = await this.ledgerFetch(this.Default.version);
                     let listInfo = [];
                     await this.FactoryList.forEach(async (address) => {
                         const DetailedERC20 = DetailedERC20Factory.at(address);
@@ -343,7 +365,7 @@
                 this.subscribeToEventsLoading = true;
 
                 try {
-                    const {WTokenTestHelperFactory} = await this.ledgerFetch();
+                    const {WTokenTestHelperFactory} = await this.ledgerFetch(this.Default.version);
                     const WTokenTestHelper = WTokenTestHelperFactory.at(this.FactoryTokens.address);
                     const NewToken = WTokenTestHelper.events.NewToken(null, null, this.onNewTokenEvent);
 

@@ -149,7 +149,7 @@
                 this.subscribeToEventsLoading = true;
 
                 try {
-                    const {W12CrowdsaleFactory, W12ListerFactory, W12TokenFactory, W12AtomicSwapFactory} = await this.LedgerFetch();
+                    const {W12CrowdsaleFactory, W12ListerFactory, W12TokenFactory, W12AtomicSwapFactory} = await this.LedgerFetch(this.currentProject.version);
                     let ApprovalW12Event = null;
                     let UnsoldTokenReturned = null;
                     let Exchange = null;
@@ -157,13 +157,12 @@
                     if (!isZeroAddress(this.currentProject.crowdsaleAddress)) {
                         const W12Crowdsale = W12CrowdsaleFactory.at(this.currentProject.crowdsaleAddress);
                         UnsoldTokenReturned = W12Crowdsale.events.UnsoldTokenReturned(null, null, this.onUnsoldTokenReturnedEvent);
-                        const W12Lister = W12ListerFactory.at(this.W12Lister.address);
+                        const W12Lister = W12ListerFactory.at(this.currentProject.listerAddress);
                         const swapAddress = await W12Lister.methods.swap();
                         const W12AtomicSwap = W12AtomicSwapFactory.at(swapAddress);
                         Exchange = W12AtomicSwap.events.Exchange(null, null, this.onExchangeEvent);
                     }
 
-                    console.log(this.currentProject.wTokenAddress);
                     if (!isZeroAddress(this.currentProject.wTokenAddress)) {
                         const W12Token = W12TokenFactory.at(this.currentProject.wTokenAddress);
                         ApprovalW12Event = W12Token.events.Approval(null, null, this.onApprovalW12Event);

@@ -1,0 +1,12 @@
+.actions__buytokens {
+  &:hover {
+    color: #fff;
+    text-decoration: none;
+  }
+  &:active {
+    background-image: -webkit-gradient(linear, left top, right top, from(#ff9c00), to(#ff1b46));
+    background-image: -webkit-linear-gradient(left, #ff9c00, #ff1b46);
+    background-image: -o-linear-gradient(left, #ff9c00, #ff1b46);
+    background-image: linear-gradient(to right, #ff9c00, #ff1b46);
+  }
+}

@@ -28,7 +28,14 @@
                 <p class="py-2">{{ $t('WaitingConfirm') }}:</p>
                 <b-tag class="py-2">{{isPendingTx.hash}}</b-tag>
             </div>
-            <div class="ExchangeTokens__form" v-if="!isPendingTx">
+            <div class="pm-2" v-if="isErrorTx">
+                <p class="py-2">{{ $t('TransactionFailed') }}:</p>
+                <b-tag class="py-2">{{isErrorTx.hash}}</b-tag>
+                <div class="pt-2 text-left">
+                    <button class="btn btn-primary btn-sm" @click="TransactionsRetry(isErrorTx)">{{ $t('ToRetry') }}</button>
+                </div>
+            </div>
+            <div class="ExchangeTokens__form" v-if="!isPendingTx && !isErrorTx">
                 <label v-if="this.currentAccountData.allowanceForSwap === '0'" for="Amount">{{
                     $t('InvestorDashboardExchangeTokensAmount', {WToken: currentToken.symbol}) }}</label>
                 <b-field v-if="this.currentAccountData.allowanceForSwap === '0'" id="Amount">
@@ -164,7 +171,21 @@
             vestingBalance() {
                 return fromWeiDecimalsString(this.currentAccountData.vestingBalance, this.currentToken.decimals);
             },
-
+            isErrorTx() {
+                return this.TransactionsList && this.TransactionsList.length
+                    ? this.TransactionsList.find((tr) => {
+                        return tr.token
+                        && tr.name
+                        && tr.hash
+                        && tr.status
+                        && tr.token === this.currentToken.crowdSaleInformation.WTokenAddress
+                        && tr.name === "exchangeTokens"
+                        && tr.status === "error"
+                            ? tr
+                            : false
+                    })
+                    : false;
+            },
             isPendingTx() {
                 return this.TransactionsList && this.TransactionsList.length
                     ? this.TransactionsList.find((tr) => {
@@ -201,6 +222,9 @@
             ...AccountNS.mapActions({
                 updateAccountData: 'updateAccountData',
             }),
+            ...TransactionsNS.mapActions({
+                TransactionsRetry: "retry"
+            }),
             toEth(value) {
                 value = value ? new BigNumber(value) : 0;
                 return web3.fromWei(value, 'ether').toString();
@@ -212,8 +236,8 @@
             async approveSwapToSpend() {
                 this.loading = true;
                 try {
-                    const {W12TokenFactory, W12ListerFactory} = await this.ledgerFetch();
-                    const W12Lister = W12ListerFactory.at(this.configW12Lister.address);
+                    const {W12TokenFactory, W12ListerFactory} = await this.ledgerFetch(this.currentToken.version);
+                    const W12Lister = W12ListerFactory.at(this.currentToken.listerAddress);
                     const {web3} = await Connector.connect();
                     const W12Token = W12TokenFactory.at(this.currentToken.crowdSaleInformation.WTokenAddress);
                     const swapAddress = (await W12Lister.methods.swap());
@@ -239,8 +263,8 @@
             async decreaseSwapApprovalToSpend() {
                 this.loading = true;
                 try {
-                    const {W12TokenFactory, W12ListerFactory} = await this.ledgerFetch();
-                    const W12Lister = W12ListerFactory.at(this.configW12Lister.address);
+                    const {W12TokenFactory, W12ListerFactory} = await this.ledgerFetch(this.currentToken.version);
+                    const W12Lister = W12ListerFactory.at(this.currentToken.listerAddress);
                     const {web3} = await Connector.connect();
                     const W12Token = W12TokenFactory.at(this.currentToken.crowdSaleInformation.WTokenAddress);
                     const swapAddress = (await W12Lister.methods.swap());
@@ -267,8 +291,8 @@
             async exchange() {
                 this.loading = true;
                 try {
-                    const {W12AtomicSwapFactory, W12ListerFactory} = await this.ledgerFetch();
-                    const W12Lister = W12ListerFactory.at(this.configW12Lister.address);
+                    const {W12AtomicSwapFactory, W12ListerFactory} = await this.ledgerFetch(this.currentToken.version);
+                    const W12Lister = W12ListerFactory.at(this.currentToken.listerAddress);
                     const {web3} = await Connector.connect();
                     const swapAddress = (await W12Lister.methods.swap());
                     const W12AtomicSwap = W12AtomicSwapFactory.at(swapAddress);
@@ -316,9 +340,9 @@
                 this.subscribeToEventsLoading = true;
 
                 try {
-                    const {ERC20Factory, W12AtomicSwapFactory, W12ListerFactory} = await this.ledgerFetch();
+                    const {ERC20Factory, W12AtomicSwapFactory, W12ListerFactory} = await this.ledgerFetch(this.currentToken.version);
                     const ERC20 = ERC20Factory.at(this.currentToken.crowdSaleInformation.WTokenAddress);
-                    const W12Lister = W12ListerFactory.at(this.configW12Lister.address);
+                    const W12Lister = W12ListerFactory.at(this.currentToken.listerAddress);
                     const swapAddress = (await W12Lister.methods.swap());
                     const W12AtomicSwap = W12AtomicSwapFactory.at(swapAddress);
 
