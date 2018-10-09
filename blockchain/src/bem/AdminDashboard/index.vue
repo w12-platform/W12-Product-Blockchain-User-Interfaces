@@ -41,9 +41,6 @@
     export default {
         name: 'AdminDashboard',
         template: '#AdminDashboardTemplate',
-        components: {
-            ListerSwitch,
-        },
         data() {
             return {
                 meta: {
