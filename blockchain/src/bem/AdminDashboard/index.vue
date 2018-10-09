@@ -3,7 +3,7 @@
         <section class="container">
             <h2>{{ $t('AdminDashboard') }}</h2>
 
-            <ListerSwitch></ListerSwitch>
+            <ListerSwitch :disabled="true"></ListerSwitch>
 
             <b-notification class="AdminDashboard__error" v-if="isError && !isLoading" type="is-danger" :closable="false" has-icon>
                 <span v-if="ledgerMeta.loadingError">{{ ledgerMeta.loadingError }}</span>
@@ -33,6 +33,7 @@
     import {version} from 'lib/utils.js';
 
     import {createNamespacedHelpers} from "vuex";
+    import { CONFIG_UPDATE } from 'store/modules/Config';
 
     const LedgerNS = createNamespacedHelpers("Ledger");
     const AccountNS = createNamespacedHelpers("Account");
@@ -69,7 +70,11 @@
                 langMeta: 'meta'
             }),
             ...ConfigNS.mapState({
-                W12Lister: 'W12Lister'
+                W12Lister: 'W12Lister',
+                W12ListerList: 'W12ListerList'
+            }),
+            ...ConfigNS.mapGetters({
+                W12ListerLastVersion: 'W12ListerLastVersion'
             }),
 
             isLoading() {
@@ -93,10 +98,13 @@
             ...AccountNS.mapActions({
                 watchCurrentAccount: 'watch',
             }),
+            ...ConfigNS.mapMutations({
+                updateLister: CONFIG_UPDATE,
+            }),
 
             async handleW12ListerChange(){
                 await this.whitelistFetch();
-            }
+            },
         },
         watch: {
             'W12Lister': {
@@ -107,7 +115,16 @@
             this.meta.loading = true;
 
             await this.watchCurrentAccount();
-            await this.whitelistFetch();
+
+            if (
+                this.W12Lister
+                && this.W12ListerLastVersion
+                && this.W12Lister.address != this.W12ListerLastVersion.address
+            ) {
+                this.updateLister({ W12Lister: this.W12ListerLastVersion });
+            } else {
+                await this.whitelistFetch();
+            }
 
             this.meta.loading = false;
             window.dispatchEvent(new Event('resize'));
