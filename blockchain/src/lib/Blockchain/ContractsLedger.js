@@ -96,6 +96,19 @@ export async function loadContracts(v) {
     );
     await WTokenTestHelper.init();
 
+    let Rates = null;
+
+    if(v === "0.21.3" || v === "0.23.2"){
+        const {RatesFactoryStrategy} = await dynamicImport("FactoryStrategies", v, "Rates");
+        const {RatesWrapper} = await dynamicImport("Wrappers", v, "Rates");
+        const RatesArtifacts = await jsonLoader(v, "Rates");
+
+        Rates = new ContractWrappersFactory(
+            new RatesFactoryStrategy(RatesArtifacts, RatesWrapper, Connector)
+        );
+        await Rates.init();
+    }
+
     const W12Lister = new ContractWrappersFactory(
         new W12ListerFactoryStrategy(
             W12ListerArtifacts,
@@ -121,6 +134,7 @@ export async function loadContracts(v) {
         W12AtomicSwapFactory: W12AtomicSwap,
         WTokenTestHelperFactory: WTokenTestHelper,
         VersionsLedgerFactory: VersionsLedger,
-        VersionableFactory: Versionable
+        VersionableFactory: Versionable,
+        RatesFactory: Rates
     };
 }

@@ -24,7 +24,6 @@
                 <div class="ProjectDashboard__project" v-if="!ProjectMeta.loadingProjectError && currentProject && currentProject.version">
                     <TokenInfo :is="TokenInfoVersion"></TokenInfo>
                     <ProjectStages :is="ProjectStagesVersion"></ProjectStages>
-                    <Milestones></Milestones>
 
                     <b-loading :is-full-page="false" :active.sync="ProjectMeta.loadingProject" :can-cancel="true"></b-loading>
                 </div>
@@ -37,7 +36,6 @@
     import './default.scss';
     import {version} from 'lib/utils.js';
     import ProjectSwitch from 'bem/ProjectSwitch';
-    import Milestones from 'bem/Milestones';
 
     import {createNamespacedHelpers} from 'vuex';
 
@@ -49,8 +47,7 @@
     export default {
         name: 'ProjectDashboard',
         components: {
-            ProjectSwitch,
-            Milestones
+            ProjectSwitch
         },
         computed: {
             ...LedgerNS.mapState({

@@ -49,6 +49,35 @@
       }
     }
   }
+  &__setup {
+    margin-top: 10px;
+    .card-content {
+      padding: 0;
+      width: 100%;
+    }
+    .card {
+      border: none;
+      border-radius: 0;
+    }
+    .content {
+      padding: 0;
+      margin: 0 !important;
+      min-width: 100%;
+      max-width: 100%;
+    }
+    .card-footer {
+      width: 100%;
+      padding: 0;
+      .card-footer-item {
+        &:hover {
+          background: #e4e4e4;
+        }
+      }
+    }
+    .mx-calendar-content .cell {
+      text-align: center;
+    }
+  }
   &__initCrowdsaleAddress {
     margin-top: 10px;
   }
