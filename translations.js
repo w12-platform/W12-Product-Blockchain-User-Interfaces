@@ -656,6 +656,10 @@
 //         "en": "Commission for the withdrawal of project funds from the fund",
 //         "ru": "Комиссия при выводе средств проектом из фонда"
 //     },
+//     "AdminDashboardSelectLister": {
+//         "en": "Select whitelist version",
+//         "ru": "Выберите версию белого списка"
+//     },
 //     "InvestorDashboard": {
 //         "en": "Investor Dashboard",
 //         "ru": "Панель инструментов инвестора"
@@ -980,6 +984,10 @@
 //         "en": "Place Tokens to Listing",
 //         "ru": "Добавить токены в листинг"
 //     },
+//     "ProjectDashboardStageCurrenciesList": {
+//         "en": "Select list of allowed crypto-currencies",
+//         "ru": "Выбрать список разрешенных криптовалют"
+//     },
 //     "ProjectDashboardStagePlaceStatusPending": {
 //         "en": "Pending",
 //         "ru": "В ожидании"
@@ -1136,6 +1144,10 @@
 //         "en": "Save Milestones to blockchain",
 //         "ru": "Сохранить этапы"
 //     },
+//     "SetupCrowdsale": {
+//         "en": "Save to blockchain",
+//         "ru": "Сохранить"
+//     },
 //     "trancheInformation": {
 //         "en": "Get ETH",
 //         "ru": "Получение ETH"
@@ -1244,8 +1256,6 @@
 //         "en": "The sum of all percentages is not 100",
 //         "ru": "Сумма всех процентов не равно 100"
 //     },
-//     //---
-//     // validations
 //     "ErrorValidDecimals": {
 //         "en": "The number of decimal places after the decimal point can be only from 0 to 36",
 //         "ru": "Количество десятичный знаков после запятой может быть только от 0 до 36"
