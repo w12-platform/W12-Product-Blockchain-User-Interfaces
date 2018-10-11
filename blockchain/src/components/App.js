@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import Buefy from 'buefy';
 import vuexI18n from 'vuex-i18n';
-import VueMask from 'v-mask';
 import Cleave from 'vue-cleave-component';
 import Tooltip from 'vue-directive-tooltip';
 import MultiSelect from 'vue-multiselect'
@@ -10,11 +9,9 @@ import {createNamespacedHelpers} from "vuex";
 import { LANG_UPDATE_META } from "store/modules/Lang.js";
 const LangNS = createNamespacedHelpers("Lang");
 
-
 import 'bem/buefy/default.scss';
 import store from "store";
 
-Vue.use(VueMask);
 Vue.use(Buefy);
 Vue.use(Cleave);
 Vue.use(Tooltip);

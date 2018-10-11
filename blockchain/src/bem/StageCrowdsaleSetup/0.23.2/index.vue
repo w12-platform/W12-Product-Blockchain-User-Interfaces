@@ -183,26 +183,26 @@
                             <footer class="card-footer" v-if="!isStartCrowdSale">
                                 <a class="card-footer-item" @click="addStage">{{$t('ProjectDashboardStageBonusesAddStageButton') }}</a>
                                 <a class="card-footer-item" @click="addMilestone">{{ $t('MilestonesAdd') }}</a>
-                                <a class="card-footer-item" @click="saveSettings" v-if="canSave">{{ $t('SetupCrowdsale') }}</a>
+                                <a class="card-footer-item" @click="saveSettings" v-if="!saveDisable">{{ $t('SetupCrowdsale') }}</a>
                             </footer>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <b-loading :is-full-page="false" :active.sync="setStagesLoading" :can-cancel="true"></b-loading>
+        <b-loading :is-full-page="false" :active.sync="saveLoading" :can-cancel="true"></b-loading>
     </div>
 </template>
 
 <script>
     import './default.scss';
     import Connector from 'lib/Blockchain/DefaultConnector.js';
-    import {packSetupCrowdsaleParameters, waitTransactionReceipt} from 'lib/utils.js';
     import DatePicker from 'vue2-datepicker';
     import {createNamespacedHelpers} from "vuex";
-    import {UPDATE_TX} from "store/modules/Transactions.js";
     import {MilestoneModel} from 'bem/StageCrowdsaleSetup/0.23.2/shared.js';
+    import {waitTransactionReceipt} from 'lib/utils.js';
     import MilestoneCard from 'bem/StageCrowdsaleSetup/0.23.2/MilestoneCard.vue';
+    import {UPDATE_TX} from "store/modules/Transactions.js";
 
     const ConfigNS = createNamespacedHelpers('Config');
     const ProjectNS = createNamespacedHelpers("Project");
@@ -220,10 +220,8 @@
         template: '#StageCrowdsaleSetupTemplate',
         data() {
             return {
-                setStagesLoading: false,
                 tokenCrowdSaleStages: [],
-                saveMilestonesLoading: false,
-                block: false,
+                saveLoading: false,
                 tokenCrowdSaleMilestones: [],
                 error: false,
             };
@@ -277,11 +275,6 @@
                 TransactionsList: "list"
             }),
 
-            canSave(){
-                //проверяем заданны ли все параметры
-                return true;
-            },
-
             isOneHundredPercent(){
                 if(this.tokenCrowdSaleMilestones
                     && this.tokenCrowdSaleMilestones.length){
@@ -293,7 +286,15 @@
                 }
                 return false;
             },
-            isEmpty(){
+            isEmptyStages(){
+                if(this.tokenCrowdSaleStages && this.tokenCrowdSaleStages.length){
+                    return this.tokenCrowdSaleStages.length === this.tokenCrowdSaleStages.filter(
+                        (st)=> st.startDate && st.endDate && st.discount && st.vestingDate && st.withdrawalEndDate
+                    ).length;
+                }
+                return false;
+            },
+            isEmptyMilestones(){
                 if(this.tokenCrowdSaleMilestones && this.tokenCrowdSaleMilestones.length){
                     return this.tokenCrowdSaleMilestones.length === this.tokenCrowdSaleMilestones.filter(
                         (ml)=> ml.description && ml.endDate && ml.name && ml.tranchePercent && ml.withdrawalEndDate
@@ -302,7 +303,7 @@
                 return false;
             },
             saveDisable(){
-                return this.isOneHundredPercent && this.tokenCrowdSaleMilestones.length && this.isEmpty;
+                return this.isOneHundredPercent && this.isEmptyMilestones && this.isEmptyStages;
             },
             isErrorTx() {
                 return this.TransactionsList && this.TransactionsList.length
@@ -312,7 +313,7 @@
                         && tr.hash
                         && tr.status
                         && tr.token === this.currentProject.tokenAddress
-                        && tr.name === "saveMilestones"
+                        && tr.name === "crowdsaleSetup"
                         && tr.status === "error"
                             ? tr
                             : false
@@ -346,36 +347,30 @@
                 TransactionsRetry: "retry"
             }),
             async saveSettings(){
-                console.log(this.tokenCrowdSaleStages);
+                this.saveLoading = true;
                 try {
                     const {W12CrowdsaleFactory} = await this.LedgerFetch(this.currentProject.version);
                     const W12Crowdsale = W12CrowdsaleFactory.at(this.currentProject.crowdsaleAddress);
-                    const params = packSetupCrowdsaleParameters(this.tokenCrowdSaleStages, this.tokenCrowdSaleMilestones);
-                    console.log(params);
-
-                    const tx = await W12Crowdsale.methods.setup(...params);
-
+                    const tx = await W12Crowdsale.setup(this.tokenCrowdSaleStages, this.tokenCrowdSaleMilestones);
                     const connectedWeb3 = (await Connector.connect()).web3;
-                    // this.$store.commit(`Transactions/${UPDATE_TX}`, {
-                    //     token: this.currentProject.tokenAddress,
-                    //     name: "setStages",
-                    //     hash: tx,
-                    //     status: "pending"
-                    // });
+                    this.$store.commit(`Transactions/${UPDATE_TX}`, {
+                        token: this.currentProject.tokenAddress,
+                        name: "crowdsaleSetup",
+                        hash: tx,
+                        status: "pending"
+                    });
+                    console.log("test11");
+                    //getExchanger
                     await waitTransactionReceipt(tx, connectedWeb3);
-                    //stages.forEach(stage => stage.wasCreated = true);
-                    //this.tokenCrowdSaleStagesChange = false;
+
+                    console.log("test22");
+                    // this.tokenCrowdSaleStages.forEach(stage => stage.wasCreated = true);
+                    // this.tokenCrowdSaleMilestones.forEach(stage => stage.wasCreated = true);
                 } catch (e) {
                     this.error = e.message;
                 }
+                this.saveLoading = false;
             },
-            minStartDate(stageIndex) {
-                console.log(stageIndex);
-                const today = new Date();
-                console.log(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
-                return new Date(today.getFullYear(), today.getMonth(), today.getDate());
-            },
-
             onDelete(value) {
                 const index = this.tokenCrowdSaleMilestones.indexOf(value);
                 if (index !== -1) {

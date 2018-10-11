@@ -30,7 +30,6 @@
     import './default.scss';
 
     import ListerSwitch from 'bem/ListerSwitch';
-    import {version} from 'lib/utils.js';
 
     import {createNamespacedHelpers} from "vuex";
 
@@ -78,12 +77,13 @@
             isError() {
                 return this.ledgerMeta.loadingError || this.tokensListMeta.loadingError || this.accountMeta.loadingError;
             },
-
             WhiteListTableVersion(){
-                return version('WhiteListTable', this.W12Lister.version);
+                const v = this.W12Lister.version;
+                return () => import("bem/WhiteListTable/" + v);
             },
             WhiteListFormVersion(){
-                return version('WhiteListForm', this.W12Lister.version);
+                const v = this.W12Lister.version;
+                return () => import("bem/WhiteListForm/" + v);
             }
         },
         methods: {

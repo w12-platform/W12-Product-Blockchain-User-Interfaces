@@ -1,5 +1,4 @@
 let path = require("path");
-//let webpack = require('webpack');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 
 const MODE = "development"; //production || development
@@ -32,12 +31,9 @@ module.exports = [
                     loader: "vue-loader"
                 },
                 {
-                    test: /\.css$/,
-                    use: ['style-loader', 'css-loader']
-                },
-                {
-                    test: /\.scss$/,
+                    test: /\.(scss|css)$/,
                     use: [
+                        "style-loader",
                         "vue-style-loader",
                         "css-loader",
                         "sass-loader"
@@ -54,16 +50,13 @@ module.exports = [
             ]
         },
         plugins: [
-            new VueLoaderPlugin()
+            new VueLoaderPlugin(),
         ],
         devServer: {
             contentBase: path.join(__dirname, '../'),
             publicPath: '/blockchain/build/',
             compress: true,
             port: 8090,
-            proxy: {
-                "/ru/api": "http://[::1]:3000"
-            }
         }
     },
 ];

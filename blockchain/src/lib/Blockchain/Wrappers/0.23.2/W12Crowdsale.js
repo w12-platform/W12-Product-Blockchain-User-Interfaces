@@ -1,11 +1,83 @@
 import { countStringBytes, decodeStringFromBytes, encodeStringToBytes, promisify } from 'lib/utils.js';
 import { BaseWrapper } from 'lib/Blockchain/Wrappers/NoVersion/BaseWrapper.js';
+import {toWeiDecimals} from "../../../utils";
+import bytes from 'utf8-bytes';
 
 const moment = window.moment;
-const DATE_FORMAT = 'YYYY-MM-DD';
 const web3 = new Web3();
 
 export class W12CrowdsaleWrapper extends BaseWrapper {
+    encodeMilestoneParameters(name, description, tranchePercent, endDate, voteEndDate, withdrawalWindow) {
+        const result = {
+            dates: [
+                endDate, voteEndDate, withdrawalWindow
+            ],
+            tranchePercent,
+            offsets: [],
+            namesAndDescriptions: '0x',
+            descriptionHex: null,
+            nameHex: null
+        };
+
+        let utfBytes = bytes(name).map(num => num.toString(16)).join('');
+
+        result.offsets.push(utfBytes.length / 2);
+        result.namesAndDescriptions += utfBytes;
+        result.nameHex = `0x${utfBytes}`;
+
+        utfBytes = bytes(description).map(num => num.toString(16)).join('');
+
+        result.offsets.push(utfBytes.length / 2);
+        result.namesAndDescriptions += utfBytes;
+        result.descriptionHex = `0x${utfBytes}`;
+        return result;
+    }
+    packSetupCrowdsaleParameters(stages, milestones) {
+        const [pack1, pack2] = stages.reduce((result, stage, idx) => {
+
+            const pack1 = [moment(stage.startDate).unix(), moment(stage.endDate).unix(), Math.floor(stage.discount * 100), moment(stage.vestingDate).unix()];
+
+            if (stage.bonusVolumes.length === 0) {
+                pack1.push(0, 0);
+            } else {
+                let volumeBoundaries = [];
+                let bonusVolumes = [];
+
+                stage.bonusVolumes.forEach((bonus)=>{
+                    volumeBoundaries.push(toWeiDecimals(bonus[0], 18));
+                    bonusVolumes.push(Math.floor(bonus[1] * 100));
+                });
+
+                const lastOffset = result[1].length;
+
+                pack1.push(lastOffset, lastOffset + bonusVolumes.length * 2);
+                result[1].push(...bonusVolumes.reduce((result, v, idx) => (result.push(volumeBoundaries[idx], v), result), []));
+            }
+
+            result[0].push(pack1);
+            return result;
+        }, [[], []]);
+        const [pack3, pack4, pack5] = milestones
+            .map(m =>
+                this.encodeMilestoneParameters(
+                    m.name,
+                    m.description,
+                    Math.floor(m.tranchePercent * 100),
+                    m.endDate,
+                    m.endDate + 1,
+                    m.withdrawalEndDate
+                )
+            )
+            .reduce((result, m, idx) => {
+                result[0].push([...m.dates, m.tranchePercent]);
+                result[1].push(...m.offsets);
+                result[2] += m.namesAndDescriptions.slice(2);
+
+                return result;
+            }, [[], [], '0x']);
+        return [pack1, pack2, pack3, pack4, pack5];
+    }
+
     async getStagesList() {
         const stagesLength = (await this.methods.stagesLength()).toNumber();
         const list = [];
@@ -54,70 +126,8 @@ export class W12CrowdsaleWrapper extends BaseWrapper {
         return result;
     }
 
-    async setBonusVolumes(index, list) {
-        const volumeBoundaries = [];
-        const volumeBonuses = [];
-
-        for (let item of list) {
-            volumeBoundaries.push(
-                web3.toWei(item[0], 'ether').toString()
-            );
-            volumeBonuses.push(item[1]);
-        }
-
-        return await this.methods.setStageVolumeBonuses(index, volumeBoundaries, volumeBonuses);
-    }
-
-    async setStages(stages) {
-        const dates = [];
-        const discounts = [];
-        const vestings = [];
-        const format = (date) => moment(date).isValid() ? undefined : 'YYYY-MM-DD';
-
-        for(let stage of stages) {
-            dates.push(
-                [moment(stage.startDate, format(stage.endDate)).utc().unix(), moment(stage.endDate, format(stage.endDate)).utc().unix()]
-            );
-            discounts.push(Math.floor(stage.discount * 100));
-            vestings.push(
-                moment(stage.vestingDate, format(stage.endDate)).utc().unix()
-            );
-        }
-
-        return await this.methods.setStages(dates, discounts, vestings);
-    }
-
-    async setMilestones(milestones) {
-        const dates = [];
-        const tranchePercents = [];
-        const offsets = [];
-        const namesAndDescriptions = [];
-
-        for (let milestone of milestones) {
-            dates.push(
-                milestone.endDate,
-                milestone.endDate+1, //voteEndDate remove vote
-                milestone.withdrawalEndDate
-            );
-            tranchePercents.push(Math.floor(milestone.tranchePercent * 100));
-            offsets.push(
-                countStringBytes(milestone.name),
-                countStringBytes(milestone.description),
-            );
-            namesAndDescriptions.push(
-                encodeStringToBytes(milestone.name),
-                encodeStringToBytes(milestone.description)
-            )
-        }
-
-        const a = namesAndDescriptions.reduce((output, el) => output + el.slice(2), '0x');
-
-        return await this.methods.setMilestones(
-            dates,
-            tranchePercents,
-            offsets,
-            a
-        );
+    async setup(stages, milestones){
+        await this.methods.setup(...this.packSetupCrowdsaleParameters(stages, milestones));
     }
 
     async getMilestones() {

@@ -102,4 +102,8 @@ export class W12ListerWrapper extends BaseWrapper {
 
         return result;
     }
+
+    async swap(){
+        return await this.methods.swap();
+    }
 }

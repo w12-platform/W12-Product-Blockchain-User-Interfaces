@@ -8,14 +8,14 @@ export class W12ListerFactoryStrategy extends BaseFactoryStrategy {
         W12CrowdsaleFactory,
         DetailedERC20Factory,
         ERC20Factory,
-        W12TokenLedgerFactory
+        TokenExchangerFactory
     ) {
         super(contractArtifacts, ContractWrapper, connector);
 
         this.W12CrowdsaleFactory = W12CrowdsaleFactory;
         this.ERC20Factory = ERC20Factory;
         this.DetailedERC20Factory = DetailedERC20Factory;
-        this.W12TokenLedgerFactory = W12TokenLedgerFactory;
+        this.TokenExchangerFactory = TokenExchangerFactory;
     }
 
     at(address) {
@@ -24,7 +24,7 @@ export class W12ListerFactoryStrategy extends BaseFactoryStrategy {
         origin.setFactories({
             W12CrowdsaleFactory: this.W12CrowdsaleFactory,
             ERC20Factory: this.ERC20Factory,
-            W12TokenLedgerFactory: this.W12TokenLedgerFactory,
+            TokenExchangerFactory: this.TokenExchangerFactory,
         });
 
         return origin;
