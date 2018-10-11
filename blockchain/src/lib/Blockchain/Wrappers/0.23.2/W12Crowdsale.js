@@ -127,7 +127,7 @@ export class W12CrowdsaleWrapper extends BaseWrapper {
     }
 
     async setup(stages, milestones){
-        await this.methods.setup(...this.packSetupCrowdsaleParameters(stages, milestones));
+        return await this.methods.setup(...this.packSetupCrowdsaleParameters(stages, milestones));
     }
 
     async getMilestones() {

@@ -359,13 +359,9 @@
                         hash: tx,
                         status: "pending"
                     });
-                    console.log("test11");
-                    //getExchanger
                     await waitTransactionReceipt(tx, connectedWeb3);
-
-                    console.log("test22");
-                    // this.tokenCrowdSaleStages.forEach(stage => stage.wasCreated = true);
-                    // this.tokenCrowdSaleMilestones.forEach(stage => stage.wasCreated = true);
+                    this.tokenCrowdSaleStages.forEach(stage => stage.wasCreated = true);
+                    this.tokenCrowdSaleMilestones.forEach(stage => stage.wasCreated = true);
                 } catch (e) {
                     this.error = e.message;
                 }

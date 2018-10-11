@@ -21,8 +21,8 @@
                     {{ ProjectMeta.loadingProjectError }}
                 </b-notification>
 
-                <div class="ProjectDashboardTranche__project" v-if="!ProjectMeta.loadingProjectError">
-                    <TrancheInformation></TrancheInformation>
+                <div class="ProjectDashboardTranche__project" >
+                    <TrancheInformation v-if="!ProjectMeta.loadingProjectError"></TrancheInformation>
 
                     <b-loading :is-full-page="false" :active.sync="ProjectMeta.loadingProject" :can-cancel="true"></b-loading>
                 </div>

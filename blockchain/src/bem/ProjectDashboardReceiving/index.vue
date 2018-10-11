@@ -21,8 +21,8 @@
                     {{ ProjectMeta.loadingProjectError }}
                 </b-notification>
 
-                <div class="ProjectDashboardReceiving__project" v-if="!ProjectMeta.loadingProjectError">
-                    <Receiving></Receiving>
+                <div class="ProjectDashboardReceiving__project">
+                    <Receiving v-if="!ProjectMeta.loadingProjectError"></Receiving>
 
                     <b-loading :is-full-page="false" :active.sync="ProjectMeta.loadingProject" :can-cancel="true"></b-loading>
                 </div>
