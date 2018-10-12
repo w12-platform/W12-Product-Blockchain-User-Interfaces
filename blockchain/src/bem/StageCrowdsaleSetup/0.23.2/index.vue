@@ -180,10 +180,14 @@
                                             type="is-danger" has-icon>{{ error }}
                             </b-notification>
 
+                            <b-notification class="ProjectStages__errorStage" v-if="tokenCrowdSaleMilestones.length && !isOneHundredPercent" type="is-danger" has-icon>
+                                {{ $t('MilestoneTitleErrorNotOneHundredPercent') }}
+                            </b-notification>
+
                             <footer class="card-footer" v-if="!isStartCrowdSale">
                                 <a class="card-footer-item" @click="addStage">{{$t('ProjectDashboardStageBonusesAddStageButton') }}</a>
-                                <a class="card-footer-item" @click="addMilestone">{{ $t('MilestonesAdd') }}</a>
-                                <a class="card-footer-item" @click="saveSettings" v-if="!saveDisable">{{ $t('SetupCrowdsale') }}</a>
+                                <a class="card-footer-item" v-if="checkAddMilestone" @click="addMilestone">{{ $t('MilestonesAdd') }}</a>
+                                <a class="card-footer-item" v-if="checkSetupCrowdsale" @click="saveSettings">{{ $t('SetupCrowdsale') }}</a>
                             </footer>
                         </div>
                     </div>
@@ -276,34 +280,24 @@
             }),
 
             isOneHundredPercent(){
-                if(this.tokenCrowdSaleMilestones
-                    && this.tokenCrowdSaleMilestones.length){
-                    let percent = 0;
-                    this.tokenCrowdSaleMilestones.forEach((ml)=>{
-                        percent = percent + parseFloat(ml.tranchePercent);
-                    });
+                const Ml = this.tokenCrowdSaleMilestones;
+                if(Ml && Ml.length){
+                    const percent = Ml.reduce(function(sum, ml) {
+                        return sum + parseFloat(ml.tranchePercent);
+                    }, 0);
                     return percent === 100;
                 }
                 return false;
             },
-            isEmptyStages(){
-                if(this.tokenCrowdSaleStages && this.tokenCrowdSaleStages.length){
-                    return this.tokenCrowdSaleStages.length === this.tokenCrowdSaleStages.filter(
-                        (st)=> st.startDate && st.endDate && st.discount && st.vestingDate && st.withdrawalEndDate
-                    ).length;
-                }
-                return false;
+            checkAddMilestone(){
+                const St = this.tokenCrowdSaleStages;
+                return St && St.length ? St.length === St.filter((st)=>st.startDate && st.endDate).length : false;
             },
-            isEmptyMilestones(){
-                if(this.tokenCrowdSaleMilestones && this.tokenCrowdSaleMilestones.length){
-                    return this.tokenCrowdSaleMilestones.length === this.tokenCrowdSaleMilestones.filter(
-                        (ml)=> ml.description && ml.endDate && ml.name && ml.tranchePercent && ml.withdrawalEndDate
-                    ).length;
-                }
-                return false;
-            },
-            saveDisable(){
-                return this.isOneHundredPercent && this.isEmptyMilestones && this.isEmptyStages;
+            checkSetupCrowdsale(){
+                const Ml = this.tokenCrowdSaleMilestones;
+                return Ml && Ml.length && this.checkAddMilestone && this.isOneHundredPercent
+                    ? Ml.length === Ml.filter((ml)=>ml.name && ml.tranchePercent && ml.endDate && ml.withdrawalEndDate).length
+                    : false;
             },
             isErrorTx() {
                 return this.TransactionsList && this.TransactionsList.length
@@ -365,6 +359,7 @@
                 } catch (e) {
                     this.error = e.message;
                 }
+
                 this.saveLoading = false;
             },
             onDelete(value) {

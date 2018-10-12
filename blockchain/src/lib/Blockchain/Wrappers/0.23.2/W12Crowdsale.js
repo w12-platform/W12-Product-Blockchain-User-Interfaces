@@ -35,7 +35,12 @@ export class W12CrowdsaleWrapper extends BaseWrapper {
     packSetupCrowdsaleParameters(stages, milestones) {
         const [pack1, pack2] = stages.reduce((result, stage, idx) => {
 
-            const pack1 = [moment(stage.startDate).unix(), moment(stage.endDate).unix(), Math.floor(stage.discount * 100), moment(stage.vestingDate).unix()];
+            const pack1 = [
+                moment(stage.startDate).unix(),
+                moment(stage.endDate).unix(),
+                Math.floor((stage.discount?stage.discount:0) * 100),
+                moment(stage.vestingDate).unix()
+            ];
 
             if (stage.bonusVolumes.length === 0) {
                 pack1.push(0, 0);
