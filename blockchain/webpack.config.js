@@ -10,7 +10,7 @@ module.exports = [
         entry: './src/components/App.js',
         output: {
             path: path.resolve(__dirname, 'build'),
-            publicPath: '/blockchain/build/',
+            publicPath: path.resolve(__dirname, 'build'),
             filename: "App.js"
         },
         resolve: {
