@@ -62,12 +62,12 @@ export default {
                         const currentAccount = (await getAccounts())[0];
 
                         await connectedWeb3.version.getNetwork(async (err, networkId) => {
-                            if(networkId !== "4"){ // 4 - RINKEBY
+                            if(networkId !== "1"){ // 4 - RINKEBY
                                 commit(UPDATE, {});
                                 commit(UPDATE_DATA, {});
                                 commit(UPDATE_META, {
                                     loading: false,
-                                    loadingError: this._vm.$t('ErrorMetamaskIsRinkebyNetwork')
+                                    loadingError: this._vm.$t('ErrorMetamaskIsMainnetNetwork')
                                 });
                             } else {
                                 if (!currentAccount) {
@@ -113,7 +113,7 @@ export default {
         async updateAccountData({commit}) {
             const selectedToken = this.state.TokensList.currentToken;
             const currentProject = this.state.Project.currentProject;
-            
+
             if (!selectedToken && !currentProject) return;
             if(currentProject && !currentProject.fundData) return;
 
