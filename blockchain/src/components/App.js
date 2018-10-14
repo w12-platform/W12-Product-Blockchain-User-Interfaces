@@ -35,6 +35,7 @@ import InvestorDashboardRefund from 'bem/InvestorDashboardRefund';
 import ProjectDashboard from 'bem/ProjectDashboard';
 import ProjectDashboardReceiving from 'bem/ProjectDashboardReceiving';
 import ProjectDashboardTranche from 'bem/ProjectDashboardTranche';
+import Versions from 'bem/Versions';
 
 new Vue({
     store,
@@ -54,6 +55,7 @@ new Vue({
         ProjectDashboard,
         ProjectDashboardReceiving,
         ProjectDashboardTranche,
+        Versions,
     },
     computed: {
         ...LangNS.mapState({

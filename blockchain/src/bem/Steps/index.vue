@@ -25,7 +25,6 @@
                 required: true
             },
             blocked: {
-                type: String
             },
             link: {
                 type: String,
