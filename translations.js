@@ -1264,4 +1264,16 @@
 //         "en": "The number of tokens can be from {min} to {max}",
 //         "ru": "Количество токенов может быть от {min} до {max}"
 //     },
+//     "StepsNext": {
+//         "en": "Next step",
+//         "ru": "Следующий шаг"
+//     },
+//     "StepsText": {
+//         "en": "Step {number} of 10",
+//         "ru": "Шаг {number} из 10"
+//     },
+//     "StepsBlockedTx": {
+//         "en": "Please wait for confirmation of the transaction",
+//         "ru": "Пожалуйста дождитесь подтверждения транзакции"
+//     }
 // };

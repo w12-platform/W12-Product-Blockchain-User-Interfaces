@@ -16,13 +16,14 @@
                 <b-loading :is-full-page="false" :active.sync="isLoading" :can-cancel="true"></b-loading>
             </b-notification>
 
-            <div v-if="!isLoading">
+            <div v-if="!isLoading && currentToken">
                 <TokenSwitch></TokenSwitch>
                 <CrowdSale></CrowdSale>
                 <SaleTable></SaleTable>
                 <Calculator></Calculator>
             </div>
         </section>
+        <Steps :number="6" link="/investor-refund.html"></Steps>
     </div>
 </template>
 
@@ -35,6 +36,7 @@
     import CrowdSale from 'bem/CrowdSale';
     import SaleTable from 'bem/SaleTable';
     import Calculator from 'bem/Calculator';
+    import Steps from "bem/Steps";
 
     const LedgerNS = createNamespacedHelpers("Ledger");
     const AccountNS = createNamespacedHelpers("Account");
@@ -64,6 +66,7 @@
             CrowdSale,
             SaleTable,
             Calculator,
+            Steps
         },
         data() {
             return {
@@ -77,6 +80,7 @@
                 ledgerMeta: 'meta',
             }),
             ...TokensListNS.mapState({
+                list: "list",
                 tokensListMeta: 'meta',
                 currentToken: "currentToken"
             }),
@@ -90,7 +94,7 @@
             }),
 
             isLoading() {
-                return this.tokensListMeta.loading && this.meta.loading;
+                return this.tokensListMeta.loading || this.meta.loading || !this.currentToken || !this.list.length;
             },
             isError() {
                 return this.ledgerMeta.loadingError || this.tokensListMeta.loadingError || this.accountMeta.loadingError;

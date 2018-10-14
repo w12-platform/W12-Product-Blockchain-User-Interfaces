@@ -28,6 +28,7 @@
                 </div>
             </div>
         </section>
+        <Steps :number="10"></Steps>
     </div>
 </template>
 
@@ -36,6 +37,7 @@
     import ProjectSwitch from 'bem/ProjectSwitch';
     import Receiving from 'bem/Receiving';
     import {CONFIRM_TX} from "store/modules/Transactions.js";
+    import Steps from "bem/Steps";
 
     import {createNamespacedHelpers} from 'vuex';
     import {isZeroAddress} from 'lib/utils';
@@ -51,6 +53,7 @@
         components: {
             ProjectSwitch,
             Receiving,
+            Steps
         },
         computed: {
             ...LedgerNS.mapState({

@@ -28,17 +28,16 @@
                 </div>
             </div>
         </section>
+        <Steps :number="9" link="/receiving.html"></Steps>
     </div>
 </template>
 
 <script>
     import './default.scss';
     import ProjectSwitch from 'bem/ProjectSwitch';
-    //import TokenInfo from 'bem/TokenInfo';
-    //import ProjectStages from 'bem/ProjectStages';
     import Receiving from 'bem/Receiving';
-    //import Milestones from 'bem/Milestones';
     import TrancheInformation from 'bem/TrancheInformation';
+    import Steps from "bem/Steps";
 
     import {CONFIRM_TX} from "store/modules/Transactions.js";
     import {createNamespacedHelpers} from 'vuex';
@@ -54,11 +53,9 @@
         name: 'ProjectDashboardTranche',
         components: {
             ProjectSwitch,
-            //TokenInfo,
-            //ProjectStages,
-            //Milestones,
             Receiving,
             TrancheInformation,
+            Steps
         },
         data() {
             return {
@@ -93,7 +90,7 @@
                     this.accountMeta.loading
                     || this.ProjectMeta.loading
                 );
-            },
+            }
         },
         watch: {
             'currentAccount': {

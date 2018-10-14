@@ -23,6 +23,7 @@
                 <WhiteListForm :is="WhiteListFormVersion"></WhiteListForm>
             </div>
         </section>
+        <Steps :number="4" :blocked="nextStepBlocked" link="/project.html"></Steps>
     </div>
 </template>
 
@@ -30,6 +31,7 @@
     import './default.scss';
 
     import ListerSwitch from 'bem/ListerSwitch';
+    import Steps from "bem/Steps";
 
     import {createNamespacedHelpers} from "vuex";
 
@@ -44,6 +46,7 @@
         template: '#AdminDashboardTemplate',
         components: {
             ListerSwitch,
+            Steps
         },
         data() {
             return {
@@ -84,6 +87,9 @@
             WhiteListFormVersion(){
                 const v = this.W12Lister.version;
                 return () => import("bem/WhiteListForm/" + v);
+            },
+            nextStepBlocked(){
+                return this.isPendingTx ? this.$t('StepsBlockedTx') : false;
             }
         },
         methods: {

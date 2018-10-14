@@ -29,12 +29,14 @@
                 </div>
             </div>
         </section>
+        <Steps :number="5" link="/crowdsale.html"></Steps>
     </div>
 </template>
 
 <script>
     import './default.scss';
     import ProjectSwitch from 'bem/ProjectSwitch';
+    import Steps from "bem/Steps";
 
     import {createNamespacedHelpers} from 'vuex';
 
@@ -46,7 +48,8 @@
     export default {
         name: 'ProjectDashboard',
         components: {
-            ProjectSwitch
+            ProjectSwitch,
+            Steps
         },
         computed: {
             ...LedgerNS.mapState({
@@ -80,7 +83,7 @@
             ProjectStagesVersion(){
                 const v = this.currentProject.version;
                 return () => import("bem/ProjectStages/" + v);
-            },
+            }
         },
         watch: {
             'currentAccount': {
