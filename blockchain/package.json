@@ -6,7 +6,7 @@
   "scripts": {
     "serve": "webpack-dev-server --host localhost --mode development",
     "dev": "webpack --mode development",
-    "build": "webpack -p",
+    "build": "NODE_ENV=production webpack -p",
     "watch": "webpack --watch --mode development",
     "docker-server": "PROXY_URL=https://w12.io/ node ../server/bin/www",
     "dev-server:proxy": "PROXY_URL=https://w12.io/ node ../server/bin/www"
@@ -31,7 +31,6 @@
     "popper": "^1.0.1",
     "popper.js": "^1.14.4",
     "resolve": "^1.8.1",
-    "utf8-bytes": "0.0.1",
     "v-mask": "^1.3.2",
     "vue": "^2.5.16",
     "vue-cleave-component": "^2.1.1",

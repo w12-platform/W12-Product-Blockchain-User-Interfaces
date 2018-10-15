@@ -1,3 +1,5 @@
+import { encode } from '@redtea/semint';
+
 export const CONFIG_UPDATE = "CONFIG_UPDATE";
 
 export default {
@@ -33,7 +35,13 @@ export default {
         }
     },
     modules: {},
-    getters: {},
+    getters: {
+        W12ListerLastVersion (state) {
+            const list = state.W12ListerList.slice()
+                .sort((a, b) => encode(a.version, 4) - encode(b.version, 4));
+            return list.length != 0 ? list[list.length - 1] : null;
+        }
+    },
     mutations: {
         [CONFIG_UPDATE](state, payload) {
             Object.assign(state, payload);

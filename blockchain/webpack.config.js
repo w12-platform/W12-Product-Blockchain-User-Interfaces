@@ -1,11 +1,12 @@
-const ROOT_PATH = "/";
-const PACKAGE_JSON_PATH = ROOT_PATH + "blockchain/package.json";
+const path = require("path");
 
-let path = require("path");
-let webpack = require("webpack");
+const webpack = require("webpack");
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 
-const MODE = "development"; //production || development
+const MODE = process.env.NODE_ENV || 'development'; // production || development
+const ROOT_PATH = path.resolve("../");
+const BUILD_DIR_PATH = path.join(ROOT_PATH, 'blockchain/build');
+const publicPath = MODE === 'production' ? '/blockchain/build/' : '/blockchain/build/'
 
 module.exports = [
     {
@@ -13,8 +14,8 @@ module.exports = [
         mode: MODE,
         entry: './src/components/App.js',
         output: {
-            path: path.join(ROOT_PATH, 'blockchain/build'),
-            publicPath: path.join(ROOT_PATH, 'blockchain/build'),
+            path: BUILD_DIR_PATH,
+            publicPath,
             filename: "App.js"
         },
         resolve: {
@@ -56,13 +57,13 @@ module.exports = [
         plugins: [
             new VueLoaderPlugin(),
             new webpack.DefinePlugin({
-                ROOT_PATH: JSON.stringify(ROOT_PATH),
-                PACKAGE_JSON_PATH: JSON.stringify(PACKAGE_JSON_PATH),
+                ROOT_PATH: JSON.stringify('/'),
+                PACKAGE_JSON_PATH: JSON.stringify('/blockchain/package.json'),
             }),
         ],
         devServer: {
-            contentBase: "../",
-            publicPath: path.join(ROOT_PATH, 'blockchain/build/'),
+            contentBase: ROOT_PATH,
+            publicPath,
             compress: true,
             port: 8090,
         }

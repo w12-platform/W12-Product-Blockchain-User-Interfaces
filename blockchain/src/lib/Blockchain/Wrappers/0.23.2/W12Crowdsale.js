@@ -1,7 +1,6 @@
 import { countStringBytes, decodeStringFromBytes, encodeStringToBytes, promisify } from 'lib/utils.js';
 import { BaseWrapper } from 'lib/Blockchain/Wrappers/NoVersion/BaseWrapper.js';
 import {toWeiDecimals} from "../../../utils";
-import bytes from 'utf8-bytes';
 
 const moment = window.moment;
 const web3 = new Web3();
@@ -12,26 +11,21 @@ export class W12CrowdsaleWrapper extends BaseWrapper {
             dates: [
                 endDate, voteEndDate, withdrawalWindow
             ],
-            tranchePercent,
-            offsets: [],
-            namesAndDescriptions: '0x',
-            descriptionHex: null,
-            nameHex: null
+            tranchePercent: tranchePercent * 100,
+            offsets: [
+                countStringBytes(name),
+                countStringBytes(description)
+            ],
+            namesAndDescriptions: null,
+            descriptionHex: encodeStringToBytes(name),
+            nameHex: encodeStringToBytes(description)
         };
 
-        let utfBytes = bytes(name).map(num => num.toString(16)).join('');
+        result.namesAndDescriptions = `${result.nameHex}${result.descriptionHex.slice(2)}`;
 
-        result.offsets.push(utfBytes.length / 2);
-        result.namesAndDescriptions += utfBytes;
-        result.nameHex = `0x${utfBytes}`;
-
-        utfBytes = bytes(description).map(num => num.toString(16)).join('');
-
-        result.offsets.push(utfBytes.length / 2);
-        result.namesAndDescriptions += utfBytes;
-        result.descriptionHex = `0x${utfBytes}`;
         return result;
     }
+
     packSetupCrowdsaleParameters(stages, milestones) {
         const [pack1, pack2] = stages.reduce((result, stage, idx) => {
 
@@ -67,7 +61,7 @@ export class W12CrowdsaleWrapper extends BaseWrapper {
                 this.encodeMilestoneParameters(
                     m.name,
                     m.description,
-                    Math.floor(m.tranchePercent * 100),
+                    m.tranchePercent,
                     m.endDate,
                     m.endDate + 1,
                     m.withdrawalEndDate
