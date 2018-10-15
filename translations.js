@@ -732,14 +732,6 @@
 //         "en": "The cost of one {WToken} token, including discount",
 //         "ru": "Стоимость одного токена {WToken} с учетом текущей скидки"
 //     },
-//     "InvestorDashboardCalculatorTotalCost": {
-//         "en": "Необходимо оплатить: {cost}",
-//         "ru": "Необходимо оплатить: {cost}"
-//     },
-//     "InvestorDashboardCalculatorTotalProfit": {
-//         "en": "Экономия: {profit}",
-//         "ru": "Экономия: {profit}"
-//     },
 //     "InvestorDashboardCountdown": {
 //         "en": "Number of days, hours, minutes of the current discount validity",
 //         "ru": "Кол-во дней, часов, минут до окончания действия текущей скидки"
@@ -748,11 +740,6 @@
 //         "en": "Discounts",
 //         "ru": "Скидки"
 //     },
-//     "InvestorDashboardCrowdsaleTableVestingDate": {
-//         "en": "Дата заморозки",
-//         "ru": "Дата заморозки"
-//     },
-//
 //     "InvestorDashboardDiscountsStages": {
 //         "en": "Crowdsale stage (UTC)",
 //         "ru": "Стадии (UTC)"
@@ -800,18 +787,6 @@
 //     "InvestorDashboardCalculatorDiscount": {
 //         "en": "Discount:",
 //         "ru": "Скидка:"
-//     },
-//     "InvestorDashboardCalculatorDiscountBeforeEndTimeout":{
-//         "en": "До окончания скидки: {countdown}",
-//         "ru": "До окончания скидки: {countdown}"
-//     },
-//     "InvestorDashboardCalculatorDiscountVestingEndDate": {
-//         "en": "Дата окончания заморозки: {date}",
-//         "ru": "Дата окончания заморозки: {date}"
-//     },
-//     "InvestorDashboardCalculatorDiscountVestingDateCaution": {
-//         "en": "До окончания заморозки вы не сможете обменять W-tokens на токены проекта.",
-//         "ru": "До окончания заморозки вы не сможете обменять W-tokens на токены проекта."
 //     },
 //     "InvestorDashboardCalculatorBonus": {
 //         "en": "Bonus:",
@@ -868,14 +843,6 @@
 //     "InvestorDashboardExchangeTokensExchange": {
 //         "en": "Exchange",
 //         "ru": "Обменять"
-//     },
-//     "InvestorDashboardExchangeTokensVestingDate": {
-//         "en": "Дата окончания разморозки",
-//         "ru": "Дата окончания разморозки"
-//     },
-//     "InvestorDashboardExchangeTokensVestingBalance": {
-//         "en": "Количество токенов {WToken}",
-//         "ru": "Количество токенов {WToken}"
 //     },
 //     "InvestorDashboardRefundEth": {
 //         "en": "REFUND. Return: {WToken}, get: ETH",
@@ -940,30 +907,6 @@
 //     "InvestorDashboardRefundEthTokensRefund": {
 //         "en": "Exchange",
 //         "ru": "Обменять"
-//     },
-//     "InvestorDashboardRefundActiveStatusTitle": {
-//         "en": "Статус возврата",
-//         "ru": "Статус возврата"
-//     },
-//     "InvestorDashboardRefundActiveStatusActive": {
-//         "en": "Активен",
-//         "ru": "Активен"
-//     },
-//     "InvestorDashboardRefundActiveStatusNotActive": {
-//         "en": "Не активен",
-//         "ru": "Не активен"
-//     },
-//     "InvestorDashboardRefundWindowTitle": {
-//         "en": "Период доступности возврата",
-//         "ru": "Период доступности возврата"
-//     },
-//     "InvestorDashboardRefundWindowDates": {
-//         "en": "с {from} до {to}",
-//         "ru": "с {from} до {to}"
-//     },
-//     "InvestorDashboardRefundMilestoneNumberTitle": {
-//         "en": "№ этапа",
-//         "ru": "№ этапа"
 //     },
 //     "ProjectDashboard": {
 //         "en": "Project Dashboard",

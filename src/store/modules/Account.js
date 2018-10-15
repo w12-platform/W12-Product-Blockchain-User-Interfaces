@@ -1,4 +1,4 @@
-import Connector from 'src/lib/Blockchain/DefaultConnector.js';
+import Connector from 'lib/Blockchain/DefaultConnector.js';
 import {promisify} from 'lib/utils.js';
 import config from '@/config.js';
 import Web3 from 'web3';
