@@ -1,9 +1,4 @@
 @dev
 node_modules
-<<<<<<< HEAD
-.idea
-blockchain/build/
-=======
 build
 .idea
->>>>>>> 2a3e18992501c8c34fb49f28ff65f9a8a157f184
