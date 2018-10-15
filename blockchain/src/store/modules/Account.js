@@ -1,6 +1,6 @@
 import Connector from 'lib/Blockchain/DefaultConnector.js';
 import {promisify} from 'lib/utils.js';
-
+import config from '@/config.js'
 export const ERROR_FETCH_ACCOUNT = 'LoadLedger: An unknown error';
 
 export const UPDATE_META = "UPDATE_META";
@@ -55,37 +55,35 @@ export default {
             await this.dispatch('Account/unWatch');
             const watcher = async () => {
                 try {
-                    const connectedWeb3 = (await Connector.connect()).web3;
+                    const { web3: connectedWeb3, netId } = await Connector.connect();
 
                     if (Connector.isProvider('metamask')) {
                         const getAccounts = promisify(connectedWeb3.eth.getAccounts.bind(connectedWeb3.eth.getAccounts));
                         const currentAccount = (await getAccounts())[0];
 
-                        await connectedWeb3.version.getNetwork(async (err, networkId) => {
-                            if(networkId !== "4"){ // 4 - RINKEBY
+                        if(netId != config.blockchainNetworkId){
+                            commit(UPDATE, {});
+                            commit(UPDATE_DATA, {});
+                            commit(UPDATE_META, {
+                                loading: false,
+                                loadingError: this._vm.$t(`ErrorCurrentEthereumNetworkIdIsNot${config.blockchainNetworkId}`)
+                            });
+                        } else {
+                            if (!currentAccount) {
                                 commit(UPDATE, {});
                                 commit(UPDATE_DATA, {});
                                 commit(UPDATE_META, {
                                     loading: false,
-                                    loadingError: this._vm.$t('ErrorMetamaskIsRinkebyNetwork')
+                                    loadingError: this._vm.$t('ErrorMetamaskIsBlocked')
                                 });
                             } else {
-                                if (!currentAccount) {
-                                    commit(UPDATE, {});
-                                    commit(UPDATE_DATA, {});
-                                    commit(UPDATE_META, {
-                                        loading: false,
-                                        loadingError: this._vm.$t('ErrorMetamaskIsBlocked')
-                                    });
-                                } else {
-                                    if (this.state.Account.currentAccount !== currentAccount) {
-                                        commit(UPDATE, {currentAccount});
-                                        await this.dispatch('Account/updateAccountData');
-                                        commit(UPDATE_META, {loading: false, loadingError: false});
-                                    }
+                                if (this.state.Account.currentAccount !== currentAccount) {
+                                    commit(UPDATE, {currentAccount});
+                                    await this.dispatch('Account/updateAccountData');
+                                    commit(UPDATE_META, {loading: false, loadingError: false});
                                 }
                             }
-                        });
+                        }
                     } else {
                         commit(UPDATE_META, {
                             loading: false,

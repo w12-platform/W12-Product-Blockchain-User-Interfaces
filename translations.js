@@ -1252,6 +1252,14 @@
 //         "en": "Please connect to the Rinkeby network",
 //         "ru": "Пожалуйста подключитесь к сети Rinkeby"
 //     },
+//     "ErrorCurrentEthereumNetworkIdIsNot1": {
+//         "en": "Please connect to the Mainnet network",
+//         "ru": "Пожалуйста подключитесь к сети Mainnet"
+//     },
+//     "ErrorCurrentEthereumNetworkIdIsNot4": {
+//         "en": "Please connect to the Rinkeby network",
+//         "ru": "Пожалуйста подключитесь к сети Rinkeby"
+//     },
 //     "MilestoneTitleErrorNotOneHundredPercent": {
 //         "en": "The sum of all percentages is not 100",
 //         "ru": "Сумма всех процентов не равно 100"

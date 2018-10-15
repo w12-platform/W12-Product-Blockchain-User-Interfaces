@@ -22,7 +22,7 @@ jobs:
           name: build image
           command: |
               docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
-              docker build --pull  -t "$DOCKERHUB_USERNAME/$CI_REGISTRY_IMAGE" .
+              docker build --pull --build-arg BLOCKCHAIN_NETWORK_ID=4 -t "$DOCKERHUB_USERNAME/$CI_REGISTRY_IMAGE" .
               docker push "$DOCKERHUB_USERNAME/$CI_REGISTRY_IMAGE"
   build-stage:
     <<: *defaults
@@ -40,7 +40,7 @@ jobs:
           name: build image
           command: |
              docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
-             docker build --pull  -t "$DOCKERHUB_USERNAME/$CI_REGISTRY_IMAGE:stage" .
+             docker build --pull --build-arg BLOCKCHAIN_NETWORK_ID=1 -t "$DOCKERHUB_USERNAME/$CI_REGISTRY_IMAGE:stage" .
              docker push "$DOCKERHUB_USERNAME/$CI_REGISTRY_IMAGE:stage"
   deploy-develop:
     <<: *defaults
