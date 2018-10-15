@@ -170,7 +170,7 @@
                     const W12Lister = W12ListerFactory.at(this.currentProject.listerAddress);
                     const {web3} = await Connector.connect();
                     const W12Token = W12TokenFactory.at(this.currentProject.wTokenAddress);
-                    const swapAddress = (await W12Lister.methods.swap());
+                    const swapAddress = (await W12Lister.swap());
 
                     const tx = await W12Token.methods.approve(
                         swapAddress,
@@ -198,7 +198,7 @@
                     const W12Lister = W12ListerFactory.at(this.currentProject.listerAddress);
                     const {web3} = await Connector.connect();
                     const W12Token = W12TokenFactory.at(this.currentProject.wTokenAddress);
-                    const swapAddress = (await W12Lister.methods.swap());
+                    const swapAddress = (await W12Lister.swap());
                     const tx = await W12Token.methods.decreaseApproval(
                         swapAddress,
                         new BigNumber(this.currentAccountData.allowanceForSwap),
@@ -220,12 +220,11 @@
             async exchange() {
                 this.loading = true;
                 try {
-                    const {W12AtomicSwapFactory, W12ListerFactory} = await this.ledgerFetch(this.currentProject.version);
+                    const {W12AtomicSwapFactory, W12ListerFactory, TokenExchangerFactory} = await this.ledgerFetch(this.currentProject.version);
                     const W12Lister = W12ListerFactory.at(this.currentProject.listerAddress);
                     const {web3} = await Connector.connect();
-                    const swapAddress = (await W12Lister.methods.swap());
-                    const W12AtomicSwap = W12AtomicSwapFactory.at(swapAddress);
-
+                    const swapAddress = (await W12Lister.swap());
+                    const W12AtomicSwap = TokenExchangerFactory ? TokenExchangerFactory.at(swapAddress):W12AtomicSwapFactory.at(swapAddress);
                     const tx = await W12AtomicSwap.methods.exchange(
                         this.currentProject.wTokenAddress,
                         new BigNumber(this.currentAccountData.allowanceForSwap)

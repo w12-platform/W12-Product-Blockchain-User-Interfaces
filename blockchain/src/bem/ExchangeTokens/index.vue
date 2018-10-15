@@ -240,7 +240,7 @@
                     const W12Lister = W12ListerFactory.at(this.currentToken.listerAddress);
                     const {web3} = await Connector.connect();
                     const W12Token = W12TokenFactory.at(this.currentToken.crowdSaleInformation.WTokenAddress);
-                    const swapAddress = (await W12Lister.methods.swap());
+                    const swapAddress = (await W12Lister.swap());
                     const tx = await W12Token.methods.approve(
                         swapAddress,
                         toWeiDecimals(this.amount, this.currentToken.decimals),
@@ -267,7 +267,7 @@
                     const W12Lister = W12ListerFactory.at(this.currentToken.listerAddress);
                     const {web3} = await Connector.connect();
                     const W12Token = W12TokenFactory.at(this.currentToken.crowdSaleInformation.WTokenAddress);
-                    const swapAddress = (await W12Lister.methods.swap());
+                    const swapAddress = (await W12Lister.swap());
 
                     const tx = await W12Token.methods.decreaseApproval(
                         swapAddress,
@@ -291,12 +291,11 @@
             async exchange() {
                 this.loading = true;
                 try {
-                    const {W12AtomicSwapFactory, W12ListerFactory} = await this.ledgerFetch(this.currentToken.version);
+                    const {W12AtomicSwapFactory, W12ListerFactory, TokenExchangerFactory} = await this.ledgerFetch(this.currentToken.version);
                     const W12Lister = W12ListerFactory.at(this.currentToken.listerAddress);
                     const {web3} = await Connector.connect();
-                    const swapAddress = (await W12Lister.methods.swap());
-                    const W12AtomicSwap = W12AtomicSwapFactory.at(swapAddress);
-
+                    const swapAddress = (await W12Lister.swap());
+                    const W12AtomicSwap = TokenExchangerFactory ? TokenExchangerFactory.at(swapAddress):W12AtomicSwapFactory.at(swapAddress);
                     const tx = await W12AtomicSwap.methods.exchange(
                         this.currentToken.crowdSaleInformation.WTokenAddress,
                         new BigNumber(this.currentAccountData.allowanceForSwap)
@@ -314,7 +313,6 @@
                 }
                 this.loading = false;
             },
-
             async handleSelectedChange() {
                 await this.updateAccountData();
                 this.unsubscribeFromEvents();
@@ -340,12 +338,11 @@
                 this.subscribeToEventsLoading = true;
 
                 try {
-                    const {ERC20Factory, W12AtomicSwapFactory, W12ListerFactory} = await this.ledgerFetch(this.currentToken.version);
+                    const {ERC20Factory, W12AtomicSwapFactory, W12ListerFactory, TokenExchangerFactory} = await this.ledgerFetch(this.currentToken.version);
                     const ERC20 = ERC20Factory.at(this.currentToken.crowdSaleInformation.WTokenAddress);
                     const W12Lister = W12ListerFactory.at(this.currentToken.listerAddress);
-                    const swapAddress = (await W12Lister.methods.swap());
-                    const W12AtomicSwap = W12AtomicSwapFactory.at(swapAddress);
-
+                    const swapAddress = (await W12Lister.swap());
+                    const W12AtomicSwap = TokenExchangerFactory ? TokenExchangerFactory.at(swapAddress):W12AtomicSwapFactory.at(swapAddress);
                     const ApprovalEvent = ERC20.events.Approval(null, null, this.onApprovalEvent);
                     const ExchangeEvent = W12AtomicSwap.events.Exchange(null, null, this.onExchangeEvent);
 

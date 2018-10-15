@@ -21,23 +21,22 @@
                     {{ ProjectMeta.loadingProjectError }}
                 </b-notification>
 
-                <div class="ProjectDashboard__project" v-if="!ProjectMeta.loadingProjectError && currentProject && currentProject.version">
-                    <TokenInfo :is="TokenInfoVersion"></TokenInfo>
-                    <ProjectStages :is="ProjectStagesVersion"></ProjectStages>
-                    <Milestones></Milestones>
+                <div class="ProjectDashboard__project">
+                    <TokenInfo v-if="!ProjectMeta.loadingProjectError && currentProject && currentProject.version" :is="TokenInfoVersion"></TokenInfo>
+                    <ProjectStages v-if="!ProjectMeta.loadingProjectError && currentProject && currentProject.version" :is="ProjectStagesVersion"></ProjectStages>
 
                     <b-loading :is-full-page="false" :active.sync="ProjectMeta.loadingProject" :can-cancel="true"></b-loading>
                 </div>
             </div>
         </section>
+        <Steps :number="5" link="/crowdsale.html"></Steps>
     </div>
 </template>
 
 <script>
     import './default.scss';
-    import {version} from 'lib/utils.js';
     import ProjectSwitch from 'bem/ProjectSwitch';
-    import Milestones from 'bem/Milestones';
+    import Steps from "bem/Steps";
 
     import {createNamespacedHelpers} from 'vuex';
 
@@ -50,7 +49,7 @@
         name: 'ProjectDashboard',
         components: {
             ProjectSwitch,
-            Milestones
+            Steps
         },
         computed: {
             ...LedgerNS.mapState({
@@ -78,11 +77,13 @@
                 );
             },
             TokenInfoVersion(){
-                return version('TokenInfo', this.currentProject.version);
+                const v = this.currentProject.version;
+                return () => import("bem/TokenInfo/" + v);
             },
             ProjectStagesVersion(){
-                return version('ProjectStages', this.currentProject.version);
-            },
+                const v = this.currentProject.version;
+                return () => import("bem/ProjectStages/" + v);
+            }
         },
         watch: {
             'currentAccount': {

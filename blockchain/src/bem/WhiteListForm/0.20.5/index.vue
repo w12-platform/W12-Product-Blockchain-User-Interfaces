@@ -69,16 +69,12 @@
                     <span class="labelTooltip" v-tooltip="$t('AdminDashboardFieldTrancheFeePercentLabelMessage')">?</span>
                 </label>
                 <b-field id="trancheFeePercent">
-                    <input
+                    <cleave
                             :placeholder="$t('AdminDashboardFieldTrancheFeePercentPlaceholder')"
-                            type="text"
-                            min="0"
-                            class="form-control"
-                            max="99.99"
-                            step="0.01"
                             v-model="whiteListForm.trancheFeePercent"
-                            v-mask="'##.##'"
-                    />
+                            :options="optionsNumber"
+                            class="form-control"
+                    ></cleave>
                 </b-field>
             </div>
             <div class="form-group">
@@ -87,16 +83,12 @@
                     <span class="labelTooltip" v-tooltip="$t('AdminDashboardFieldWTokenSaleFeePercentLabelMessage')">?</span>
                 </label>
                 <b-field id="WTokenSaleFeePercent">
-                    <input
+                    <cleave
                             :placeholder="$t('AdminDashboardFieldWTokenSaleFeePercentPlaceholder')"
-                            type="text"
-                            min="0"
-                            class="form-control"
-                            max="99.99"
-                            step="0.01"
                             v-model="whiteListForm.WTokenSaleFeePercent"
-                            v-mask="'##.##'"
-                    />
+                            :options="optionsNumber"
+                            class="form-control"
+                    ></cleave>
                 </b-field>
             </div>
             <div class="form-group">
@@ -104,16 +96,12 @@
                     <span class="labelTooltip" v-tooltip="$t('AdminDashboardFieldFeeTokensLabelMessage')">?</span>
                 </label>
                 <b-field id="FeeTokens">
-                    <input
+                    <cleave
                             :placeholder="$t('AdminDashboardFieldFeeTokensPlaceholder')"
-                            type="text"
-                            min="0"
-                            class="form-control"
-                            max="99.99"
-                            step="0.01"
                             v-model="whiteListForm.feePercent"
-                            v-mask="'##.##'"
-                    />
+                            :options="optionsNumber"
+                            class="form-control"
+                    ></cleave>
                 </b-field>
             </div>
             <div class="form-group">
@@ -121,16 +109,12 @@
                     <span class="labelTooltip" v-tooltip="$t('AdminDashboardFieldFeeEthLabelMessage')">?</span>
                 </label>
                 <b-field id="FeeETH">
-                    <input
+                    <cleave
                             :placeholder="$t('AdminDashboardFieldFeeEthPlaceholder')"
-                            type="text"
-                            min="0"
-                            class="form-control"
-                            max="99.99"
-                            step="0.01"
                             v-model="whiteListForm.feeETHPercent"
-                            v-mask="'##.##'"
-                    />
+                            :options="optionsNumber"
+                            class="form-control"
+                    ></cleave>
                 </b-field>
             </div>
 
@@ -191,10 +175,10 @@
                     symbol: 'TN' + EndOfSymbol,
                     decimals: '18',
                     name: 'Token Name',
-                    feePercent: '00.00',
-                    feeETHPercent: '00.00',
-                    WTokenSaleFeePercent: '05.00',
-                    trancheFeePercent: '05.00',
+                    feePercent: null,
+                    feeETHPercent: null,
+                    WTokenSaleFeePercent: null,
+                    trancheFeePercent: null,
                 },
                 whitelistingReadOnly: false,
                 whitelistingToken: false,
@@ -215,6 +199,17 @@
                 TransactionsList: "list"
             }),
 
+            optionsNumber() {
+                return {
+                    prefix: '',
+                    numeral: true,
+                    numeralPositiveOnly: true,
+                    noImmediatePrefix: true,
+                    rawValueTrimPrefix: true,
+                    numeralIntegerScale: 2,
+                    numeralDecimalScale: 2,
+                };
+            },
             disableWhiteListButton() {
                 return (
                     !this.whiteListForm.tokenAddress

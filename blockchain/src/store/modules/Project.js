@@ -43,7 +43,7 @@ export default {
         meta: {
             loading: true,
             loadingError: false,
-            loadingProject: true,
+            loadingProject: false,
             loadingProjectError: false,
         },
         list: [],
@@ -306,8 +306,8 @@ export default {
         },
         async updatePlacedTokenStatus({commit}, {Token}) {
             try {
-                const {W12TokenLedgerFactory} = await this.dispatch('Ledger/fetch', Token.version);
-                const W12TokenLedger = W12TokenLedgerFactory.at(Token.ledgerAddress);
+                const {W12TokenLedgerFactory, TokenExchangerFactory} = await this.dispatch('Ledger/fetch', Token.version);
+                const W12TokenLedger = W12TokenLedgerFactory ? W12TokenLedgerFactory.at(Token.ledgerAddress) : TokenExchangerFactory.at(Token.ledgerAddress);
 
                 const placedTokenAddress = await W12TokenLedger.methods.getWTokenByToken(Token.tokenAddress);
 

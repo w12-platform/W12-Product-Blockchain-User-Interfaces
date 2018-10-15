@@ -1,22 +1,21 @@
 import Vue from 'vue';
 import Buefy from 'buefy';
 import vuexI18n from 'vuex-i18n';
-import VueMask from 'v-mask';
 import Cleave from 'vue-cleave-component';
 import Tooltip from 'vue-directive-tooltip';
+import MultiSelect from 'vue-multiselect'
 import 'vue-directive-tooltip/css/index.css';
 import {createNamespacedHelpers} from "vuex";
 import { LANG_UPDATE_META } from "store/modules/Lang.js";
 const LangNS = createNamespacedHelpers("Lang");
 
-
 import 'bem/buefy/default.scss';
 import store from "store";
 
-Vue.use(VueMask);
 Vue.use(Buefy);
 Vue.use(Cleave);
 Vue.use(Tooltip);
+Vue.component('multiselect', MultiSelect);
 
 Vue.use(vuexI18n.plugin, store, {
     translateFilterName: 't'
@@ -36,6 +35,7 @@ import InvestorDashboardRefund from 'bem/InvestorDashboardRefund';
 import ProjectDashboard from 'bem/ProjectDashboard';
 import ProjectDashboardReceiving from 'bem/ProjectDashboardReceiving';
 import ProjectDashboardTranche from 'bem/ProjectDashboardTranche';
+import Versions from 'bem/Versions';
 
 new Vue({
     store,
@@ -55,6 +55,7 @@ new Vue({
         ProjectDashboard,
         ProjectDashboardReceiving,
         ProjectDashboardTranche,
+        Versions,
     },
     computed: {
         ...LangNS.mapState({

@@ -13,7 +13,15 @@
                         <p class="py-2">{{ $t('WaitingConfirm') }}:</p>
                         <b-tag class="py-2">{{isPendingTx.hash}}</b-tag>
                     </div>
-                    <div class="ProjectDashboard__bonuses card" v-if="!isPendingTx">
+                    <div class="pm-2" v-if="isErrorTx">
+                        <p class="py-2">{{ $t('TransactionFailed') }}:</p>
+                        <b-tag class="py-2">{{isErrorTx.hash}}</b-tag>
+                        <div class="pt-2 text-left">
+                            <button class="btn btn-primary btn-sm" @click="TransactionsRetry(isErrorTx)">{{ $t('ToRetry') }}</button>
+                        </div>
+                    </div>
+
+                    <div class="ProjectDashboard__bonuses card" v-if="!isPendingTx && !isErrorTx">
                         <div class="card-content">
                             <div class="content" v-if="tokenCrowdSaleStages.length">
                                 <div class="ProjectDashboard__stageBonus card"
@@ -260,7 +268,21 @@
             ...TransactionsNS.mapState({
                 TransactionsList: "list"
             }),
-
+            isErrorTx(){
+                return this.TransactionsList && this.TransactionsList.length
+                    ? this.TransactionsList.find((tr) => {
+                        return tr.token
+                        && tr.name
+                        && tr.hash
+                        && tr.status
+                        && tr.token === this.currentProject.tokenAddress
+                        && tr.name === "setStages"
+                        && tr.status === "error"
+                            ? tr
+                            : false
+                    })
+                    : false;
+            },
             isPendingTx() {
                 return this.TransactionsList && this.TransactionsList.length
                     ? this.TransactionsList.find((tr) => {
@@ -283,6 +305,9 @@
             }),
             ...LedgerNS.mapActions({
                 LedgerFetch: 'fetch',
+            }),
+            ...TransactionsNS.mapActions({
+                TransactionsRetry: "retry"
             }),
 
             changeAnyInputsForBonuses() {
