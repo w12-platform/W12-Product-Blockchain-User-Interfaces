@@ -21,6 +21,7 @@
                 <ExchangeTokens></ExchangeTokens>
             </div>
         </section>
+        <Steps :number="8" link="/tranche.html"></Steps>
     </div>
 </template>
 
@@ -31,6 +32,7 @@
 
     import TokenSwitch from 'bem/TokenSwitch';
     import ExchangeTokens from 'bem/ExchangeTokens';
+    import Steps from "bem/Steps";
 
     const LedgerNS = createNamespacedHelpers("Ledger");
     const AccountNS = createNamespacedHelpers("Account");
@@ -45,7 +47,8 @@
         name: 'InvestorDashboardExchange',
         components: {
             TokenSwitch,
-            ExchangeTokens
+            ExchangeTokens,
+            Steps
         },
         data() {
             return {
@@ -59,6 +62,7 @@
                 ledgerMeta: 'meta',
             }),
             ...TokensListNS.mapState({
+                list: "list",
                 tokensListMeta: 'meta',
                 currentToken: "currentToken"
             }),
@@ -72,11 +76,11 @@
             }),
 
             isLoading() {
-                return this.tokensListMeta.loading && this.meta.loading;
+                return this.tokensListMeta.loading || this.meta.loading || !this.currentToken || !this.list.length;
             },
             isError() {
                 return this.ledgerMeta.loadingError || this.tokensListMeta.loadingError || this.accountMeta.loadingError;
-            },
+            }
         },
         methods: {
             ...LedgerNS.mapActions({

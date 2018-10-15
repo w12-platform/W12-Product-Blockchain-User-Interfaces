@@ -113,6 +113,7 @@
                 </div>
             </div>
         </section>
+        <Steps :number="3" :blocked="nextStepBlocked" link="/listing.html"></Steps>
     </div>
 </template>
 
@@ -122,6 +123,7 @@
     import {waitTransactionReceipt} from 'lib/utils.js';
     import {UPDATE_TX, CONFIRM_TX} from "store/modules/Transactions.js";
     import {FACTORY_ADD} from "store/modules/Factory.js";
+    import Steps from "bem/Steps";
 
     import {createNamespacedHelpers} from "vuex";
 
@@ -185,6 +187,9 @@
             percentFractional(value) {
                 return value / 100;
             },
+        },
+        components: {
+            Steps
         },
         computed: {
             ...LedgerNS.mapState({
@@ -298,6 +303,9 @@
             isError() {
                 return this.ledgerMeta.loadingError || this.accountMeta.loadingError;
             },
+            nextStepBlocked(){
+                return this.isPendingTx ? this.$t('StepsBlockedTx') : false;
+            }
         },
         methods: {
             ...AccountNS.mapActions({
