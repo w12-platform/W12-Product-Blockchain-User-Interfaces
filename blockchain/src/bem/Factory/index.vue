@@ -122,6 +122,7 @@
     import {waitTransactionReceipt} from 'lib/utils.js';
     import {UPDATE_TX, CONFIRM_TX} from "store/modules/Transactions.js";
     import {FACTORY_ADD} from "store/modules/Factory.js";
+    import Web3 from 'web3';
 
     import {createNamespacedHelpers} from "vuex";
 

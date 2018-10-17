@@ -14,7 +14,7 @@ export class ContractWrappersFactory {
     }
 
     get instanceGetter() {
-        return this.strategy.instanceSender;
+        return this.strategy.instanceGetter;
     }
 
     get instanceSender() {

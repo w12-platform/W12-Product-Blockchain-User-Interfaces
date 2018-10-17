@@ -85,6 +85,7 @@
     import moment from 'moment';
     import DatePicker from 'vue2-datepicker';
     import {createNamespacedHelpers} from "vuex";
+    import Web3 from 'web3';
 
     const ProjectNS = createNamespacedHelpers("Project");
     const LangNS = createNamespacedHelpers("Lang");

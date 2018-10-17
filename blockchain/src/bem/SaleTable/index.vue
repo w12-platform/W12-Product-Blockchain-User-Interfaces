@@ -60,6 +60,7 @@
 <script>
     import './default.scss';
     import {createNamespacedHelpers} from "vuex";
+    import Web3 from 'web3';
 
     const TokensListNS = createNamespacedHelpers("TokensList");
 
