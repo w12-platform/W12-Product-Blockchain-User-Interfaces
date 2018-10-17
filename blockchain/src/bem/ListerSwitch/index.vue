@@ -1,6 +1,6 @@
 <template>
     <b-field class="ListerSwitch">
-        <b-select @input="selectLister" :placeholder="$t('AdminDashboardSelectLister')" expanded>
+        <b-select @input="selectLister" :value="W12Lister" :placeholder="$t('AdminDashboardSelectLister')" expanded :disabled="disabled">
             <option v-for="(lister, idx) in W12ListerList" :key="idx" :value="lister">
                 {{ lister.address }}   v{{ lister.version }}
             </option>
@@ -19,16 +19,24 @@
     export default {
         name: 'ProjectSwitch',
         template: '#ProjectSwitchTemplate',
+        props: {
+            disabled: {
+                type: Boolean,
+                default: false
+            }
+        },
         components: {},
         watch: {},
         computed: {
             ...ConfigNS.mapState({
-                W12ListerList: "W12ListerList"
+                W12ListerList: "W12ListerList",
+                W12Lister: "W12Lister"
             }),
+
         },
         methods: {
             selectLister(lister){
-                this.$store.commit(`Config/${CONFIG_UPDATE}`, {"W12Lister": lister});
+                this.$store.commit(`Config/${CONFIG_UPDATE}`, {W12Lister: lister});
             }
         },
     };

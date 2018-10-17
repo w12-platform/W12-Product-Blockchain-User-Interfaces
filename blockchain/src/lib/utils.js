@@ -1,7 +1,9 @@
 import jsunicode from 'jsunicode';
+import Web3 from 'web3';
 
 const web3 = new Web3();
 const BigNumber = web3.BigNumber;
+
 BigNumber.config({
     DECIMAL_PLACES: 36,
     FORMAT: {
@@ -117,6 +119,7 @@ export function version(block, version) {
 export async function dynamicImport(type, version, name) {
     return import("lib/Blockchain/" + type + "/" + version + "/" + name + ".js");
 }
+
 export async function jsonLoader(version, name) {
     return await fetch("/protocol/abi/" + version + "/" + name + ".json").then(data => data.json());
 }

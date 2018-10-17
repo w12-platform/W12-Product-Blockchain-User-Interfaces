@@ -1,25 +1,23 @@
+import { encode } from '@redtea/semint';
+
 export const CONFIG_UPDATE = "CONFIG_UPDATE";
 
 export default {
     namespaced: true,
     state: {
         FactoryTokens: {
-            address: "0x15bfbebcace798a18c42c2ff1f23388449355ea4"
+            address: "0x146f81931a3e0a53f1847f33175f25b488f9fef8"
         },
         W12Lister: {
-            address: "0x4dda30a4ab8e05223a772e1bbf09e3bfb6c9aff3",
+            address: "0x4a3d202120d2d75445c73f256507f1b4186e25d4",
             version: "0.21.3"
         },
         Default: {
-            version: "0.20.5"
+            version: "0.21.3"
         },
         W12ListerList: [
             {
-                address: "0x0d60b4c74be0670166dc8f5588d35c8d50f4929d",
-                version: "0.20.5"
-            },
-            {
-                address: "0x4dda30a4ab8e05223a772e1bbf09e3bfb6c9aff3",
+                address: "0x4a3d202120d2d75445c73f256507f1b4186e25d4",
                 version: "0.21.3"
             },
         ],
@@ -28,7 +26,14 @@ export default {
         }
     },
     modules: {},
-    getters: {},
+    getters: {
+        W12ListerLastVersion(state) {
+            const list = state.W12ListerList.slice()
+                .sort((a, b) => encode(a.version, 4) - encode(b.version, 4));
+
+            return list.length != 0 ? list[list.length - 1] : null;
+        }
+    },
     mutations: {
         [CONFIG_UPDATE](state, payload) {
             Object.assign(state, payload);

@@ -1,3 +1,4 @@
 @dev
 node_modules
 .idea
+blockchain/build/

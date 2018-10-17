@@ -7,8 +7,18 @@ export class ContractWrappersFactory {
         return this.strategy.init();
     }
 
+    // TODO: remove in the future
+    // backward compatibility
     get instance() {
-        return this.strategy.instance;
+        return this.strategy.instanceSender;
+    }
+
+    get instanceGetter() {
+        return this.strategy.instanceSender;
+    }
+
+    get instanceSender() {
+        return this.strategy.instanceSender;
     }
 
     at(address) {

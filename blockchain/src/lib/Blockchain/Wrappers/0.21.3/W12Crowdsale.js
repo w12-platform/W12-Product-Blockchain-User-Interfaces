@@ -1,5 +1,6 @@
 import { countStringBytes, decodeStringFromBytes, encodeStringToBytes, promisify } from 'lib/utils.js';
 import { BaseWrapper } from 'lib/Blockchain/Wrappers/NoVersion/BaseWrapper.js';
+import Web3 from 'web3';
 
 const moment = window.moment;
 const DATE_FORMAT = 'YYYY-MM-DD';

@@ -48,6 +48,7 @@
     import Connector from "lib/Blockchain/DefaultConnector";
     import {UPDATE_TX} from "store/modules/Transactions.js";
     import {waitTransactionReceipt} from 'lib/utils.js';
+    import Web3 from 'web3';
 
     const ProjectNS = createNamespacedHelpers("Project");
     const LedgerNS = createNamespacedHelpers("Ledger");

@@ -6,7 +6,7 @@
             <span v-if="whitelistingToken">{{ $t('AdminDashboardListingToken') }}</span>
             <span v-if="checkingToken">{{ $t('AdminDashboardCheckingToken') }}</span>
 
-            <b-loading :is-full-page="false" :active.sync="isLoading" :can-cancel="true"></b-loading>
+            <b-loading :is-full-page="false" :active="isLoading" :can-cancel="true"></b-loading>
         </b-notification>
 
         <div v-if="!isLoading" class="WhiteListForm__form">

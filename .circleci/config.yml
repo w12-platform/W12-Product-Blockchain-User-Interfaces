@@ -6,7 +6,7 @@ defaults: &defaults
 
 version: 2
 jobs:
-  build:
+  build-develop:
     <<: *defaults
     steps:
       - checkout
@@ -22,9 +22,27 @@ jobs:
           name: build image
           command: |
               docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
-              docker build --pull  -t "$DOCKERHUB_USERNAME/$CI_REGISTRY_IMAGE:stage" .
-              docker push "$DOCKERHUB_USERNAME/$CI_REGISTRY_IMAGE:stage"
-  deploy:
+              docker build --pull --build-arg BLOCKCHAIN_NETWORK_ID=4 -t "$DOCKERHUB_USERNAME/$CI_REGISTRY_IMAGE" .
+              docker push "$DOCKERHUB_USERNAME/$CI_REGISTRY_IMAGE"
+  build-stage:
+    <<: *defaults
+    steps:
+      - checkout
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+          name: pull submodules
+          command: |
+             apk add --no-cache git
+             git submodule sync --recursive
+             git submodule update --init --recursive
+      - run:
+          name: build image
+          command: |
+             docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
+             docker build --pull --build-arg BLOCKCHAIN_NETWORK_ID=1 -t "$DOCKERHUB_USERNAME/$CI_REGISTRY_IMAGE:stage" .
+             docker push "$DOCKERHUB_USERNAME/$CI_REGISTRY_IMAGE:stage"
+  deploy-develop:
     <<: *defaults
     steps:
       - setup_remote_docker:
@@ -37,11 +55,32 @@ jobs:
       - run:
           name: deploy
           command: |
-            ssh -o StrictHostKeyChecking=no "$DEPLOY_USER_STAGE@$DEPLOY_SERVER_STAGE" "sudo docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD"
-            ssh -o StrictHostKeyChecking=no "$DEPLOY_USER_STAGE@$DEPLOY_SERVER_STAGE" "cd /var/apps/w12-stage/ && sudo docker-compose -f docker-compose-w12-stage.yml pull && sudo docker-compose -f docker-compose-w12-stage.yml up -d"
+            ssh -o StrictHostKeyChecking=no "$DEPLOY_USER@$DEPLOY_SERVER" docker login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_PASSWORD"
+            ssh -o StrictHostKeyChecking=no "$DEPLOY_USER@$DEPLOY_SERVER" "cd /opt/servers/ && docker-compose -f docker-compose-w12-product.yml pull && docker-compose -f docker-compose-w12-product.yml up -d"
+  deploy-stage:
+    <<: *defaults
+    steps:
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+          name: setup
+          command: |
+              apk add --no-cache openssh-client
+              eval $(ssh-agent -s)
+      - run:
+          name: deploy
+          command: |
+              ssh -o StrictHostKeyChecking=no "$DEPLOY_USER_STAGE@$DEPLOY_SERVER_STAGE" "sudo docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD"
+              ssh -o StrictHostKeyChecking=no "$DEPLOY_USER_STAGE@$DEPLOY_SERVER_STAGE" "cd /var/apps/w12-stage/ && sudo docker-compose -f docker-compose-w12-stage.yml pull && sudo docker-compose -f docker-compose-w12-stage.yml up -d"
 
 # workflows
-default_filters: &default_filters
+develop_filters: &develop_filters
+  filters:
+    branches:
+      only:
+        - develop
+
+stage_filters: &stage_filters
   filters:
     branches:
       only:
@@ -51,9 +90,15 @@ workflows:
   version: 2
   build_deploy:
     jobs:
-      - build:
-          <<: *default_filters
-      - deploy:
-          <<: *default_filters
+      - build-develop:
+          <<: *develop_filters
+      - deploy-develop:
+          <<: *develop_filters
           requires:
-            - build
+            - build-develop
+      - build-stage:
+          <<: *stage_filters
+      - deploy-stage:
+          <<: *stage_filters
+          requires:
+            - build-stage

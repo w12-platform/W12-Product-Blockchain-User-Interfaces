@@ -14,6 +14,7 @@ export async function loadContracts(v) {
     const {W12FundFactoryStrategy} = await dynamicImport("FactoryStrategies", v, "W12Fund");
     const {WTokenTestHelperFactoryStrategy} = await dynamicImport("FactoryStrategies", v, "WTokenTestHelper");
     const {W12AtomicSwapFactoryStrategy} = await dynamicImport("FactoryStrategies", v, "W12AtomicSwap");
+    const {VersionsLedgerFactoryStrategy} = await dynamicImport("FactoryStrategies", v, "VersionsLedger");
 
     const {WTokenTestHelperWrapper} = await dynamicImport("Wrappers", v, "WTokenTestHelper");
     const {DetailedERC20Wrapper} = await dynamicImport("Wrappers", v, "DetailedERC20");
@@ -41,13 +42,8 @@ export async function loadContracts(v) {
     const W12AtomicSwapArtifacts = await jsonLoader(v, "W12AtomicSwap");
     const WTokenTestHelperArtifacts = await jsonLoader(v, "WTokenTestHelper");
 
-    const Versionable = new ContractWrappersFactory(
-        new W12TokenFactoryStrategy(VersionableArtifacts, VersionableWrapper, Connector)
-    );
-    await Versionable.init();
-
     const VersionsLedger = new ContractWrappersFactory(
-        new W12TokenFactoryStrategy(VersionsLedgerArtifacts, VersionsLedgerWrapper, Connector)
+        new VersionsLedgerFactoryStrategy(VersionsLedgerArtifacts, VersionsLedgerWrapper, Connector)
     );
     await VersionsLedger.init();
 
@@ -120,7 +116,6 @@ export async function loadContracts(v) {
         W12FundFactory: W12Fund,
         W12AtomicSwapFactory: W12AtomicSwap,
         WTokenTestHelperFactory: WTokenTestHelper,
-        VersionsLedgerFactory: VersionsLedger,
-        VersionableFactory: Versionable
+        VersionsLedgerFactory: VersionsLedger
     };
 }
