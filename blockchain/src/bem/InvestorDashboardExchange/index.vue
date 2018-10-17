@@ -26,7 +26,7 @@
 
 <script>
     import './default.scss';
-
+    import Web3 from 'web3';
     import {createNamespacedHelpers} from "vuex";
 
     import TokenSwitch from 'bem/TokenSwitch';
