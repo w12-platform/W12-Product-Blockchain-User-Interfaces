@@ -203,7 +203,8 @@
             disable() {
                 return !this.refundValueInTokens
                     || !this.refundInformation.refundTokensVolume
-                    || this.refundValueInTokens === "0";
+                    || this.refundValueInTokens === "0"
+                    || !new BigNumber(this.refundInformation.refundTokensVolume).gte(new BigNumber(this.adjustedRefundValueInTokens));
             }
         },
         methods: {
