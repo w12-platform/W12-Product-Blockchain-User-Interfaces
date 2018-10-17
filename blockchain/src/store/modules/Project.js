@@ -5,6 +5,7 @@ import {ReceivingModel} from 'bem/Receiving/model.js';
 import {TrancheInformationModel} from 'bem/TrancheInformation/shared.js';
 import {MilestoneModel} from 'bem/Milestones/shared.js';
 import Connector from "lib/Blockchain/DefaultConnector";
+import Web3 from 'web3';
 
 const moment = window.moment;
 const web3 = new Web3();

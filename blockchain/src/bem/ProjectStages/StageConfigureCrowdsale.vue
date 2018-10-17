@@ -122,6 +122,7 @@
     const ConfigNS = createNamespacedHelpers('Config');
     const ProjectNS = createNamespacedHelpers("Project");
     const LedgerNS = createNamespacedHelpers("Ledger");
+    import Web3 from 'web3';
     const AccountNS = createNamespacedHelpers("Account");
     const TransactionsNS = createNamespacedHelpers("Transactions");
 
