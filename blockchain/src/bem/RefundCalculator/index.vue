@@ -29,6 +29,7 @@
     import 'bem/RefundCalculator/default.scss';
     import { RefundInformationModel } from 'bem/RefundInformation/shared.js';
     import { toWeiDecimals } from 'lib/utils.js';
+    import Web3 from 'web3';
 
     const web3 = new Web3();
     const BigNumber = web3.BigNumber.another({ EXPONENTIAL_AT: [-30, 30] });
@@ -142,7 +143,7 @@
                     if (this.helpers) {
                         const {W12Fund} = this.helpers;
 
-                        const value = await W12Fund.methods.getRefundAmount(
+                        const value = await W12Fund.methods.getRefundAmount.callWithSender(
                             toWeiDecimals(this.inputValue, this.currentToken.decimals),
                             {from: this.accountAddress}
                         );

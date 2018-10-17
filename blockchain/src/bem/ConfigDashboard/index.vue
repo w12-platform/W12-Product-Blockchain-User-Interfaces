@@ -59,6 +59,7 @@
     import { createNamespacedHelpers } from "vuex";
     import { CONFIG_UPDATE } from "store/modules/Config.js";
     import { decode } from '@redtea/semint';
+    import Web3 from 'web3';
 
     const ConfigNS = createNamespacedHelpers('Config');
     const TokensListNS = createNamespacedHelpers('TokensList');

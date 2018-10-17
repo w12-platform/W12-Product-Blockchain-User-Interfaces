@@ -19,6 +19,8 @@ export class Connector {
     constructor () {
         this.web3send = null;
         this.web3get = null;
+        this.defaultAccountWatcherId = null;
+        this.isWatchingAccount = false;
         this.inited = false;
     }
 
@@ -32,7 +34,19 @@ export class Connector {
         this.web3send = new Web3(provider);
         this.web3get = null;
         this.networkId = null;
+        this.updateAccountWatcher();
         this.inited = true;
+    }
+
+    updateAccountWatcher() {
+        if (this.isWatchingAccount) clearInterval(this.defaultAccountWatcherId);
+
+        this.defaultAccountWatcherId = setInterval(async () => {
+            const address = (await promisify(this.web3send.eth.getAccounts)())[0];
+
+            this.web3send.eth.defaultAccount = address;
+
+        }, 1000);
     }
 
     async getProvider () {

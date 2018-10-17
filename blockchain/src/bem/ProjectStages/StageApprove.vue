@@ -77,7 +77,7 @@
     import Connector from 'lib/Blockchain/DefaultConnector.js';
     import {UPDATE_TX} from "store/modules/Transactions.js";
     import {waitTransactionReceipt, formatNumber, toWeiDecimals} from 'lib/utils.js';
-
+    import Web3 from 'web3';
     import {createNamespacedHelpers} from "vuex";
 
     const ConfigNS = createNamespacedHelpers('Config');

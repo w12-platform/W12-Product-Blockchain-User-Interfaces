@@ -84,6 +84,7 @@
     import {createNamespacedHelpers} from "vuex";
     import {waitTransactionReceipt} from 'lib/utils.js';
     import {UPDATE_TX, CONFIRM_TX} from "store/modules/Transactions.js";
+    import Web3 from 'web3';
 
     const LedgerNS = createNamespacedHelpers("Ledger");
     const AccountNS = createNamespacedHelpers("Account");
@@ -368,6 +369,7 @@
                     });
                     await waitTransactionReceipt(tx, connectedWeb3);
                 } catch (e) {
+                    console.error(e);
                     this.error = e.message;
                 }
                 this.loading = false;

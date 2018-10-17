@@ -21,15 +21,15 @@ export class BaseWrapper {
                 }
 
                 methods[item.name].call = promisify(this.getterInstance[item.name].call);
+                methods[item.name].callWithSender = promisify(this.senderInstance[item.name].call);
                 methods[item.name].sendTransaction = promisify(this.senderInstance[item.name].sendTransaction);
-                methods[item.name].request = this.getterInstance[item.name].request;
-                methods[item.name].getData = this.getterInstance[item.name].getData;
-                // methods[item.name].toPayload = contractInter[item.name].toPayload;
-                methods[item.name].estimateGas = promisify(this.getterInstance[item.name].estimateGas);
+                methods[item.name].request = this.senderInstance[item.name].request;
+                methods[item.name].getData = this.senderInstance[item.name].getData;
+                methods[item.name].estimateGas = promisify(this.senderInstance[item.name].estimateGas);
             }
 
             if (item.type == "event") {
-                events[item.name] = this.getterInstance[item.name];
+                events[item.name] = this.senderInstance[item.name];
             }
         }
     }

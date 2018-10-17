@@ -13,8 +13,8 @@ export class BaseFactoryStrategy {
 
         const {web3send, web3get} = await this.connector.connect();
 
-        this._instanceGetter = web3send.eth.contract(this.artifact.abi);
-        this._instanceSender = web3get.eth.contract(this.artifact.abi);
+        this._instanceGetter = web3get.eth.contract(this.artifact.abi);
+        this._instanceSender = web3send.eth.contract(this.artifact.abi);
         this.inited = true;
     }
 
