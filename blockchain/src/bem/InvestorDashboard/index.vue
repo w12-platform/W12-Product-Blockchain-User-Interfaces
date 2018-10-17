@@ -31,6 +31,7 @@
     import './default.scss';
 
     import {createNamespacedHelpers} from "vuex";
+    import Web3 from 'web3';
 
     import TokenSwitch from 'bem/TokenSwitch';
     import CrowdSale from 'bem/CrowdSale';

@@ -113,7 +113,6 @@
                 </div>
             </div>
         </section>
-        <Steps :number="3" :blocked="nextStepBlocked" link="/listing.html"></Steps>
     </div>
 </template>
 
@@ -123,6 +122,7 @@
     import {waitTransactionReceipt} from 'lib/utils.js';
     import {UPDATE_TX, CONFIRM_TX} from "store/modules/Transactions.js";
     import {FACTORY_ADD} from "store/modules/Factory.js";
+    import Web3 from 'web3';
     import Steps from "bem/Steps";
 
     import {createNamespacedHelpers} from "vuex";

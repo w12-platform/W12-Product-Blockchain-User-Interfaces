@@ -134,11 +134,11 @@ export default {
                 const allowanceForTheFund = (await W12Token.methods.allowance(this.state.Account.currentAccount, fundAddress)).toString();
                 const swapAddress = (await W12Lister.swap());
                 const allowanceForSwap = (await W12Token.methods.allowance(this.state.Account.currentAccount, swapAddress)).toString();
-                const allowanceForTheFundInRefundAmount = (await W12Fund.methods.getRefundAmount(allowanceForTheFund)).toString();
+                const allowanceForTheFundInRefundAmount = (await W12Fund.methods.getRefundAmount.callWithSender(allowanceForTheFund)).toString();
                 const unVestingBalance = (await W12Token.methods.accountBalance(this.state.Account.currentAccount)).toString();
                 const vestingBalance = new BigNumber(balance).minus(unVestingBalance).toString();
-                const refundForOneToken = (await W12Fund.methods.getRefundAmount(oneToken)).toString();
-                const totalRefundAmount = (await W12Fund.methods.getRefundAmount(balance)).toString();
+                const refundForOneToken = (await W12Fund.methods.getRefundAmount.callWithSender(oneToken)).toString();
+                const totalRefundAmount = (await W12Fund.methods.getRefundAmount.callWithSender(balance)).toString();
                 const investorInformation = await W12Fund.methods.getInvestmentsInfo(this.state.Account.currentAccount);
                 const fundTokensBalance = (await W12Token.methods.balanceOf(fundAddress)).toString();
 

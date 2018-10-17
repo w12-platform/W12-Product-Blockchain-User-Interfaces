@@ -56,8 +56,12 @@
     import {waitTransactionReceipt} from 'lib/utils.js';
     import Connector from 'lib/Blockchain/DefaultConnector.js';
     import {UPDATE_TX} from "store/modules/Transactions.js";
-
+    import Web3 from 'web3';
     import {createNamespacedHelpers} from 'vuex';
+
+
+    const web3 = new Web3();
+    const BigNumber = web3.BigNumber;
 
     const ProjectNS = createNamespacedHelpers("Project");
     const AccountNS = createNamespacedHelpers("Account");

@@ -64,6 +64,7 @@
     import RefundCalculator from 'bem/RefundCalculator';
     import {RefundInformationModel} from 'bem/RefundInformation/shared.js';
     import {UPDATE_TX, CONFIRM_TX} from "store/modules/Transactions.js";
+    import Web3 from 'web3';
 
     const web3 = new Web3();
     const BigNumber = web3.BigNumber;

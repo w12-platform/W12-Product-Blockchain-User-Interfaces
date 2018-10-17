@@ -151,7 +151,7 @@
     import Connector from 'lib/Blockchain/DefaultConnector.js';
     import {promisify, waitTransactionReceipt} from 'lib/utils.js';
     import {UPDATE_TX} from "store/modules/Transactions.js";
-
+    import Web3 from 'web3';
     import {createNamespacedHelpers} from "vuex";
 
     const LedgerNS = createNamespacedHelpers("Ledger");
