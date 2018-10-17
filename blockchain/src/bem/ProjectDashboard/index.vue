@@ -11,7 +11,7 @@
 
             <b-notification v-if="!isError && isLoading" :closable="false">
                 {{ $t('ProjectDashboardLoadExpect') }}
-                <b-loading :is-full-page="false" :active.sync="isLoading" :can-cancel="true"></b-loading>
+                <b-loading :is-full-page="false" :active="isLoading" :can-cancel="true"></b-loading>
             </b-notification>
 
             <div v-if="!isLoading">
@@ -26,7 +26,7 @@
                     <ProjectStages :is="ProjectStagesVersion"></ProjectStages>
                     <Milestones></Milestones>
 
-                    <b-loading :is-full-page="false" :active.sync="ProjectMeta.loadingProject" :can-cancel="true"></b-loading>
+                    <b-loading :is-full-page="false" :active="ProjectMeta.loadingProject" :can-cancel="true"></b-loading>
                 </div>
             </div>
         </section>
