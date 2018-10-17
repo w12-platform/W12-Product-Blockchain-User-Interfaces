@@ -2,8 +2,8 @@ import { BaseWrapper } from 'src/lib/Blockchain/Wrappers/NoVersion/BaseWrapper.j
 
 export class W12FundWrapper extends BaseWrapper {
     setFactories ({
-                      W12CrowdsaleFactory,
-                  }) {
+      W12CrowdsaleFactory,
+    }) {
         this.W12CrowdsaleFactory = W12CrowdsaleFactory;
     }
 }
