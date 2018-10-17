@@ -41,6 +41,10 @@
             </div>
 
             <div class="Calculator__info">
+                <b-notification v-if="!isMaxTokenOnSaleAmount" type="is-danger" has-icon :closable="false">
+                    {{ $t('ErrorOnSaleMaxAmount', { max: currentToken.crowdSaleInformation.tokensOnSale }) }}
+                </b-notification>
+
                 <p v-if="currentToken.crowdSaleInformation.stageDiscount !== '0'">
                     {{$t('InvestorDashboardCalculatorDiscount')}}
                     <b-tag type="is-success">{{ currentToken.crowdSaleInformation.stageDiscount }}%</b-tag>
@@ -145,6 +149,11 @@
             ...TransactionsNS.mapState({
                 TransactionsList: "list"
             }),
+            isMaxTokenOnSaleAmount() {
+                return this.currentToken.crowdSaleInformation.tokensOnSale && this.tokens
+                    ? new BigNumber(this.tokens).lte(this.currentToken.crowdSaleInformation.tokensOnSale)
+                    : !this.tokens;
+            },
             tokenPrice() {
                 return this.currentToken.crowdSaleInformation.tokenPrice;
             },
@@ -209,7 +218,7 @@
             },
             disable() {
                 const amount = new BigNumber(this.total);
-                return !amount.greaterThan(0);
+                return !amount.greaterThan(0) || !this.isMaxTokenOnSaleAmount;
             }
         },
         methods: {
