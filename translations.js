@@ -632,6 +632,10 @@
 //         "en": "Symbol",
 //         "ru": "Символ"
 //     },
+//     "AdminDashboardTableIndex": {
+//         "en": "Index",
+//         "ru": "Индекс"
+//     },
 //     "AdminDashboardTableName": {
 //         "en": "Name",
 //         "ru": "Название"

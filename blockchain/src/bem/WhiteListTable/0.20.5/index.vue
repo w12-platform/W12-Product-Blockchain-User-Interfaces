@@ -43,6 +43,12 @@
             <template slot="detail" slot-scope="props">
                 <div class="WhiteListTable__detail">
                     <div class="WhiteListTable__detailField">
+                        {{ $t('AdminDashboardTableIndex') }} :
+                        <div class="WhiteListTable__detailDecimals">
+                            <span>{{ props.row.index }}</span>
+                        </div>
+                    </div>
+                    <div class="WhiteListTable__detailField">
                         {{ $t('AdminDashboardTableToken') }} :
                         <div class="WhiteListTable__detailToken">
                             <span class="tag is-success">{{ props.row.tokenAddress }}</span>
