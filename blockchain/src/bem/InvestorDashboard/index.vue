@@ -17,7 +17,7 @@
             </b-notification>
 
             <div v-if="!isLoading && currentToken">
-                <TokenSwitch></TokenSwitch>
+                <TokenSwitch v-if="!isCurrentToken"></TokenSwitch>
                 <CrowdSale></CrowdSale>
                 <SaleTable></SaleTable>
                 <Calculator></Calculator>
@@ -99,11 +99,15 @@
             isError() {
                 return this.ledgerMeta.loadingError || this.tokensListMeta.loadingError || this.accountMeta.loadingError;
             },
+            isCurrentToken(){
+                return typeof CurrentToken !== 'undefined';
+            }
         },
         methods: {
             ...TokensListNS.mapActions({
                 tokensListFetch: "fetch",
-                tokensListWatch: "watch"
+                tokensListWatch: "watch",
+                FetchTokenByCurrentToken: "fetchTokenByCurrentToken"
             }),
             ...AccountNS.mapActions({
                 watchCurrentAccount: 'watch',
@@ -116,7 +120,11 @@
             async handleCurrentAccountChange(currentAccount) {
                 if(currentAccount){
                     await this.transactionsUpStatusTx();
-                    await this.tokensListFetch();
+                    if(this.isCurrentToken){
+                        await this.FetchTokenByCurrentToken(CurrentToken);
+                    } else {
+                        await this.tokensListFetch();
+                    }
                     await this.updateAccountData();
                     window.dispatchEvent(new Event('resize'));
                     this.meta.loading = false;
