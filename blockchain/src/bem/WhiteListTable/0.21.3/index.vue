@@ -1,6 +1,15 @@
 <template>
     <div class="WhiteListTable WhiteListTable_v2 buefy">
+
+        <b-notification v-if="isLoading" :closable="false" class="WhiteListTable__loader">
+            <span v-if="whitelistingToken">{{ $t('AdminDashboardListingToken') }}</span>
+            <span v-if="checkingToken">{{ $t('AdminDashboardCheckingToken') }}</span>
+
+            <b-loading :is-full-page="false" :active.sync="isLoading" :can-cancel="true"></b-loading>
+        </b-notification>
+
         <b-table
+                v-if="!isLoading"
                 detailed
                 :data="tokensList"
                 :mobile-cards="true"
@@ -102,8 +111,13 @@
         },
         computed: {
             ...WhitelistNS.mapState({
-                tokensList: "list"
+                tokensList: "list",
+                whiteMeta: "meta"
             }),
+
+            isLoading() {
+                return this.whiteMeta.loading;
+            },
         },
     };
 </script>
