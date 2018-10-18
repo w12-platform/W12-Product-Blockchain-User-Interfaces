@@ -164,7 +164,11 @@ export default {
                             timeLeft,
                             WTokenTotal,
                             tokensForSaleAmount,
-                            tokensOnSale,
+                            tokensOnSale: new BigNumber(tokensOnSale)
+                                .mul((new BigNumber(tokensOnSale)))
+                                .div(new BigNumber(tokensOnSale)
+                                    .mul(1 + token.WTokenSaleFeePercent / (100 ** 2)))
+                                .toString(),
                             fund: {
                                 W12FundAddress,
                                 foundBalanceInWei,
@@ -258,13 +262,28 @@ export default {
                         }
 
                         token.crowdSaleInformation.status = status;
-                        token.crowdSaleInformation.saleAmount = new BigNumber(WTokenTotal).minus(tokensOnSale).toString();
-                        token.crowdSaleInformation.salePercent = new BigNumber(WTokenTotal).minus(tokensOnSale).div(WTokenTotal).mul(100).toString();
-                        token.crowdSaleInformation.tokensOnSale = tokensOnSale;
+                        token.crowdSaleInformation.saleAmount = new BigNumber(WTokenTotal)
+                            .minus(tokensOnSale).toString();
+
+                        token.crowdSaleInformation.salePercent = new BigNumber(WTokenTotal)
+                            .minus(tokensOnSale)
+                            .div(WTokenTotal)
+                            .mul(100)
+                            .toString();
+
+                        token.crowdSaleInformation.tokensOnSale = new BigNumber(tokensOnSale)
+                            .mul((new BigNumber(tokensOnSale)))
+                            .div(new BigNumber(tokensOnSale)
+                                .mul(1 + token.WTokenSaleFeePercent / (100 ** 2)))
+                            .toString();
+
                         token.crowdSaleInformation.tokensForSaleAmount = tokensForSaleAmount;
                         token.crowdSaleInformation.stageDiscount = stageDiscount;
                         token.crowdSaleInformation.stageEndDate = stageEndDate;
-                        token.crowdSaleInformation.price = new BigNumber(tokenPrice).mul(100 - stageDiscount).div(100).toString();
+                        token.crowdSaleInformation.price = new BigNumber(tokenPrice)
+                            .mul(100 - stageDiscount)
+                            .div(100)
+                            .toString();
                     }
                     return token;
                 });

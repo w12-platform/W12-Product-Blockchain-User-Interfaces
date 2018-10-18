@@ -59,7 +59,7 @@
             </tr>
             <tr>
                 <td>{{ $t('InvestorDashboardTokensOnSale') }}</td>
-                <td>{{ currentToken.crowdSaleInformation.tokensOnSale }}</td>
+                <td><span class="restriction">{{ currentToken.crowdSaleInformation.tokensOnSale }}</span></td>
             </tr>
             <tr>
                 <td>{{ $t('InvestorDashboardPrice', {'WToken': currentToken.symbol }) }}</td>
