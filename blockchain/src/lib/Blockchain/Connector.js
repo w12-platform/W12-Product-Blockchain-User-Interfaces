@@ -45,6 +45,7 @@ export class Connector {
             const address = (await promisify(this.web3send.eth.getAccounts)())[0];
 
             this.web3send.eth.defaultAccount = address;
+            this.web3get.eth.defaultAccount = address;
 
         }, 1000);
     }
@@ -64,8 +65,8 @@ export class Connector {
             }
         } else if (typeof window.web3 !== 'undefined') {
             return window.web3.currentProvider;
-        } else {
-            return new web3.providers.HttpProvider(config.provider);
+        } else if (config.providers[config.blockchainNetworkId]) {
+            return new web3.providers.HttpProvider(config.providers[config.blockchainNetworkId]);
         }
 
         throw new Error('provider is not found');
@@ -80,17 +81,14 @@ export class Connector {
             throw new Error(`no matching network with id "${senderNetId}" in the configuration`);
         }
 
-        if (!this.web3get) {
-            this.web3get = new Web3(new web3.providers.HttpProvider(config.providers[senderNetId]));
-            theSame = true;
+        if (this.web3get) {
+            const getterNetId = await promisify(this.web3get.version.getNetwork.bind(this.web3get.version))();
+
+            theSame = getterNetId != senderNetId;
         }
 
         if (!theSame) {
-            const getterNetId = await promisify(this.web3get.version.getNetwork.bind(this.web3get.version))();
-
-            if (getterNetId != senderNetId) {
-                throw new Error('net id of the sender is not match net id of the getter');
-            }
+            this.web3get = new Web3(new web3.providers.HttpProvider(config.providers[senderNetId]));
         }
     }
 

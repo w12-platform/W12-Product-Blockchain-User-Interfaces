@@ -143,7 +143,7 @@
                     if (this.helpers) {
                         const {W12Fund} = this.helpers;
 
-                        const value = await W12Fund.methods.getRefundAmount.callWithSender(
+                        const value = await W12Fund.methods.getRefundAmount(
                             toWeiDecimals(this.inputValue, this.currentToken.decimals),
                             {from: this.accountAddress}
                         );
