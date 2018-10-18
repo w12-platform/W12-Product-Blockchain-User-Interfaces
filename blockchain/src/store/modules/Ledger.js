@@ -27,6 +27,7 @@ export default {
             try {
                 ledger = await loadContracts(version);
             } catch (e) {
+                console.error(e);
                 commit(UPDATE_META, {loading: false, loadingError: e.message || ERROR_FETCH_LEDGER});
             }
 
