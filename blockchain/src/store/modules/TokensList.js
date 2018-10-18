@@ -164,7 +164,11 @@ export default {
                             timeLeft,
                             WTokenTotal,
                             tokensForSaleAmount,
-                            tokensOnSale,
+                            tokensOnSale: new BigNumber(tokensOnSale)
+                                .mul((new BigNumber(tokensOnSale)))
+                                .div(new BigNumber(tokensOnSale)
+                                    .mul(1 + token.WTokenSaleFeePercent / (100 ** 2)))
+                                .toString(),
                             fund: {
                                 W12FundAddress,
                                 foundBalanceInWei,
