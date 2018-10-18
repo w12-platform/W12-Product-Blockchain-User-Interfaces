@@ -17,7 +17,7 @@
             </b-notification>
 
             <div v-if="!isLoading">
-                <TokenSwitch></TokenSwitch>
+                <TokenSwitch v-if="!isCurrentToken"></TokenSwitch>
                 <RefundEth></RefundEth>
             </div>
         </section>
@@ -78,6 +78,9 @@
             isError() {
                 return this.ledgerMeta.loadingError || this.tokensListMeta.loadingError || this.accountMeta.loadingError;
             },
+            isCurrentToken(){
+                return typeof CurrentToken !== 'undefined';
+            }
         },
         methods: {
             ...LedgerNS.mapActions({
@@ -85,7 +88,8 @@
             }),
             ...TokensListNS.mapActions({
                 tokensListFetch: "fetch",
-                tokensListWatch: "watch"
+                tokensListWatch: "watch",
+                FetchTokenByCurrentToken: "fetchTokenByCurrentToken"
             }),
             ...AccountNS.mapActions({
                 watchCurrentAccount: 'watch',
@@ -98,7 +102,11 @@
             async handleCurrentAccountChange(currentAccount) {
                 if(currentAccount){
                     await this.transactionsUpStatusTx();
-                    await this.tokensListFetch();
+                    if(this.isCurrentToken){
+                        await this.FetchTokenByCurrentToken(CurrentToken);
+                    } else {
+                        await this.tokensListFetch();
+                    }
                     await this.updateAccountData();
                     window.dispatchEvent(new Event('resize'));
                     this.meta.loading = false;
