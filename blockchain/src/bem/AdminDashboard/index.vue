@@ -3,6 +3,8 @@
         <section class="container">
             <h2>{{ $t('AdminDashboard') }}</h2>
 
+            <ListerSwitch></ListerSwitch>
+
             <b-notification class="AdminDashboard__error" v-if="isError && !isLoading" type="is-danger" :closable="false" has-icon>
                 <span v-if="ledgerMeta.loadingError">{{ ledgerMeta.loadingError }}</span>
                 <span v-if="tokensListMeta.loadingError">{{ tokensListMeta.loadingError }}</span>
@@ -88,7 +90,7 @@
                 return () => import("bem/WhiteListTable/" + v);
             },
             WhiteListFormVersion(){
-                const v = this.W12Lister.version;
+                const v = this.W12ListerLastVersion.version;
                 return () => import("bem/WhiteListForm/" + v);
             },
             nextStepBlocked(){

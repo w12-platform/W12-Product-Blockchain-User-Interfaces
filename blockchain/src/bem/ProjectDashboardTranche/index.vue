@@ -15,7 +15,7 @@
             </b-notification>
 
             <div v-if="!isLoading">
-                <ProjectSwitch></ProjectSwitch>
+                <ProjectSwitch v-if="!isCurrentToken"></ProjectSwitch>
 
                 <b-notification v-if="ProjectMeta.loadingProjectError" :closable="false">
                     {{ ProjectMeta.loadingProjectError }}
@@ -90,6 +90,9 @@
                     this.accountMeta.loading
                     || this.ProjectMeta.loading
                 );
+            },
+            isCurrentToken(){
+                return typeof CurrentToken !== 'undefined';
             }
         },
         watch: {
@@ -110,6 +113,7 @@
             ...ProjectNS.mapActions({
                 ProjectFetchList: "fetchList",
                 updateFundInformation: "updateFundInformation",
+                FetchProjectByCurrentToken: "fetchProjectByCurrentToken"
             }),
             ...LedgerNS.mapActions({
                 LedgerFetch: 'fetch',
@@ -117,7 +121,11 @@
 
             async handleCurrentAccountChange(currentAccount) {
                 if(currentAccount){
-                    await this.ProjectFetchList();
+                    if(this.isCurrentToken){
+                        await this.FetchProjectByCurrentToken(CurrentToken);
+                    } else {
+                        await this.ProjectFetchList();
+                    }
                 }
             },
 

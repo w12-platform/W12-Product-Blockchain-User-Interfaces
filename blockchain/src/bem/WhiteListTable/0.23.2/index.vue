@@ -1,6 +1,12 @@
 <template>
     <div class="WhiteListTable WhiteListTable_v2 buefy">
+
+        <b-notification v-if="isLoading" :closable="false" class="WhiteListTable__loader">
+            <b-loading :is-full-page="false" :active="isLoading" :can-cancel="true"></b-loading>
+        </b-notification>
+
         <b-table
+                v-if="!isLoading"
                 detailed
                 :data="tokensList"
                 :mobile-cards="true"
@@ -33,6 +39,12 @@
 
             <template slot="detail" slot-scope="props">
                 <div class="WhiteListTable__detail">
+                    <div class="WhiteListTable__detailField">
+                        {{ $t('AdminDashboardTableIndex') }} :
+                        <div class="WhiteListTable__detailDecimals">
+                            <span>{{ props.row.index }}</span>
+                        </div>
+                    </div>
                     <div class="WhiteListTable__detailField">
                         {{ $t('AdminDashboardTableToken') }} :
                         <div class="WhiteListTable__detailToken">
@@ -102,8 +114,13 @@
         },
         computed: {
             ...WhitelistNS.mapState({
-                tokensList: "list"
+                tokensList: "list",
+                whiteMeta: "meta"
             }),
+
+            isLoading() {
+                return this.whiteMeta.loading;
+            },
         },
     };
 </script>

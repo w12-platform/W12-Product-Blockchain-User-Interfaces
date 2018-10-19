@@ -15,7 +15,7 @@
             </b-notification>
 
             <div v-if="!isLoading">
-                <ProjectSwitch></ProjectSwitch>
+                <ProjectSwitch v-if="!isCurrentToken"></ProjectSwitch>
 
                 <b-notification v-if="ProjectMeta.loadingProjectError" :closable="false">
                     {{ ProjectMeta.loadingProjectError }}
@@ -83,6 +83,9 @@
             ProjectStagesVersion(){
                 const v = this.currentProject.version;
                 return () => import("bem/ProjectStages/" + v);
+            },
+            isCurrentToken(){
+                return typeof CurrentToken !== 'undefined';
             }
         },
         watch: {
@@ -101,12 +104,17 @@
                 updateAccountData: 'updateAccountData',
             }),
             ...ProjectNS.mapActions({
-                ProjectFetchList: "fetchList"
+                ProjectFetchList: "fetchList",
+                FetchProjectByCurrentToken: "fetchProjectByCurrentToken"
             }),
 
             async handleCurrentAccountChange(currentAccount) {
                 if(currentAccount){
-                    await this.ProjectFetchList();
+                    if(this.isCurrentToken){
+                        await this.FetchProjectByCurrentToken(CurrentToken);
+                    } else {
+                        await this.ProjectFetchList();
+                    }
                 }
             },
             async handleCurrentProjectChange() {

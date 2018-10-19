@@ -2,14 +2,7 @@
     <div class="WhiteListForm_v3 buefy">
         <h2>{{ $t('AdminDashboardWhiteListForm') }}</h2>
 
-        <b-notification v-if="isLoading" :closable="false" class="WhiteListForm__loader">
-            <span v-if="whitelistingToken">{{ $t('AdminDashboardListingToken') }}</span>
-            <span v-if="checkingToken">{{ $t('AdminDashboardCheckingToken') }}</span>
-
-            <b-loading :is-full-page="false" :active.sync="isLoading" :can-cancel="true"></b-loading>
-        </b-notification>
-
-        <div v-if="!isLoading" class="WhiteListForm__form">
+        <div class="WhiteListForm__form">
             <div class="form-group">
                 <label for="TokenAddress">{{ $t('AdminDashboardFieldTokenLabel') }}</label>
                 <input
@@ -232,9 +225,6 @@
                     && (!isWhiteListed || !isTheSameOwner)
                 )
             },
-            isLoading() {
-                return this.whiteMeta.loading || this.meta.loading;
-            },
             isErrorTx() {
                 return this.TransactionsList && this.TransactionsList.length
                     ? this.TransactionsList.find((tr) => {
@@ -283,9 +273,6 @@
             }),
             async tryWhiteListToken() {
                 this.clearErrorMessage();
-
-                if (this.isLoading) return;
-
                 await this.whiteListToken(this.whiteListForm);
             },
             clearErrorMessage() {

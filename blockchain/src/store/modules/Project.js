@@ -245,6 +245,14 @@ export default {
             await this.dispatch('Project/updateProject', Token);
             commit(UPDATE_META, {loadingProject: false});
         },
+        async fetchProjectByCurrentToken({commit}, CurrentToken) {
+            commit(UPDATE_META, {loadingProject: true, loading: true});
+            const {W12ListerFactory} = await this.dispatch('Ledger/fetch', CurrentToken.version);
+            const W12Lister = W12ListerFactory.at(CurrentToken.listerAddress);
+            const Token = await W12Lister.fetchComposedTokenInformationByTokenAddress(CurrentToken);
+            await this.dispatch('Project/updateProject', Token);
+            commit(UPDATE_META, {loadingProject: false, loading: false});
+        },
         async updateProject({commit, getters, state}, Token) {
             try {
                 if (Token.tokenAddress && Token.tokenOwners) {

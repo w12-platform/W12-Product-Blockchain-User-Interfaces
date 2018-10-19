@@ -632,6 +632,10 @@
 //         "en": "Symbol",
 //         "ru": "Символ"
 //     },
+//     "AdminDashboardTableIndex": {
+//         "en": "Index",
+//         "ru": "Индекс"
+//     },
 //     "AdminDashboardTableName": {
 //         "en": "Name",
 //         "ru": "Название"
@@ -1271,6 +1275,10 @@
 //     "ErrorValidMaxAmount": {
 //         "en": "The number of tokens can be from {min} to {max}",
 //         "ru": "Количество токенов может быть от {min} до {max}"
+//     },
+//     "ErrorOnSaleMaxAmount": {
+//         "en": "Only {max} tokens are available for sale",
+//         "ru": "Для продажи доступно только {max} токенов"
 //     },
 //     "StepsNext": {
 //         "en": "Next step",
