@@ -10,6 +10,7 @@ import Project from "store/modules/Project.js";
 import Transactions from "store/modules/Transactions.js";
 import Lang from "store/modules/Lang.js";
 import Factory from "store/modules/Factory.js";
+import Rates from "store/modules/Rates.js";
 import PersistedStatePlugin from "vuex-persistedstate";
 
 Vue.use(Vuex);
@@ -29,7 +30,8 @@ const store = {
         Project,
         Transactions,
         Lang,
-        Factory
+        Factory,
+        Rates
     },
     plugins: [
         PersistedStatePlugin({
@@ -38,7 +40,8 @@ const store = {
                 "Transactions.list",
                 "Lang.current",
                 "Lang.vocabulary",
-                "Factory.list"
+                "Factory.list",
+                "Rates"
             ]
         })
     ]

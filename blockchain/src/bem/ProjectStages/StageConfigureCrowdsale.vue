@@ -2,7 +2,7 @@
     <div class="ProjectStages__stage">
         <div class="row align-items-center justify-content-left">
             <div class="col-auto">
-                <span class="ProjectDashboard__step-badge step-badge badge badge-pill badge-light">4</span>
+                <span class="ProjectDashboard__step-badge step-badge badge badge-pill badge-light">5</span>
             </div>
             <div class="col-sm-4">
                 {{ $t('ProjectDashboardStageConfigureCrowdsale') }}
@@ -24,7 +24,14 @@
                     <p class="py-2">{{ $t('WaitingConfirm') }}:</p>
                     <b-tag class="py-2">{{isPendingTx.hash}}</b-tag>
                 </div>
-                <div v-if="!isPendingTx && !projectMeta.loadingProject">
+                <div class="pm-2" v-if="isErrorTx">
+                    <p class="py-2">{{ $t('TransactionFailed') }}:</p>
+                    <b-tag class="py-2">{{isErrorTx.hash}}</b-tag>
+                    <div class="pt-2 text-left">
+                        <button class="btn btn-primary btn-sm" @click="TransactionsRetry(isErrorTx)">{{ $t('ToRetry') }}</button>
+                    </div>
+                </div>
+                <div v-if="!isPendingTx && !isErrorTx && !projectMeta.loadingProject">
                     <b-tag class="ProjectDashboard__initCrowdsaleAddress" v-if="isCrowdsaleInited"
                            type="is-info">{{ currentProject.tokenCrowdsaleAddress }}
                     </b-tag>
@@ -194,6 +201,21 @@
             lengthMaxAmount() {
                 return this.tokensForSaleAmountToNumber ? this.tokensForSaleAmountToNumber.length : 0;
             },
+            isErrorTx() {
+                return this.TransactionsList && this.TransactionsList.length
+                    ? this.TransactionsList.find((tr) => {
+                        return tr.token
+                        && tr.name
+                        && tr.hash
+                        && tr.status
+                        && tr.token === this.currentProject.tokenAddress
+                        && tr.name === "ConfigCrowdSale"
+                        && tr.status === "error"
+                            ? tr
+                            : false
+                    })
+                    : false;
+            },
             isPendingTx() {
                 return this.TransactionsList && this.TransactionsList.length
                     ? this.TransactionsList.find((tr) => {
@@ -241,6 +263,9 @@
                 updateTokenInfo: "updateTokenInfo",
                 updateOwnerBalance: "updateOwnerBalance",
                 upTokenAfterEvent: "upTokenAfterEvent"
+            }),
+            ...TransactionsNS.mapActions({
+                TransactionsRetry: "retry"
             }),
             toEth(value) {
                 value = new BigNumber(value);

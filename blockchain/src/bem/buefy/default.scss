@@ -33,6 +33,7 @@
   }
 
   .btn.btn-primary {
+    background: #e94041;
     background-image: -webkit-gradient(linear, left top, right top, from(#ff9c00), to(#ff1b46));
     background-image: -webkit-linear-gradient(left, #ff9c00, #ff1b46);
     background-image: -o-linear-gradient(left, #ff9c00, #ff1b46);
@@ -64,5 +65,12 @@
     &__select {
       margin-left: 45px;
     }
+  }
+
+  .loading-overlay {
+    z-index: 2;
+  }
+  .notification {
+    padding: 1.75rem 2.5rem 1.75rem 1.5rem;
   }
 }

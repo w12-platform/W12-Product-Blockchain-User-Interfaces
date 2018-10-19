@@ -21,13 +21,14 @@
                     {{ ProjectMeta.loadingProjectError }}
                 </b-notification>
 
-                <div class="ProjectDashboardReceiving__project" v-if="!ProjectMeta.loadingProjectError">
-                    <Receiving></Receiving>
+                <div class="ProjectDashboardReceiving__project">
+                    <Receiving v-if="!ProjectMeta.loadingProjectError"></Receiving>
 
                     <b-loading :is-full-page="false" :active="ProjectMeta.loadingProject" :can-cancel="true"></b-loading>
                 </div>
             </div>
         </section>
+        <Steps :number="10"></Steps>
     </div>
 </template>
 
@@ -36,6 +37,7 @@
     import ProjectSwitch from 'bem/ProjectSwitch';
     import Receiving from 'bem/Receiving';
     import {CONFIRM_TX} from "store/modules/Transactions.js";
+    import Steps from "bem/Steps";
 
     import {createNamespacedHelpers} from 'vuex';
     import {isZeroAddress} from 'lib/utils';
@@ -51,6 +53,7 @@
         components: {
             ProjectSwitch,
             Receiving,
+            Steps
         },
         computed: {
             ...LedgerNS.mapState({
@@ -149,7 +152,7 @@
                 this.subscribeToEventsLoading = true;
 
                 try {
-                    const {W12CrowdsaleFactory, W12ListerFactory, W12TokenFactory, W12AtomicSwapFactory} = await this.LedgerFetch(this.currentProject.version);
+                    const {W12CrowdsaleFactory, W12ListerFactory, W12TokenFactory, W12AtomicSwapFactory, TokenExchangerFactory} = await this.LedgerFetch(this.currentProject.version);
                     let ApprovalW12Event = null;
                     let UnsoldTokenReturned = null;
                     let Exchange = null;
@@ -158,8 +161,8 @@
                         const W12Crowdsale = W12CrowdsaleFactory.at(this.currentProject.crowdsaleAddress);
                         UnsoldTokenReturned = W12Crowdsale.events.UnsoldTokenReturned(null, null, this.onUnsoldTokenReturnedEvent);
                         const W12Lister = W12ListerFactory.at(this.currentProject.listerAddress);
-                        const swapAddress = await W12Lister.methods.swap();
-                        const W12AtomicSwap = W12AtomicSwapFactory.at(swapAddress);
+                        const swapAddress = await W12Lister.swap();
+                        const W12AtomicSwap = TokenExchangerFactory ? TokenExchangerFactory.at(swapAddress):W12AtomicSwapFactory.at(swapAddress);
                         Exchange = W12AtomicSwap.events.Exchange(null, null, this.onExchangeEvent);
                     }
 

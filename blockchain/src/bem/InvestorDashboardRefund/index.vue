@@ -16,11 +16,12 @@
                 <b-loading :is-full-page="false" :active="isLoading" :can-cancel="true"></b-loading>
             </b-notification>
 
-            <div v-if="!isLoading && currentToken && currentAccountData">
+            <div v-if="!isLoading">
                 <TokenSwitch></TokenSwitch>
                 <RefundEth></RefundEth>
             </div>
         </section>
+        <Steps :number="7" link="/investor-exchange.html"></Steps>
     </div>
 </template>
 
@@ -31,6 +32,7 @@
 
     import TokenSwitch from 'bem/TokenSwitch';
     import RefundEth from 'bem/RefundEth';
+    import Steps from "bem/Steps";
 
     const LedgerNS = createNamespacedHelpers("Ledger");
     const AccountNS = createNamespacedHelpers("Account");
@@ -42,7 +44,8 @@
         name: 'InvestorDashboardRefund',
         components: {
             TokenSwitch,
-            RefundEth
+            RefundEth,
+            Steps
         },
         data() {
             return {
@@ -56,6 +59,7 @@
                 ledgerMeta: 'meta',
             }),
             ...TokensListNS.mapState({
+                list: "list",
                 tokensListMeta: 'meta',
                 currentToken: "currentToken"
             }),
@@ -69,7 +73,7 @@
             }),
 
             isLoading() {
-                return this.tokensListMeta.loading && this.meta.loading;
+                return this.tokensListMeta.loading || this.meta.loading || !this.currentToken || !this.list.length;
             },
             isError() {
                 return this.ledgerMeta.loadingError || this.tokensListMeta.loadingError || this.accountMeta.loadingError;

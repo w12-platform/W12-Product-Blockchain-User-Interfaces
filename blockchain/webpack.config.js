@@ -1,8 +1,12 @@
-let path = require("path");
-//let webpack = require('webpack');
+const path = require("path");
+
+const webpack = require("webpack");
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 
-const MODE = "development"; //production || development
+const MODE = process.env.NODE_ENV || 'development'; // production || development
+const ROOT_PATH = path.resolve("../");
+const BUILD_DIR_PATH = path.join(ROOT_PATH, 'blockchain/build');
+const publicPath = MODE === 'production' ? '/blockchain/build/' : '/blockchain/build/'
 
 module.exports = [
     {
@@ -10,8 +14,8 @@ module.exports = [
         mode: MODE,
         entry: './src/components/App.js',
         output: {
-            path: path.resolve(__dirname, 'build'),
-            publicPath: '/blockchain/build/',
+            path: BUILD_DIR_PATH,
+            publicPath,
             filename: "App.js"
         },
         resolve: {
@@ -32,12 +36,9 @@ module.exports = [
                     loader: "vue-loader"
                 },
                 {
-                    test: /\.css$/,
-                    use: ['style-loader', 'css-loader']
-                },
-                {
-                    test: /\.scss$/,
+                    test: /\.(scss|css)$/,
                     use: [
+                        "style-loader",
                         "vue-style-loader",
                         "css-loader",
                         "sass-loader"
@@ -54,16 +55,17 @@ module.exports = [
             ]
         },
         plugins: [
-            new VueLoaderPlugin()
+            new VueLoaderPlugin(),
+            new webpack.DefinePlugin({
+                ROOT_PATH: JSON.stringify('/'),
+                PACKAGE_JSON_PATH: JSON.stringify('/blockchain/package.json'),
+            }),
         ],
         devServer: {
-            contentBase: path.join(__dirname, '../'),
-            publicPath: '/blockchain/build/',
+            contentBase: ROOT_PATH,
+            publicPath,
             compress: true,
             port: 8090,
-            proxy: {
-                "/ru/api": "http://[::1]:3000"
-            }
         }
     },
 ];

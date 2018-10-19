@@ -12,7 +12,7 @@
     <!--[if lt IE 9]>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.2/html5shiv.min.js"></script><![endif]-->
     <link href="/blockchain/node_modules/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
-    <script src="./translations.js"></script>
+    <script src="./translations.js?<%= VERSION %>"></script>
     <link rel="stylesheet" href="//cdn.materialdesignicons.com/2.4.85/css/materialdesignicons.min.css">
 </head>
 <body>
@@ -21,12 +21,8 @@
         <div class="header__line">
             <div class="container">
                 <div class="header__content">
-                    <div class="logo">
-                      <a class="logo__link" href="/">
-                        <img class="logo__img" src="stand/html/img/logo.svg?v=2" alt="">
-                        <span>Blockchain protocol</span>
-                      </a>
-                    </div>
+                    <div class="logo"><a class="logo__link" href="/"><img class="logo__img" src="stand/html/img/logo.svg" alt=""></a></div>
+                    <versions></versions>
                     <div class="actions">
                         <header-buy-w12-tokens></header-buy-w12-tokens>
                         <lang-switch style="margin-left: 45px; width: 80px;"></lang-switch>
@@ -53,11 +49,11 @@
     <app-footer></app-footer>
 </div>
 <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-<link rel="stylesheet" href="stand/html/css/main.css?v=2">
+<link rel="stylesheet" href="stand/html/css/main.css?<%= VERSION %>">
 <script src="stand/html/libs/jquery/jquery-3.2.1.min.js"></script>
 <script src="stand/html/libs/sticky/sticky-sidebar.min.js"></script>
 <script src="blockchain/node_modules/moment/moment.js"></script>
-<script src="/blockchain/build/App.js"></script>
-<script src="stand/html/js/common.js"></script>
+<script src="/blockchain/build/App.js?<%= VERSION %>"></script>
+<script src="stand/html/js/common.js?<%= VERSION %>>"></script>
 </body>
 </html>

@@ -112,14 +112,10 @@ export function toWeiDecimals(value, decimals) {
     return value ? new BigNumber(value).times(oneToken): "";
 }
 
-export function version(block, version) {
-    return () => import("bem/" + block + "/" + version);
-}
-
 export async function dynamicImport(type, version, name) {
     return import("lib/Blockchain/" + type + "/" + version + "/" + name + ".js");
 }
 
 export async function jsonLoader(version, name) {
-    return await fetch("/protocol/abi/" + version + "/" + name + ".json").then(data => data.json());
+    return await fetch(ROOT_PATH + "protocol/abi/" + version + "/" + name + ".json").then(data => data.json());
 }

@@ -132,7 +132,7 @@ export default {
                 const oneToken = new BigNumber(10).pow(decimals);
                 const balance = (await W12Token.methods.balanceOf(this.state.Account.currentAccount)).toString();
                 const allowanceForTheFund = (await W12Token.methods.allowance(this.state.Account.currentAccount, fundAddress)).toString();
-                const swapAddress = (await W12Lister.methods.swap());
+                const swapAddress = (await W12Lister.swap());
                 const allowanceForSwap = (await W12Token.methods.allowance(this.state.Account.currentAccount, swapAddress)).toString();
                 const allowanceForTheFundInRefundAmount = (await W12Fund.methods.getRefundAmount(allowanceForTheFund)).toString();
                 const unVestingBalance = (await W12Token.methods.accountBalance(this.state.Account.currentAccount)).toString();

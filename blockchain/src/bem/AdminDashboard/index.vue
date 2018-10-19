@@ -21,13 +21,15 @@
                 <WhiteListForm :is="WhiteListFormVersion"></WhiteListForm>
             </div>
         </section>
+        <Steps :number="4" :blocked="nextStepBlocked" link="/project.html"></Steps>
     </div>
 </template>
 
 <script>
     import './default.scss';
 
-    import {version} from 'lib/utils.js';
+    import ListerSwitch from 'bem/ListerSwitch';
+    import Steps from "bem/Steps";
 
     import {createNamespacedHelpers} from "vuex";
     import { CONFIG_UPDATE } from 'store/modules/Config';
@@ -41,6 +43,10 @@
     export default {
         name: 'AdminDashboard',
         template: '#AdminDashboardTemplate',
+        components: {
+            ListerSwitch,
+            Steps
+        },
         data() {
             return {
                 meta: {
@@ -77,12 +83,16 @@
             isError() {
                 return this.ledgerMeta.loadingError || this.tokensListMeta.loadingError || this.accountMeta.loadingError;
             },
-
             WhiteListTableVersion(){
-                return version('WhiteListTable', this.W12Lister.version);
+                const v = this.W12Lister.version;
+                return () => import("bem/WhiteListTable/" + v);
             },
             WhiteListFormVersion(){
-                return version('WhiteListForm', this.W12Lister.version);
+                const v = this.W12Lister.version;
+                return () => import("bem/WhiteListForm/" + v);
+            },
+            nextStepBlocked(){
+                return this.isPendingTx ? this.$t('StepsBlockedTx') : false;
             }
         },
         methods: {
