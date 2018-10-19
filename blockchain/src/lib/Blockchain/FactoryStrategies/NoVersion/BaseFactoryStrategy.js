@@ -4,21 +4,31 @@ export class BaseFactoryStrategy {
         this.connector = connector;
         this.ContractWrapper = ContractWrapper;
         this.inited = false;
-        this._instance = null;
+        this._instanceGetter = null;
+        this._instanceSender = null;
     }
 
     async init () {
         if (this.inited) return;
 
-        const {web3} = await this.connector.connect();
+        const {web3send, web3get} = await this.connector.connect();
 
-        this._instance = web3.eth.contract(this.artifact.abi);
+        this._instanceGetter = web3get.eth.contract(this.artifact.abi);
+        this._instanceSender = web3send.eth.contract(this.artifact.abi);
         this.inited = true;
     }
 
-    get instance () { return this._instance; }
+    get instanceGetter () { return this._instanceGetter; }
+
+    get instanceSender () { return this._instanceSender; }
 
     at(address) {
-        return new this.ContractWrapper(this.artifact, this.instance.at(address));
+        return new this.ContractWrapper(
+            this.artifact,
+            {
+                sender: this.instanceSender.at(address),
+                getter: this.instanceGetter.at(address)
+            }
+        );
     }
 }

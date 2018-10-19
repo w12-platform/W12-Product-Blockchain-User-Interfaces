@@ -1,7 +1,8 @@
 import config from '../../config.js';
 import { promisify } from '../utils.js';
+import Web3 from 'web3';
 
-const Web3 = window.Web3;
+
 const web3 = new Web3();
 const onLoad = new Promise((resolve, reject) => {
     if (typeof window !== 'undefined') {
@@ -16,7 +17,10 @@ export class Connector {
     static get PROVIDER_METAMASK() { return 'metamask'; }
 
     constructor () {
-        this.web3 = null;
+        this.web3send = null;
+        this.web3get = null;
+        this.defaultAccountWatcherId = null;
+        this.isWatchingAccount = false;
         this.inited = false;
     }
 
@@ -27,9 +31,23 @@ export class Connector {
             ? customProvider
             : await this.getProvider();
 
-        this.web3 = new Web3(provider);
+        this.web3send = new Web3(provider);
+        this.web3get = null;
         this.networkId = null;
+        this.updateAccountWatcher();
         this.inited = true;
+    }
+
+    updateAccountWatcher() {
+        if (this.isWatchingAccount) clearInterval(this.defaultAccountWatcherId);
+
+        this.defaultAccountWatcherId = setInterval(async () => {
+            const address = (await promisify(this.web3send.eth.getAccounts)())[0];
+
+            this.web3send.eth.defaultAccount = address;
+            this.web3get.eth.defaultAccount = address;
+
+        }, 1000);
     }
 
     async getProvider () {
@@ -47,37 +65,94 @@ export class Connector {
             }
         } else if (typeof window.web3 !== 'undefined') {
             return window.web3.currentProvider;
-        } else if (config.useInfuraAsFallbackNet) {
-            return new web3.providers.HttpProvider(`${config.infura.net}${config.infura.key}`);
+        } else if (config.providers[config.blockchainNetworkId]) {
+            return new web3.providers.HttpProvider(config.providers[config.blockchainNetworkId]);
         }
 
         throw new Error('provider is not found');
     }
 
-    async connect() {
-        if (!this.inited) await this.init();
+    async syncProviders() {
+        let theSame = false;
 
-        const getNetwork = promisify(this.web3.version.getNetwork.bind(this.web3.version));
-        const netId = await getNetwork();
+        const senderNetId = await promisify(this.web3send.version.getNetwork.bind(this.web3send.version))();
 
-        this.networkId = netId;
+        if (!this.web3get && !config.providers[senderNetId]) {
+            throw new Error(`no matching network with id "${senderNetId}" in the configuration`);
+        }
 
-        return { web3: this.web3, netId };
-    }
+        if (this.web3get) {
+            const getterNetId = await promisify(this.web3get.version.getNetwork.bind(this.web3get.version))();
 
-    setProvider(provider) {
-        if (this.inited) {
-            this.web3.setProvider(provider);
+            theSame = getterNetId != senderNetId;
+        }
+
+        if (!theSame) {
+            this.web3get = new Web3(new web3.providers.HttpProvider(config.providers[senderNetId]));
         }
     }
 
+    async connect() {
+        if (!this.inited) await this.init();
+
+        await this.syncProviders();
+
+        const netId = await promisify(this.web3send.version.getNetwork.bind(this.web3send.version))();
+
+        this.networkId = netId;
+
+        return {
+            web3send: this.web3send,
+            web3get: this.web3get,
+            // TODO: remove in the future
+            // backward compatibility
+            web3: this.web3send,
+            netId
+        };
+    }
+
+    async setProvider(provider) {
+        if (this.inited) {
+            this.web3send.setProvider(provider);
+            this.web3get = null;
+        }
+    }
+
+    // TODO: remove in the future
+    // backward compatibility
     isProvider(id) {
         if (!this.inited) return false;
 
         switch (id) {
             case Connector.PROVIDER_METAMASK:
                 return (
-                    this.web3.currentProvider.isMetaMask
+                    this.web3send.currentProvider.isMetaMask
+                );
+            default:
+                return false;
+        }
+    }
+
+    isGetterProvider (id) {
+        if (!this.inited) return false;
+
+        switch (id) {
+            case Connector.PROVIDER_METAMASK:
+                return (
+                    this.web3get.currentProvider.isMetaMask
+                );
+            default:
+                return false;
+        }
+    }
+
+    isSenderProvider (id) {
+        if (!this.inited) return false;
+
+        switch (id) {
+            case Connector.PROVIDER_METAMASK:
+                return (
+                    this.web3send.currentProvider.isMetaMask
                 );
             default:
                 return false;

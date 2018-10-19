@@ -59,6 +59,7 @@
     import { createNamespacedHelpers } from "vuex";
     import { CONFIG_UPDATE } from "store/modules/Config.js";
     import { decode } from '@redtea/semint';
+    import Web3 from 'web3';
 
     const ConfigNS = createNamespacedHelpers('Config');
     const TokensListNS = createNamespacedHelpers('TokensList');
@@ -110,9 +111,9 @@
             async saveW12ListerList () {
                 this.loading = true;
                 const ListSave = this.list.map(async(item) => {
-                    const {VersionableFactory} = await this.ledgerFetch(this.Default.version);
-                    const Versionable = VersionableFactory.at(item.address);
-                    item.version = decode(parseInt(await new BigNumber(await Versionable.methods.version()).toString()), 4);
+                    const {W12ListerFactory} = await this.ledgerFetch(this.Default.version);
+                    const W12Lister = W12ListerFactory.at(item.address);
+                    item.version = decode(parseInt(await new BigNumber(await W12Lister.methods.version()).toString()), 4);
                     return item;
                 });
                 Promise.all(ListSave).then((completed) => {

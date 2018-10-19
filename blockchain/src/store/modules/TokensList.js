@@ -1,6 +1,7 @@
 import Connector from "lib/Blockchain/DefaultConnector";
 import {promisify, isZeroAddress, fromWeiDecimalsString} from "lib/utils";
 import {map} from 'p-iteration';
+import Web3 from 'web3';
 
 const moment = window.moment;
 const web3 = new Web3();

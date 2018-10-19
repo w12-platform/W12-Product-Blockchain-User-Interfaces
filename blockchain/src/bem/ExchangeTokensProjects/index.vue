@@ -47,7 +47,7 @@
                 </div>
             </div>
         </div>
-        <b-loading :is-full-page="false" :active.sync="loading" :can-cancel="true"></b-loading>
+        <b-loading :is-full-page="false" :active="loading" :can-cancel="true"></b-loading>
     </div>
 </template>
 
@@ -57,9 +57,11 @@
     import { waitTransactionReceipt, formatNumber, toWeiDecimals, fromWeiDecimals, fromWeiDecimalsString} from 'lib/utils.js';
     import {createNamespacedHelpers} from "vuex";
     import {UPDATE_TX} from "store/modules/Transactions.js";
+    import Web3 from 'web3';
 
     const web3 = new Web3();
     const BigNumber = web3.BigNumber;
+
     BigNumber.config({
         DECIMAL_PLACES: 36,
         FORMAT: {

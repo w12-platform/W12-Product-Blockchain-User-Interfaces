@@ -87,7 +87,7 @@
                 <td>{{ countdown }}</td>
             </tr>
             </tbody>
-            <b-loading :is-full-page="false" :active.sync="tokensListMeta.updated" :can-cancel="true"></b-loading>
+            <b-loading :is-full-page="false" :active="tokensListMeta.updated" :can-cancel="true"></b-loading>
         </table>
     </div>
 </template>
@@ -96,10 +96,10 @@
     import './default.scss';
     import {createNamespacedHelpers} from "vuex";
     import { waitTransactionReceipt, formatNumber, toWeiDecimals, fromWeiDecimals, fromWeiDecimalsString} from 'lib/utils.js';
-
-    const TokensListNS = createNamespacedHelpers("TokensList");
+    import Web3 from 'web3';
     import countdown from 'countdown';
 
+    const TokensListNS = createNamespacedHelpers("TokensList");
     const moment = window.moment;
     const web3 = new Web3();
     const BigNumber = web3.BigNumber;

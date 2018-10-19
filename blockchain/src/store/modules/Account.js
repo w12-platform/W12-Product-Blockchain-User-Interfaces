@@ -1,6 +1,8 @@
 import Connector from 'lib/Blockchain/DefaultConnector.js';
 import {promisify} from 'lib/utils.js';
-import config from '@/config.js'
+import config from '@/config.js';
+import Web3 from 'web3';
+
 export const ERROR_FETCH_ACCOUNT = 'LoadLedger: An unknown error';
 
 export const UPDATE_META = "UPDATE_META";
