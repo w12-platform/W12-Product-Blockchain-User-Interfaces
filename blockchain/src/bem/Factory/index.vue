@@ -12,7 +12,7 @@
             <b-notification v-if="isLoading && !isError" :closable="false" class="AdminDashboard__loader">
                 <span v-if="ledgerMeta.loading">{{ $t('AdminDashboardLoadLedger') }}<br></span>
 
-                <b-loading :is-full-page="false" :active.sync="isLoading" :can-cancel="true"></b-loading>
+                <b-loading :is-full-page="false" :active="isLoading" :can-cancel="true"></b-loading>
             </b-notification>
 
             <div v-if="!isLoading && this.currentAccount">
