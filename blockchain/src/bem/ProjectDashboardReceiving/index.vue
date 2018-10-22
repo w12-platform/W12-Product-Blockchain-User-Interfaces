@@ -154,8 +154,8 @@
                     let UnsoldTokenReturned = null;
                     let Exchange = null;
 
-                    if (!isZeroAddress(this.currentProject.crowdsaleAddress)) {
-                        const W12Crowdsale = W12CrowdsaleFactory.at(this.currentProject.crowdsaleAddress);
+                    if (!isZeroAddress(this.currentProject.tokenCrowdsaleAddress)) {
+                        const W12Crowdsale = W12CrowdsaleFactory.at(this.currentProject.tokenCrowdsaleAddress);
                         UnsoldTokenReturned = W12Crowdsale.events.UnsoldTokenReturned(null, null, this.onUnsoldTokenReturnedEvent);
                         const W12Lister = W12ListerFactory.at(this.currentProject.listerAddress);
                         const swapAddress = await W12Lister.methods.swap();

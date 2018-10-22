@@ -198,7 +198,7 @@
                 this.saveMilestonesLoading = true;
                 try {
                     const {W12CrowdsaleFactory} = await this.ledgerFetch(this.currentProject.version);
-                    const W12Crowdsale = W12CrowdsaleFactory.at(this.currentProject.crowdsaleAddress);
+                    const W12Crowdsale = W12CrowdsaleFactory.at(this.currentProject.tokenCrowdsaleAddress);
                     const tx = await W12Crowdsale.setMilestones(this.tokenCrowdSaleMilestones);
                     this.$store.commit(`Transactions/${UPDATE_TX}`, {
                         token: this.currentProject.tokenAddress,
