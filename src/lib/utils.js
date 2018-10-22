@@ -121,7 +121,8 @@ export function getRefundWindow(milestones, currentMilestoneIndex) {
     if(
         Array.isArray(milestones)
         && currentMilestoneIndex != null
-        && currentMilestoneIndex >= 0
+        // refund allowed from milestone[1]
+        && currentMilestoneIndex > 0
         && milestones.length > currentMilestoneIndex) {
 
         const milestone = milestones[currentMilestoneIndex];
