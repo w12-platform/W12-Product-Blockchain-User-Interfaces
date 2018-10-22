@@ -151,8 +151,8 @@
                     const {W12CrowdsaleFactory, W12FundFactory} = await this.LedgerFetch(this.currentProject.version);
                     let TrancheReleased = null;
 
-                    if (!isZeroAddress(this.currentProject.crowdsaleAddress)) {
-                        const W12Crowdsale = W12CrowdsaleFactory.at(this.currentProject.crowdsaleAddress);
+                    if (!isZeroAddress(this.currentProject.tokenCrowdsaleAddress)) {
+                        const W12Crowdsale = W12CrowdsaleFactory.at(this.currentProject.tokenCrowdsaleAddress);
                         const fundAddress = await W12Crowdsale.methods.fund();
                         const W12Fund = W12FundFactory.at(fundAddress);
                         TrancheReleased = W12Fund.events.TrancheReleased(null, null, this.onTrancheReleasedEvent);

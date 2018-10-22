@@ -140,7 +140,7 @@
                 this.loadingClaim = true;
                 try {
                     const {W12CrowdsaleFactory} = await this.LedgerFetch(this.currentProject.version);
-                    const W12Crowdsale = W12CrowdsaleFactory.at(this.currentProject.crowdsaleAddress);
+                    const W12Crowdsale = W12CrowdsaleFactory.at(this.currentProject.tokenCrowdsaleAddress);
                     const connectedWeb3 = (await Connector.connect()).web3;
                     const tx = await W12Crowdsale.methods.claimRemainingTokens();
                     this.$store.commit(`Transactions/${UPDATE_TX}`, {

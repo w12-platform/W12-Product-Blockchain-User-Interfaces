@@ -425,7 +425,7 @@ export default {
                 const receiving = new ReceivingModel({
                     symbol: token.symbol,
                     symbolW: Token.symbol,
-                    amountUnSold: fromWeiDecimalsString(await W12Token.methods.balanceOf(Token.crowdsaleAddress), state.currentProject.decimals),
+                    amountUnSold: fromWeiDecimalsString(await W12Token.methods.balanceOf(Token.tokenCrowdsaleAddress), state.currentProject.decimals),
                     amountRemainingInTokenChanger: 0,
                     amountRemainingAfterTheExchange: 0,
                     amountTotalAvailable: 0,
@@ -438,7 +438,7 @@ export default {
         async updateFundInformation({commit, state}, {Token}) {
             try {
                 const {W12CrowdsaleFactory, W12FundFactory} = await this.dispatch('Ledger/fetch', Token.version);
-                const W12Crowdsale = W12CrowdsaleFactory.at(Token.crowdsaleAddress);
+                const W12Crowdsale = W12CrowdsaleFactory.at(Token.tokenCrowdsaleAddress);
                 const fundAddress = await W12Crowdsale.methods.fund();
                 const W12Fund = W12FundFactory.at(fundAddress);
                 const {web3} = await Connector.connect();
