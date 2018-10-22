@@ -133,8 +133,8 @@
                     let UnsoldTokenReturned = null;
                     let TrancheReleased = null;
 
-                    if (!isZeroAddress(this.currentProject.crowdsaleAddress)) {
-                        const W12Crowdsale = W12CrowdsaleFactory.at(this.currentProject.crowdsaleAddress);
+                    if (!isZeroAddress(this.currentProject.tokenCrowdsaleAddress)) {
+                        const W12Crowdsale = W12CrowdsaleFactory.at(this.currentProject.tokenCrowdsaleAddress);
                         const fundAddress = await W12Crowdsale.methods.fund();
                         const W12Fund = W12FundFactory.at(fundAddress);
                         StagesUpdated = W12Crowdsale.events.StagesUpdated(null, null, this.onStagesUpdatedEvent);
