@@ -5,6 +5,7 @@ const moment = window.moment;
 
 export const UPDATE_TX = "UPDATE_TX";
 export const CONFIRM_TX = "CONFIRM_TX";
+export const CANCEL_TX = "CANCEL_TX";
 export const RESET = "RESET";
 
 export default {
@@ -18,6 +19,9 @@ export default {
             state.list.push(tx);
         },
         [CONFIRM_TX](state, tx) {
+            state.list = state.list.filter((tr)=> tr.hash && tr.hash !== tx);
+        },
+        [CANCEL_TX](state, tx) {
             state.list = state.list.filter((tr)=> tr.hash && tr.hash !== tx);
         },
         [RESET](state) {
@@ -34,10 +38,12 @@ export default {
                             if (receipt.status === '0x1' || receipt.status === 1) {
                                 commit(CONFIRM_TX, tr.hash);
                             } else {
-                                commit(CONFIRM_TX, tr.hash);
+                                commit(CANCEL_TX, tr.hash);
                                 tr.status = "error";
                                 commit(UPDATE_TX, tr);
                             }
+                        } else {
+                            commit(CANCEL_TX, tr.hash);
                         }
                     });
                 }
