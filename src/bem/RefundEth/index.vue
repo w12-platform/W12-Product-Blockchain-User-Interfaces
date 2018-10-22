@@ -65,6 +65,7 @@
     import {RefundInformationModel} from 'bem/RefundInformation/shared.js';
     import {UPDATE_TX, CONFIRM_TX} from "store/modules/Transactions.js";
     import Web3 from 'web3';
+    import { getRefundWindow, isRefundActive } from '../../lib/utils';
 
     const web3 = new Web3();
     const BigNumber = web3.BigNumber;
@@ -138,7 +139,15 @@
                         fundBalance: web3.fromWei(this.currentToken.crowdSaleInformation.fund.foundBalanceInWei, 'ether').toString(),
                         totalRefundPercent,
                         currentWalletBalanceInTokens: this.currentAccountData.balance,
-                        currentWalletBalanceInRefundAmount: web3.fromWei(this.currentAccountData.totalRefundAmount, 'ether').toString()
+                        currentWalletBalanceInRefundAmount: web3.fromWei(this.currentAccountData.totalRefundAmount, 'ether').toString(),
+                        isRefundActive: isRefundActive(
+                            this.currentToken.crowdSaleInformation.milestones,
+                            this.currentToken.crowdSaleInformation.currentMilestoneIndex,
+                        ),
+                        refundWindow: getRefundWindow(
+                            this.currentToken.crowdSaleInformation.milestones,
+                            this.currentToken.crowdSaleInformation.currentMilestoneIndex,
+                        )
                     });
                 }
             },

@@ -1,5 +1,6 @@
 import jsunicode from 'jsunicode';
 import Web3 from 'web3';
+import moment from 'moment';
 
 const web3 = new Web3();
 const BigNumber = web3.BigNumber;
@@ -114,6 +115,31 @@ export function toWeiDecimals(value, decimals) {
 
 export async function dynamicImport(type, version, name) {
     return import("lib/Blockchain/" + type + "/" + version + "/" + name + ".js");
+}
+
+export function getRefundWindow(milestones, currentMilestoneIndex) {
+    if(
+        Array.isArray(milestones)
+        && currentMilestoneIndex != null
+        && currentMilestoneIndex >= 0
+        && milestones.length > currentMilestoneIndex) {
+
+        const milestone = milestones[currentMilestoneIndex];
+
+        return [milestone.endDate, milestone.withdrawalWindow];
+    }
+}
+
+export function isRefundActive(milestones, currentMilestoneIndex) {
+    if (currentMilestoneIndex === null || currentMilestoneIndex < 0) return false;
+
+    const window = getRefundWindow(milestones, currentMilestoneIndex);
+
+    if (!window) return false;
+
+    const nowUnix = moment().unix();
+
+    return window[0] <= nowUnix && nowUnix < window[1];
 }
 
 export async function jsonLoader(version, name) {

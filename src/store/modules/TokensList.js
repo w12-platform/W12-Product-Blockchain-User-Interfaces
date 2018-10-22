@@ -96,7 +96,11 @@ export default {
                         const tokensForSaleAmount = fromWeiDecimalsString(token.tokensForSaleAmount, token.decimals);
                         const tokenPrice = web3.fromWei(await W12Crowdsale.methods.price(), 'ether').toString();
                         const stages = (await W12Crowdsale.getStagesList());
+                        const milestones = (await W12Crowdsale.getMilestones());
                         const startDate = stages.length ? stages[0].startDate : null;
+                        let currentMilestoneIndex = (await W12Crowdsale.methods.getCurrentMilestoneIndex());
+
+                        currentMilestoneIndex = currentMilestoneIndex[1] ? currentMilestoneIndex[0] : null;
 
                         let endDate = false;
                         let stageEndDate = false;
@@ -167,6 +171,8 @@ export default {
                             endDate,
                             timeLeft,
                             WTokenTotal,
+                            currentMilestoneIndex,
+                            milestones,
                             tokensForSaleAmount,
                             tokensOnSale: new BigNumber(tokensOnSale)
                                 .mul((new BigNumber(tokensOnSale)))

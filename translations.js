@@ -941,6 +941,26 @@
 //         "en": "Exchange",
 //         "ru": "Обменять"
 //     },
+//     "InvestorDashboardRefundActiveStatusTitle": {
+//         "en": "Статус возврата",
+//         "ru": "Статус возврата"
+//     },
+//     "InvestorDashboardRefundActiveStatusActive": {
+//         "en": "Активен",
+//         "ru": "Активен"
+//     },
+//     "InvestorDashboardRefundActiveStatusNotActive": {
+//         "en": "Не активен",
+//         "ru": "Не активен"
+//     },
+//     "InvestorDashboardRefundWindowTitle": {
+//         "en": "Период доступности возврата",
+//         "ru": "Период доступности возврата"
+//     },
+//     "InvestorDashboardRefundWindowDates": {
+//         "en": "с {from} до {to}",
+//         "ru": "с {from} до {to}"
+//     },
 //     "ProjectDashboard": {
 //         "en": "Project Dashboard",
 //         "ru": "Панель инструментов проекта"
