@@ -961,6 +961,10 @@
 //         "en": "с {from} до {to}",
 //         "ru": "с {from} до {to}"
 //     },
+//     "InvestorDashboardRefundMilestoneNumberTitle": {
+//         "en": "№ этапа",
+//         "ru": "№ этапа"
+//     },
 //     "ProjectDashboard": {
 //         "en": "Project Dashboard",
 //         "ru": "Панель инструментов проекта"

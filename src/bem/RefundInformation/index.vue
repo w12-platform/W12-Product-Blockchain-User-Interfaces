@@ -34,6 +34,10 @@
                     <td>{{ $t('InvestorDashboardRefundEthInfoAllSold', {WToken: data.tokenSymbol}) }}</td>
                     <td>{{ data.currentWalletBalanceInRefundAmount }} ETH</td>
                 </tr>
+                <tr v-if="data.currentMilestoneNumber !== null">
+                    <td>{{ $t('InvestorDashboardRefundMilestoneNumberTitle') }}</td>
+                    <td>{{ data.currentMilestoneNumber }}</td>
+                </tr>
                 <tr>
                     <td>{{ $t('InvestorDashboardRefundActiveStatusTitle') }}</td>
                     <td>{{

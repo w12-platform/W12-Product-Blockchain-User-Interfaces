@@ -140,6 +140,10 @@
                         totalRefundPercent,
                         currentWalletBalanceInTokens: this.currentAccountData.balance,
                         currentWalletBalanceInRefundAmount: web3.fromWei(this.currentAccountData.totalRefundAmount, 'ether').toString(),
+                        currentMilestoneNumber: this.currentToken.crowdSaleInformation.currentMilestoneIndex > 0
+                            ? this.currentToken.crowdSaleInformation.currentMilestoneIndex + 1
+                            : null
+                        ,
                         isRefundActive: isRefundActive(
                             this.currentToken.crowdSaleInformation.milestones,
                             this.currentToken.crowdSaleInformation.currentMilestoneIndex,

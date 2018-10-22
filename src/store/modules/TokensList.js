@@ -100,7 +100,9 @@ export default {
                         const startDate = stages.length ? stages[0].startDate : null;
                         let currentMilestoneIndex = (await W12Crowdsale.methods.getCurrentMilestoneIndex());
 
-                        currentMilestoneIndex = currentMilestoneIndex[1] ? currentMilestoneIndex[0] : null;
+                        currentMilestoneIndex = currentMilestoneIndex[1]
+                            ? currentMilestoneIndex[0].toNumber()
+                            : null;
 
                         let endDate = false;
                         let stageEndDate = false;
