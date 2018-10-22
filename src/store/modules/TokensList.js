@@ -96,12 +96,19 @@ export default {
                         const tokensForSaleAmount = fromWeiDecimalsString(token.tokensForSaleAmount, token.decimals);
                         const tokenPrice = web3.fromWei(await W12Crowdsale.methods.price(), 'ether').toString();
                         const stages = (await W12Crowdsale.getStagesList());
+                        const milestones = (await W12Crowdsale.getMilestones());
                         const startDate = stages.length ? stages[0].startDate : null;
+                        let currentMilestoneIndex = (await W12Crowdsale.methods.getCurrentMilestoneIndex());
+
+                        currentMilestoneIndex = currentMilestoneIndex[1]
+                            ? currentMilestoneIndex[0].toNumber()
+                            : null;
 
                         let endDate = false;
                         let stageEndDate = false;
                         let timeLeft = false;
                         let status = false;
+                        let vestingDate;
                         let stageDiscount = 0;
                         let bonusVolumes = [];
 
@@ -146,6 +153,7 @@ export default {
                                 bonusVolumes = foundStage.stage.bonusVolumes;
                                 stageDiscount = foundStage.stage.discount;
                                 stageEndDate = foundStage.stage.endDate;
+                                vestingDate = foundStage.stage.vestingDate;
                                 timeLeft = stageEndDate - currentDateUnix;
                             }
                         }
@@ -160,10 +168,13 @@ export default {
                             bonusVolumes,
                             stageDiscount,
                             stageEndDate,
+                            vestingDate,
                             WTokenAddress,
                             endDate,
                             timeLeft,
                             WTokenTotal,
+                            currentMilestoneIndex,
+                            milestones,
                             tokensForSaleAmount,
                             tokensOnSale: new BigNumber(tokensOnSale)
                                 .mul((new BigNumber(tokensOnSale)))

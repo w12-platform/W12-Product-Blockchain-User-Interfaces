@@ -11,5 +11,8 @@ export class RefundInformationModel {
         this.totalRefundPercent = model.totalRefundPercent;
         this.currentWalletBalanceInTokens = model.currentWalletBalanceInTokens;
         this.currentWalletBalanceInRefundAmount = model.currentWalletBalanceInRefundAmount;
+        this.currentMilestoneNumber = model.currentMilestoneNumber;
+        this.isRefundActive = model.isRefundActive;
+        this.refundWindow = model.refundWindow;
     }
 }

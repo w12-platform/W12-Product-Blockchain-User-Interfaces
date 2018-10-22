@@ -1,22 +1,6 @@
 <template>
     <div class="RefundEth byefy" v-if="currentToken && currentAccountData">
         <h2>{{ $t('InvestorDashboardRefundEth', { WToken: currentToken.symbol }) }}</h2>
-        <RefundInformation v-if="refundInformation" :data="refundInformation"></RefundInformation>
-
-        <b-notification class="" v-if="error" @close="error = false" type="is-danger" has-icon>
-            {{ error }}
-        </b-notification>
-        <div class="pm-2" v-if="isPendingTx">
-            <p class="py-2">{{ $t('WaitingConfirm') }}:</p>
-            <b-tag class="py-2">{{isPendingTx.hash}}</b-tag>
-        </div>
-        <div class="pm-2" v-if="isErrorTx">
-            <p class="py-2">{{ $t('TransactionFailed') }}:</p>
-            <b-tag class="py-2">{{isErrorTx.hash}}</b-tag>
-            <div class="pt-2 text-left">
-                <button class="btn btn-primary btn-sm" @click="TransactionsRetry(isErrorTx)">{{ $t('ToRetry') }}</button>
-            </div>
-        </div>
         <div v-if="refundInformation && !isPendingTx && !isErrorTx">
             <RefundCalculator v-if="refundInformation.currentWalletBalanceInRefundAmount"
                               v-model="refundValueInTokens"
@@ -35,9 +19,9 @@
             </div>
             <div v-if="this.currentAccountData.allowanceForTheFund !== '0'" class="py-2">
                 {{ $t('InvestorDashboardRefundEthMessagesBeforeRefund', {
-                    allowance: toEth(currentAccountData.allowanceForTheFund),
-                    WToken: currentToken.symbol,
-                    refundAmount: toEth(currentAccountData.allowanceForTheFundInRefundAmount)
+                allowance: toEth(currentAccountData.allowanceForTheFund),
+                WToken: currentToken.symbol,
+                refundAmount: toEth(currentAccountData.allowanceForTheFundInRefundAmount)
                 }) }}
             </div>
             <div v-if="this.currentAccountData.allowanceForTheFund !== '0'" class="row pl-3 pr-3">
@@ -52,6 +36,23 @@
                 </button>
             </div>
         </div>
+        <RefundInformation v-if="refundInformation" :data="refundInformation"></RefundInformation>
+
+        <b-notification class="" v-if="error" @close="error = false" type="is-danger" has-icon>
+            {{ error }}
+        </b-notification>
+        <div class="pm-2" v-if="isPendingTx">
+            <p class="py-2">{{ $t('WaitingConfirm') }}:</p>
+            <b-tag class="py-2">{{isPendingTx.hash}}</b-tag>
+        </div>
+        <div class="pm-2" v-if="isErrorTx">
+            <p class="py-2">{{ $t('TransactionFailed') }}:</p>
+            <b-tag class="py-2">{{isErrorTx.hash}}</b-tag>
+            <div class="pt-2 text-left">
+                <button class="btn btn-primary btn-sm" @click="TransactionsRetry(isErrorTx)">{{ $t('ToRetry') }}</button>
+            </div>
+        </div>
+
     </div>
 </template>
 
@@ -65,6 +66,7 @@
     import {RefundInformationModel} from 'bem/RefundInformation/shared.js';
     import {UPDATE_TX, CONFIRM_TX} from "store/modules/Transactions.js";
     import Web3 from 'web3';
+    import { getRefundWindow, isRefundActive } from '../../lib/utils';
 
     const web3 = new Web3();
     const BigNumber = web3.BigNumber;
@@ -138,7 +140,19 @@
                         fundBalance: web3.fromWei(this.currentToken.crowdSaleInformation.fund.foundBalanceInWei, 'ether').toString(),
                         totalRefundPercent,
                         currentWalletBalanceInTokens: this.currentAccountData.balance,
-                        currentWalletBalanceInRefundAmount: web3.fromWei(this.currentAccountData.totalRefundAmount, 'ether').toString()
+                        currentWalletBalanceInRefundAmount: web3.fromWei(this.currentAccountData.totalRefundAmount, 'ether').toString(),
+                        currentMilestoneNumber: this.currentToken.crowdSaleInformation.currentMilestoneIndex > 0
+                            ? this.currentToken.crowdSaleInformation.currentMilestoneIndex + 1
+                            : null
+                        ,
+                        isRefundActive: isRefundActive(
+                            this.currentToken.crowdSaleInformation.milestones,
+                            this.currentToken.crowdSaleInformation.currentMilestoneIndex,
+                        ),
+                        refundWindow: getRefundWindow(
+                            this.currentToken.crowdSaleInformation.milestones,
+                            this.currentToken.crowdSaleInformation.currentMilestoneIndex,
+                        )
                     });
                 }
             },
