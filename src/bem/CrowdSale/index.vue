@@ -103,6 +103,7 @@
     const moment = window.moment;
     const web3 = new Web3();
     const BigNumber = web3.BigNumber;
+
     BigNumber.config({
         DECIMAL_PLACES: 36,
         FORMAT: {
@@ -114,6 +115,7 @@
             fractionGroupSize: 0
         }
     });
+
     export default {
         name: 'CrowdSale',
         template: '#CrowdsaleTemplate',
@@ -129,7 +131,13 @@
                 return moment(value * 1000).utc().format("DD.MM.YYYY HH:mm");
             },
         },
-        watch: {},
+        watch: {
+            currentToken: {
+                handler: 'onCurrentTokenDeepUpdate',
+                deep: true,
+                immediate: true
+            }
+        },
         computed: {
             ...TokensListNS.mapState({
                 tokensListMeta: 'meta',
@@ -143,6 +151,10 @@
                 tokensListUpdate: "update",
                 tokensListWatch: "watch",
             }),
+
+            async onCurrentTokenDeepUpdate() {
+                await this.watchCountdown();
+            },
 
             async watchCountdown() {
                 this.unwatchCountdown();
@@ -168,14 +180,13 @@
                     }
                 };
 
-                this.countdownTmId = setInterval(watcher, 1000);
+                if (this.currentToken) {
+                    this.countdownTmId = setInterval(watcher, 1000);
+                }
             },
             unwatchCountdown() {
                 clearInterval(this.countdownTmId);
             },
-        },
-        async created() {
-            await this.watchCountdown();
         },
         beforeDestroy() {
             this.unwatchCountdown();

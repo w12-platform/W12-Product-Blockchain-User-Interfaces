@@ -732,6 +732,14 @@
 //         "en": "The cost of one {WToken} token, including discount",
 //         "ru": "Стоимость одного токена {WToken} с учетом текущей скидки"
 //     },
+//     "InvestorDashboardCalculatorTotalCost": {
+//         "en": "Необходимо оплатить: {cost}",
+//         "ru": "Необходимо оплатить: {cost}"
+//     },
+//     "InvestorDashboardCalculatorTotalProfit": {
+//         "en": "Экономия: {profit}",
+//         "ru": "Экономия: {profit}"
+//     },
 //     "InvestorDashboardCountdown": {
 //         "en": "Number of days, hours, minutes of the current discount validity",
 //         "ru": "Кол-во дней, часов, минут до окончания действия текущей скидки"
@@ -740,6 +748,7 @@
 //         "en": "Discounts",
 //         "ru": "Скидки"
 //     },
+//
 //     "InvestorDashboardDiscountsStages": {
 //         "en": "Crowdsale stage (UTC)",
 //         "ru": "Стадии (UTC)"
@@ -787,6 +796,18 @@
 //     "InvestorDashboardCalculatorDiscount": {
 //         "en": "Discount:",
 //         "ru": "Скидка:"
+//     },
+//     "InvestorDashboardCalculatorDiscountBeforeEndTimeout":{
+//         "en": "До окончания скидки: {countdown}",
+//         "ru": "До окончания скидки: {countdown}"
+//     },
+//     "InvestorDashboardCalculatorDiscountVestingEndDate": {
+//         "en": "Дата окончания заморозки: {date}",
+//         "ru": "Дата окончания заморозки: {date}"
+//     },
+//     "InvestorDashboardCalculatorDiscountVestingDateCaution": {
+//         "en": "До окончания заморозки вы не сможете обменять W-tokens на токены проекта.",
+//         "ru": "До окончания заморозки вы не сможете обменять W-tokens на токены проекта."
 //     },
 //     "InvestorDashboardCalculatorBonus": {
 //         "en": "Bonus:",

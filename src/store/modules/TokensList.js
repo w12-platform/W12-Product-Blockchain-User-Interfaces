@@ -102,6 +102,7 @@ export default {
                         let stageEndDate = false;
                         let timeLeft = false;
                         let status = false;
+                        let vestingDate;
                         let stageDiscount = 0;
                         let bonusVolumes = [];
 
@@ -146,6 +147,7 @@ export default {
                                 bonusVolumes = foundStage.stage.bonusVolumes;
                                 stageDiscount = foundStage.stage.discount;
                                 stageEndDate = foundStage.stage.endDate;
+                                vestingDate = foundStage.stage.vestingDate;
                                 timeLeft = stageEndDate - currentDateUnix;
                             }
                         }
@@ -160,6 +162,7 @@ export default {
                             bonusVolumes,
                             stageDiscount,
                             stageEndDate,
+                            vestingDate,
                             WTokenAddress,
                             endDate,
                             timeLeft,
