@@ -1,6 +1,6 @@
 <template>
     <div class="ExchangeTokens buefy" v-if="currentToken">
-        <h2>{{ $t('InvestorDashboardExchangeTokens', { WToken: currentToken.symbol, Token:
+        <h2 class="ExchangeTokens__title">{{ $t('InvestorDashboardExchangeTokens', { WToken: currentToken.symbol, Token:
             currentToken.tokenInformation.symbol}) }}</h2>
         <div class="ExchangeTokens__content">
             <table v-if="currentToken && currentAccountData"
