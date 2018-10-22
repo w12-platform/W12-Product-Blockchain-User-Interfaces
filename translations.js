@@ -748,6 +748,10 @@
 //         "en": "Discounts",
 //         "ru": "Скидки"
 //     },
+//     "InvestorDashboardCrowdsaleTableVestingDate": {
+//         "en": "Дата заморозки",
+//         "ru": "Дата заморозки"
+//     },
 //
 //     "InvestorDashboardDiscountsStages": {
 //         "en": "Crowdsale stage (UTC)",
@@ -864,6 +868,14 @@
 //     "InvestorDashboardExchangeTokensExchange": {
 //         "en": "Exchange",
 //         "ru": "Обменять"
+//     },
+//     "InvestorDashboardExchangeTokensVestingDate": {
+//         "en": "Дата окончания разморозки",
+//         "ru": "Дата окончания разморозки"
+//     },
+//     "InvestorDashboardExchangeTokensVestingBalance": {
+//         "en": "Количество токенов {WToken}",
+//         "ru": "Количество токенов {WToken}"
 //     },
 //     "InvestorDashboardRefundEth": {
 //         "en": "REFUND. Return: {WToken}, get: ETH",
