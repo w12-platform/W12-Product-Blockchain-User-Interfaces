@@ -18,7 +18,7 @@ app.set('view engine', 'ejs');
 app.engine('html', require('ejs').renderFile);
 
 app.get(['/', '/index', '/index.html'], (req, res) => res.render('index.html', { VERSION }));
-app.get(['/config', '/config.html'], (req, res) => res.render('config.html', { VERSION }));
+app.get(['/test-dashboard', '/test-dashboard.html'], (req, res) => res.render('config.html', { VERSION }));
 app.get(['/crowdsale', '/crowdsale.html'], (req, res) => res.render('crowdsale.html', { VERSION }));
 app.get(['/factory', '/factory.html'], (req, res) => res.render('factory.html', { VERSION }));
 app.get(['/investor-exchange', '/investor-exchange.html'], (req, res) => res.render('investor-exchange.html', { VERSION }));

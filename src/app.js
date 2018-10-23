@@ -47,7 +47,11 @@ new Vue({
         SidebarMenu,
         AppFooter,
         Factory,
-        ConfigDashboard,
+        ConfigDashboard: (
+            process.env.NODE_ENV === 'development'
+                ? ConfigDashboard
+                : undefined
+        ),
         Home,
         InvestorDashboard,
         InvestorDashboardExchange,
