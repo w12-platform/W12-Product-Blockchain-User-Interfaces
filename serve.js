@@ -4,7 +4,7 @@ const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const ROOT = path.resolve(__dirname, '/');
+const ROOT = __dirname;
 const VERSION = `v${require('./package.json').version}_${Date.now()}`;
 
 const app = express();
