@@ -69,7 +69,11 @@
                 <div v-if="!isPendingTx && !isErrorTx">
                     <div class="form-group">
                         <label for="FactoryName">{{ $t('TokensFactoryCreateFormName') }}</label>
-                        <b-field id="FactoryName">
+                        <b-field
+                            id="FactoryName"
+                            :type="typeName"
+                            :message="messageName"
+                        >
                             <input type="text"
                                    class="form-control"
                                    v-model="createForm.name"/>
@@ -77,10 +81,15 @@
                     </div>
                     <div class="form-group">
                         <label for="FactorySymbol">{{ $t('TokensFactoryCreateFormSymbol') }}</label>
-                        <b-field id="FactorySymbol">
+                        <b-field
+                            id="FactorySymbol"
+                            :type="typeSymbol"
+                            :message="messageSymbol"
+                        >
                             <input type="text"
                                    class="form-control"
-                                   v-model="createForm.symbol"/>
+                                   v-model="createForm.symbol"
+                            />
                         </b-field>
                     </div>
                     <div class="form-group">
@@ -123,6 +132,7 @@
     import {waitTransactionReceipt} from 'lib/utils.js';
     import {UPDATE_TX, CONFIRM_TX} from "store/modules/Transactions.js";
     import {FACTORY_ADD} from "store/modules/Factory.js";
+    import tokenValidationMixinGenerator from '@/bem/mixins/validation/token-validation';
     import Web3 from 'web3';
     import Steps from "bem/Steps";
 
@@ -154,6 +164,22 @@
     export default {
         name: 'Factory',
         template: '#FactoryTemplate',
+        mixins: [
+            tokenValidationMixinGenerator({
+                tokenSymbolGetter(component) {
+                    return component.createForm.symbol;
+                },
+                tokenNameGetter(component) {
+                    return component.createForm.name;
+                },
+                tokenDecimalsGetter(component) {
+                    return component.createForm.decimals;
+                },
+                tokenMintAmountGetter(component) {
+                    return component.createForm.amount;
+                }
+            })
+        ],
         data() {
             return {
                 createForm: {
@@ -214,25 +240,6 @@
                 FactoryList: "list"
             }),
 
-            isCorrectDecimals() {
-                return this.createForm.decimals ?
-                    this.createForm.decimals <= 36 &&
-                    this.createForm.decimals >= 0
-                    : false;
-            },
-            isCorrectAmount() {
-                return this.createForm.amount ?
-                    new BigNumber(this.createForm.amount).lte(this.maxAmount) &&
-                    new BigNumber(this.createForm.amount).gt(0)
-                    : false
-            },
-
-            typeDecimals() {
-                return this.isCorrectDecimals ? "" : "is-danger";
-            },
-            messageDecimals() {
-                return this.isCorrectDecimals ? "" : this.$t("ErrorValidDecimals");
-            },
             maxAmount() {
                 const decimals = this.createForm.decimals ? this.createForm.decimals : 0;
                 return uintMaxValue.div(new BigNumber(10).pow(decimals)).toFormat(0);
@@ -251,18 +258,51 @@
                     noImmediatePrefix: true,
                     rawValueTrimPrefix: true,
                     numeralIntegerScale: this.lengthMaxAmount,
-                    numeralDecimalScale: this.createForm.decimals,
+                    numeralDecimalScale: 0,
                 };
             },
             typeAmount() {
-                return this.isCorrectAmount ? "" : "is-danger";
+                if (!this.createForm.amount) return '';
+
+                return this.isTokenMintAmountValid ? "" : "is-danger";
             },
             messageAmount() {
-                const decimals = this.createForm.decimals ? this.createForm.decimals : 0;
-                return this.isCorrectAmount ? "" : this.$t("ErrorValidMaxAmount", {
-                    min: new BigNumber(1).div(new BigNumber(10).pow(decimals)),
+                if (!this.createForm.amount) return '';
+
+                return this.isTokenMintAmountValid ? "" : this.$t("ErrorValidMaxAmount", {
+                    min: 100,
                     max: this.maxAmountPrecision,
                 });
+            },
+            typeDecimals() {
+                if (!this.createForm.decimals) return '';
+
+                return this.isTokenDecimalsValid ? "" : "is-danger";
+            },
+            messageDecimals() {
+                if (!this.createForm.decimals) return '';
+
+                return this.isTokenDecimalsValid ? "" : this.$t("ErrorValidDecimals");
+            },
+            typeName() {
+                if (!this.createForm.name) return '';
+
+                return this.isTokenNameValid ? "" : "is-danger";
+            },
+            messageName() {
+                if (!this.createForm.name) return '';
+
+                return this.isTokenNameValid ? "" : this.$t("ErrorTokenNameIsNotValid");
+            },
+            typeSymbol() {
+                if (!this.createForm.symbol) return '';
+
+                return this.isTokenSymbolValid ? "" : "is-danger";
+            },
+            messageSymbol() {
+                if (!this.createForm.symbol) return '';
+
+                return this.isTokenSymbolValid ? "" : this.$t("ErrorTokenSymbolsIsNotValid");
             },
             isErrorTx() {
                 return this.TransactionsList && this.TransactionsList.length
@@ -291,12 +331,10 @@
                     : false;
             },
             disable() {
-                return !this.createForm.name
-                    || !this.createForm.symbol
-                    || !this.createForm.decimals
-                    || !this.isCorrectDecimals
-                    || !this.isCorrectAmount
-                    || !this.createForm.amount;
+                return !this.isTokenNameValid
+                    || !this.isTokenSymbolValid
+                    || !this.isTokenDecimalsValid
+                    || !this.isTokenMintAmountValid;
             },
             isLoading() {
                 return this.meta.loading;
