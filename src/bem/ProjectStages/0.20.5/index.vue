@@ -39,11 +39,13 @@
         watch: {
             'ProjectMeta.loadingProject': {
                 handler: 'handleProjectChange',
+                immediate: true
             },
         },
         data() {
             return {
                 subscribeToEventsLoading: false,
+                isSubscribedToEvent: false,
                 error: false,
             };
         },
@@ -83,12 +85,15 @@
                 updateProject: "updateProject"
             }),
 
-            async handleProjectChange() {
-                await this.updateAccountData();
-                this.unsubscribeFromEvents();
-                await this.subscribeToEvents();
+            async handleProjectChange(loadingStatus) {
+                if (loadingStatus === false) {
+                    await this.updateAccountData();
+                    this.unsubscribeFromEvents();
+                    await this.subscribeToEvents();
+                }
             },
             unsubscribeFromEvents() {
+                if (!this.isSubscribedToEvent) return;
                 if (!this.subscribedEvents) return;
 
                 this.subscribedEvents.CrowdsaleInitialized.stopWatching();
@@ -113,10 +118,11 @@
                 }
 
                 this.subscribedEvents.TokenPlaced.stopWatching();
-
+                this.isSubscribedToEvent = false;
                 this.subscribedEvents = null;
             },
             async subscribeToEvents() {
+                if (this.isSubscribedToEvent) return;
                 if (!this.currentProject) return;
                 if (this.subscribedEvents) return;
 
@@ -133,8 +139,8 @@
                     let UnsoldTokenReturned = null;
                     let TrancheReleased = null;
 
-                    if (!isZeroAddress(this.currentProject.crowdsaleAddress)) {
-                        const W12Crowdsale = W12CrowdsaleFactory.at(this.currentProject.crowdsaleAddress);
+                    if (!isZeroAddress(this.currentProject.tokenCrowdsaleAddress)) {
+                        const W12Crowdsale = W12CrowdsaleFactory.at(this.currentProject.tokenCrowdsaleAddress);
                         const fundAddress = await W12Crowdsale.methods.fund();
                         const W12Fund = W12FundFactory.at(fundAddress);
                         StagesUpdated = W12Crowdsale.events.StagesUpdated(null, null, this.onStagesUpdatedEvent);
@@ -170,6 +176,7 @@
                     this.error = e.message;
                 }
 
+                this.isSubscribedToEvent = true;
                 this.subscribeToEventsLoading = false;
             },
 

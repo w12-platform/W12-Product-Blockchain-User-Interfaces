@@ -18,9 +18,9 @@
 
             <div v-if="!isLoading && currentToken">
                 <TokenSwitch v-if="!isCurrentToken"></TokenSwitch>
-                <CrowdSale></CrowdSale>
-                <SaleTable></SaleTable>
                 <Calculator></Calculator>
+                <SaleTable></SaleTable>
+                <CrowdSale></CrowdSale>
             </div>
         </section>
         <Steps :number="6" link="/investor-refund.html"></Steps>

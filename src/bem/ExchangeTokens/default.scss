@@ -1,6 +1,14 @@
 .ExchangeTokens {
   &__exchange {
   }
+
+  &__title {
+    font-size: 30px;
+    line-height: 1.3;
+    font-family: "geometria-extablack", sans-serif;
+    text-align: center;
+  }
+
   .icon {
     margin: auto 5px;
     opacity: 0.3;

@@ -344,7 +344,7 @@
                 this.saveLoading = true;
                 try {
                     const {W12CrowdsaleFactory} = await this.LedgerFetch(this.currentProject.version);
-                    const W12Crowdsale = W12CrowdsaleFactory.at(this.currentProject.crowdsaleAddress);
+                    const W12Crowdsale = W12CrowdsaleFactory.at(this.currentProject.tokenCrowdsaleAddress);
                     const tx = await W12Crowdsale.setup(this.tokenCrowdSaleStages, this.tokenCrowdSaleMilestones);
                     const connectedWeb3 = (await Connector.connect()).web3;
                     this.$store.commit(`Transactions/${UPDATE_TX}`, {

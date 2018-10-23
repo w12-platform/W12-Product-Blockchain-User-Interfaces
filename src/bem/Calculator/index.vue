@@ -48,14 +48,23 @@
                 <p v-if="currentToken.crowdSaleInformation.stageDiscount !== '0'">
                     {{$t('InvestorDashboardCalculatorDiscount')}}
                     <b-tag type="is-success">{{ currentToken.crowdSaleInformation.stageDiscount }}%</b-tag>
-                    {{ profitInEth }} ETH
+                    <br>{{$t('InvestorDashboardCalculatorDiscountBeforeEndTimeout', { countdown: countdown })}}
+                    <!--{{ profitInEth }} ETH {{ countdown }}-->
+                </p>
+                <p>
+                    {{$t('InvestorDashboardCalculatorDiscountVestingEndDate', { date: dateFormat(this.currentToken.crowdSaleInformation.vestingDate) })}}
+                    <br>{{$t('InvestorDashboardCalculatorDiscountVestingDateCaution')}}
                 </p>
                 <p v-if="bonusVolume !== '0.00'">{{$t('InvestorDashboardCalculatorBonus')}}
                     <b-tag type="is-success">+{{ bonusVolume }} {{ currentToken.symbol }}</b-tag>
                 </p>
 
-                <div class="Calculator__total">{{$t('InvestorDashboardCalculatorTotalBuy')}} {{ totalToken }} {{
-                    currentToken.symbol }} - {{ total }} ETH
+                <div class="Calculator__total">
+                    {{$t('InvestorDashboardCalculatorTotalBuy')}} {{ totalToken }} {{ currentToken.symbol }} - {{ total }} ETH
+                    <br>
+                    {{$t('InvestorDashboardCalculatorTotalCost', { cost: totalCost })}} ETH
+                    <br>
+                    {{$t('InvestorDashboardCalculatorTotalProfit', { profit: profitInEth })}} ETH
                 </div>
             </div>
 
@@ -89,6 +98,8 @@
     import {waitTransactionReceipt} from 'lib/utils.js';
     import {UPDATE_TX, CONFIRM_TX} from "store/modules/Transactions.js";
     import Web3 from 'web3';
+    import countdown from 'countdown';
+    import moment from 'moment';
 
     const LedgerNS = createNamespacedHelpers("Ledger");
     const AccountNS = createNamespacedHelpers("Account");
@@ -115,7 +126,8 @@
                 blockChangeTokens: false,
                 blockChangeETHs: false,
                 total: 0,
-
+                countdownTmId: false,
+                countdown: false,
                 optionsNumber: {
                     prefix: '',
                     numeral: true,
@@ -138,6 +150,11 @@
             },
             currentToken: {
                 handler: 'handleSelectedChange',
+                immediate: true
+            },
+            currentToken: {
+                handler: 'onCurrentTokenDeepUpdate',
+                deep: true,
                 immediate: true
             }
         },
@@ -170,6 +187,13 @@
                     : this.ETHs;
 
                 return new BigNumber(this.ETHsWithoutDiscount).minus(ETHs).toFixed(4).toString();
+            },
+            totalCost () {
+                const ETHs = isNaN(parseFloat(this.ETHs))
+                    ? '0'
+                    : this.ETHs;
+
+                return new BigNumber(ETHs).toFixed(4).toString();
             },
             bonusVolume() {
                 const amount = this.ETHs ? this.ETHs : 0;
@@ -261,6 +285,9 @@
                         range.start.lessThanOrEqualTo(eth)
                         && range.end.greaterThanOrEqualTo(eth)
                 );
+            },
+            dateFormat (value) {
+                return moment(value * 1000).utc().format("DD.MM.YYYY HH:mm");
             },
             getPrice() {
                 const discount = new BigNumber(1).minus(
@@ -426,6 +453,34 @@
                     await this.tokensListUpdate({Index: this.currentToken.index});
                     this.$store.commit(`Transactions/${CONFIRM_TX}`, tx);
                 }
+            },
+            async watchCountdown () {
+                this.unwatchCountdown();
+
+                const watcher = async () => {
+                    if (this.currentToken) {
+                        const currentDate = moment().utc().unix();
+                        const stageEndDate = this.currentToken.crowdSaleInformation.stageEndDate;
+                        const EndDate = this.currentToken.crowdSaleInformation.endDate;
+
+                        if (currentDate >= stageEndDate) {
+                            this.unwatchCountdown();
+                            this.countdown = false;
+                        } else {
+                            this.countdown = countdown(new Date(stageEndDate * 1000)).toString();
+                        }
+                    }
+                };
+
+                if (this.currentToken) {
+                    this.countdownTmId = setInterval(watcher, 1000);
+                }
+            },
+            unwatchCountdown () {
+                clearInterval(this.countdownTmId);
+            },
+            async onCurrentTokenDeepUpdate () {
+                await this.watchCountdown();
             },
         },
     };

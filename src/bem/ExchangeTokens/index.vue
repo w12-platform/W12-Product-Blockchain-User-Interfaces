@@ -1,6 +1,6 @@
 <template>
     <div class="ExchangeTokens buefy" v-if="currentToken">
-        <h2>{{ $t('InvestorDashboardExchangeTokens', { WToken: currentToken.symbol, Token:
+        <h2 class="ExchangeTokens__title">{{ $t('InvestorDashboardExchangeTokens', { WToken: currentToken.symbol, Token:
             currentToken.tokenInformation.symbol}) }}</h2>
         <div class="ExchangeTokens__content">
             <table v-if="currentToken && currentAccountData"
@@ -82,6 +82,21 @@
                                 @click="exchange">{{ $t('InvestorDashboardExchangeTokensExchange') }}
                         </button>
                     </div>
+                    <table
+                        v-if="currentToken && currentAccountData"
+                        class="table table-striped table-bordered table-hover table-responsive-sm my-4"
+                    >
+                        <tbody>
+                            <tr>
+                                <td>{{ $t('InvestorDashboardExchangeTokensVestingBalance', {WToken: currentToken.symbol}) }}</td>
+                                <td>{{ vestingBalance }}</td>
+                            </tr>
+                            <tr v-if="currentToken.crowdSaleInformation.vestingDate">
+                                <td>{{ $t('InvestorDashboardExchangeTokensVestingDate') }}</td>
+                                <td>{{ currentToken.crowdSaleInformation.vestingDate | dateFormat }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -96,6 +111,7 @@
     import {createNamespacedHelpers} from "vuex";
     import {UPDATE_TX, CONFIRM_TX} from "store/modules/Transactions.js";
     import Web3 from 'web3';
+    import moment from 'moment';
 
     const web3 = new Web3();
     const BigNumber = web3.BigNumber;
@@ -122,7 +138,11 @@
         name: 'ExchangeTokens',
         template: '#ExchangeTokensTemplate',
         components: {},
-
+        filters: {
+            dateFormat (value) {
+                return moment(value * 1000).utc().format("DD.MM.YYYY HH:mm");
+            },
+        },
         data() {
             return {
                 loading: false,
