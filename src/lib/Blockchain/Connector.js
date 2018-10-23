@@ -65,8 +65,8 @@ export class Connector {
             }
         } else if (typeof window.web3 !== 'undefined') {
             return window.web3.currentProvider;
-        } else if (config.providers[config.blockchainNetworkId]) {
-            return new web3.providers.HttpProvider(config.providers[config.blockchainNetworkId]);
+        } else if (config.currentProvider) {
+            return new web3.providers.HttpProvider(config.currentProvider);
         }
 
         throw new Error('provider is not found');
