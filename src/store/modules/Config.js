@@ -1,34 +1,25 @@
 import { encode } from '@redtea/semint';
+import cloneDeep from 'lodash/cloneDeep';
+import config from '@/config';
+
+const getLastVersionInList = (list) => {
+    list = Array.from(list)
+        .sort((a, b) => encode(a.version, 4) - encode(b.version, 4));
+    return list.length != 0 ? list[list.length - 1] : null;
+};
 
 export const CONFIG_UPDATE = "CONFIG_UPDATE";
 
 export default {
     namespaced: true,
     state: {
-        FactoryTokens: {
-            address: "0x15bfbebcace798a18c42c2ff1f23388449355ea4"
-        },
-        W12Lister: {
-            address: "0xdb1278fbc18d0188ba237cf5e44bc2d930223d45",
-            version: "0.23.2"
-        },
+        FactoryTokens: cloneDeep(config.currentNetworkContractAddresses.FactoryTokens),
+        W12Lister: cloneDeep(getLastVersionInList(config.currentNetworkContractAddresses.W12Lister)),
         Default: {
-            version: "0.20.5"
+            version: getLastVersionInList(config.currentNetworkContractAddresses.W12Lister).version
         },
-        W12ListerList: [
-            {
-                address: "0x0d60b4c74be0670166dc8f5588d35c8d50f4929d",
-                version: "0.20.5"
-            },
-            {
-                address: "0x4dda30a4ab8e05223a772e1bbf09e3bfb6c9aff3",
-                version: "0.21.3"
-            },
-            {
-                address: "0xdb1278fbc18d0188ba237cf5e44bc2d930223d45",
-                version: "0.23.2"
-            }
-        ],
+        W12ListerList: cloneDeep(config.currentNetworkContractAddresses.W12Lister),
+        // TODO: move out to config
         Rates: {
             address: "0x811b10cde932759f6af53ba97e006ffe7796159b",
             version: "0.21.3"
@@ -37,9 +28,7 @@ export default {
     modules: {},
     getters: {
         W12ListerLastVersion (state) {
-            const list = state.W12ListerList.slice()
-                .sort((a, b) => encode(a.version, 4) - encode(b.version, 4));
-            return list.length != 0 ? list[list.length - 1] : null;
+            return getLastVersionInList(state.W12ListerList);
         }
     },
     mutations: {
@@ -47,7 +36,5 @@ export default {
             Object.assign(state, payload);
         },
     },
-    actions: {
-
-    }
+    actions: {}
 };

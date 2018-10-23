@@ -3,10 +3,42 @@ const path = require("path");
 const webpack = require("webpack");
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 
+const resolvePublicPath = (env) => {
+    const _default = '/build/';
+
+    switch(env) {
+        case 'production':
+            return (
+                process.env.WEBPACK_PUBLIC_PATH_PRODUCTION
+                || process.env.WEBPACK_PUBLIC_PATH
+                || _default
+            );
+        case 'development':
+            return (
+                process.env.WEBPACK_PUBLIC_PATH_DEVELOPMENT
+                || process.env.WEBPACK_PUBLIC_PATH
+                || _default
+            );
+        default:
+            return (
+                process.env.WEBPACK_PUBLIC_PATH
+                || _default
+            );
+    }
+};
+const validateBlockchainNetId = (id) => {
+    if (id != 1 && id != 4) throw new Error(`blockchain network id ${id} is not supported`);
+};
+
 const MODE = process.env.NODE_ENV || 'development'; // production || development
 const ROOT_PATH = path.join(__dirname, "/");
 const BUILD_DIR_PATH = path.join(__dirname, '/build');
-const publicPath = MODE === 'production' ? '/build/' : '/build/';
+const publicPath = resolvePublicPath(MODE);
+const blockchainNetworkId = process.env.BLOCKCHAIN_NETWORK_ID || '4';
+
+validateBlockchainNetId(blockchainNetworkId);
+
+console.log('Building client for blockchain network with id: ', blockchainNetworkId);
 
 module.exports = [
     {
@@ -61,6 +93,7 @@ module.exports = [
             new webpack.DefinePlugin({
                 ROOT_PATH: JSON.stringify('/'),
                 PACKAGE_JSON_PATH: JSON.stringify('package.json'),
+                BLOCKCHAIN_NETWORK_ID: blockchainNetworkId
             }),
         ],
         devServer: {

@@ -26,6 +26,7 @@
     "countdown": "^2.6.0",
     "jquery": "^3.3.1",
     "jsunicode": "^1.1.1",
+    "lodash": "^4.17.11",
     "moment": "^2.22.2",
     "p-iteration": "^1.1.7",
     "popper": "^1.0.1",
