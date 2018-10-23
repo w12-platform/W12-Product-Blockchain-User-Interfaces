@@ -2,8 +2,8 @@ import Web3 from 'web3';
 
 const BigNumber = new Web3().BigNumber;
 const MAX_UINT = new BigNumber(2).pow(256).minus(1);
-const TOKEN_SYMBOL_RE = /^([a-zA-Z0-9]{3,5})$/;
-const TOKEN_NAME_RE = /^([a-zA-Z0-9]{5,50})$/;
+const TOKEN_SYMBOL_RE = /^[a-zA-Z0-9]{3,5}$/;
+const TOKEN_NAME_VALIDATION = (value) => /^([a-zA-Z0-9]+?\s?[a-zA-Z0-9]+?)+$/.test(value) && value.length < 51;
 const TOKEN_DECIMALS_VALIDATION = (value) => { return value = parseInt(value), (1 < value && value < 19); };
 
 export default ({
@@ -22,7 +22,7 @@ export default ({
             isTokenNameValid () {
                 const value = tokenNameGetter(this);
 
-                return TOKEN_NAME_RE.test(value || '');
+                return TOKEN_NAME_VALIDATION(value || '');
             },
             isTokenDecimalsValid () {
                 const value = tokenDecimalsGetter(this);
