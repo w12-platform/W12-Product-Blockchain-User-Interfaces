@@ -132,7 +132,7 @@
     import {waitTransactionReceipt} from 'lib/utils.js';
     import {UPDATE_TX, CONFIRM_TX} from "store/modules/Transactions.js";
     import {FACTORY_ADD} from "store/modules/Factory.js";
-    import tokenValidationMixinGenerator from '@/bem/mixins/validation/token-validation';
+    import tokenValidationMixinGenerator from '@/lib/views/mixins/validation/token-validation';
     import Web3 from 'web3';
     import Steps from "bem/Steps";
 

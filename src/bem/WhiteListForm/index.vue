@@ -158,7 +158,7 @@
     import Connector from 'lib/Blockchain/DefaultConnector.js';
     import {promisify, waitTransactionReceipt} from 'lib/utils.js';
     import {UPDATE_TX} from "store/modules/Transactions.js";
-    import tokenValidationMixinGenerator from '@/bem/mixins/validation/token-validation';
+    import tokenValidationMixinGenerator from '@/lib/views/mixins/validation/token-validation';
     import {createNamespacedHelpers} from "vuex";
     import Web3 from "web3";
 
