@@ -17,9 +17,6 @@
         props: {
             number: {
                 required: true
-            },
-            all: {
-                default: 10
             }
         },
     };
