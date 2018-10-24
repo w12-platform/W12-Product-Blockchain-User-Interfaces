@@ -43,8 +43,15 @@ export class BaseWrapper {
     beforeSendHook(funct) {
         return async (...args) => {
             if (
-                args.length
-                && typeof args[args.length - 1] === 'object'
+                !args.length
+                || typeof args[args.length - 1] !== 'object'
+                || typeof args[args.length - 1].toNumber === 'function'
+            ) {
+                args.push({});
+            }
+
+            if (
+                typeof args[args.length - 1] === 'object'
                 && !args[args.length - 1].toNumber
             ) {
                 const txParams = args[args.length - 1];
