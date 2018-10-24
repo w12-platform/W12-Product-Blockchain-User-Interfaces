@@ -4,6 +4,7 @@ import {toWeiDecimals} from "../../../utils";
 
 const moment = window.moment;
 const web3 = new Web3();
+const BigNumber = web3.BigNumber;
 
 export class W12CrowdsaleWrapper extends BaseWrapper {
     encodeMilestoneParameters(name, description, tranchePercent, endDate, voteEndDate, withdrawalWindow) {
@@ -115,7 +116,7 @@ export class W12CrowdsaleWrapper extends BaseWrapper {
                     && boundaries.length > 0
                         && boundaries.length === bonuses.length) {
             for (let index in boundaries) {
-                const boundary = web3.fromWei(boundaries[index], 'ether').toNumber();
+                const boundary = new BigNumber(web3.fromWei(boundaries[index], 'ether').toString()).toNumber();
                 const bonus = Math.floor(bonuses[index] / 100).toString();
 
                 result.push([boundary, bonus]);
