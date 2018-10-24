@@ -6,10 +6,10 @@
   "scripts": {
     "serve": "webpack-dev-server --host localhost --mode development",
     "dev": "webpack --mode development",
-    "build": "NODE_ENV=production webpack -p",
+    "build": "cross-env NODE_ENV=production webpack -p",
     "watch": "webpack --watch --mode development",
-    "docker-server": "PROXY_URL=https://w12.io/ node ../server/bin/www",
-    "dev-server:proxy": "PROXY_URL=https://w12.io/ node ../server/bin/www"
+    "docker-server": "cross-env PROXY_URL=https://w12.io/ node ../server/bin/www",
+    "dev-server:proxy": "cross-env PROXY_URL=https://w12.io/ node ../server/bin/www"
   },
   "author": "",
   "license": "ISC",
@@ -57,6 +57,7 @@
     "babel-preset-stage-0": "~6.1.0",
     "babel-runtime": "~6.2.0",
     "body-parser": "^1.18.3",
+    "cross-env": "^5.2.0",
     "css-loader": "0.14.5",
     "ejs": "^2.6.1",
     "express": "^4.16.4",
