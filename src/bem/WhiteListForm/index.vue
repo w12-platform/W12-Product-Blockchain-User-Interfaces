@@ -1,15 +1,8 @@
 <template>
-    <div class="WhiteListForm_v2 buefy">
+    <div class="WhiteListForm buefy">
         <h2>{{ $t('AdminDashboardWhiteListForm') }}</h2>
 
-        <b-notification v-if="isLoading" :closable="false" class="WhiteListForm__loader">
-            <span v-if="whitelistingToken">{{ $t('AdminDashboardListingToken') }}</span>
-            <span v-if="checkingToken">{{ $t('AdminDashboardCheckingToken') }}</span>
-
-            <b-loading :is-full-page="false" :active="isLoading" :can-cancel="true"></b-loading>
-        </b-notification>
-
-        <div v-if="!isLoading" class="WhiteListForm__form">
+        <div class="WhiteListForm__form">
             <div class="form-group">
                 <label for="TokenAddress">{{ $t('AdminDashboardFieldTokenLabel') }}</label>
                 <input
@@ -29,39 +22,54 @@
                         v-model="whiteListForm.ownerAddress">
             </div>
             <div class="form-group">
-                <label for="Symbol">{{ $t('AdminDashboardFieldSymbolLabel') }}</label>
-                <input
-                        :placeholder="$t('AdminDashboardFieldSymbolPlaceholder')"
-                        minlength="1"
-                        type="text"
-                        @blur="onSymbolBlur"
-                        class="form-control"
-                        id="Symbol"
-                        :disabled="whitelistingReadOnly"
-                        v-model="whiteListForm.symbol"
+                <b-field
+                    :label="$t('AdminDashboardFieldSymbolLabel')"
+                    label-for="Symbol"
+                    :type="typeSymbol"
+                    :message="messageSymbol"
                 >
+                    <input
+                            :placeholder="$t('AdminDashboardFieldSymbolPlaceholder')"
+                            minlength="1"
+                            type="text"
+                            @blur="onSymbolBlur"
+                            class="form-control"
+                            id="Symbol"
+                            v-model="whiteListForm.symbol"
+                    >
+                </b-field>
             </div>
             <div class="form-group">
-                <label for="Decimals">{{ $t('AdminDashboardFieldDecimalsLabel') }}</label>
-                <input
-                        :placeholder="$t('AdminDashboardFieldDecimalsPlaceholder')"
-                        type="number"
-                        minlength="1"
-                        maxlength="2"
-                        class="form-control"
-                        id="Decimals"
-                        :disabled="whitelistingReadOnly"
-                        v-model="whiteListForm.decimals">
+                <b-field
+                        :label="$t('AdminDashboardFieldDecimalsLabel')"
+                        label-for="Decimals"
+                        :type="typeDecimals"
+                        :message="messageDecimals"
+                >
+                    <input
+                            :placeholder="$t('AdminDashboardFieldDecimalsPlaceholder')"
+                            type="number"
+                            minlength="1"
+                            maxlength="2"
+                            class="form-control"
+                            id="Decimals"
+                            v-model="whiteListForm.decimals">
+                </b-field>
             </div>
             <div class="form-group">
-                <label for="Name">{{ $t('AdminDashboardFieldNameLabel') }}</label>
-                <input
-                        :placeholder="$t('AdminDashboardFieldNamePlaceholder')"
-                        type="text"
-                        class="form-control"
-                        id="Name"
-                        :disabled="whitelistingReadOnly"
-                        v-model="whiteListForm.name">
+                <b-field
+                        :label="$t('AdminDashboardFieldNameLabel')"
+                        label-for="Name"
+                        :type="typeName"
+                        :message="messageName"
+                >
+                    <input
+                            :placeholder="$t('AdminDashboardFieldNamePlaceholder')"
+                            type="text"
+                            class="form-control"
+                            id="Name"
+                            v-model="whiteListForm.name">
+                </b-field>
             </div>
             <div class="form-group">
                 <label for="trancheFeePercent">
@@ -119,7 +127,6 @@
             </div>
 
 
-
             <b-notification :closable="false" v-if="disableWhiteListButton">
                 {{ $t('AdminDashboardWarning') }}
             </b-notification>
@@ -151,19 +158,40 @@
     import Connector from 'lib/Blockchain/DefaultConnector.js';
     import {promisify, waitTransactionReceipt} from 'lib/utils.js';
     import {UPDATE_TX} from "store/modules/Transactions.js";
-
+    import tokenValidationMixinGenerator from '@/lib/views/mixins/validation/token-validation';
     import {createNamespacedHelpers} from "vuex";
+    import Web3 from "web3";
+
+    const web3 = new Web3();
+    const BigNumber = web3.BigNumber;
 
     const LedgerNS = createNamespacedHelpers("Ledger");
     const WhitelistNS = createNamespacedHelpers("Whitelist");
     const ConfigNS = createNamespacedHelpers('Config');
     const TransactionsNS = createNamespacedHelpers("Transactions");
 
-    const EndOfSymbol = "-W";
+    const EndOfSymbol = "W";
+    const uintMaxValue = new BigNumber(2).pow(256).minus(1);
 
     export default {
         name: 'WhiteListForm',
         template: '#WhiteListFormTemplate',
+        mixins: [
+            tokenValidationMixinGenerator({
+                tokenSymbolGetter (component) {
+                    return component.whiteListForm.symbol;
+                },
+                tokenNameGetter (component) {
+                    return component.whiteListForm.name;
+                },
+                tokenDecimalsGetter (component) {
+                    return component.whiteListForm.decimals;
+                },
+                tokenMintAmountGetter (component) {
+                    return component.whiteListForm.amount;
+                }
+            })
+        ],
         data() {
             return {
                 meta: {
@@ -180,7 +208,6 @@
                     WTokenSaleFeePercent: null,
                     trancheFeePercent: null,
                 },
-                whitelistingReadOnly: false,
                 whitelistingToken: false,
                 checkingToken: false,
                 isTokenExists: false,
@@ -232,8 +259,35 @@
                     && (!isWhiteListed || !isTheSameOwner)
                 )
             },
-            isLoading() {
-                return this.whiteMeta.loading || this.meta.loading;
+            typeDecimals () {
+                if (!this.whiteListForm.decimals) return '';
+
+                return this.isTokenDecimalsValid ? "" : "is-danger";
+            },
+            messageDecimals () {
+                if (!this.whiteListForm.decimals) return '';
+
+                return this.isTokenDecimalsValid ? "" : this.$t("ErrorValidDecimals");
+            },
+            typeName () {
+                if (!this.whiteListForm.name) return '';
+
+                return this.isTokenNameValid ? "" : "is-danger";
+            },
+            messageName () {
+                if (!this.whiteListForm.name) return '';
+
+                return this.isTokenNameValid ? "" : this.$t("ErrorTokenNameIsNotValid");
+            },
+            typeSymbol () {
+                if (!this.whiteListForm.symbol) return '';
+
+                return this.isTokenSymbolValid ? "" : "is-danger";
+            },
+            messageSymbol () {
+                if (!this.whiteListForm.symbol) return '';
+
+                return this.isTokenSymbolValid ? "" : this.$t("ErrorTokenSymbolsIsNotValid");
             },
             isErrorTx() {
                 return this.TransactionsList && this.TransactionsList.length
@@ -260,7 +314,7 @@
                             : false
                     })
                     : false;
-            }
+            },
         },
         watch: {
             'whiteListForm.tokenAddress': {
@@ -283,9 +337,6 @@
             }),
             async tryWhiteListToken() {
                 this.clearErrorMessage();
-
-                if (this.isLoading) return;
-
                 await this.whiteListToken(this.whiteListForm);
             },
             clearErrorMessage() {
@@ -367,10 +418,6 @@
                         ownerAddress: currentAccount,
                         decimals: decimals.toString()
                     });
-
-                    this.whitelistingReadOnly = true;
-                } else {
-                    this.whitelistingReadOnly = false;
                 }
             },
             async createEventsHelpers() {

@@ -20,7 +20,7 @@
 
             <div v-if="!isLoading && this.currentAccount">
                 <WhiteListTable :is="WhiteListTableVersion"></WhiteListTable>
-                <WhiteListForm :is="WhiteListFormVersion"></WhiteListForm>
+                <WhiteListForm></WhiteListForm>
             </div>
         </section>
         <Steps :number="4"></Steps>
@@ -32,6 +32,7 @@
 
     import ListerSwitch from 'bem/ListerSwitch';
     import Steps from "bem/Steps";
+    import WhiteListForm from "bem/WhiteListForm";
 
     import {createNamespacedHelpers} from "vuex";
     import { CONFIG_UPDATE } from 'store/modules/Config';
@@ -47,6 +48,7 @@
         template: '#AdminDashboardTemplate',
         components: {
             ListerSwitch,
+            WhiteListForm,
             Steps
         },
         data() {
@@ -88,10 +90,6 @@
             WhiteListTableVersion(){
                 const v = this.W12Lister.version;
                 return () => import("bem/WhiteListTable/" + v);
-            },
-            WhiteListFormVersion(){
-                const v = this.W12ListerLastVersion.version;
-                return () => import("bem/WhiteListForm/" + v);
             },
             nextStepBlocked(){
                 return this.isPendingTx ? this.$t('StepsBlockedTx') : false;
