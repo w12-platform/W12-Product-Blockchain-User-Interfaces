@@ -23,7 +23,7 @@
                 <CrowdSale></CrowdSale>
             </div>
         </section>
-        <Steps :number="6" link="/investor-refund.html"></Steps>
+        <Steps :number="6"></Steps>
     </div>
 </template>
 

@@ -21,7 +21,7 @@
                 <ExchangeTokens></ExchangeTokens>
             </div>
         </section>
-        <Steps :number="8" link="/tranche.html"></Steps>
+        <Steps :number="8"></Steps>
     </div>
 </template>
 
