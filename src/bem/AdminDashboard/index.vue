@@ -23,7 +23,7 @@
                 <WhiteListForm :is="WhiteListFormVersion"></WhiteListForm>
             </div>
         </section>
-        <Steps :number="4" :blocked="nextStepBlocked" link="/project.html"></Steps>
+        <Steps :number="4"></Steps>
     </div>
 </template>
 

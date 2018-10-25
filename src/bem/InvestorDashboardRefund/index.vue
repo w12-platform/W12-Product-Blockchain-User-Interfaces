@@ -21,7 +21,7 @@
                 <RefundEth></RefundEth>
             </div>
         </section>
-        <Steps :number="7" link="/investor-exchange.html"></Steps>
+        <Steps :number="7"></Steps>
     </div>
 </template>
 

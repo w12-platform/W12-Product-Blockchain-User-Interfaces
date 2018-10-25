@@ -113,7 +113,7 @@
                 </div>
             </div>
         </section>
-        <Steps :number="3" :blocked="nextStepBlocked" link="/listing.html"></Steps>
+        <Steps :number="3"></Steps>
     </div>
 </template>
 

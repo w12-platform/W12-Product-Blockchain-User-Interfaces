@@ -29,7 +29,7 @@
                 </div>
             </div>
         </section>
-        <Steps :number="5" link="/crowdsale.html"></Steps>
+        <Steps :number="5"></Steps>
     </div>
 </template>
 

@@ -28,7 +28,7 @@
                 </div>
             </div>
         </section>
-        <Steps :number="9" link="/receiving.html"></Steps>
+        <Steps :number="9"></Steps>
     </div>
 </template>
 
