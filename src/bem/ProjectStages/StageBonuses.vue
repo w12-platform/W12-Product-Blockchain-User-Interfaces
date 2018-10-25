@@ -39,7 +39,11 @@
                                                 <div class="col-sm py-2">
                                                     <label>{{ $t('ProjectDashboardStageBonusesStartDateLabel')
                                                         }}</label>
-                                                    <b-field class="ProjectDashboard__dateSelect">
+                                                    <b-field
+                                                            class="ProjectDashboard__dateSelect"
+                                                            :type="stageIndex === 0 ? firstStageStartDateFieldType : null"
+                                                            :message="stageIndex === 0 ? firstStageStartDateMessage : null"
+                                                    >
                                                         <date-picker
                                                                 :not-before="getNotBeforeStart(stageIndex)"
                                                                 :not-after="getNotAfterStart(stageIndex)"
@@ -269,6 +273,35 @@
             ...TransactionsNS.mapState({
                 TransactionsList: "list"
             }),
+            // returns bool if first stage and first stage start date exists, otherwise undefined
+            isFirstStageStartDateGreaterOrEqualRecommended () {
+                if (this.tokenCrowdSaleStages.length) {
+                    const first = this.tokenCrowdSaleStages[0];
+
+                    if (first.startDate) {
+                        const startDate = moment(first.startDate);
+                        const recommended = moment().add(1, 'h');
+
+                        return startDate.isSameOrAfter(recommended);
+                    }
+                }
+
+                return;
+            },
+            firstStageStartDateFieldType () {
+                if (this.tokenCrowdSaleStages.length) {
+                    if (!this.isFirstStageStartDateGreaterOrEqualRecommended) {
+                        return 'is-info';
+                    }
+                }
+            },
+            firstStageStartDateMessage () {
+                if (this.tokenCrowdSaleStages.length) {
+                    if (!this.isFirstStageStartDateGreaterOrEqualRecommended) {
+                        return this.$t('FirstStageStartDateRecommendedDateInfoMessage');
+                    }
+                }
+            },
             isErrorTx(){
                 return this.TransactionsList && this.TransactionsList.length
                     ? this.TransactionsList.find((tr) => {
