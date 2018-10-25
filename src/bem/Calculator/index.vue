@@ -149,10 +149,6 @@
                 immediate: true
             },
             currentToken: {
-                handler: 'handleSelectedChange',
-                immediate: true
-            },
-            currentToken: {
                 handler: 'onCurrentTokenDeepUpdate',
                 deep: true,
                 immediate: true
@@ -481,6 +477,7 @@
             },
             async onCurrentTokenDeepUpdate () {
                 await this.watchCountdown();
+                await this.handleSelectedChange();
             },
         },
     };
