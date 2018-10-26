@@ -25,7 +25,7 @@ export default {
             state.list = state.list.filter((tr)=> tr.hash && tr.hash !== tx);
         },
         [RESET](state) {
-            state.list = null;
+            state.list = [];
         }
     },
     actions: {

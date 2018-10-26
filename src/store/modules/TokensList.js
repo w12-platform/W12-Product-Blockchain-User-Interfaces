@@ -94,7 +94,7 @@ export default {
                         const WTokenTotal = fromWeiDecimalsString(token.wTokensIssuedAmount, token.decimals);
                         const tokensOnSale = fromWeiDecimalsString((await W12Token.methods.balanceOf(token.crowdsaleAddress)).toString(), token.decimals);
                         const tokensForSaleAmount = fromWeiDecimalsString(token.tokensForSaleAmount, token.decimals);
-                        const tokenPrice = web3.fromWei(await W12Crowdsale.methods.price(), 'ether').toString();
+                        const tokenPrice = (await W12Crowdsale.methods.price()).toString();
                         const stages = (await W12Crowdsale.getStagesList());
                         const milestones = (await W12Crowdsale.getMilestones());
                         const startDate = stages.length ? stages[0].startDate : null;
@@ -233,7 +233,7 @@ export default {
                     const WTokenTotal = fromWeiDecimalsString(token.wTokensIssuedAmount, token.decimals);
                     const tokensOnSale = fromWeiDecimalsString((await W12Token.methods.balanceOf(token.crowdsaleAddress)).toString(), token.decimals);
                     const tokensForSaleAmount = fromWeiDecimalsString(token.tokensForSaleAmount, token.decimals);
-                    const tokenPrice = web3.fromWei(await W12Crowdsale.methods.price(), 'ether').toString();
+                    const tokenPrice = (await W12Crowdsale.methods.price()).toString();
                     const stages = (await W12Crowdsale.getStagesList());
                     const startDate = stages.length ? stages[0].startDate : null;
 
@@ -349,7 +349,7 @@ export default {
                         const tokensOnSale = fromWeiDecimalsString((await W12Token.methods.balanceOf(token.crowdsaleAddress)).toString(), token.decimals);
                         const tokensForSaleAmount = fromWeiDecimalsString(token.tokensForSaleAmount, token.decimals);
 
-                        const tokenPrice = web3.fromWei(await W12Crowdsale.methods.price(), 'ether').toString();
+                        const tokenPrice = (await W12Crowdsale.methods.price()).toString();
                         const stages = (await W12Crowdsale.getStagesList());
                         const startDate = stages.length ? stages[0].startDate : null;
 

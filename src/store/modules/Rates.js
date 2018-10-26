@@ -15,7 +15,7 @@ export default {
     },
     actions: {
         async fetch({commit}) {
-            const {RatesFactory} = await this.dispatch('Ledger/fetch', this.state.Config.Rates.version);
+            const {RatesFactory} = await this.dispatch('Ledger/fetch', this.state.Config.W12Lister.version);
             const Rates = await RatesFactory.at(this.state.Config.Rates.address);
             commit(RATES_UPDATE, {list: await Rates.getList()});
         },

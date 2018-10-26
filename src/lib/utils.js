@@ -5,6 +5,14 @@ import moment from 'moment';
 const web3 = new Web3();
 const BigNumber = web3.BigNumber;
 
+
+BigNumber.TEN = new BigNumber(10);
+BigNumber.TWO = new BigNumber(2);
+BigNumber.UINT_MAX = BigNumber.TWO.pow(256).minus(1);
+
+export { web3 };
+export { BigNumber };
+
 BigNumber.config({
     DECIMAL_PLACES: 36,
     FORMAT: {
@@ -63,6 +71,26 @@ export function waitTransactionReceipt(tx, web3, timeout = 240000) {
         };
 
         make_attempt();
+    });
+}
+
+export function waitContractEventOnce(contract, name, timeout = Infinity) {
+    return new Promise(function (accept, reject) {
+        if (typeof contract.events[name] !== 'function') reject(new Error(`no event with name "${name}"`));
+
+        let timer = isFinite(timeout) && timeout >= 0
+            ? setTimeout(() => reject(new Error('timout has been expired')), timeout)
+            : null;
+
+        const watcher = contract.events[name](null, null, (error, result) => {
+            watcher.stopWatching();
+
+            if (timer !== null) clearTimeout(timer);
+
+            if (error) return reject(error);
+
+            return accept(result);
+        });
     });
 }
 
@@ -141,6 +169,18 @@ export function isRefundActive(milestones, currentMilestoneIndex) {
     const nowUnix = moment().unix();
 
     return window[0] <= nowUnix && nowUnix < window[1];
+}
+
+export function encodeUSD(value) {
+    value = new BigNumber(value);
+
+    return value.mul(BigNumber.TEN.pow(8));
+}
+
+export function decodeUSD(value) {
+    value = new BigNumber(value);
+
+    return value.div(BigNumber.TEN.pow(8));
 }
 
 export async function jsonLoader(version, name) {

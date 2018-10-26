@@ -83,7 +83,7 @@ export async function loadContracts(v) {
 
     let Rates = null;
 
-    if(v === "0.21.3" || v === "0.23.2"){
+    if(['0.21.3', '0.23.2', '0.26.2'].includes(v)){
         const {RatesFactoryStrategy} = await dynamicImport("FactoryStrategies", v, "Rates");
         const {RatesWrapper} = await dynamicImport("Wrappers", v, "Rates");
         const RatesArtifacts = await jsonLoader(v, "Rates");
@@ -93,7 +93,8 @@ export async function loadContracts(v) {
         );
         await Rates.init();
     }
-    if(v === "0.23.2"){
+
+    if(['0.23.2', '0.26.2'].includes(v)){
         const TokenExchangerArtifacts = await jsonLoader(v, "TokenExchanger");
 
         const {TokenExchangerFactoryStrategy} = await dynamicImport("FactoryStrategies", v, "TokenExchanger");

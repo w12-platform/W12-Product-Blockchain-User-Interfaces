@@ -5,11 +5,11 @@ import {ReceivingModel} from 'src/bem/Receiving/model.js';
 import {TrancheInformationModel} from 'src/bem/TrancheInformation/shared.js';
 import {MilestoneModel} from 'src/bem/Milestones/shared.js';
 import Connector from "src/lib/Blockchain/DefaultConnector";
-import Web3 from 'web3';
+import isEqual from 'lodash/isEqual'
+import { web3, BigNumber } from 'src/lib/utils';
+
 
 const moment = window.moment;
-const web3 = new Web3();
-const BigNumber = web3.BigNumber;
 BigNumber.config({
     DECIMAL_PLACES: 36,
     FORMAT: {
@@ -34,6 +34,7 @@ export const UPDATE_CROWD_SALE_MILESTONES_LIST = "UPDATE_CROWD_SALE_MILESTONES_L
 export const REMEMBER_APPROVE_TOKENS_TX = "REMEMBER_APPROVE_TOKENS_TX";
 export const UPDATE_RECEVING_INFO = "UPDATE_RECEVING_INFO";
 export const UPDATE_FUND_DATA = "UPDATE_FUND_DATA";
+export const UPDATE_PAYMENT_METHODS_LIST = "UPDATE_PAYMENT_METHODS_LIST";
 export const UPDATE_META = "UPDATE_META";
 export const UPDATE = "UPDATE";
 export const RESET = "RESET";
@@ -207,6 +208,12 @@ export default {
                 ...state.currentProject,
                 fundData: fundData
             }
+        },
+        [UPDATE_PAYMENT_METHODS_LIST](state, list) {
+            state.currentProject = {
+                ...state.currentProject,
+                paymentMethodsList: list
+            };
         }
     },
     actions: {
@@ -219,7 +226,6 @@ export default {
             await this.dispatch('Project/fetchCrowdSaleAddressAndInfo', {Token});
             commit(UPDATE_META, {loadingProject: false});
         },
-
         async fetchList({commit}) {
             commit(UPDATE_META, {loading: true});
             try {
@@ -266,6 +272,7 @@ export default {
                     if (getters.isCrowdsaleInited) {
                         await this.dispatch('Project/fetchCrowdSaleStagesList', {Token: state.currentProject});
                         await this.dispatch('Project/upCrowdSaleStart', {Token: state.currentProject});
+                        await this.dispatch('Project/fetchPaymentMethodsList', {Token: state.currentProject});
 
                         if (state.currentProject.crowdSaleInformation.tokenCrowdSaleStages.length) {
                             await this.dispatch('Project/fetchCrowdSaleMilestonesList', {Token: state.currentProject});
@@ -356,7 +363,7 @@ export default {
                     if (address && !isZeroAddress(address)) {
                         const W12Crowdsale = W12CrowdsaleFactory.at(address);
                         const tokensForSaleAmount = Token.wTokensIssuedAmount;
-                        const tokenPrice = web3.fromWei(await W12Crowdsale.methods.price(), 'ether').toString();
+                        const tokenPrice = (await W12Crowdsale.methods.price()).toString();
 
                         commit(UPDATE_CROWD_SALE_ADDRESS, address);
                         commit(UPDATE_CROWD_SALE_INFO, {
@@ -461,6 +468,27 @@ export default {
                     fundData.trancheAmount = 0;
                 }
                 commit(UPDATE_FUND_DATA, fundData);
+            } catch (e) {
+                commit(UPDATE_META, {loadingProjectError: e.message});
+            }
+        },
+        async fetchPaymentMethodsList({commit, state}, {Token}) {
+            try {
+                let list = [];
+
+                if (!isZeroAddress(Token.tokenCrowdsaleAddress)) {
+                    const {W12CrowdsaleFactory} = await this.dispatch('Ledger/fetch', Token.version);
+                    const W12Crowdsale = W12CrowdsaleFactory.at(Token.tokenCrowdsaleAddress);
+
+                    list = await W12Crowdsale.getPaymentMethodsList();
+                }
+
+                if (
+                    state.currentProject
+                    && !isEqual(state.currentProject.paymentMethodsList, list)
+                ) {
+                    commit(UPDATE_PAYMENT_METHODS_LIST, list);
+                }
             } catch (e) {
                 commit(UPDATE_META, {loadingProjectError: e.message});
             }

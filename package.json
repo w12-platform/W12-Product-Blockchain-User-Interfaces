@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "serve": "webpack-dev-server --host localhost --mode development",
+    "d-up": "cross-env BLOCKCHAIN_NETWORK_ID=5777 webpack-dev-server --host localhost --mode development",
     "dev": "webpack --mode development",
     "build": "cross-env NODE_ENV=production webpack -p",
     "watch": "webpack --watch --mode development",
