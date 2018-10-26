@@ -78,11 +78,22 @@ export function waitContractEventOnce(contract, name, timeout = Infinity) {
     return new Promise(function (accept, reject) {
         if (typeof contract.events[name] !== 'function') reject(new Error(`no event with name "${name}"`));
 
+        const timerCb = () => {
+            if (watcher) watcher.stopWatching();
+
+            watcher = null;
+
+            reject(new Error('timout has been expired'));
+        };
+
+        let watcher;
         let timer = isFinite(timeout) && timeout >= 0
-            ? setTimeout(() => reject(new Error('timout has been expired')), timeout)
+            ? setTimeout(timerCb, timeout)
             : null;
 
-        const watcher = contract.events[name](null, null, (error, result) => {
+        watcher = contract.events[name](null, null, (error, result) => {
+            if (!watcher) return;
+
             watcher.stopWatching();
 
             if (timer !== null) clearTimeout(timer);
