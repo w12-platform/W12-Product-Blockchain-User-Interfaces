@@ -18,7 +18,7 @@
 
             <div v-if="!isLoading && currentToken">
                 <TokenSwitch v-if="!isCurrentToken"></TokenSwitch>
-                <Calculator></Calculator>
+                <component :is="CalculatorComponent"></component>
                 <SaleTable></SaleTable>
                 <CrowdSale></CrowdSale>
             </div>
@@ -36,7 +36,6 @@
     import TokenSwitch from 'bem/TokenSwitch';
     import CrowdSale from 'bem/CrowdSale';
     import SaleTable from 'bem/SaleTable';
-    import Calculator from 'bem/Calculator';
     import Steps from "bem/Steps";
 
     const LedgerNS = createNamespacedHelpers("Ledger");
@@ -66,7 +65,6 @@
             TokenSwitch,
             CrowdSale,
             SaleTable,
-            Calculator,
             Steps
         },
         data() {
@@ -102,6 +100,11 @@
             },
             isCurrentToken(){
                 return typeof CurrentToken !== 'undefined';
+            },
+            CalculatorComponent() {
+                if (!this.currentToken) return () => {};
+
+                return () => import(`@/bem/Calculator/${this.currentToken.version}/index.vue`);
             }
         },
         methods: {
