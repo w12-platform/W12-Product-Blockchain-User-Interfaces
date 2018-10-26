@@ -25,7 +25,7 @@
             :preserve-search="true"
             :placeholder="$t('ProjectDashboardStageCurrenciesListPickCurrencies')"
             :preselect-first="true"
-            :disabled="disabled"
+            :disabled="disabled || isStartCrowdSale"
         >
             <template slot="tag" slot-scope="props">
                 <b-taglist class="ProjectStages__tag" attached>
@@ -88,8 +88,11 @@
                 storedList: (state) =>
                     (state.currentProject && state.currentProject.paymentMethodsList)
                     || []
+                ,
             }),
-
+            ...ProjectNS.mapGetters({
+                isStartCrowdSale: 'isStartCrowdSale',
+            }),
             isAllReadyToSetup() {
                 return this.value.length > 0;
             }
