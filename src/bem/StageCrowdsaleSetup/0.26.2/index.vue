@@ -111,16 +111,16 @@
                                                 <div class="row justify-content-between">
                                                     <div class="col-sm py-2">
                                                         <label v-if="bonusVolumeIndex === 0" for="bonusVolumeETH">{{
-                                                            $t('ProjectDashboardStageBonusesFromEth') }}</label>
-                                                        <b-field id="bonusVolumeETH">
+                                                            $t('ProjectDashboardStageBonusesFieldsTitle', { currency: 'USD' }) }}</label>
+                                                        <b-field id="bonusVolumeUSD">
                                                             <b-input
-                                                                    placeholder="ETH"
+                                                                    placeholder="USD"
                                                                     type="number"
                                                                     :disabled="isStartCrowdSale"
                                                                     min="0"
                                                                     :step="0.0001"
                                                                     v-model="tokenCrowdSaleStages[stageIndex].bonusVolumes[bonusVolumeIndex][0]"
-                                                                    icon="ethereum">
+                                                                    icon="currency-usd">
                                                             </b-input>
                                                         </b-field>
                                                     </div>

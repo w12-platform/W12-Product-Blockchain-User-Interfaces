@@ -1,7 +1,8 @@
+import { encodeUSD } from '@/lib/utils';
 import { countStringBytes, decodeStringFromBytes, encodeStringToBytes, promisify } from 'lib/utils.js';
 import { BaseWrapper } from 'src/lib/Blockchain/Wrappers/NoVersion/BaseWrapper.js';
 import {toWeiDecimals} from "../../../utils";
-import { web3, BigNumber } from 'lib/utils';
+import { web3, BigNumber, decodeUSD } from 'lib/utils';
 
 
 const moment = window.moment;
@@ -44,7 +45,7 @@ export class W12CrowdsaleWrapper extends BaseWrapper {
                 let bonusVolumes = [];
 
                 stage.bonusVolumes.forEach((bonus)=>{
-                    volumeBoundaries.push(toWeiDecimals(bonus[0], 18));
+                    volumeBoundaries.push(encodeUSD(bonus[0]));
                     bonusVolumes.push(Math.floor(bonus[1] * 100));
                 });
 
@@ -118,7 +119,7 @@ export class W12CrowdsaleWrapper extends BaseWrapper {
                     && boundaries.length > 0
                         && boundaries.length === bonuses.length) {
             for (let index in boundaries) {
-                const boundary = new BigNumber(web3.fromWei(boundaries[index], 'ether').toString()).toNumber();
+                const boundary = decodeUSD(boundaries[index]).toString();
                 const bonus = Math.floor(bonuses[index] / 100).toString();
 
                 result.push([boundary, bonus]);

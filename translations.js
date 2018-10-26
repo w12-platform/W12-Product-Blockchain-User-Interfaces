@@ -1299,13 +1299,17 @@
 //     "StepsBlockedTx": {
 //         "en": "Please wait for confirmation of the transaction",
 //         "ru": "Пожалуйста дождитесь подтверждения транзакции"
-//     }
+//     },
 //     "FirstStageStartDateRecommendedDateInfoMessage": {
 //         "en": "Дату начала первой стадии рекомендуется устанавливать больше текущей даты на час и выше",
 //         "ru": "Дату начала первой стадии рекомендуется устанавливать больше текущей даты на час и выше"
-//     }
+//     },
 //     "ProjectDashboardStageCurrenciesListPickCurrencies": {
 //         "en": "Выберите валюту",
 //         "ru": "Выберите валюту"
-//     }
+//     },
+//     "ProjectDashboardStageBonusesFieldsTitle": {
+//         "en": "от {currency}",
+//         "ru": "от {currency}"
+//     },
 // };

@@ -7,7 +7,7 @@ import {MilestoneModel} from 'src/bem/Milestones/shared.js';
 import Connector from "src/lib/Blockchain/DefaultConnector";
 import isEqual from 'lodash/isEqual'
 import { web3, BigNumber } from 'src/lib/utils';
-
+import semver from 'semver';
 
 const moment = window.moment;
 BigNumber.config({
@@ -462,11 +462,15 @@ export default {
                     address: fundAddress,
                     balanceWei: (await getBalance(fundAddress)).toString(),
                 };
-                if(state.currentProject && state.currentProject.crowdSaleInformation && state.currentProject.crowdSaleInformation.isStartCrowdSale) {
-                    fundData.trancheAmount = (await W12Fund.methods.getTrancheAmount()).toString();
-                } else {
-                    fundData.trancheAmount = 0;
+
+                if (semver.satisfies(Token.version, '<0.26.2')) {
+                    if (state.currentProject && state.currentProject.crowdSaleInformation && state.currentProject.crowdSaleInformation.isStartCrowdSale) {
+                        fundData.trancheAmount = (await W12Fund.methods.getTrancheAmount()).toString();
+                    } else {
+                        fundData.trancheAmount = 0;
+                    }
                 }
+
                 commit(UPDATE_FUND_DATA, fundData);
             } catch (e) {
                 commit(UPDATE_META, {loadingProjectError: e.message});
