@@ -20,7 +20,7 @@
                 <TokenSwitch v-if="!isCurrentToken"></TokenSwitch>
                 <component :is="CalculatorComponent"></component>
                 <component :is="SaleTableComponent"></component>
-                <CrowdSale></CrowdSale>
+                <component :is="CrowdSaleComponent"></component>
             </div>
         </section>
         <Steps :number="6"></Steps>
@@ -34,7 +34,6 @@
     import Web3 from 'web3';
 
     import TokenSwitch from 'bem/TokenSwitch';
-    import CrowdSale from 'bem/CrowdSale';
     import Steps from "bem/Steps";
 
     const LedgerNS = createNamespacedHelpers("Ledger");
@@ -62,7 +61,6 @@
         },
         components: {
             TokenSwitch,
-            CrowdSale,
             Steps
         },
         data() {
@@ -108,7 +106,12 @@
                 if (!this.currentToken) return () => {};
 
                 return () => import(`@/bem/SaleTable/${this.currentToken.version}/index.vue`);
-            }
+            },
+            CrowdSaleComponent() {
+                if (!this.currentToken) return () => {};
+
+                return () => import(`@/bem/CrowdSale/${this.currentToken.version}/index.vue`);
+            },
         },
         methods: {
             ...TokensListNS.mapActions({
