@@ -82,7 +82,8 @@ export default {
                     } = await this.dispatch('Ledger/fetch', Lister.version);
                     const W12Lister = W12ListerFactory.at(Lister.address);
 
-                    let tokens = await W12Lister.fetchAllTokensComposedInformation();
+                    let tokens = (await W12Lister.fetchAllTokensComposedInformation())
+                        .filter(t => !isZeroAddress(t.crowdsaleAddress));
 
                     tokens.forEach((token, index) => {
                         token.index = index + 1;
@@ -188,6 +189,7 @@ export default {
 
                 commit(UPDATE, {list});
             } catch (e) {
+                console.error(e);
                 commit(UPDATE_META, {loading: false, loadingError: e.message || ERROR_FETCH_TOKENS_LIST});
             }
             commit(UPDATE_META, {loading: false});
