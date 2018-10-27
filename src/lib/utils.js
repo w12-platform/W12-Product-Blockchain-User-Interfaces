@@ -74,7 +74,7 @@ export function waitTransactionReceipt(tx, web3, timeout = 240000) {
     });
 }
 
-export function waitContractEventOnce(contract, name, timeout = Infinity) {
+export function waitContractEventOnce(contract, name, filters, timeout = Infinity) {
     return new Promise(function (accept, reject) {
         if (typeof contract.events[name] !== 'function') reject(new Error(`no event with name "${name}"`));
 
@@ -91,7 +91,7 @@ export function waitContractEventOnce(contract, name, timeout = Infinity) {
             ? setTimeout(timerCb, timeout)
             : null;
 
-        watcher = contract.events[name](null, null, (error, result) => {
+        watcher = contract.events[name](filters, null, (error, result) => {
             if (!watcher) return;
 
             watcher.stopWatching();
@@ -196,4 +196,10 @@ export function decodeUSD(value) {
 
 export async function jsonLoader(version, name) {
     return import("abi/" + version + "/" + name + ".json");
+}
+
+export function round(value) {
+    value = new BigNumber(value);
+
+    return new BigNumber(value.toFixed(0, 1));
 }

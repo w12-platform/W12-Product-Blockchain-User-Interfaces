@@ -28,7 +28,6 @@
 //         "en": "BUY W12 TOKENS",
 //         "ru": "КУПИТЬ W12 TOKENS"
 //     },
-//
 //     "TokenInfoAddress": {
 //         "en": "Token Address",
 //         "ru": "Адрес токена"
@@ -1311,5 +1310,25 @@
 //     "ProjectDashboardStageBonusesFieldsTitle": {
 //         "en": "от {currency}",
 //         "ru": "от {currency}"
+//     },
+//     "InvestorDashboardCalculatorChange": {
+//         "en": "Сдача: {change}",
+//         "ru": "Сдача: {change}"
+//     },
+//     "InvestorDashboardCalculatorPaymentMethods": {
+//         "en": "Оплатить",
+//         "ru": "Оплатить"
+//     },
+//     "InvestorDashboardCalculatorPaymentMethodsSelect": {
+//         "en": "Выберите валюту",
+//         "ru": "Выберите валюту"
+//     },
+//     "InvestorDashboardCalculatorNeedToApprove": {
+//         "en": "Разрешить снятие средств на сумму: {approve}",
+//         "ru": "Разрешить снятие средств на сумму: {approve}"
+//     },
+//     "InvestorDashboardCalculatorDoApprove": {
+//         "en": "Разрешить снятие средств для оплаты",
+//         "ru": "Разрешить снятие средств для оплаты"
 //     },
 // };

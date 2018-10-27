@@ -1,11 +1,16 @@
+import {
+    getSaleTokenAmountWithoutCommission,
+    getTokenPriceWithDiscount, getSoldAmount,
+    getSoldPercent
+} from '@/lib/selectors/crowdsale';
+import { getCurrentStage, getEndDate, getStartDate } from '@/lib/selectors/crowdsaleStages';
 import Connector from "lib/Blockchain/DefaultConnector";
-import {promisify, isZeroAddress, fromWeiDecimalsString} from "src/lib/utils";
-import {map} from 'p-iteration';
-import Web3 from 'web3';
-
-const moment = window.moment;
-const web3 = new Web3();
-const BigNumber = web3.BigNumber;
+import semver from 'semver';
+import { promisify, isZeroAddress, fromWeiDecimalsString, decodeUSD } from "src/lib/utils";
+import {map, reduce} from 'p-iteration';
+import {web3, BigNumber} from 'src/lib/utils';
+import moment from 'moment';
+import zipObject from 'lodash/zipObject';
 
 export const ERROR_FETCH_TOKENS_LIST = 'An unknown error while trying get tokens';
 
@@ -62,25 +67,28 @@ export default {
     actions: {
         async fetch({commit}) {
             commit(UPDATE_META, {loading: true});
+
+            const {web3} = await Connector.connect();
+
             try {
-                const {DetailedERC20Factory, W12CrowdsaleFactory, W12TokenFactory, W12FundFactory} = await this.dispatch('Ledger/fetch', this.state.Config.W12Lister.version);
-                const listPromise = this.state.Config.W12ListerList.map(async (Lister)=>{
-                    const {W12ListerFactory} = await this.dispatch('Ledger/fetch', Lister.version);
+                const listers = this.state.Config.W12ListerList;
+                const fetchToken = async (list, Lister) => {
+                    const {
+                        DetailedERC20Factory,
+                        W12CrowdsaleFactory,
+                        W12TokenFactory,
+                        W12FundFactory,
+                        W12ListerFactory
+                    } = await this.dispatch('Ledger/fetch', Lister.version);
                     const W12Lister = W12ListerFactory.at(Lister.address);
-                    return await W12Lister.fetchAllTokensComposedInformation();
-                });
-                Promise.all(listPromise).then(async(completed) => {
-                    let list = [];
-                    completed.forEach((item)=>{
-                        list = list.concat(item);
+
+                    let tokens = await W12Lister.fetchAllTokensComposedInformation();
+
+                    tokens.forEach((token, index) => {
+                        token.index = index + 1;
                     });
-                    let index = 1;
-                    list.map((item)=>{
-                        item.index = index++;
-                    });
-                    list = list.filter((token) => !isZeroAddress(token.crowdsaleAddress));
-                    list = await map(list, async token => {
-                        const {web3} = await Connector.connect();
+
+                    tokens = await map(tokens, async (token) => {
                         const DetailedERC20 = DetailedERC20Factory.at(token.tokenAddress);
                         const W12Crowdsale = W12CrowdsaleFactory.at(token.crowdsaleAddress);
                         const WTokenAddress = token.wTokenAddress;
@@ -89,86 +97,59 @@ export default {
                         const W12Fund = W12FundFactory.at(W12FundAddress);
 
                         const getBalance = promisify(web3.eth.getBalance.bind(web3.eth));
-                        const foundBalanceInWei = (await getBalance(W12FundAddress)).toString();
 
                         const WTokenTotal = fromWeiDecimalsString(token.wTokensIssuedAmount, token.decimals);
                         const tokensOnSale = fromWeiDecimalsString((await W12Token.methods.balanceOf(token.crowdsaleAddress)).toString(), token.decimals);
                         const tokensForSaleAmount = fromWeiDecimalsString(token.tokensForSaleAmount, token.decimals);
-                        const tokenPrice = (await W12Crowdsale.methods.price()).toString();
+                        const tokenPrice = decodeUSD(await W12Crowdsale.methods.price()).toString();
                         const stages = (await W12Crowdsale.getStagesList());
                         const milestones = (await W12Crowdsale.getMilestones());
-                        const startDate = stages.length ? stages[0].startDate : null;
+                        const startDate = getStartDate(stages);
+                        const endDate = getEndDate(stages);
+                        const currentDateUnix = moment.utc().unix();
+                        const currentStage = getCurrentStage(stages);
+                        const timeLeft = currentStage ? currentStage.endDate - currentDateUnix : 0;
+                        const status = !!currentStage;
+                        const stageDiscount = currentStage ? currentStage.discount : 0;
+
                         let currentMilestoneIndex = (await W12Crowdsale.methods.getCurrentMilestoneIndex());
+                        let totalFundedPerAsset,
+                            totalReleasedPerAsset;
+                        let totalFunded, totalRefunded, foundBalanceInWei;
+                        let paymentMethods;
 
                         currentMilestoneIndex = currentMilestoneIndex[1]
                             ? currentMilestoneIndex[0].toNumber()
                             : null;
 
-                        let endDate = false;
-                        let stageEndDate = false;
-                        let timeLeft = false;
-                        let status = false;
-                        let vestingDate;
-                        let stageDiscount = 0;
-                        let bonusVolumes = [];
+                        if (semver.satisfies(Lister.version, '>=0.26.0')) {
+                            const symbols = await W12Fund.getTotalFundedAssetsSymbols();
+                            const funded = await map(symbols, async (s) => await W12Fund.getTotalFundedAmount(s));
+                            const released = await map(symbols, async (s) => await W12Fund.getTotalFundedReleased(s));
 
-                        if (stages.length) {
-                            const ranges = [
-                                {
-                                    range: [startDate],
-                                    stage: null
-                                }
-                            ];
+                            totalFundedPerAsset = zipObject(symbols, funded);
+                            totalReleasedPerAsset = zipObject(symbols, released);
+                            paymentMethods = await W12Crowdsale.getPaymentMethodsList();
+                        }
 
-                            for (let stage of stages) {
-                                const last = ranges[ranges.length - 1];
-                                const endDateUnix = stage.endDate;
-
-                                if (last.range.length === 1) {
-                                    last.range.push(endDateUnix);
-                                    last.stage = stage;
-                                }
-
-                                ranges.push({
-                                    range: [endDateUnix],
-                                    stage: null
-                                });
-
-                                const stageEndDate = stage.endDate;
-                                endDate = endDate < stageEndDate ? stageEndDate : endDate;
-                            }
-
-                            ranges.pop();
-
-                            const currentDateUnix = moment.utc().unix();
-                            const foundStage = ranges.find(item => {
-                                return (
-                                    currentDateUnix >= item.range[0]
-                                    && currentDateUnix <= item.range[1]
-                                );
-                            });
-
-                            if (foundStage) {
-                                status = true;
-                                bonusVolumes = foundStage.stage.bonusVolumes;
-                                stageDiscount = foundStage.stage.discount;
-                                stageEndDate = foundStage.stage.endDate;
-                                vestingDate = foundStage.stage.vestingDate;
-                                timeLeft = stageEndDate - currentDateUnix;
-                            }
+                        if (semver.satisfies(Lister.version, '<0.26.0')) {
+                            foundBalanceInWei = (await getBalance(W12FundAddress)).toString();
+                            totalFunded = (await W12Fund.methods.totalFunded()).toString();
+                            totalRefunded = (await W12Fund.methods.totalRefunded()).toString();
                         }
 
                         token.tokenInformation = (await DetailedERC20.getDescription());
                         token.crowdSaleInformation = {
                             tokenPrice,
-                            startDate: startDate,
+                            paymentMethods,
+                            startDate,
                             crowdsaleAddress: token.crowdsaleAddress,
                             stages,
                             status,
-                            bonusVolumes,
+                            bonusVolumes: currentStage ? currentStage.bonusVolumes : [],
                             stageDiscount,
-                            stageEndDate,
-                            vestingDate,
+                            stageEndDate: currentStage ? currentStage.endDate : null,
+                            vestingDate: currentStage ? currentStage.vestingDate : null,
                             WTokenAddress,
                             endDate,
                             timeLeft,
@@ -176,21 +157,20 @@ export default {
                             currentMilestoneIndex,
                             milestones,
                             tokensForSaleAmount,
-                            tokensOnSale: new BigNumber(tokensOnSale)
-                                .mul((new BigNumber(tokensOnSale)))
-                                .div(new BigNumber(tokensOnSale)
-                                    .mul(1 + token.WTokenSaleFeePercent / (100 ** 2)))
-                                .toString(),
+                            tokensOnSale: getSaleTokenAmountWithoutCommission(tokensOnSale, token.WTokenSaleFeePercent).toString(),
                             fund: {
                                 W12FundAddress,
                                 foundBalanceInWei,
-                                totalFunded: (await W12Fund.methods.totalFunded()).toString(),
-                                totalRefunded: (await W12Fund.methods.totalRefunded()).toString()
+                                totalFunded,
+                                totalRefunded,
+                                totalFundedPerAsset,
+                                totalReleasedPerAsset
                             },
-                            saleAmount: new BigNumber(WTokenTotal).minus(tokensOnSale).toString(),
-                            salePercent: new BigNumber(WTokenTotal).minus(tokensOnSale).div(WTokenTotal).mul(100).toString(),
-                            price: new BigNumber(tokenPrice).mul(100 - stageDiscount).div(100).toString()
+                            saleAmount: getSoldAmount(WTokenTotal, tokensOnSale).toString(),
+                            salePercent: getSoldPercent(WTokenTotal, tokensOnSale).toString(),
+                            price: getTokenPriceWithDiscount(tokenPrice, stageDiscount).toString()
                         };
+
                         if (endDate) {
                             if (!this.state.TokensList.currentToken) {
                                 commit(TOKEN_SELECTED, {currentToken: token});
@@ -198,8 +178,15 @@ export default {
                             return token;
                         }
                     });
-                    commit(UPDATE, {list});
-                });
+
+                    list = list.concat(tokens);
+
+                    return list;
+                };
+
+                const list = await reduce(listers, fetchToken, []);
+
+                commit(UPDATE, {list});
             } catch (e) {
                 commit(UPDATE_META, {loading: false, loadingError: e.message || ERROR_FETCH_TOKENS_LIST});
             }

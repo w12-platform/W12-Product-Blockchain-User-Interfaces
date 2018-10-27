@@ -161,4 +161,16 @@ export class W12CrowdsaleWrapper extends BaseWrapper {
     async getPaymentMethodsList() {
         return (await this.methods.getPaymentMethodsList()).map((s) => web3.toUtf8(s));
     }
+
+    async getInvoice(symbol, amount) {
+        return await this.methods.getInvoice(web3.fromUtf8(symbol), amount);
+    }
+
+    async getInvoiceByTokenAmount(symbol, amount) {
+        return await this.methods.getInvoiceByTokenAmount(web3.fromUtf8(symbol), amount);
+    }
+
+    async buyTokens(symbol, amount, txParams) {
+        return await this.methods.buyTokens(web3.fromUtf8(symbol), amount, txParams);
+    }
 }

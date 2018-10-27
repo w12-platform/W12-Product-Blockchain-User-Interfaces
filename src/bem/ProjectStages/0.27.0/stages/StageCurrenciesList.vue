@@ -17,7 +17,7 @@
         <multiselect
             :value="value"
             @input="$emit('input', $event)"
-            :options="RatesList"
+            :options="ratesList"
             :multiple="true"
             :close-on-select="false"
             :clear-on-select="false"
@@ -82,7 +82,7 @@
         },
         computed: {
             ...RatesNS.mapState({
-                RatesList: "list",
+                storedRatesList: "list",
             }),
             ...ProjectNS.mapState({
                 storedList: (state) =>
@@ -93,6 +93,9 @@
             ...ProjectNS.mapGetters({
                 isStartCrowdSale: 'isStartCrowdSale',
             }),
+            ratesList() {
+               return this.storedRatesList.map(r => r.symbol);
+            },
             isAllReadyToSetup() {
                 return this.value.length > 0;
             }

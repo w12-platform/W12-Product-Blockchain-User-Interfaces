@@ -51,7 +51,7 @@
                     <br>{{$t('InvestorDashboardCalculatorDiscountBeforeEndTimeout', { countdown: countdown })}}
                     <!--{{ profitInEth }} ETH {{ countdown }}-->
                 </p>
-                <p>
+                <p v-if="currentToken.crowdSaleInformation.vestingDate">
                     {{$t('InvestorDashboardCalculatorDiscountVestingEndDate', { date: dateFormat(this.currentToken.crowdSaleInformation.vestingDate) })}}
                     <br>{{$t('InvestorDashboardCalculatorDiscountVestingDateCaution')}}
                 </p>

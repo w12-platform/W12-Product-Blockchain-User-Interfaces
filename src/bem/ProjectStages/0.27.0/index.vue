@@ -36,7 +36,7 @@
     import StagePlace from 'bem/ProjectStages/StagePlace';
     import StageCurrenciesList from './stages/StageCurrenciesList';
     import StageConfigureCrowdsale from './stages/StageConfigureCrowdsale';
-    import StageCrowdsaleSetup from 'bem/StageCrowdsaleSetup/0.26.2';
+    import StageCrowdsaleSetup from 'bem/StageCrowdsaleSetup/0.27.0';
 
     import {createNamespacedHelpers} from "vuex";
     import {CONFIRM_TX, UPDATE_TX} from "store/modules/Transactions.js";
@@ -235,24 +235,6 @@
                     await this.updateReceivingInformation({Token: this.currentProject});
                     await this.updateAccountData();
                     const tx = result.transactionHash;
-                    this.$store.commit(`Transactions/${CONFIRM_TX}`, tx);
-                }
-            },
-            // TODO: remove
-            async onCrowdsaleSetUpEvent(error, result) {
-                if (!error) {
-                    await this.$nextTick();
-
-                    const tx = result.transactionHash;
-
-                    const found = this.$store.state.Transactions.list.find((tr) => tr.hash === tx);
-
-                    if (!found) return;
-
-                    await this.fetchCrowdSaleStagesList({Token: this.currentProject});
-                    await this.fetchCrowdSaleMilestonesList({Token: this.currentProject});
-                    await this.fetchPaymentMethodsList({Token: this.currentProject});
-
                     this.$store.commit(`Transactions/${CONFIRM_TX}`, tx);
                 }
             },
