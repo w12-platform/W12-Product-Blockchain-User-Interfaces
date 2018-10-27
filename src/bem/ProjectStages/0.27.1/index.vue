@@ -36,7 +36,7 @@
     import StagePlace from 'bem/ProjectStages/StagePlace';
     import StageCurrenciesList from './stages/StageCurrenciesList';
     import StageConfigureCrowdsale from './stages/StageConfigureCrowdsale';
-    import StageCrowdsaleSetup from 'bem/StageCrowdsaleSetup/0.27.0';
+    import StageCrowdsaleSetup from 'bem/StageCrowdsaleSetup/0.27.1';
 
     import {createNamespacedHelpers} from "vuex";
     import {CONFIRM_TX, UPDATE_TX} from "store/modules/Transactions.js";
