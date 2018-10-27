@@ -1331,4 +1331,9 @@
 //         "en": "Разрешить снятие средств для оплаты",
 //         "ru": "Разрешить снятие средств для оплаты"
 //     },
+//     "InvestorDashboardDiscountsAmountTitle": {
+//         "en": "В {currency}",
+//         "ru": "В {currency}"
+//     },
+
 // };
