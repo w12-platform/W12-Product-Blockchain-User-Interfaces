@@ -1,6 +1,7 @@
 import jsunicode from 'jsunicode';
 import Web3 from 'web3';
 import moment from 'moment';
+import * as Sentry from '@sentry/browser';
 
 const web3 = new Web3();
 const BigNumber = web3.BigNumber;
@@ -24,6 +25,40 @@ export function promisify (funct) {
                 if (error != null) {
                     reject(error);
                 } else {
+                    accept(result);
+                }
+            };
+
+            return funct(...args, callback);
+        });
+    };
+}
+
+export function promisifyLogsResult (funct, info) {
+    return function (...args) {
+        return new Promise((accept, reject) => {
+            const callback = function (error, result) {
+                const title = [info.type,info.contract_name,info.name,info.version,info.address].join(' ');
+                Sentry.configureScope((scope) => {
+                    scope.setExtra("args", args);
+                    scope.setExtra("result", result);
+                    scope.setTag("Type", info.type);
+                    scope.setTag("ContractName", info.contract_name);
+                    scope.setTag("Name", info.name);
+                    scope.setTag("Version", info.version);
+                    scope.setTag("Address", info.address);
+                });
+                if (error != null) {
+                    Sentry.configureScope((scope) => {
+                        scope.setLevel("error");
+                    });
+                    Sentry.captureMessage(title);
+                    reject(error);
+                } else {
+                    Sentry.configureScope((scope) => {
+                        scope.setLevel("info");
+                    });
+                    Sentry.captureMessage(title);
                     accept(result);
                 }
             };

@@ -5,8 +5,13 @@ const providers = {
     4: process.env.BLOCKCHAIN_NETWORK_4_PROVIDER || 'https://rinkeby.infura.io/v3/8df9df41a48b4dd290a1abbba80b9953'
 };
 
+const sentry = {
+    allowedLevel: "fatal error warning debug", //fatal error warning info debug
+};
+
 // noinspection JSUnresolvedVariable
 const config = {
+    sentry,
     providers,
     currentProvider: providers[BLOCKCHAIN_NETWORK_ID],
     contractAddresses,

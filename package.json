@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@redtea/semint": "^1.0.1",
+    "@sentry/browser": "^4.2.3",
     "ajv": "^6.5.4",
     "axios": "^0.18.0",
     "bootstrap": "^4.1.3",
