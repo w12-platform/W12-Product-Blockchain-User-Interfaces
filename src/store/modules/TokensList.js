@@ -4,6 +4,7 @@ import {
     getSoldPercent
 } from '@/lib/selectors/crowdsale';
 import { getCurrentStage, getEndDate, getStartDate } from '@/lib/selectors/crowdsaleStages';
+import { convertionByDecimals } from '@/lib/selectors/units';
 import Connector from "lib/Blockchain/DefaultConnector";
 import semver from 'semver';
 import { promisify, isZeroAddress, fromWeiDecimalsString, decodeUSD } from "src/lib/utils";
@@ -102,7 +103,9 @@ export default {
                         const WTokenTotal = fromWeiDecimalsString(token.wTokensIssuedAmount, token.decimals);
                         const tokensOnSale = fromWeiDecimalsString((await W12Token.methods.balanceOf(token.crowdsaleAddress)).toString(), token.decimals);
                         const tokensForSaleAmount = fromWeiDecimalsString(token.tokensForSaleAmount, token.decimals);
-                        const tokenPrice = decodeUSD(await W12Crowdsale.methods.price()).toString();
+                        const tokenPrice = semver.satisfies(Lister.version, '>=0.26.0')
+                            ? decodeUSD(await W12Crowdsale.methods.price()).toString()
+                            : web3.fromWei(await W12Crowdsale.methods.price(), 'ether').toString()
                         const stages = (await W12Crowdsale.getStagesList());
                         const milestones = (await W12Crowdsale.getMilestones());
                         const startDate = getStartDate(stages);
