@@ -1,6 +1,5 @@
 import {promisify, isZeroAddress, fromWeiDecimalsString, fromWeiDecimals} from "src/lib/utils";
 import {map} from 'p-iteration';
-
 import {ReceivingModel} from 'src/bem/Receiving/model.js';
 import {TrancheInformationModel} from 'src/bem/TrancheInformation/shared.js';
 import {MilestoneModel} from 'src/bem/Milestones/shared.js';
@@ -272,7 +271,9 @@ export default {
                     if (getters.isCrowdsaleInited) {
                         await this.dispatch('Project/fetchCrowdSaleStagesList', {Token: state.currentProject});
                         await this.dispatch('Project/upCrowdSaleStart', {Token: state.currentProject});
-                        await this.dispatch('Project/fetchPaymentMethodsList', {Token: state.currentProject});
+                        if (semver.satisfies(Token.version, '>=0.26.0')) {
+                            await this.dispatch('Project/fetchPaymentMethodsList', {Token: state.currentProject});
+                        }
 
                         if (state.currentProject.crowdSaleInformation.tokenCrowdSaleStages.length) {
                             await this.dispatch('Project/fetchCrowdSaleMilestonesList', {Token: state.currentProject});
