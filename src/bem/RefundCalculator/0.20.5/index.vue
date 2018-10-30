@@ -26,14 +26,13 @@
     </div>
 </template>
 <script>
-    import 'src/bem/RefundCalculator/default.scss';
-    import { RefundInformationModel } from 'bem/RefundInformation/shared.js';
-    import { toWeiDecimals } from 'lib/utils.js';
-    import Web3 from 'web3';
+    import './default.scss';
+    import { RefundInformationModel } from 'bem/RefundInformation/0.20.5/shared.js';
+    import {web3, toWeiDecimals} from 'lib/utils';
 
-    const web3 = new Web3();
-    const BigNumber = web3.BigNumber.another({ EXPONENTIAL_AT: [-30, 30] });
     import {createNamespacedHelpers} from "vuex";
+
+    const BigNumber = web3.BigNumber.another({ EXPONENTIAL_AT: [-30, 30] });
 
     const LedgerNS = createNamespacedHelpers("Ledger");
     const TokensListNS = createNamespacedHelpers("TokensList");

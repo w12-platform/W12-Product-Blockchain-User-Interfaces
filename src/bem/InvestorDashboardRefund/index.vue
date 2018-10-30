@@ -17,8 +17,8 @@
             </b-notification>
 
             <div v-if="!isLoading">
-                <TokenSwitch v-if="!isCurrentToken"></TokenSwitch>
-                <RefundEth></RefundEth>
+                <TokenSwitch v-if="!hasCurrentToken"></TokenSwitch>
+                <component :is="RefundEthComponent"></component>
             </div>
         </section>
         <Steps :number="7"></Steps>
@@ -28,10 +28,10 @@
 <script>
     import './default.scss';
 
+    import semver from 'semver';
     import {createNamespacedHelpers} from "vuex";
 
     import TokenSwitch from 'bem/TokenSwitch';
-    import RefundEth from 'bem/RefundEth';
     import Steps from "bem/Steps";
 
     const LedgerNS = createNamespacedHelpers("Ledger");
@@ -44,14 +44,14 @@
         name: 'InvestorDashboardRefund',
         components: {
             TokenSwitch,
-            RefundEth,
             Steps
         },
         data() {
             return {
                 meta: {
                     loading: false,
-                }
+                },
+                hasCurrentToken: !!window.CurrentToken
             };
         },
         computed: {
@@ -78,8 +78,16 @@
             isError() {
                 return this.ledgerMeta.loadingError || this.tokensListMeta.loadingError || this.accountMeta.loadingError;
             },
-            isCurrentToken(){
-                return typeof CurrentToken !== 'undefined';
+            RefundEthComponent() {
+                if (!this.currentToken) return;
+
+                const {version} = this.currentToken;
+
+                if (semver.satisfies(version, '<0.26.0')) {
+                    return () => import('@/bem/RefundEth/0.20.5/index.vue');
+                } else if (semver.satisfies(version, '>=0.26.0')) {
+                    return () => import('@/bem/RefundEth/0.26.0/index.vue');
+                }
             }
         },
         methods: {
@@ -102,8 +110,8 @@
             async handleCurrentAccountChange(currentAccount) {
                 if(currentAccount){
                     await this.transactionsUpStatusTx();
-                    if(this.isCurrentToken){
-                        await this.FetchTokenByCurrentToken(CurrentToken);
+                    if(this.hasCurrentToken){
+                        await this.FetchTokenByCurrentToken(window.CurrentToken);
                     } else {
                         await this.tokensListFetch();
                     }

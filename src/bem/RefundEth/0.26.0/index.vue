@@ -3,36 +3,36 @@
         <h2>{{ $t('InvestorDashboardRefundEth', { WToken: currentToken.symbol }) }}</h2>
         <div v-if="refundInformation && !isPendingTx && !isErrorTx">
             <RefundCalculator v-if="refundInformation.currentWalletBalanceInRefundAmount"
-                              v-model="refundValueInTokens"
-                              :refundInformation="refundInformation"
-                              :fundAddress="currentToken.crowdSaleInformation.fund.W12FundAddress"
-                              :accountAddress="currentAccount"
-                              :tokenSymbol="currentToken.symbol"
-                              :tokenDecimals="currentToken.decimals"
-                              @approve="approveTheFundToSpend"
+                v-model="refundValueInTokens"
+                :refundInformation="refundInformation"
+                :fundAddress="currentToken.crowdSaleInformation.fund.W12FundAddress"
+                :accountAddress="currentAccount"
+                :tokenSymbol="currentToken.symbol"
+                :tokenDecimals="currentToken.decimals"
+                @approve="approveTheFundToSpend"
             >
             </RefundCalculator>
             <div class="py-2">
                 <button class="btn btn-primary py-2" :disabled="disable"
-                        @click="approveTheFundToSpend">{{ $t('InvestorDashboardRefundEthApprove') }}
+                    @click="approveTheFundToSpend">{{ $t('InvestorDashboardRefundEthApprove') }}
                 </button>
             </div>
             <div v-if="this.currentAccountData.allowanceForTheFund !== '0'" class="py-2">
                 {{ $t('InvestorDashboardRefundEthMessagesBeforeRefund', {
-                allowance: toEth(currentAccountData.allowanceForTheFund),
-                WToken: currentToken.symbol,
-                refundAmount: toEth(currentAccountData.allowanceForTheFundInRefundAmount)
+                    allowance: toEth(currentAccountData.allowanceForTheFund),
+                    WToken: currentToken.symbol,
+                    refundAmount: toEth(currentAccountData.allowanceForTheFundInRefundAmount)
                 }) }}
             </div>
             <div v-if="this.currentAccountData.allowanceForTheFund !== '0'" class="row pl-3 pr-3">
 
                 <button
-                        class="btn btn-primary py-2"
-                        @click="decreaseTheFundApprovalToSpend">{{ $t('InvestorDashboardRefundEthDecreaseRefund') }}
+                    class="btn btn-primary py-2"
+                    @click="decreaseTheFundApprovalToSpend">{{ $t('InvestorDashboardRefundEthDecreaseRefund') }}
                 </button>
                 <button
-                        class="btn btn-primary py-2 ml-3"
-                        @click="refund">{{ $t('InvestorDashboardRefundEthTokensRefund') }}
+                    class="btn btn-primary py-2 ml-3"
+                    @click="refund">{{ $t('InvestorDashboardRefundEthTokensRefund') }}
                 </button>
             </div>
         </div>
@@ -61,15 +61,11 @@
     import Connector from "lib/Blockchain/DefaultConnector";
     import { waitTransactionReceipt, formatNumber, toWeiDecimals, fromWeiDecimals, fromWeiDecimalsString} from 'lib/utils.js';
     import {createNamespacedHelpers} from "vuex";
-    import RefundInformation from 'bem/RefundInformation';
-    import RefundCalculator from 'bem/RefundCalculator';
-    import {RefundInformationModel} from 'bem/RefundInformation/shared.js';
+    import RefundInformation from 'bem/RefundInformation/0.26.0';
+    import RefundCalculator from 'bem/RefundCalculator/0.26.0';
+    import {RefundInformationModel} from 'bem/RefundInformation/0.26.0/shared.js';
     import {UPDATE_TX, CONFIRM_TX} from "store/modules/Transactions.js";
-    import Web3 from 'web3';
-    import { getRefundWindow, isRefundActive } from '../../lib/utils';
-
-    const web3 = new Web3();
-    const BigNumber = web3.BigNumber;
+    import { getRefundWindow, isRefundActive, web3, BigNumber } from '@/lib/utils';
 
     const TokensListNS = createNamespacedHelpers("TokensList");
     const AccountNS = createNamespacedHelpers("Account");
