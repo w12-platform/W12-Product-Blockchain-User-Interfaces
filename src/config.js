@@ -6,8 +6,13 @@ const providers = {
     5777: process.env.BLOCKCHAIN_NETWORK_5777_PROVIDER || 'http://127.0.0.1:7545'
 };
 
+const sentry = {
+    allowedLevel: "fatal error warning debug", //fatal error warning info debug
+};
+
 // noinspection JSUnresolvedVariable
 const config = {
+    sentry,
     providers,
     currentProvider: providers[BLOCKCHAIN_NETWORK_ID],
     contractAddresses,
