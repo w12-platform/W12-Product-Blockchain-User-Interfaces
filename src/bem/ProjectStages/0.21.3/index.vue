@@ -14,7 +14,7 @@
     import StageWhiteList from 'bem/ProjectStages/StageWhiteList';
     import StageApprove from 'bem/ProjectStages/StageApprove';
     import StagePlace from 'bem/ProjectStages/StagePlace';
-    import StageConfigureCrowdsale from 'bem/ProjectStages/StageConfigureCrowdsale';
+    import StageConfigureCrowdsale from './stages/StageConfigureCrowdsale';
     import StageBonuses from 'bem/ProjectStages/StageBonuses';
 
     import {createNamespacedHelpers} from "vuex";

@@ -1,0 +1,18 @@
+.WhiteListTable {
+  font-size: 12px;
+
+  &__loader {
+    min-height: 250px;
+  }
+  table {
+    td {
+      vertical-align: middle !important;
+    }
+  }
+  &__detailField {
+    margin-bottom: 5px;
+  }
+  &__detailOwner {
+    margin-bottom: 2px;
+  }
+}

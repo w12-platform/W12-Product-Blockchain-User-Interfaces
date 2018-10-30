@@ -14,7 +14,7 @@
     import StageWhiteList from 'bem/ProjectStages/StageWhiteList';
     import StageApprove from 'bem/ProjectStages/StageApprove';
     import StagePlace from 'bem/ProjectStages/StagePlace';
-    import StageConfigureCrowdsale from 'bem/ProjectStages/StageConfigureCrowdsale';
+    import StageConfigureCrowdsale from './stages/StageConfigureCrowdsale';
     import StageBonuses from 'bem/ProjectStages/StageBonuses';
 
     import {createNamespacedHelpers} from "vuex";
@@ -129,7 +129,7 @@
                 this.subscribeToEventsLoading = true;
 
                 try {
-                    const {ERC20Factory, W12ListerFactory, W12CrowdsaleFactory, W12TokenFactory, W12FundFactory} = await this.LedgerFetch();
+                    const {ERC20Factory, W12ListerFactory, W12CrowdsaleFactory, W12TokenFactory, W12FundFactory} = await this.LedgerFetch(this.currentProject.version);
                     const ERC20 = ERC20Factory.at(this.currentProject.tokenAddress);
                     const W12Lister = W12ListerFactory.at(this.currentProject.listerAddress);
                     let ApprovalW12Event = null;

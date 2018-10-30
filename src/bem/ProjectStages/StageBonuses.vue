@@ -348,7 +348,6 @@
                 this.tokenCrowdSaleStagesChange = true;
             },
             minStartDate(stageIndex) {
-                console.log(stageIndex);
                 const today = new Date();
                 return new Date(today.getFullYear(), today.getMonth(), today.getDate());
             },

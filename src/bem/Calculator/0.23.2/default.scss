@@ -1,0 +1,41 @@
+.Calculator {
+  position: relative;
+
+  &__content {
+    background: #f2f2f2;
+    padding: 20px;
+    border: 1px solid #dbdbdb;
+  }
+  p {
+    padding-bottom: 5px;
+    color: #363636;
+  }
+
+  &__inputs {
+    margin-bottom: 20px;
+  }
+  &__infoToken {
+
+  }
+  &__inputTokens {
+    margin-left: 5px;
+  }
+  &__inputEth {
+    margin-left: 5px;
+  }
+  &__info {
+
+  }
+  &__buy {
+    margin: 10px auto;
+  }
+  &__total {
+    border-top: 1px solid #dbdbdb;
+    padding: 10px 0;
+    margin-top: 20px;
+  }
+  .icon {
+    margin: auto 5px;
+    opacity: 0.3;
+  }
+}
