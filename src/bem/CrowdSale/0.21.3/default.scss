@@ -1,0 +1,17 @@
+.CrowdSale {
+  margin: 20px 0;
+
+  &__table {
+    .restriction {
+      max-width: 130px;
+      display: block;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+  }
+
+  &__eth {
+    font-size: 10px;
+    color: grey;
+  }
+}

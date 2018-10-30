@@ -3,7 +3,6 @@
         <StageWhiteList></StageWhiteList>
         <StageApprove></StageApprove>
         <StagePlace></StagePlace>
-        <!--<StageCurrenciesList></StageCurrenciesList>-->
         <StageConfigureCrowdsale></StageConfigureCrowdsale>
         <StageCrowdsaleSetup></StageCrowdsaleSetup>
     </div>
@@ -15,8 +14,7 @@
     import StageWhiteList from 'bem/ProjectStages/StageWhiteList';
     import StageApprove from 'bem/ProjectStages/StageApprove';
     import StagePlace from 'bem/ProjectStages/StagePlace';
-    import StageCurrenciesList from 'bem/ProjectStages/StageCurrenciesList';
-    import StageConfigureCrowdsale from 'bem/ProjectStages/StageConfigureCrowdsale';
+    import StageConfigureCrowdsale from './stages/StageConfigureCrowdsale';
     import StageCrowdsaleSetup from 'bem/StageCrowdsaleSetup/0.23.2';
 
     import {createNamespacedHelpers} from "vuex";
@@ -35,7 +33,6 @@
             StageWhiteList,
             StageApprove,
             StagePlace,
-            StageCurrenciesList,
             StageConfigureCrowdsale,
             StageCrowdsaleSetup
         },

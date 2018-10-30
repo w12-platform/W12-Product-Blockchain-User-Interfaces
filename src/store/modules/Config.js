@@ -19,11 +19,7 @@ export default {
             version: getLastVersionInList(config.currentNetworkContractAddresses.W12Lister).version
         },
         W12ListerList: cloneDeep(config.currentNetworkContractAddresses.W12Lister),
-        // TODO: move out to config
-        Rates: {
-            address: "0x811b10cde932759f6af53ba97e006ffe7796159b",
-            version: "0.21.3"
-        }
+        Rates: cloneDeep(config.currentNetworkContractAddresses.Rates)
     },
     modules: {},
     getters: {

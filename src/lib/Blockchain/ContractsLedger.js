@@ -1,4 +1,5 @@
 import { dynamicImport, jsonLoader } from 'lib/utils.js';
+import semver from 'semver';
 
 import Connector from './DefaultConnector.js';
 import { ContractWrappersFactory } from './Factory.js';
@@ -83,7 +84,7 @@ export async function loadContracts(v) {
 
     let Rates = null;
 
-    if(v === "0.21.3" || v === "0.23.2"){
+    if(semver.satisfies(v, '>0.21.0')) {
         const {RatesFactoryStrategy} = await dynamicImport("FactoryStrategies", v, "Rates");
         const {RatesWrapper} = await dynamicImport("Wrappers", v, "Rates");
         const RatesArtifacts = await jsonLoader(v, "Rates");
@@ -93,7 +94,8 @@ export async function loadContracts(v) {
         );
         await Rates.init();
     }
-    if(v === "0.23.2"){
+
+    if(semver.satisfies(v, '>0.23.0')) {
         const TokenExchangerArtifacts = await jsonLoader(v, "TokenExchanger");
 
         const {TokenExchangerFactoryStrategy} = await dynamicImport("FactoryStrategies", v, "TokenExchanger");

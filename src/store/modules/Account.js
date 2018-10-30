@@ -1,6 +1,7 @@
 import Connector from 'lib/Blockchain/DefaultConnector.js';
 import {promisify} from 'lib/utils.js';
 import config from '@/config.js';
+import semver from 'semver';
 import Web3 from 'web3';
 
 export const ERROR_FETCH_ACCOUNT = 'LoadLedger: An unknown error';
@@ -134,13 +135,25 @@ export default {
                 const allowanceForTheFund = (await W12Token.methods.allowance(this.state.Account.currentAccount, fundAddress)).toString();
                 const swapAddress = (await W12Lister.swap());
                 const allowanceForSwap = (await W12Token.methods.allowance(this.state.Account.currentAccount, swapAddress)).toString();
-                const allowanceForTheFundInRefundAmount = (await W12Fund.methods.getRefundAmount(allowanceForTheFund)).toString();
                 const unVestingBalance = (await W12Token.methods.accountBalance(this.state.Account.currentAccount)).toString();
                 const vestingBalance = new BigNumber(balance).minus(unVestingBalance).toString();
-                const refundForOneToken = (await W12Fund.methods.getRefundAmount(oneToken)).toString();
-                const totalRefundAmount = (await W12Fund.methods.getRefundAmount(balance)).toString();
-                const investorInformation = await W12Fund.methods.getInvestmentsInfo(this.state.Account.currentAccount);
                 const fundTokensBalance = (await W12Token.methods.balanceOf(fundAddress)).toString();
+
+                let investorInformation,
+                    allowanceForTheFundInRefundAmount,
+                    refundForOneToken,
+                    totalRefundAmount;
+
+                if (semver.satisfies(version, '<0.26.0')) {
+                    investorInformation = await W12Fund.methods.getInvestmentsInfo(this.state.Account.currentAccount);
+                }
+
+                // refund
+                if (semver.satisfies(version, '<0.26.0')) {
+                    allowanceForTheFundInRefundAmount = (await W12Fund.methods.getRefundAmount(allowanceForTheFund)).toString();
+                    refundForOneToken = (await W12Fund.methods.getRefundAmount(oneToken)).toString();
+                    totalRefundAmount = (await W12Fund.methods.getRefundAmount(balance)).toString();
+                }
 
                 const currentAccountData = {
                     balance,
@@ -152,10 +165,12 @@ export default {
                     allowanceForSwap,
                     allowanceForTheFund,
                     allowanceForTheFundInRefundAmount,
-                    investorInformation: {
-                        totalBought: investorInformation[0].toString(),
-                        averageTokenPrice: investorInformation[1].toString()
-                    }
+                    investorInformation: investorInformation
+                        ? ({
+                            totalBought: investorInformation[0].toString(),
+                            averageTokenPrice: investorInformation[1].toString()
+                        })
+                        : null,
                 };
                 commit(UPDATE_DATA, {currentAccountData});
             } catch (e) {
