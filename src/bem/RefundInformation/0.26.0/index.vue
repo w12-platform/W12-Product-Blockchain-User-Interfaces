@@ -4,23 +4,37 @@
             <tbody>
                 <tr>
                     <td>{{ $t('InvestorDashboardRefundEthInfoVolumeFrozen') }}</td>
-                    <td>{{ decimals(data.freezeTokensVolume) }} {{ data.tokenSymbol }}</td>
+                    <td>{{ data.freezeTokensVolume }} {{ data.tokenSymbol }}</td>
                 </tr>
                 <tr>
                     <td>{{ $t('InvestorDashboardRefundEthInfoAvailableReturn') }}</td>
-                    <td>{{ decimals(data.refundTokensVolume) }} {{ data.tokenSymbol }}</td>
+                    <td>{{ data.refundTokensVolume }} {{ data.tokenSymbol }}</td>
                 </tr>
                 <tr>
                     <td>{{ $t('InvestorDashboardRefundEthInfoReturnOne', {WToken: data.tokenSymbol})}}</td>
-                    <td>{{ data.refundAmountPerToken }} ETH</td>
+                    <td>
+                        <span v-for="(value, symbol) in data.refundAmountPerToken" :key="symbol">
+                            {{ value }} {{ symbol }}
+                            <br>
+                        </span>
+                    </td>
                 </tr>
                 <tr>
                     <td>{{ $t('InvestorDashboardRefundEthInfoInitial', {WToken: data.tokenSymbol}) }}</td>
-                    <td>{{ data.tokenPrice }} ETH</td>
+                    <td>{{ data.tokenPrice }} USD</td>
                 </tr>
                 <tr>
                     <td>{{ $t('InvestorDashboardRefundEthInfoFundBalance') }}</td>
-                    <td>{{ decimals(data.fundTokensBalance) }} {{ data.tokenSymbol }} | {{ data.fundBalance }} ETH</td>
+                    <td>
+                        <span>
+                            {{ data.fundTokensBalance }} {{ data.tokenSymbol }}
+                            <br>
+                        </span>
+                        <span v-for="(value, symbol) in data.fundBalancePerAsset" :key="symbol">
+                            {{ value }} {{ symbol }}
+                            <br>
+                        </span>
+                    </td>
                 </tr>
                 <tr>
                     <td>{{ $t('InvestorDashboardRefundEthInfoFundReturn') }}</td>
@@ -28,11 +42,16 @@
                 </tr>
                 <tr>
                     <td>{{ $t('InvestorDashboardRefundEthInfoBalance', {WToken: data.tokenSymbol}) }}</td>
-                    <td>{{ decimals(data.currentWalletBalanceInTokens) }} {{ data.tokenSymbol }}</td>
+                    <td>{{ data.currentWalletBalanceInTokens }} {{ data.tokenSymbol }}</td>
                 </tr>
                 <tr>
                     <td>{{ $t('InvestorDashboardRefundEthInfoAllSold', {WToken: data.tokenSymbol}) }}</td>
-                    <td>{{ data.currentWalletBalanceInRefundAmount }} ETH</td>
+                    <td>
+                        <span v-for="(value, symbol) in data.currentWalletBalanceInRefundedAssets" :key="symbol">
+                            {{ value }} {{ symbol }}
+                            <br>
+                        </span>
+                    </td>
                 </tr>
                 <tr v-if="data.currentMilestoneNumber !== null">
                     <td>{{ $t('InvestorDashboardRefundMilestoneNumberTitle') }}</td>
@@ -61,7 +80,6 @@
 </template>
 <script>
     import {RefundInformationModel} from './shared.js';
-    import {web3, BigNumber} from '@/lib/utils';
 
     export default {
         name: 'RefundInformation',
@@ -72,14 +90,6 @@
             }
         },
         methods: {
-            decimals(value) {
-                const d = this.data.tokenDecimals;
-                const base = new BigNumber(10);
-
-                value = new BigNumber(value);
-
-                return value.div(base.pow(d)).toString();
-            },
             dateFormat (value) {
                 return moment(value * 1000).utc().format("DD.MM.YYYY HH:mm");
             },

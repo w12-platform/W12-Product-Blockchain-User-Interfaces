@@ -1,32 +1,36 @@
 <template>
     <div class="RefundCalculator buefy">
-            <label for="Amount">{{ $t('InvestorDashboardRefundEthCalculator', {WToken: tokenSymbol}) }}</label>
-            <b-field id="Amount">
-                <b-icon icon="shopping"></b-icon>
-                <cleave
-                        :placeholder="$t('InvestorDashboardRefundEthCalculatorTokenAmountPlaceholder')"
-                        :max="decimals(refundInformation.currentWalletBalanceInTokens)"
-                        v-model="inputValue"
-                        @input.native="calculate"
-                        :options="optionsNumber"
-                        class="form-control"
-                        min="0"
-                        @keyup.enter.native="$emit('approve')"
-                ></cleave>
-            </b-field>
+        <label for="Amount">{{ $t('InvestorDashboardRefundEthCalculator', {WToken: tokenSymbol}) }}</label>
+        <b-field id="Amount">
+            <b-icon icon="shopping"></b-icon>
+            <cleave
+                :placeholder="$t('InvestorDashboardRefundEthCalculatorTokenAmountPlaceholder')"
+                :max="refundInformation.currentWalletBalanceInTokens"
+                :value="value"
+                @input="$emit('input', $event)"
+                :options="optionsNumber"
+                class="form-control"
+                min="0"
+                @keyup.enter.native="$emit('approve')"
+            ></cleave>
+        </b-field>
         <div class="row">
             <div class="col">
                 {{ $t('InvestorDashboardRefundEthCalculatorMessage') }}
             </div>
-            <div class="col">
-                {{ refundAmount | ETH }} ETH
+            <div v-if="!refundedAmountPerAsset" class="col">-</div>
+            <div v-else class="col">
+                <span v-for="(value, symbol) in refundedAmountPerAsset" :key="symbol">
+                    {{ value }} {{ symbol }}
+                    <br>
+                </span>
             </div>
         </div>
-        <b-loading :is-full-page="false" :active.sync="calculation" :can-cancel="true"></b-loading>
     </div>
 </template>
 <script>
     import './default.scss';
+    import { getRefundedAmountPerAsset } from '@/lib/selectors/fund';
     import { RefundInformationModel } from 'bem/RefundInformation/0.26.0/shared.js';
     import {web3, toWeiDecimals} from 'lib/utils';
 
@@ -68,10 +72,6 @@
         },
         data() {
             return {
-                loadingLedger: false,
-                calculation: false,
-                refundAmount: '0',
-                inputValue: 0,
                 optionsNumber: {
                     prefix: '',
                     numeral: true,
@@ -83,78 +83,23 @@
                 }
             }
         },
-        watch: {
-            fundAddress: {
-                async handler() {
-                    await this.updateHelpers();
-                },
-                immediate: true
-            },
-            accountAddress: {
-                async handler () {
-                    await this.calculate();
-                },
-                immediate: true
-            },
-            inputValue: {
-                async handler (value) {
-                    await this.calculate();
-                },
-            },
-        },
         computed: {
             ...TokensListNS.mapState({
                 currentToken: "currentToken"
             }),
-        },
-        methods: {
-            ...LedgerNS.mapActions({
-                ledgerFetch: "fetch"
-            }),
-            decimals (value) {
-                const d = this.refundInformation.tokenDecimals;
-                const base = new BigNumber(10);
-                value = new BigNumber(value);
-                return value.div(base.pow(d)).toString();
-            },
-            async updateHelpers() {
-                this.loadingLedger = true;
 
-                try {
-                    const {W12FundFactory} = await this.ledgerFetch(this.currentToken.version);
+            refundedAmountPerAsset() {
+                if (!this.refundInformation) return null;
 
-                    if (this.fundAddress) {
-                        this.helpers = {
-                            W12Fund: W12FundFactory.at(this.fundAddress)
-                        };
-                    }
-                } catch (e) {
-                    console.log(e);
-                }
-
-                this.loadingLedger = false;
-            },
-            async calculate() {
-                this.calculation = true;
-
-                this.$emit('input', this.inputValue);
-                try {
-                    if (this.helpers) {
-                        const {W12Fund} = this.helpers;
-
-                        const value = await W12Fund.methods.getRefundAmount(
-                            toWeiDecimals(this.inputValue, this.currentToken.decimals),
-                            {from: this.accountAddress}
-                        );
-
-                        this.refundAmount = value.toString();
-                    }
-                } catch (e) {
-                    console.log(e);
-                }
-
-                this.calculation = false;
+                return getRefundedAmountPerAsset(
+                    this.value,
+                    this.refundInformation.refundAmountPerToken,
+                    (v, a) =>
+                        v.greaterThan(this.refundInformation.currentWalletBalanceInRefundedAssets[a])
+                            ? this.refundInformation.currentWalletBalanceInRefundedAssets[a]
+                            : v.toString()
+                );
             }
-        },
+        }
     };
 </script>

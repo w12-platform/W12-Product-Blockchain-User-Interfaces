@@ -1,8 +1,12 @@
+import { convertionByDecimals, reverseConversionByDecimals } from '@/lib/selectors/units';
 import Connector from 'lib/Blockchain/DefaultConnector.js';
 import {promisify} from 'lib/utils.js';
 import config from '@/config.js';
 import semver from 'semver';
-import Web3 from 'web3';
+import {web3, BigNumber} from 'lib/utils';
+import {map} from 'p-iteration';
+import zipObject from 'lodash/zipObject'
+
 
 export const ERROR_FETCH_ACCOUNT = 'LoadLedger: An unknown error';
 
@@ -12,9 +16,6 @@ export const UPDATE_DATA = 'UPDATE_DATA';
 export const UPDATE_TIMER_ID = 'UPDATE_TIMER_ID';
 export const RESET = 'RESET';
 export const INTERVAL_UP = 5000;
-
-const web3 = new Web3();
-const BigNumber = web3.BigNumber;
 
 export default {
     namespaced: true,
@@ -111,7 +112,7 @@ export default {
         async unWatch({commit}) {
             commit(UPDATE_TIMER_ID);
         },
-        async updateAccountData({commit}) {
+        async updateAccountData({commit, dispatch}) {
             const selectedToken = this.state.TokensList.currentToken;
             const currentProject = this.state.Project.currentProject;
             
@@ -137,18 +138,49 @@ export default {
                 const allowanceForSwap = (await W12Token.methods.allowance(this.state.Account.currentAccount, swapAddress)).toString();
                 const unVestingBalance = (await W12Token.methods.accountBalance(this.state.Account.currentAccount)).toString();
                 const vestingBalance = new BigNumber(balance).minus(unVestingBalance).toString();
-                const fundTokensBalance = (await W12Token.methods.balanceOf(fundAddress)).toString();
 
-                let investorInformation,
-                    allowanceForTheFundInRefundAmount,
-                    refundForOneToken,
-                    totalRefundAmount;
+                let fundTokensBalance;
+
+                if (semver.satisfies(version, '<0.26.0')) {
+                    fundTokensBalance = (await W12Token.methods.balanceOf(fundAddress)).toString();
+                } else if (semver.satisfies(version, '>=0.26.0')) {
+                    // nothing
+                }
+
+                let investorInformation;
 
                 if (semver.satisfies(version, '<0.26.0')) {
                     investorInformation = await W12Fund.methods.getInvestmentsInfo(this.state.Account.currentAccount);
+                    investorInformation = {
+                        totalBought: investorInformation[0].toString(),
+                        averageTokenPrice: investorInformation[1].toString()
+                    };
+                } else if (semver.satisfies(version, '>=0.26.0')) {
+                    const symbols = await W12Fund.getInvestorFundedAssetsSymbols(this.state.Account.currentAccount);
+                    const funded = await map(
+                        symbols,
+                        async (s) => {
+                            const amount = await W12Fund.methods
+                                .getInvestorFundedAmount(this.state.Account.currentAccount, web3.fromUtf8(s));
+                            const decimals = await dispatch('Rates/resolveDecimals', s, {root: true});
+
+                            return reverseConversionByDecimals(amount, decimals).toString();
+                        }
+                    );
+                    let totalBought = await W12Fund.methods.getInvestorTokenBoughtAmount(this.state.Account.currentAccount);
+                    totalBought = reverseConversionByDecimals(totalBought, await W12Token.methods.decimals()).toString();
+
+                    investorInformation = {
+                        totalBought,
+                        fundedAssetsSymbols: symbols,
+                        fundedAmountPerAsset: zipObject(symbols, funded)
+                    };
                 }
 
                 // refund
+                let allowanceForTheFundInRefundAmount,
+                    refundForOneToken,
+                    totalRefundAmount;
                 if (semver.satisfies(version, '<0.26.0')) {
                     allowanceForTheFundInRefundAmount = (await W12Fund.methods.getRefundAmount(allowanceForTheFund)).toString();
                     refundForOneToken = (await W12Fund.methods.getRefundAmount(oneToken)).toString();
@@ -165,15 +197,11 @@ export default {
                     allowanceForSwap,
                     allowanceForTheFund,
                     allowanceForTheFundInRefundAmount,
-                    investorInformation: investorInformation
-                        ? ({
-                            totalBought: investorInformation[0].toString(),
-                            averageTokenPrice: investorInformation[1].toString()
-                        })
-                        : null,
+                    investorInformation,
                 };
                 commit(UPDATE_DATA, {currentAccountData});
             } catch (e) {
+                console.error(e);
                 commit(UPDATE_META, {loading: false, updated: false, loadingError: e.message || ERROR_FETCH_ACCOUNT});
             }
 

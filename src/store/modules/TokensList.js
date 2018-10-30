@@ -4,7 +4,7 @@ import {
     getSoldPercent
 } from '@/lib/selectors/crowdsale';
 import { getCurrentStage, getEndDate, getStartDate } from '@/lib/selectors/crowdsaleStages';
-import { convertionByDecimals } from '@/lib/selectors/units';
+import { convertionByDecimals, reverseConversionByDecimals } from '@/lib/selectors/units';
 import Connector from "lib/Blockchain/DefaultConnector";
 import semver from 'semver';
 import { promisify, isZeroAddress, fromWeiDecimalsString, decodeUSD } from "src/lib/utils";
@@ -52,6 +52,13 @@ export default {
         [UPDATE](state, payload) {
             const list = payload.list || false;
             Object.assign(state, {list});
+
+            if(state.currentToken) {
+                const index = payload.list.findIndex(
+                    t => t.index === state.currentToken.index && t.version === state.currentToken.version);
+
+                state.currentToken = index === -1 ? null : payload.list[index];
+            }
         },
         [UPDATE_PROJECTS](state, payload) {
             const projects = payload.projects || false;
@@ -66,7 +73,7 @@ export default {
         },
     },
     actions: {
-        async fetch({commit}) {
+        async fetch({commit, dispatch}) {
             commit(UPDATE_META, {loading: true});
 
             const {web3} = await Connector.connect();
@@ -100,6 +107,7 @@ export default {
 
                         const getBalance = promisify(web3.eth.getBalance.bind(web3.eth));
 
+                        const WTokenDecimals = await W12Token.methods.decimals();
                         const WTokenTotal = fromWeiDecimalsString(token.wTokensIssuedAmount, token.decimals);
                         const tokensOnSale = fromWeiDecimalsString((await W12Token.methods.balanceOf(token.crowdsaleAddress)).toString(), token.decimals);
                         const tokensForSaleAmount = fromWeiDecimalsString(token.tokensForSaleAmount, token.decimals);
@@ -117,24 +125,49 @@ export default {
                         const stageDiscount = currentStage ? currentStage.discount : 0;
 
                         let currentMilestoneIndex = (await W12Crowdsale.methods.getCurrentMilestoneIndex());
-                        let totalFundedPerAsset,
-                            totalReleasedPerAsset;
-                        let totalFunded, totalRefunded, foundBalanceInWei;
-                        let paymentMethods;
 
                         currentMilestoneIndex = currentMilestoneIndex[1]
                             ? currentMilestoneIndex[0].toNumber()
                             : null;
 
+                        let totalFundedPerAsset,
+                            totalReleasedPerAsset,
+                            totalTokenBought,
+                            totalTokenRefunded,
+                            paymentMethods;
+
                         if (semver.satisfies(Lister.version, '>=0.26.0')) {
                             const symbols = await W12Fund.getTotalFundedAssetsSymbols();
-                            const funded = await map(symbols, async (s) => await W12Fund.getTotalFundedAmount(s));
-                            const released = await map(symbols, async (s) => await W12Fund.getTotalFundedReleased(s));
+                            const funded = await map(symbols, async (s) => {
+                                const amount = await W12Fund.getTotalFundedAmount(s);
+                                const decimals = await dispatch('Rates/resolveDecimals', s, {root: true});
+
+                                return reverseConversionByDecimals(amount, decimals);
+
+                            });
+                            const released = await map(symbols, async (s) => {
+                                const amount = await W12Fund.getTotalFundedReleased(s);
+                                const decimals = await dispatch('Rates/resolveDecimals', s, {root: true});
+
+                                return reverseConversionByDecimals(amount, decimals);
+                            });
 
                             totalFundedPerAsset = zipObject(symbols, funded);
                             totalReleasedPerAsset = zipObject(symbols, released);
                             paymentMethods = await W12Crowdsale.getPaymentMethodsList();
+                            totalTokenBought = reverseConversionByDecimals(
+                                await W12Fund.methods.totalTokenBought(),
+                                WTokenDecimals
+                            )
+                                .toString();
+                            totalTokenRefunded = reverseConversionByDecimals(
+                                await W12Fund.methods.totalTokenRefunded(),
+                                WTokenDecimals
+                            )
+                                .toString();
                         }
+
+                        let totalFunded, totalRefunded, foundBalanceInWei;
 
                         if (semver.satisfies(Lister.version, '<0.26.0')) {
                             foundBalanceInWei = (await getBalance(W12FundAddress)).toString();
@@ -155,6 +188,7 @@ export default {
                             stageEndDate: currentStage ? currentStage.endDate : null,
                             vestingDate: currentStage ? currentStage.vestingDate : null,
                             WTokenAddress,
+                            WTokenDecimals,
                             endDate,
                             timeLeft,
                             WTokenTotal,
@@ -168,7 +202,9 @@ export default {
                                 totalFunded,
                                 totalRefunded,
                                 totalFundedPerAsset,
-                                totalReleasedPerAsset
+                                totalReleasedPerAsset,
+                                totalTokenBought,
+                                totalTokenRefunded
                             },
                             saleAmount: getSoldAmount(WTokenTotal, tokensOnSale).toString(),
                             salePercent: getSoldPercent(WTokenTotal, tokensOnSale).toString(),
@@ -325,108 +361,23 @@ export default {
             }
             commit(UPDATE_META, {loading: false});
         },
-        async update({commit}, {Index}) {
+        // TODO: rename action name it should mean update only one token not whole list
+        // FIXME: should fetch and update only one token. we must provide token index|address|lister version
+        //        and then action fetch information for that token and replace in the store
+        async update({commit, dispatch}) {
             commit(UPDATE_META, {updated: true});
+
             try {
-                let list = this.state.TokensList.list;
-                list = await map(list, async token => {
-                    if (token && token.index === Index) {
-                        const {web3} = await Connector.connect();
-                        const {W12CrowdsaleFactory, W12TokenFactory} = await this.dispatch('Ledger/fetch', token.version);
-                        const W12Crowdsale = W12CrowdsaleFactory.at(token.crowdsaleAddress);
-                        const WTokenAddress = (await W12Crowdsale.methods.token());
-                        const W12Token = W12TokenFactory.at(WTokenAddress);
-
-                        const WTokenTotal = fromWeiDecimalsString(token.wTokensIssuedAmount, token.decimals);
-                        const tokensOnSale = fromWeiDecimalsString((await W12Token.methods.balanceOf(token.crowdsaleAddress)).toString(), token.decimals);
-                        const tokensForSaleAmount = fromWeiDecimalsString(token.tokensForSaleAmount, token.decimals);
-
-                        const tokenPrice = (await W12Crowdsale.methods.price()).toString();
-                        const stages = (await W12Crowdsale.getStagesList());
-                        const startDate = stages.length ? stages[0].startDate : null;
-
-                        let endDate = false;
-                        let stageEndDate = false;
-                        let status = false;
-                        let stageDiscount = 0;
-
-                        if (stages.length) {
-                            const ranges = [
-                                {
-                                    range: [startDate],
-                                    stage: null
-                                }
-                            ];
-
-                            for (let stage of stages) {
-                                const last = ranges[ranges.length - 1];
-                                const endDateUnix = stage.endDate;
-
-                                if (last.range.length === 1) {
-                                    last.range.push(endDateUnix);
-                                    last.stage = stage;
-                                }
-
-                                ranges.push({
-                                    range: [endDateUnix],
-                                    stage: null
-                                });
-
-                                const stageEndDate = stage.endDate;
-                                endDate = endDate < stageEndDate ? stageEndDate : endDate;
-                            }
-
-                            ranges.pop();
-
-                            const currentDateUnix = moment.utc().unix();
-                            const foundStage = ranges.find(item => {
-                                return (
-                                    currentDateUnix >= item.range[0]
-                                    && currentDateUnix <= item.range[1]
-                                );
-                            });
-
-                            if (foundStage) {
-                                status = true;
-                                stageDiscount = foundStage.stage.discount;
-                                stageEndDate = foundStage.stage.endDate;
-                            }
-                        }
-
-                        token.crowdSaleInformation.status = status;
-                        token.crowdSaleInformation.saleAmount = new BigNumber(WTokenTotal)
-                            .minus(tokensOnSale).toString();
-
-                        token.crowdSaleInformation.salePercent = new BigNumber(WTokenTotal)
-                            .minus(tokensOnSale)
-                            .div(WTokenTotal)
-                            .mul(100)
-                            .toString();
-
-                        token.crowdSaleInformation.tokensOnSale = new BigNumber(tokensOnSale)
-                            .mul((new BigNumber(tokensOnSale)))
-                            .div(new BigNumber(tokensOnSale)
-                                .mul(1 + token.WTokenSaleFeePercent / (100 ** 2)))
-                            .toString();
-
-                        token.crowdSaleInformation.tokensForSaleAmount = tokensForSaleAmount;
-                        token.crowdSaleInformation.stageDiscount = stageDiscount;
-                        token.crowdSaleInformation.stageEndDate = stageEndDate;
-                        token.crowdSaleInformation.price = new BigNumber(tokenPrice)
-                            .mul(100 - stageDiscount)
-                            .div(100)
-                            .toString();
-                    }
-                    return token;
-                });
-                commit(UPDATE, {list});
+                await dispatch('fetch');
             } catch (e) {
+                console.error(e);
                 commit(UPDATE_META, {
                     loading: false,
                     updated: false,
                     loadingError: e.message || ERROR_FETCH_TOKENS_LIST
                 });
             }
+
             commit(UPDATE_META, {updated: false});
         },
         async reset({commit}) {

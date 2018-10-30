@@ -7,10 +7,10 @@ export class RefundInformationModel {
         this.refundAmountPerToken = model.refundAmountPerToken;
         this.tokenPrice = model.tokenPrice;
         this.fundTokensBalance = model.fundTokensBalance;
-        this.fundBalance = model.fundBalance;
+        this.fundBalancePerAsset = model.fundBalancePerAsset;
         this.totalRefundPercent = model.totalRefundPercent;
         this.currentWalletBalanceInTokens = model.currentWalletBalanceInTokens;
-        this.currentWalletBalanceInRefundAmount = model.currentWalletBalanceInRefundAmount;
+        this.currentWalletBalanceInRefundedAssets = model.currentWalletBalanceInRefundedAssets;
         this.currentMilestoneNumber = model.currentMilestoneNumber;
         this.isRefundActive = model.isRefundActive;
         this.refundWindow = model.refundWindow;

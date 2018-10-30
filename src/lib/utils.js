@@ -201,7 +201,7 @@ export function getRefundWindow(milestones, currentMilestoneIndex) {
 
         const milestone = milestones[currentMilestoneIndex];
 
-        return [milestone.endDate, milestone.withdrawalWindow];
+        return [milestone.endDate, milestone.withdrawalEndDate];
     }
 }
 
