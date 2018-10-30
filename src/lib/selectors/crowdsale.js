@@ -33,3 +33,11 @@ export function getSoldPercent(total, unsold) {
 
     return sold.div(total).mul(100);
 }
+
+export function getMilestoneNumber(index) {
+    if (index == null) return  null;
+
+    index = new BigNumber(index);
+
+    return index.plus(1).toNumber();
+}
