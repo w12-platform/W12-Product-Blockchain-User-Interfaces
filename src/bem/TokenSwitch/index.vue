@@ -41,7 +41,9 @@
             tagClass(token){
                 return {
                     'TokenSwitch__tag': true,
-                    'TokenSwitch__selected': token.hasOwnProperty('index') ? this.currentToken.index === token.index : false,
+                    'TokenSwitch__selected': token.hasOwnProperty('index') && token.hasOwnProperty('version') 
+                        ? this.currentToken.index === token.index && this.currentToken.version === token.version
+                        : false,
                 }
             },
         }
