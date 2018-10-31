@@ -1335,5 +1335,9 @@
 //         "en": "В {currency}",
 //         "ru": "В {currency}"
 //     },
+//     "InvestorDashboardRefundExchangeForAssetsTitle": {
+//         "en": "Обменять {amount} {symbol} на: ",
+//         "ru": "Обменять {amount} {symbol} на: "
+//     },
 
 // };

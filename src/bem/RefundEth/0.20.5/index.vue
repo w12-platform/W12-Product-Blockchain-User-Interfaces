@@ -61,15 +61,11 @@
     import Connector from "lib/Blockchain/DefaultConnector";
     import { waitTransactionReceipt, formatNumber, toWeiDecimals, fromWeiDecimals, fromWeiDecimalsString} from 'lib/utils.js';
     import {createNamespacedHelpers} from "vuex";
-    import RefundInformation from 'bem/RefundInformation';
-    import RefundCalculator from 'bem/RefundCalculator';
-    import {RefundInformationModel} from 'bem/RefundInformation/shared.js';
+    import RefundInformation from 'bem/RefundInformation/0.20.5';
+    import RefundCalculator from 'bem/RefundCalculator/0.20.5';
+    import {RefundInformationModel} from 'bem/RefundInformation/0.20.5/shared.js';
     import {UPDATE_TX, CONFIRM_TX} from "store/modules/Transactions.js";
-    import Web3 from 'web3';
-    import { getRefundWindow, isRefundActive } from '../../lib/utils';
-
-    const web3 = new Web3();
-    const BigNumber = web3.BigNumber;
+    import { getRefundWindow, isRefundActive, web3, BigNumber } from '@/lib/utils';
 
     const TokensListNS = createNamespacedHelpers("TokensList");
     const AccountNS = createNamespacedHelpers("Account");

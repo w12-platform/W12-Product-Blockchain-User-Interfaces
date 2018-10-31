@@ -19,4 +19,9 @@ export class W12FundWrapper extends BaseWrapper {
     async getTotalFundedReleased(symbol) {
         return await this.methods.getTotalFundedReleased(web3.fromUtf8(symbol));
     }
+
+    async getInvestorFundedAssetsSymbols(investor) {
+        return (await this.methods.getInvestorFundedAssetsSymbols(investor))
+            .map((s) => web3.toUtf8(s));
+    }
 }

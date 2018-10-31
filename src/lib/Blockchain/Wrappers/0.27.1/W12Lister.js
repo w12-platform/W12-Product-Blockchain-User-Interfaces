@@ -24,6 +24,7 @@ export class W12ListerWrapper extends BaseWrapper {
         this.DetailedERC20Factory = DetailedERC20Factory;
     }
 
+    // TODO: should get by token address not index
     async fetchComposedTokenInformationByTokenAddress(Token){
         const {TokenExchangerFactory} = this;
 
