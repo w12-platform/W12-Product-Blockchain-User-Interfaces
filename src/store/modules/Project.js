@@ -1,7 +1,6 @@
 import {promisify, isZeroAddress, fromWeiDecimalsString, fromWeiDecimals} from "src/lib/utils";
 import {map} from 'p-iteration';
 import {ReceivingModel} from 'src/bem/Receiving/model.js';
-import {TrancheInformationModel} from 'src/bem/TrancheInformation/shared.js';
 import {MilestoneModel} from 'src/bem/Milestones/shared.js';
 import Connector from "src/lib/Blockchain/DefaultConnector";
 import isEqual from 'lodash/isEqual'
@@ -11,6 +10,7 @@ import semver from 'semver';
 const moment = window.moment;
 BigNumber.config({
     DECIMAL_PLACES: 36,
+    EXPONENTIAL_AT: 18,
     FORMAT: {
         decimalSeparator: '.',
         groupSeparator: '',
@@ -470,6 +470,25 @@ export default {
                     } else {
                         fundData.trancheAmount = 0;
                     }
+                } else {
+                    const getTotalFundedAssetsSymbols = (await W12Fund.getTotalFundedAssetsSymbols());
+
+                    const getTotalFundedAssetsSymbolsPromise = getTotalFundedAssetsSymbols.map(async (symbol)=>{
+
+                        const totalAmount = await W12Fund.getTotalFundedAmount(symbol);
+                        const totalReleased = await W12Fund.getTotalFundedReleased(symbol);
+                        const trancheAmount = totalAmount.minus(totalReleased);
+
+                        return {
+                            "Symbol": symbol,
+                            "TotalFundedAmount": (fromWeiDecimals(totalAmount, 18)).toString(),
+                            "TotalFundedReleased": (fromWeiDecimals(totalReleased, 18)).toString(),
+                            "TrancheAmount": (fromWeiDecimals(trancheAmount, 18)).toString()
+                        };
+                    });
+                    await Promise.all(getTotalFundedAssetsSymbolsPromise).then((completed) => {
+                        fundData.trancheInfo = completed;
+                    });
                 }
 
                 commit(UPDATE_FUND_DATA, fundData);

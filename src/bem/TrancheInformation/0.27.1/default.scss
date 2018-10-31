@@ -1,0 +1,25 @@
+.TrancheInformation {
+  position: relative;
+  font-size: 12px;
+  margin: 20px 0;
+
+  table {
+    td {
+      vertical-align: middle !important;
+    }
+
+    tr {
+      td:first-child {
+        width: 50%
+      }
+
+      td:last-child {
+        text-align: center;
+      }
+    }
+  }
+
+  &__volumeElem {
+    margin: 3px;
+  }
+}
