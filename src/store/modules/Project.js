@@ -471,24 +471,20 @@ export default {
                         fundData.trancheAmount = 0;
                     }
                 } else {
-                    const getTotalFundedAssetsSymbols = (await W12Fund.getTotalFundedAssetsSymbols());
+                    fundData.trancheInfo = await map((await W12Fund.getTotalFundedAssetsSymbols()),
+                        async (symbol) => {
+                            const totalAmount = await W12Fund.getTotalFundedAmount(symbol);
+                            const totalReleased = await W12Fund.getTotalFundedReleased(symbol);
+                            const trancheAmount = totalAmount.minus(totalReleased);
 
-                    const getTotalFundedAssetsSymbolsPromise = getTotalFundedAssetsSymbols.map(async (symbol)=>{
-
-                        const totalAmount = await W12Fund.getTotalFundedAmount(symbol);
-                        const totalReleased = await W12Fund.getTotalFundedReleased(symbol);
-                        const trancheAmount = totalAmount.minus(totalReleased);
-
-                        return {
-                            "Symbol": symbol,
-                            "TotalFundedAmount": (fromWeiDecimals(totalAmount, 18)).toString(),
-                            "TotalFundedReleased": (fromWeiDecimals(totalReleased, 18)).toString(),
-                            "TrancheAmount": (fromWeiDecimals(trancheAmount, 18)).toString()
-                        };
-                    });
-                    await Promise.all(getTotalFundedAssetsSymbolsPromise).then((completed) => {
-                        fundData.trancheInfo = completed;
-                    });
+                            return {
+                                "Symbol": symbol,
+                                "TotalFundedAmount": (fromWeiDecimals(totalAmount, 18)).toString(),
+                                "TotalFundedReleased": (fromWeiDecimals(totalReleased, 18)).toString(),
+                                "TrancheAmount": (fromWeiDecimals(trancheAmount, 18)).toString()
+                            };
+                        }
+                    );
                 }
 
                 commit(UPDATE_FUND_DATA, fundData);
