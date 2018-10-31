@@ -120,15 +120,7 @@
                     : false;
             },
             disable(){
-                let disable = true;
-                if(this.trancheInformationData.trancheInfo && this.trancheInformationData.trancheInfo.length){
-                    this.trancheInformationData.trancheInfo.forEach((info)=>{
-                        if(new BigNumber(info.TrancheAmount).gt(0)){
-                            disable = false;
-                        }
-                    });
-                }
-                return disable;
+                return !this.trancheInformationData.trancheInfo.some(info => new BigNumber(info.TrancheAmount).gt(0));
             },
 
             nextTrancheDate() {
