@@ -57,6 +57,7 @@
     import {UPDATE_TX} from "store/modules/Transactions.js";
     import {waitTransactionReceipt} from 'lib/utils.js';
     import Web3 from 'web3';
+    import {getTrancheIntervals} from '@/lib/selectors/fund';
 
     const ProjectNS = createNamespacedHelpers("Project");
     const LedgerNS = createNamespacedHelpers("Ledger");
@@ -132,26 +133,9 @@
             },
 
             trancheInformationData() {
-                if (this.currentProject && this.currentProject.fundData && this.currentProject.fundData.address
-                    && this.currentProject.fundData.trancheInfo && this.currentProject.fundData.trancheInfo.length) {
-
-                    const trancheIntervals = this.currentProject.crowdSaleInformation.tokenCrowdSaleMilestones
-                        .reduce((out, item, idx, origin) => {
-                            if (out.length === 0) {
-                                out.push([item.endDate])
-                            } else if (idx + 1 === origin.length) {
-                                out[out.length - 1].push(item.endDate);
-                                out.push([item.withdrawalEndDate, Infinity]);
-                            } else {
-                                out[out.length - 1].push(item.endDate);
-                                out.push([item.voteEndDate]);
-                            }
-
-                            return out;
-                        }, []);
-
+                if (this.currentProject && this.currentProject.fundData && this.currentProject.fundData.trancheInfo) {
                     return new TrancheInformationModel({
-                        trancheIntervals,
+                        trancheIntervals: getTrancheIntervals(this.currentProject.crowdSaleInformation.tokenCrowdSaleMilestones),
                         trancheInfo: this.currentProject.fundData.trancheInfo,
                         trancheTransferAllowed: this.currentProject.fundData.trancheTransferAllowed
                     });
