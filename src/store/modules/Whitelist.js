@@ -1,7 +1,5 @@
 import {map} from 'p-iteration';
 
-const moment = window.moment;
-
 export const ERROR_FETCH_TOKENS_LIST = 'An unknown error while trying get tokens';
 
 export const UPDATE_META = "UPDATE_META";

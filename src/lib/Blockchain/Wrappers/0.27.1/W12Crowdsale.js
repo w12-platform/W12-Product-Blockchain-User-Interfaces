@@ -3,9 +3,7 @@ import { countStringBytes, decodeStringFromBytes, encodeStringToBytes, promisify
 import { BaseWrapper } from 'src/lib/Blockchain/Wrappers/NoVersion/BaseWrapper.js';
 import {toWeiDecimals} from "../../../utils";
 import { web3, BigNumber, decodeUSD } from 'lib/utils';
-
-
-const moment = window.moment;
+import moment from "moment";
 
 export class W12CrowdsaleWrapper extends BaseWrapper {
     encodeMilestoneParameters(name, description, tranchePercent, endDate, voteEndDate, withdrawalWindow) {

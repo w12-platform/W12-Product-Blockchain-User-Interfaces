@@ -206,6 +206,7 @@
     import {waitTransactionReceipt} from 'lib/utils.js';
     import MilestoneCard from 'bem/StageCrowdsaleSetup/0.23.2/MilestoneCard.vue';
     import {UPDATE_TX} from "store/modules/Transactions.js";
+    import moment from "moment";
 
     const ConfigNS = createNamespacedHelpers('Config');
     const ProjectNS = createNamespacedHelpers("Project");
@@ -216,7 +217,6 @@
 
     const web3 = new Web3();
     const BigNumber = web3.BigNumber;
-    const moment = window.moment;
 
     export default {
         name: 'StageCrowdsaleSetup',
