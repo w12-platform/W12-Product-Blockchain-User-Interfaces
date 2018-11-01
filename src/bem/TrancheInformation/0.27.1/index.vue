@@ -19,7 +19,7 @@
                 <td>{{ $t('trancheInformationFundBalance') }}</td>
                 <td>
                     <div v-for="info in trancheInformationData.trancheInfo">
-                        {{ info.TotalFundedAmount }} {{ info.Symbol }}
+                        {{ info.Balance }} {{ info.Symbol }}
                     </div>
                 </td>
             </tr>
@@ -120,7 +120,7 @@
                     : false;
             },
             disable(){
-                return !this.trancheInformationData.trancheInfo.some(info => new BigNumber(info.TrancheAmount).gt(0));
+                return !this.trancheInformationData.trancheTransferAllowed;
             },
 
             nextTrancheDate() {
@@ -138,10 +138,10 @@
                     const trancheIntervals = this.currentProject.crowdSaleInformation.tokenCrowdSaleMilestones
                         .reduce((out, item, idx, origin) => {
                             if (out.length === 0) {
-                                out.push([item.voteEndDate])
+                                out.push([item.endDate])
                             } else if (idx + 1 === origin.length) {
                                 out[out.length - 1].push(item.endDate);
-                                out.push([item.voteEndDate, Infinity]);
+                                out.push([item.withdrawalEndDate, Infinity]);
                             } else {
                                 out[out.length - 1].push(item.endDate);
                                 out.push([item.voteEndDate]);
@@ -152,7 +152,8 @@
 
                     return new TrancheInformationModel({
                         trancheIntervals,
-                        trancheInfo: this.currentProject.fundData.trancheInfo
+                        trancheInfo: this.currentProject.fundData.trancheInfo,
+                        trancheTransferAllowed: this.currentProject.fundData.trancheTransferAllowed
                     });
                 }
             },

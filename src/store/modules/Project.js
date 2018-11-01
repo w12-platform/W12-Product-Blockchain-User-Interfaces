@@ -6,6 +6,8 @@ import Connector from "src/lib/Blockchain/DefaultConnector";
 import isEqual from 'lodash/isEqual'
 import { web3, BigNumber } from 'src/lib/utils';
 import semver from 'semver';
+import { convertionByDecimals, reverseConversionByDecimals } from '@/lib/selectors/units';
+import {getActualBalanceInAssets} from '@/lib/selectors/fund';
 
 const moment = window.moment;
 BigNumber.config({
@@ -471,20 +473,30 @@ export default {
                         fundData.trancheAmount = 0;
                     }
                 } else {
+                    const invoice = await W12Fund.methods.getTrancheInvoice();
+                    const totalTokenBought = await W12Fund.methods.totalTokenBought();
+                    const totalTokenRefunded = await W12Fund.methods.totalTokenRefunded();
+                    const percent = invoice[0].div(100);
+
                     fundData.trancheInfo = await map((await W12Fund.getTotalFundedAssetsSymbols()),
                         async (symbol) => {
+                            const decimals = await this.dispatch('Rates/resolveDecimals', symbol);
                             const totalAmount = await W12Fund.getTotalFundedAmount(symbol);
                             const totalReleased = await W12Fund.getTotalFundedReleased(symbol);
-                            const trancheAmount = totalAmount.minus(totalReleased);
+
+                            const balance = reverseConversionByDecimals(totalAmount.minus(totalReleased), decimals);
+
+                            let trancheAmount = reverseConversionByDecimals(totalAmount, decimals).mul(percent.div(100));
+                            trancheAmount = trancheAmount.minus(trancheAmount.mul(totalTokenRefunded.div(totalTokenBought)));
 
                             return {
                                 "Symbol": symbol,
-                                "TotalFundedAmount": (fromWeiDecimals(totalAmount, 18)).toString(),
-                                "TotalFundedReleased": (fromWeiDecimals(totalReleased, 18)).toString(),
-                                "TrancheAmount": (fromWeiDecimals(trancheAmount, 18)).toString()
+                                "Balance": balance.toString(),
+                                "TrancheAmount": trancheAmount.toString(),
                             };
                         }
                     );
+                    fundData.trancheTransferAllowed =  await W12Fund.methods.trancheTransferAllowed();
                 }
 
                 commit(UPDATE_FUND_DATA, fundData);
