@@ -102,9 +102,9 @@
     import { waitTransactionReceipt, formatNumber, toWeiDecimals, fromWeiDecimals, fromWeiDecimalsString} from 'lib/utils.js';
     import Web3 from 'web3';
     import countdown from 'countdown';
+    import moment from "moment";
 
     const TokensListNS = createNamespacedHelpers("TokensList");
-    const moment = window.moment;
     const web3 = new Web3();
     const BigNumber = web3.BigNumber;
 
