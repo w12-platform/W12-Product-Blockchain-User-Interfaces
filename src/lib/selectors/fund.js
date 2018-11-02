@@ -95,3 +95,18 @@ export function getRefundedAmountPerAsset(tokenAmount, assetAmountPerOneToken, v
 
     return result;
 }
+
+export function getTrancheIntervals(tokenCrowdSaleMilestones) {
+    return tokenCrowdSaleMilestones.reduce((out, item, idx, origin) => {
+        if (out.length === 0) {
+            out.push([item.endDate])
+        } else if (idx + 1 === origin.length) {
+            out[out.length - 1].push(item.endDate);
+            out.push([item.withdrawalEndDate, Infinity]);
+        } else {
+            out[out.length - 1].push(item.endDate);
+            out.push([item.voteEndDate]);
+        }
+        return out;
+    }, []);
+}

@@ -24,7 +24,7 @@ export class W12FundWrapper extends BaseWrapper {
         return (await this.methods.getInvestorFundedAssetsSymbols(investor))
             .map((s) => web3.toUtf8(s));
     }
-
+  
     // TODO: wait for contracts realisation
     async getInvestorFundedAmount(investor, symbol) {
         const trancheReleased = await this.methods.totalTranchePercentReleased();

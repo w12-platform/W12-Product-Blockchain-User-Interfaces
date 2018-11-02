@@ -160,8 +160,10 @@ export default {
                     const funded = await map(
                         symbols,
                         async (s) => {
+
                             const amount = await W12Fund
                                 .getInvestorFundedAmount(this.state.Account.currentAccount, s);
+                          
                             const decimals = await dispatch('Rates/resolveDecimals', s, {root: true});
 
                             return reverseConversionByDecimals(amount, decimals).toString();

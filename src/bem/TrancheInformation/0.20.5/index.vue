@@ -42,7 +42,7 @@
 </template>
 <script>
     import './default.scss';
-    import {TrancheInformationModel} from 'bem/TrancheInformation/shared.js';
+    import {TrancheInformationModel} from './shared.js';
     import moment from 'moment';
     import {createNamespacedHelpers} from "vuex";
     import Connector from "lib/Blockchain/DefaultConnector";
