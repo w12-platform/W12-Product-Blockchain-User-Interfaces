@@ -9,7 +9,6 @@ import semver from 'semver';
 import { convertionByDecimals, reverseConversionByDecimals } from '@/lib/selectors/units';
 import {getActualBalanceInAssets} from '@/lib/selectors/fund';
 
-const moment = window.moment;
 BigNumber.config({
     DECIMAL_PLACES: 36,
     EXPONENTIAL_AT: 18,

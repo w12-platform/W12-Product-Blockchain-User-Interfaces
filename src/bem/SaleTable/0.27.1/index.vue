@@ -61,10 +61,10 @@
     import './default.scss';
     import {createNamespacedHelpers} from "vuex";
     import Web3 from 'web3';
+    import moment from "moment";
 
     const TokensListNS = createNamespacedHelpers("TokensList");
 
-    const moment = window.moment;
     const web3 = new Web3();
 
     export default {
