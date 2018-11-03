@@ -34,9 +34,7 @@
             }),
 
             async onSelect(token){
-                this.$store.commit(`TokensList/${TOKEN_SELECTED}`, { currentToken: token });
-                const Index = token.index;
-                this.tokensListUpdate({Index});
+                this.tokensListUpdate(token);
             },
             tagClass(token){
                 return {
