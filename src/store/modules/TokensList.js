@@ -85,7 +85,7 @@ export default {
             };
             return endDate ? token : null;
         },
-        async fetchTokenFull({}, token){
+        async fetchTokenFull({dispatch}, token){
             const {
                 DetailedERC20Factory,
                 W12CrowdsaleFactory,
