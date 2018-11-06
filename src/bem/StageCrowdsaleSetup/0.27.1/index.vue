@@ -179,8 +179,8 @@
                             </b-notification>
 
                             <footer class="card-footer" v-if="!isStartCrowdSale">
-                                <a class="card-footer-item" @click="addStage">{{$t('ProjectDashboardStageBonusesAddStageButton') }}</a>
-                                <a class="card-footer-item" v-if="checkAddMilestone" @click="addMilestone">{{ $t('MilestonesAdd') }}</a>
+                                <a class="card-footer-item" @click="addStage" v-html="$t('ProjectDashboardStageBonusesAddStageButton')"></a>
+                                <a class="card-footer-item" v-if="checkAddMilestone" @click="addMilestone" v-html="$t('MilestonesAdd')"></a>
                             </footer>
                         </div>
                     </div>

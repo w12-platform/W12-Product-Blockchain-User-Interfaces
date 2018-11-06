@@ -8,7 +8,7 @@
             </div>
         </div>
         <div class="test-steps">
-            <h3 class="test-steps__heading">{{ $t('HomeStepsHeading') }}</h3>
+            <h3 class="test-steps__heading" v-html="$t('HomeStepsHeading')"></h3>
             <div class="table-wrap">
                 <div class="test-steps__table">
                     <div class="test-steps__row">
@@ -17,21 +17,21 @@
                         <span class="test-steps__head">{{ $t('HomeStepsRole') }}</span></div>
                     <div class="test-steps__row">
                         <div class="test-steps__cell"><span class="num">1</span></div>
-                        <div class="test-steps__cell"><a target="_blank" href="https://metamask.io">{{ $t('HomeStepsNum1') }}</a>
+                        <div class="test-steps__cell"><a target="_blank" href="https://metamask.io" v-html="$t('HomeStepsNum1')"></a>
                             <p v-html="$t('HomeStepsForMetamask')"></p>
                         </div>
                         <div class="test-steps__cell"><span class="icon icon-blue">{{ $t('HomeStepsProject') }}</span><span class="icon icon-green">{{ $t('HomeStepsBuyerTokens') }}</span><span class="icon icon-red">{{ $t('HomeStepsAdmin')}}</span></div>
                     </div>
                     <div class="test-steps__row">
                         <div class="test-steps__cell"><span class="num">2</span></div>
-                        <div class="test-steps__cell"><a target="_blank" href="https://w12.io/test-ethereum-reg/">{{ $t('HomeStepsNum2')}}</a>
+                        <div class="test-steps__cell"><a target="_blank" href="https://w12.io/test-ethereum-reg/" v-html="$t('HomeStepsNum2')"></a>
                             <p v-html="$t('HomeStepsForTest')"></p>
                         </div>
                         <div class="test-steps__cell"><span class="icon icon-green">{{ $t('HomeStepsBuyerTokens') }}</span></div>
                     </div>
                     <div class="test-steps__row">
                         <div class="test-steps__cell"><span class="num">3</span></div>
-                        <div class="test-steps__cell"><a href="/factory.html">{{ $t('HomeStepsNum3') }}</a></div>
+                        <div class="test-steps__cell"><a href="/factory.html" v-html="$t('HomeStepsNum3')"></a></div>
                         <div class="test-steps__cell"><span class="icon icon-blue">{{ $t('HomeStepsProject') }}</span></div>
                     </div>
                     <div class="test-steps__row">
@@ -41,14 +41,14 @@
                     </div>
                     <div class="test-steps__row">
                         <div class="test-steps__cell"><span class="num">5</span></div>
-                        <div class="test-steps__cell"><a href="/project.html">{{ $t('HomeStepsNum5')}}</a>
+                        <div class="test-steps__cell"><a href="/project.html" v-html="$t('HomeStepsNum5')"></a>
                             <p v-html="$t('HomeStepsSale')"></p>
                         </div>
                         <div class="test-steps__cell"><span class="icon icon-blue">{{ $t('HomeStepsProject') }}</span></div>
                     </div>
                     <div class="test-steps__row">
                         <div class="test-steps__cell"><span class="num">6</span></div>
-                        <div class="test-steps__cell"><a href="/crowdsale.html">{{ $t('HomeStepsNum6')}}</a></div>
+                        <div class="test-steps__cell"><a href="/crowdsale.html" v-html="$t('HomeStepsNum6')"></a></div>
                         <div class="test-steps__cell"><span class="icon icon-green">{{ $t('HomeStepsBuyerTokens') }}</span></div>
                     </div>
                     <div class="test-steps__row">
@@ -76,9 +76,9 @@
         </div>
         <div class="tech-adv">
             <div class="mobile-btn">
-              <a class="btn actions__buytokens" href="https://w12.io/buy-w12/?utm_source=test-net&amp;utm_medium=demo_page" target="_blank">{{ $t('HeaderByuW12Tokens') }}</a>
+              <a class="btn actions__buytokens" href="https://w12.io/buy-w12/?utm_source=test-net&amp;utm_medium=demo_page" target="_blank" v-html="$t('HeaderByuW12Tokens')"></a>
             </div>
-            <h3 class="tech-adv__heading">{{ $t('HomeBenefits') }}</h3>
+            <h3 class="tech-adv__heading" v-html="$t('HomeBenefits')"></h3>
             <h4 class="tech-adv__subheading">{{ $t('HomeBenefitsMaxFlexibility') }}</h4>
             <p class="tech-adv__text">{{ $t('HomeBenefits1') }}</p>
             <p class="tech-adv__text">{{ $t('HomeBenefits2') }}</p>
@@ -93,9 +93,9 @@
         </div>
         <div class="versions">
             <div class="mobile-btn">
-              <a class="btn actions__buytokens" href="https://w12.io/buy-w12/?utm_source=test-net&amp;utm_medium=demo_page" target="_blank">{{ $t('HeaderByuW12Tokens') }}</a>
+              <a class="btn actions__buytokens" href="https://w12.io/buy-w12/?utm_source=test-net&amp;utm_medium=demo_page" target="_blank" v-html="$t('HeaderByuW12Tokens')"></a>
             </div>
-            <h3 class="versions__heading">{{ $t('HomeVersions') }}</h3>
+            <h3 class="versions__heading" v-html="$t('HomeVersions')"></h3>
             <div class="table-wrap">
                 <div class="versions__table">
                     <div class="versions__row">
@@ -187,7 +187,7 @@
                 </div>
             </div>
             <div class="mobile-btn">
-              <a class="btn actions__buytokens" href="https://w12.io/buy-w12/?utm_source=test-net&amp;utm_medium=demo_page" target="_blank">{{ $t('HeaderByuW12Tokens') }}</a>
+              <a class="btn actions__buytokens" href="https://w12.io/buy-w12/?utm_source=test-net&amp;utm_medium=demo_page" target="_blank" v-html="$t('HeaderByuW12Tokens')"></a>
             </div>
         </div>
     </div>

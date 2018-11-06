@@ -10,7 +10,7 @@
             <p class="py-2">{{ $t('TransactionFailed') }}:</p>
             <b-tag class="py-2">{{isErrorTx.hash}}</b-tag>
             <div class="pt-2 text-left">
-                <button class="btn btn-primary btn-sm" @click="TransactionsRetry(isErrorTx)">{{ $t('ToRetry') }}</button>
+                <button class="btn btn-primary btn-sm" @click="TransactionsRetry(isErrorTx)" v-html="$t('ToRetry')"></button>
             </div>
         </div>
         <div class="card" v-if="!isPendingTx && !isErrorTx">
@@ -37,7 +37,7 @@
             </b-notification>
 
             <footer class="card-footer" v-if="!isStartCrowdSale">
-                <a class="card-footer-item" @click="addStage">{{ $t('MilestonesAdd') }}</a>
+                <a class="card-footer-item" @click="addStage" v-html="$t('MilestonesAdd')"></a>
                 <a class="card-footer-item" @click="saveMilestones" v-if="saveDisable">{{
                     $t('MilestonesSend') }}</a>
             </footer>

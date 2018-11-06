@@ -22,7 +22,7 @@
                 </div>
                 <div>
                     <button class="btn btn-primary" @click="addList">Add list</button>
-                    <button class="btn btn-primary" @click="saveW12ListerList">{{ $t('ConfigDashboardSave') }}</button>
+                    <button class="btn btn-primary" @click="saveW12ListerList" v-html="$t('ConfigDashboardSave')"></button>
                 </div>
 
                 <div class="form-group">
@@ -34,7 +34,7 @@
                             v-model="factory">
                 </div>
                 <div>
-                    <button class="btn btn-primary" @click="saveFactory">{{ $t('ConfigDashboardSave') }}</button>
+                    <button class="btn btn-primary" @click="saveFactory" v-html="$t('ConfigDashboardSave')"></button>
                 </div>
 
                 <div class="form-group">
@@ -46,7 +46,7 @@
                             v-model="rates">
                 </div>
                 <div>
-                    <button class="btn btn-primary" @click="saveFactory">{{ $t('ConfigDashboardSave') }}</button>
+                    <button class="btn btn-primary" @click="saveFactory" v-html="$t('ConfigDashboardSave')"></button>
                 </div>
             </div>
             <b-loading :is-full-page="false" :active.sync="loading" :can-cancel="true"></b-loading>
