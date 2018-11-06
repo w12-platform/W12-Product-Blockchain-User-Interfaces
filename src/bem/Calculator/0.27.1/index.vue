@@ -382,7 +382,7 @@
 
                     await this.updateAllowanceAmount();
                     await this.updateAccountData();
-                    await this.tokensListUpdate({ Index: this.currentToken.index });
+                    await this.tokensListUpdate(this.currentToken);
                 } catch (e) {
                     console.error(e);
                     this.error = e.message;

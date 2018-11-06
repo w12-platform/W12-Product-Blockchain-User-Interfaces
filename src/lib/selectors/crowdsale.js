@@ -5,12 +5,12 @@ export function getSaleTokenAmountWithoutCommission(originValue, comission = 0) 
     originValue = new BigNumber(originValue);
     comission = new BigNumber(comission);
 
-    return originValue
+    return !originValue.eq(0) ? originValue
         .mul(originValue)
         .div(
             originValue
                 .mul(comission.div(10000).plus(1))
-        );
+        ) : originValue;
 }
 
 export function getTokenPriceWithDiscount(originValue, discount = 0) {

@@ -384,7 +384,7 @@
 
                     this.$store.commit(`Transactions/${CONFIRM_TX}`, tx);
 
-                    await this.tokensListUpdate({ Index: this.currentToken.index });
+                    await this.tokensListUpdate(this.currentToken);
                     await this.updateAccountData();
                 } catch (e) {
                     console.error(e);
@@ -429,7 +429,7 @@
 
                     this.$store.commit(`Transactions/${CONFIRM_TX}`, tx);
 
-                    await this.tokensListUpdate({ Index: this.currentToken.index });
+                    await this.tokensListUpdate(this.currentToken);
                     await this.updateAccountData();
                 } catch (e) {
                     console.error(e);
@@ -474,7 +474,7 @@
                         this.$store.commit(`Transactions/${CONFIRM_TX}`, tx);
 
                         await this.updateAccountData();
-                        await this.tokensListUpdate({ Index: this.currentToken.index });
+                        await this.tokensListUpdate(this.currentToken);
                     }
                 } catch (e) {
                     console.error(e);

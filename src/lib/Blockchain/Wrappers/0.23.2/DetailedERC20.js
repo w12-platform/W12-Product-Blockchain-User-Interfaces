@@ -15,7 +15,7 @@ export class DetailedERC20Wrapper extends BaseWrapper {
         };
     }
 
-    async isCurrentAddressСompatibleWithToken() {
+    async isCurrentAddressCompatibleWithToken() {
         try {
             await this.getDescription();
             return true;

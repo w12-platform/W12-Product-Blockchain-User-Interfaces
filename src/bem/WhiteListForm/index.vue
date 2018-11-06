@@ -394,9 +394,8 @@
 
                     const {DetailedERC20Factory} = await this.ledgerFetch(this.W12Lister.version);
                     const DetailedERC20 = DetailedERC20Factory.at(address);
-                    const isExists = await DetailedERC20.isCurrentAddressСompatibleWithToken();
 
-                    this.isTokenExists = isExists;
+                    this.isTokenExists = await DetailedERC20.isCurrentAddressCompatibleWithToken();
                     this.checkingToken = false;
                 }
             },
