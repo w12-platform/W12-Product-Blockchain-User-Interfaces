@@ -1,6 +1,6 @@
 <template>
     <div class="RefundCalculator buefy">
-        <label for="Amount">{{ $t('InvestorDashboardRefundEthCalculator', {WToken: tokenSymbol}) }}</label>
+        <label for="Amount" v-html="$t('InvestorDashboardRefundEthCalculator', {WToken: tokenSymbol})"></label>
         <b-field id="Amount">
             <b-icon icon="shopping"></b-icon>
             <cleave

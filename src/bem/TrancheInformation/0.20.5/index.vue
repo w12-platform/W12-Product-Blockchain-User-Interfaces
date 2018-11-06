@@ -16,15 +16,15 @@
         <table v-if="!isPendingTx && !isErrorTx" class="table table-striped table-bordered table-hover table-responsive-sm">
             <tbody>
             <tr>
-                <td>{{ $t('trancheInformationFundBalance') }}</td>
+                <td v-html="$t('trancheInformationFundBalance')"></td>
                 <td>{{ trancheInformationData.fundBalanceInWei | weiToEth }} ETH</td>
             </tr>
             <tr>
-                <td>{{ $t('trancheInformationDateNextTranche') }}</td>
+                <td v-html="$t('trancheInformationDateNextTranche')"></td>
                 <td>{{ nextTrancheDate | formatDate }}</td>
             </tr>
             <tr>
-                <td>{{ $t('trancheInformationFundsMoment') }}</td>
+                <td v-html="$t('trancheInformationFundsMoment')"></td>
                 <td>{{ trancheInformationData.trancheAmountInWei | weiToEth }} ETH</td>
             </tr>
             </tbody>

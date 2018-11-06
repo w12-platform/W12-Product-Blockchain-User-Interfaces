@@ -92,7 +92,7 @@
                                 <td>{{ vestingBalance }}</td>
                             </tr>
                             <tr v-if="currentToken.crowdSaleInformation.vestingDate">
-                                <td>{{ $t('InvestorDashboardExchangeTokensVestingDate') }}</td>
+                                <td v-html="$t('InvestorDashboardExchangeTokensVestingDate')"></td>
                                 <td>{{ currentToken.crowdSaleInformation.vestingDate | dateFormat }}</td>
                             </tr>
                         </tbody>

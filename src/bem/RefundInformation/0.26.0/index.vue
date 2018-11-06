@@ -3,11 +3,11 @@
         <table class="table table-striped table-bordered table-hover table-responsive-sm">
             <tbody>
                 <tr>
-                    <td>{{ $t('InvestorDashboardRefundEthInfoVolumeFrozen') }}</td>
+                    <td v-html="$t('InvestorDashboardRefundEthInfoVolumeFrozen')"></td>
                     <td>{{ data.freezeTokensVolume }} {{ data.tokenSymbol }}</td>
                 </tr>
                 <tr>
-                    <td>{{ $t('InvestorDashboardRefundEthInfoAvailableReturn') }}</td>
+                    <td v-html="$t('InvestorDashboardRefundEthInfoAvailableReturn')"></td>
                     <td>{{ data.refundTokensVolume }} {{ data.tokenSymbol }}</td>
                 </tr>
                 <tr>
@@ -24,7 +24,7 @@
                     <td>{{ data.tokenPrice }} USD</td>
                 </tr>
                 <tr>
-                    <td>{{ $t('InvestorDashboardRefundEthInfoFundBalance') }}</td>
+                    <td v-html="$t('InvestorDashboardRefundEthInfoFundBalance')"></td>
                     <td>
                         <span>
                             {{ data.fundTokensBalance }} {{ data.tokenSymbol }}
@@ -37,7 +37,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>{{ $t('InvestorDashboardRefundEthInfoFundReturn') }}</td>
+                    <td v-html="$t('InvestorDashboardRefundEthInfoFundReturn')"></td>
                     <td>{{ data.totalRefundPercent }} %</td>
                 </tr>
                 <tr>
@@ -54,11 +54,11 @@
                     </td>
                 </tr>
                 <tr v-if="data.currentMilestoneNumber !== null">
-                    <td>{{ $t('InvestorDashboardRefundMilestoneNumberTitle') }}</td>
+                    <td v-html="$t('InvestorDashboardRefundMilestoneNumberTitle')"></td>
                     <td>{{ data.currentMilestoneNumber }}</td>
                 </tr>
                 <tr>
-                    <td>{{ $t('InvestorDashboardRefundActiveStatusTitle') }}</td>
+                    <td v-html="$t('InvestorDashboardRefundActiveStatusTitle')"></td>
                     <td>{{
                         data.isRefundActive
                             ? $t('InvestorDashboardRefundActiveStatusActive')
@@ -66,7 +66,7 @@
                     }}</td>
                 </tr>
                 <tr v-if="data.refundWindow">
-                    <td>{{ $t('InvestorDashboardRefundWindowTitle') }}</td>
+                    <td v-html="$t('InvestorDashboardRefundWindowTitle')"></td>
                     <td>{{
                         $t('InvestorDashboardRefundWindowDates', {
                             from: dateFormat(data.refundWindow[0]),

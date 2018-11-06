@@ -16,7 +16,7 @@
         <table v-if="!isPendingTx && !isErrorTx" class="table table-striped table-bordered table-hover table-responsive-sm">
             <tbody>
             <tr>
-                <td>{{ $t('trancheInformationFundBalance') }}</td>
+                <td v-html="$t('trancheInformationFundBalance')"></td>
                 <td>
                     <div v-for="info in trancheInformationData.trancheInfo">
                         {{ info.Balance }} {{ info.Symbol }}
@@ -24,11 +24,11 @@
                 </td>
             </tr>
             <tr>
-                <td>{{ $t('trancheInformationDateNextTranche') }}</td>
+                <td v-html="$t('trancheInformationDateNextTranche')"></td>
                 <td>{{ nextTrancheDate | formatDate }}</td>
             </tr>
             <tr>
-                <td>{{ $t('trancheInformationFundsMoment') }}</td>
+                <td v-html="$t('trancheInformationFundsMoment')"></td>
                 <td>
                     <div v-for="info in trancheInformationData.trancheInfo">
                         {{ info.TrancheAmount }} {{ info.Symbol }}
