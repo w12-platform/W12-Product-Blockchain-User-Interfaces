@@ -62,6 +62,7 @@
 <script>
     import {RefundInformationModel} from './shared.js';
     import {web3, BigNumber} from '@/lib/utils';
+    import moment from 'moment';
     
     export default {
         name: 'RefundInformation',

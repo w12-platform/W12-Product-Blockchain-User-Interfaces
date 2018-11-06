@@ -80,6 +80,7 @@
 </template>
 <script>
     import {RefundInformationModel} from './shared.js';
+    import moment from 'moment';
 
     export default {
         name: 'RefundInformation',
