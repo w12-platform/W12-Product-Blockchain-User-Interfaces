@@ -77,6 +77,25 @@ jobs:
           command: |
               ssh -o StrictHostKeyChecking=no "$DEPLOY_USER_STAGE@$DEPLOY_SERVER_STAGE" "sudo docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD"
               ssh -o StrictHostKeyChecking=no "$DEPLOY_USER_STAGE@$DEPLOY_SERVER_STAGE" "cd /var/apps/w12-stage/ && sudo docker-compose -f docker-compose-w12-stage.yml pull && sudo docker-compose -f docker-compose-w12-stage.yml up -d"
+  generate-alpha-release:
+    <<: *nodejs
+    steps:
+      - checkout
+      - run:
+          name: build
+          environment:
+            BLOCKCHAIN_NETWORK_ID: 4
+          command: |
+            git submodule update --init --recursive
+            sudo npm i -g npm && npm -v
+            npm ci
+            npm run build
+      - run:
+          name: generate release
+          command: |
+            npm run gen-release
+            npm run gen-release-bundle
+            npm run upload-release-bundle
   generate-release:
     <<: *nodejs
     steps:
@@ -90,11 +109,12 @@ jobs:
             npm run build
       - run:
           name: generate release
+          environment:
+            BLOCKCHAIN_NETWORK_ID: 1
           command: |
             npm run gen-release
             npm run gen-release-bundle
             npm run upload-release-bundle
-
 
 # workflows
 develop_filters: &develop_filters
@@ -125,9 +145,15 @@ workflows:
           <<: *stage_filters
           requires:
             - build-stage
+      - generate-alpha-release:
+          filters:
+            tags:
+              only: /^v\d{1,4}\.\d{1,4}\.\d{1,4}-alpha\.\d+$/
+            branches:
+              ignore: /.*/
       - generate-release:
           filters:
             tags:
-              only: /^v\d{1,4}\.\d{1,4}\.\d{1,4}(-(alpha|beta|rc)\.\d+)?$/
+              only: /^v\d{1,4}\.\d{1,4}\.\d{1,4}(-(beta|rc)\.\d+)?$/
             branches:
               ignore: /.*/
