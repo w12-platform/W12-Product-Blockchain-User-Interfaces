@@ -108,84 +108,84 @@
                     <div class="versions__row">
                         <div class="versions__cell"><span class="version">v.1</span></div>
                         <div class="versions__cell">
-                            <p>{{ $t('HomeVersions1Func1') }}</p>
-                            <p>{{ $t('HomeVersions1Func2') }}</p>
-                            <p>{{ $t('HomeVersions1Func3') }}</p>
-                            <p>{{ $t('HomeVersions1Func4') }}</p>
-                            <p>{{ $t('HomeVersions1Func5') }}</p>
-                            <p>{{ $t('HomeVersions1Func6') }}</p>
+                            <p v-html="$t('HomeVersions1Func1')"></p>
+                            <p v-html="$t('HomeVersions1Func2')"></p>
+                            <p v-html="$t('HomeVersions1Func3')"></p>
+                            <p v-html="$t('HomeVersions1Func4')"></p>
+                            <p v-html="$t('HomeVersions1Func5')"></p>
+                            <p v-html="$t('HomeVersions1Func6')"></p>
                         </div>
                     </div>
                     <div class="versions__row">
                         <div class="versions__cell"><span class="version">v.2</span></div>
                         <div class="versions__cell">
-                            <h4>{{ $t('HomeVersionsAdditionalFunctions') }}</h4>
-                            <p>{{ $t('HomeVersions1Func7') }}</p>
-                            <p>{{ $t('HomeVersions1Func8') }}</p>
-                            <p>{{ $t('HomeVersions1Func9') }}</p>
+                            <h4 v-html="$t('HomeVersionsAdditionalFunctions')"></h4>
+                            <p v-html="$t('HomeVersions1Func7')"></p>
+                            <p v-html="$t('HomeVersions1Func8')"></p>
+                            <p v-html="$t('HomeVersions1Func9')"></p>
                         </div>
                     </div>
                     <div class="versions__row">
                         <div class="versions__cell"><span class="version">v.3</span></div>
                         <div class="versions__cell">
-                            <h4>{{ $t('HomeVersionsAdditionalFunctions') }}</h4>
-                            <p>{{ $t('HomeVersions1Func10') }}</p>
+                            <h4 v-html="$t('HomeVersionsAdditionalFunctions')"></h4>
+                            <p v-html="$t('HomeVersions1Func10')"></p>
                         </div>
                     </div>
                     <div class="versions__row">
                         <div class="versions__cell"><span class="version">v.4</span></div>
                         <div class="versions__cell">
-                            <h4>{{ $t('HomeVersionsAdditionalFunctions') }}</h4>
-                            <p>{{ $t('HomeVersions1Func11') }}</p>
+                            <h4 v-html="$t('HomeVersionsAdditionalFunctions')"></h4>
+                            <p v-html="$t('HomeVersions1Func11')"></p>
                         </div>
                     </div>
                     <div class="versions__row">
                         <div class="versions__cell"><span class="version">v.5</span></div>
                         <div class="versions__cell">
-                            <h4>{{ $t('HomeVersionsAdditionalFunctions') }}</h4>
-                            <p>{{ $t('HomeVersions1Func12') }}</p>
+                            <h4 v-html="$t('HomeVersionsAdditionalFunctions')"></h4>
+                            <p v-html="$t('HomeVersions1Func12')"></p>
                         </div>
                     </div>
                     <div class="versions__row">
                         <div class="versions__cell"><span class="version">v.6</span></div>
                         <div class="versions__cell">
-                            <h4>{{ $t('HomeVersionsAdditionalFunctions') }}</h4>
-                            <p>{{ $t('HomeVersions1Func13') }}</p>
+                            <h4 v-html="$t('HomeVersionsAdditionalFunctions')"></h4>
+                            <p v-html="$t('HomeVersions1Func13')"></p>
                         </div>
                     </div>
                     <div class="versions__row">
                         <div class="versions__cell"><span class="version">v.7</span></div>
                         <div class="versions__cell">
-                            <h4>{{ $t('HomeVersionsAdditionalFunctions') }}</h4>
-                            <p>{{ $t('HomeVersions1Func14') }}</p>
+                            <h4 v-html="$t('HomeVersionsAdditionalFunctions')"></h4>
+                            <p v-html="$t('HomeVersions1Func14')"></p>
                         </div>
                     </div>
                     <div class="versions__row">
                         <div class="versions__cell"><span class="version">v.8</span></div>
                         <div class="versions__cell">
-                            <h4>{{ $t('HomeVersionsAdditionalFunctions') }}</h4>
-                            <p>{{ $t('HomeVersions1Func15') }}</p>
+                            <h4 v-html="$t('HomeVersionsAdditionalFunctions')"></h4>
+                            <p v-html="$t('HomeVersions1Func15')"></p>
                         </div>
                     </div>
                     <div class="versions__row">
                         <div class="versions__cell"><span class="version">v.9</span></div>
                         <div class="versions__cell">
-                            <h4>{{ $t('HomeVersionsAdditionalFunctions') }}</h4>
-                            <p>{{ $t('HomeVersions1Func16') }}</p>
+                            <h4 v-html="$t('HomeVersionsAdditionalFunctions')"></h4>
+                            <p v-html="$t('HomeVersions1Func16')"></p>
                         </div>
                     </div>
                     <div class="versions__row">
                         <div class="versions__cell"><span class="version">v.10</span></div>
                         <div class="versions__cell">
-                            <h4>{{ $t('HomeVersionsAdditionalFunctions') }}</h4>
-                            <p>{{ $t('HomeVersions1Func17') }}</p>
+                            <h4 v-html="$t('HomeVersionsAdditionalFunctions')"></h4>
+                            <p v-html="$t('HomeVersions1Func17')"></p>
                         </div>
                     </div>
                     <div class="versions__row">
                         <div class="versions__cell"><span class="version">v.11</span></div>
                         <div class="versions__cell">
-                            <h4>{{ $t('HomeVersionsAdditionalFunctions') }}</h4>
-                            <p>{{ $t('HomeVersions1Func18') }}</p>
+                            <h4 v-html="$t('HomeVersionsAdditionalFunctions')"></h4>
+                            <p v-html="$t('HomeVersions1Func18')"></p>
                         </div>
                     </div>
                 </div>

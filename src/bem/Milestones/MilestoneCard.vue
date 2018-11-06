@@ -26,7 +26,7 @@
                             @input="onInput('tranchePercent', $event)"
                             type="number"></b-input>
                 </b-field>
-                <p>{{ $t('MilestonesRelativeTotal') }}</p>
+                <p v-html="$t('MilestonesRelativeTotal')"></p>
 
             </div>
             <div class="col-sm py-2">

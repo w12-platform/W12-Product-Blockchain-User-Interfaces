@@ -58,7 +58,7 @@
                                                     </b-field>
                                                 </div>
                                                 <div class="col-sm py-2">
-                                                    <label>{{ $t('ProjectDashboardStageBonusesEndDateLabel') }}</label>
+                                                    <label v-html="$t('ProjectDashboardStageBonusesEndDateLabel')"></label>
                                                     <b-field class="ProjectDashboard__dateSelect">
                                                         <date-picker
                                                                 :not-before="getNotBeforeEnd(stageIndex)"
