@@ -7,9 +7,7 @@
             <div class="col-sm-4"><span v-html="$t('ProjectDashboardStageApprove')"></span>
             </div>
             <div class="col-sm-2 text-center">
-                <b-tag v-if="!(hasAllowance || hasPlacedWTokenAddress)"
-                       type="is-success">{{ $t('ProjectDashboardStageApproveStatusPending') }}
-                </b-tag>
+                <b-tag v-if="!(hasAllowance || hasPlacedWTokenAddress)" type="is-success" v-html="$t('ProjectDashboardStageApproveStatusPending')"></b-tag>
                 <b-tag v-else type="is-success" v-html="$t('ProjectDashboardStageApproveStatusApproved')"></b-tag>
             </div>
             <div class="col-sm text-right">

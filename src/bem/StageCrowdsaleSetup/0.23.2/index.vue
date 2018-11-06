@@ -36,8 +36,7 @@
                                         <div class="ProjectDashboard__stageBonus col-sm py-2">
                                             <div class="row justify-content-between">
                                                 <div class="col-sm py-2">
-                                                    <label>{{ $t('ProjectDashboardStageBonusesStartDateLabel')
-                                                        }}</label>
+                                                    <label v-html="$t('ProjectDashboardStageBonusesStartDateLabel')"></label>
                                                     <b-field
                                                             class="ProjectDashboard__dateSelect"
                                                             :type="stageIndex === 0 ? firstStageStartDateFieldType : null"

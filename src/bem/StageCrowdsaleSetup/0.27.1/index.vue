@@ -28,7 +28,7 @@
                                         <div class="p-3 row align-items-center justify-content-between">
                                             <span class="ProjectDashboard__stageTitle"><span v-html="$t('ProjectDashboardStageBonusesStage')"></span> #{{ stageIndex+1 }}</span>
                                             <button class="btn btn-primary btn-sm" :disabled="isStartCrowdSale"
-                                                    @click="deleteStageAt(stageIndex)">{{ $t('ProjectDashboardStageBonusesRemove') }}
+                                                    @click="deleteStageAt(stageIndex)" v-html="$t('ProjectDashboardStageBonusesRemove')">
                                             </button>
                                         </div>
                                         <div class="ProjectDashboard__stageBonus col-sm py-2">

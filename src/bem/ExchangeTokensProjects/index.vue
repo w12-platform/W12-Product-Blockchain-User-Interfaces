@@ -1,7 +1,7 @@
 <template>
     <div class="ExchangeTokens buefy" v-if="balance !== '0'">
-        <h2>{{ $t('ExchangeTokensProjects', {Balance: balance, WToken: currentProject.symbol, Token:
-            currentProject.tokenInformation.symbol})}}</h2>
+        <h2 v-html="$t('ExchangeTokensProjects', {Balance: balance, WToken: currentProject.symbol, Token:
+            currentProject.tokenInformation.symbol})"></h2>
         <div class="pm-2" v-if="isPendingTx">
             <p class="py-2"><span v-html="$t('WaitingConfirm')"></span>:</p>
             <b-tag class="py-2">{{isPendingTx.hash}}</b-tag>
@@ -24,8 +24,7 @@
                         $t('ExchangeTokensProjectsApprove') }}
                     </button>
 
-                    <div v-if="currentAccountData.allowanceForSwap !== '0'" class="py-2">
-                        {{ $t('ExchangeTokensProjectsMessagesBeforeSwap', {
+                    <div v-if="currentAccountData.allowanceForSwap !== '0'" class="py-2">{{ $t('ExchangeTokensProjectsMessagesBeforeSwap', {
                         allowance: toEthDecimals(currentAccountData.allowanceForSwap),
                         WToken: currentProject.symbol,
                         Token: currentProject.tokenInformation.symbol,
@@ -36,12 +35,12 @@
                         <button
                                 class="btn btn-primary py-2"
                                 :disabled="this.currentAccountData.allowanceForSwap === '0'"
-                                @click="decreaseSwapApprovalToSpend">{{ $t('ExchangeTokensProjectsDecrease')}}
+                                @click="decreaseSwapApprovalToSpend" v-html="$t('ExchangeTokensProjectsDecrease')">
                         </button>
                         <button
                                 class="btn btn-primary py-2 ml-3"
                                 :disabled="this.currentAccountData.allowanceForSwap === '0'"
-                                @click="exchange">{{ $t('ExchangeTokensProjectsExchange')}}
+                                @click="exchange" v-html="$t('ExchangeTokensProjectsExchange')">
                         </button>
                     </div>
                 </div>
