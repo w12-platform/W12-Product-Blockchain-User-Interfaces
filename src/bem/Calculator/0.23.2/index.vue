@@ -446,7 +446,7 @@
                 if (!error) {
                     const tx = result.transactionHash;
                     await this.updateAccountData();
-                    await this.tokensListUpdate({Index: this.currentToken.index});
+                    await this.tokensListUpdate(this.currentToken);
                     this.$store.commit(`Transactions/${CONFIRM_TX}`, tx);
                 }
             },

@@ -173,7 +173,7 @@
                             if (currentDate <= EndDate) {
                                 const Index = this.currentToken.index;
                                 setTimeout(() => {
-                                    this.tokensListUpdate({Index});
+                                    this.tokensListUpdate(this.currentToken);
                                 }, 1000);
                             }
                             this.unwatchCountdown();
