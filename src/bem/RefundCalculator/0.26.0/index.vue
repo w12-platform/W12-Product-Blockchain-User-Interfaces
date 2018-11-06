@@ -15,8 +15,7 @@
             ></cleave>
         </b-field>
         <div class="row">
-            <div class="col">
-                {{ $t('InvestorDashboardRefundEthCalculatorMessage') }}
+            <div class="col"><span v-html="$t('InvestorDashboardRefundEthCalculatorMessage')"></span>
             </div>
             <div v-if="!refundedAmountPerAsset" class="col">-</div>
             <div v-else class="col">

@@ -44,8 +44,7 @@
 
                     <template slot="detail" slot-scope="props">
                         <div class="WhiteListTable__detail">
-                            <div class="WhiteListTable__detailField">
-                                {{ $t('AdminDashboardTableToken') }} :
+                            <div class="WhiteListTable__detailField"><span v-html="$t('AdminDashboardTableToken')"></span> :
                                 <div class="WhiteListTable__detailToken">
                                     <span class="tag is-success">{{ props.row.address }}</span>
                                 </div>

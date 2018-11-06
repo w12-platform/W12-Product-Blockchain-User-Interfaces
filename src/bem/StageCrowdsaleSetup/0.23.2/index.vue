@@ -4,8 +4,7 @@
             <div class="col-auto">
                 <span class="ProjectDashboard__step-badge step-badge badge badge-pill badge-light">6</span>
             </div>
-            <div class="col-sm-5">
-                {{ $t('ProjectDashboardStageBonuses') }}
+            <div class="col-sm-5"><span v-html="$t('ProjectDashboardStageBonuses')"></span>
             </div>
             <div class="col-12">
                 <div v-if="isCrowdsaleInited && hasPlacedWTokenAddress" class="text-left">
@@ -158,8 +157,7 @@
                                             <div class="text-left pt-2">
                                                 <button class="btn btn-primary btn-sm"
                                                         :disabled="isStartCrowdSale"
-                                                        @click="addBonusVolumesAt(stageIndex)">
-                                                    {{ $t('ProjectDashboardStageBonusesAddButton') }}
+                                                        @click="addBonusVolumesAt(stageIndex)" v-html="$t('ProjectDashboardStageBonusesAddButton')">
                                                 </button>
                                             </div>
                                         </div>
@@ -184,8 +182,7 @@
                                             type="is-danger" has-icon>{{ error }}
                             </b-notification>
 
-                            <b-notification class="ProjectStages__errorStage" v-if="tokenCrowdSaleMilestones.length && !isOneHundredPercent" type="is-danger" has-icon>
-                                {{ $t('MilestoneTitleErrorNotOneHundredPercent') }}
+                            <b-notification class="ProjectStages__errorStage" v-if="tokenCrowdSaleMilestones.length && !isOneHundredPercent" type="is-danger" has-icon><span v-html="$t('MilestoneTitleErrorNotOneHundredPercent')"></span>
                             </b-notification>
 
                             <footer class="card-footer" v-if="!isStartCrowdSale">

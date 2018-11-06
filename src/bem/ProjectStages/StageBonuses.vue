@@ -4,8 +4,7 @@
             <div class="col-auto">
                 <span class="ProjectDashboard__step-badge step-badge badge badge-pill badge-light">5</span>
             </div>
-            <div class="col-sm-5">
-                {{ $t('ProjectDashboardStageBonuses') }}
+            <div class="col-sm-5"><span v-html="$t('ProjectDashboardStageBonuses')"></span>
             </div>
             <div class="col-12">
                 <div v-if="isCrowdsaleInited && hasPlacedWTokenAddress" class="text-left">
@@ -163,14 +162,12 @@
                                             <div class="text-left pt-2">
                                                 <button class="btn btn-primary btn-sm"
                                                         :disabled="tokenCrowdSaleStagesChange || isStartCrowdSale"
-                                                        @click="addBonusVolumesAt(stageIndex)">
-                                                    {{ $t('ProjectDashboardStageBonusesAddButton') }}
+                                                        @click="addBonusVolumesAt(stageIndex)" v-html="$t('ProjectDashboardStageBonusesAddButton')">
                                                 </button>
                                                 <button v-if="stage.bonusVolumes.length"
                                                         :disabled="tokenCrowdSaleStagesChange || isStartCrowdSale"
                                                         class="btn btn-primary btn-sm"
-                                                        @click="saveBonusVolumesAt(stageIndex)">
-                                                    {{ $t('ProjectDashboardStageBonusesSaveButton') }}
+                                                        @click="saveBonusVolumesAt(stageIndex)" v-html="$t('ProjectDashboardStageBonusesSaveButton')">
                                                 </button>
                                             </div>
                                         </div>

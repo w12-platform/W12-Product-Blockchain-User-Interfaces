@@ -4,8 +4,7 @@
             <div class="col-auto">
                 <span class="ProjectDashboard__step-badge step-badge badge badge-pill badge-light">3</span>
             </div>
-            <div class="col-sm-4">
-                {{ $t('ProjectDashboardStagePlace') }}
+            <div class="col-sm-4"><span v-html="$t('ProjectDashboardStagePlace')"></span>
             </div>
             <div class="col-sm-2 text-center">
                 <b-tag v-if="!hasPlacedWTokenAddress && !hasAllowance"
@@ -48,15 +47,13 @@
                     <b-notification class="ProjectStages__errorStage" v-if="error" @close="error = false" type="is-danger" has-icon>
                         {{ error }}
                     </b-notification>
-                    <b-notification class="ProjectStages__errorStage" v-if="amountError" :closable="false" type="is-danger" has-icon>
-                        {{ $t('ProjectDashboardStagePlaceErrorAmount') }}
+                    <b-notification class="ProjectStages__errorStage" v-if="amountError" :closable="false" type="is-danger" has-icon><span v-html="$t('ProjectDashboardStagePlaceErrorAmount')"></span>
                     </b-notification>
                     <div class="text-right">
                         <button
                                 class="btn btn-primary btn-sm"
                                 @click="placeTokens"
-                                :disabled="disable">
-                            {{ $t('ProjectDashboardStagePlaceButton') }}
+                                :disabled="disable" v-html="$t('ProjectDashboardStagePlaceButton')">
                         </button>
                     </div>
                 </div>

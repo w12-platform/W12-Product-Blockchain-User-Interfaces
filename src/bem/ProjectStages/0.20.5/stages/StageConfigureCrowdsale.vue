@@ -4,8 +4,7 @@
             <div class="col-auto">
                 <span class="ProjectDashboard__step-badge step-badge badge badge-pill badge-light">5</span>
             </div>
-            <div class="col-sm-4">
-                {{ $t('ProjectDashboardStageConfigureCrowdsale') }}
+            <div class="col-sm-4"><span v-html="$t('ProjectDashboardStageConfigureCrowdsale')"></span>
             </div>
             <div class="col-sm-3 text-center">
                 <b-tag v-if="!isCrowdsaleInited"

@@ -174,8 +174,7 @@
                                             type="is-danger" has-icon>{{ error }}
                             </b-notification>
 
-                            <b-notification class="ProjectStages__errorStage" v-if="tokenCrowdSaleMilestones.length && !isOneHundredPercent" type="is-danger" has-icon>
-                                {{ $t('MilestoneTitleErrorNotOneHundredPercent') }}
+                            <b-notification class="ProjectStages__errorStage" v-if="tokenCrowdSaleMilestones.length && !isOneHundredPercent" type="is-danger" has-icon><span v-html="$t('MilestoneTitleErrorNotOneHundredPercent')"></span>
                             </b-notification>
 
                             <footer class="card-footer" v-if="!isStartCrowdSale">

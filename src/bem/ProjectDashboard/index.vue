@@ -9,8 +9,7 @@
                 <span v-if="accountMeta.loadingError">{{ accountMeta.loadingError }}</span>
             </b-notification>
 
-            <b-notification v-if="!isError && isLoading" :closable="false">
-                {{ $t('ProjectDashboardLoadExpect') }}
+            <b-notification v-if="!isError && isLoading" :closable="false"><span v-html="$t('ProjectDashboardLoadExpect')"></span>
                 <b-loading :is-full-page="false" :active="isLoading" :can-cancel="true"></b-loading>
             </b-notification>
 

@@ -72,8 +72,7 @@
                 </b-field>
             </div>
             <div class="form-group">
-                <label for="trancheFeePercent">
-                    {{ $t('AdminDashboardFieldTrancheFeePercentLabel') }}
+                <label for="trancheFeePercent"><span v-html="$t('AdminDashboardFieldTrancheFeePercentLabel')"></span>
                     <span class="labelTooltip" v-tooltip="$t('AdminDashboardFieldTrancheFeePercentLabelMessage')">?</span>
                 </label>
                 <b-field id="trancheFeePercent">
@@ -86,8 +85,7 @@
                 </b-field>
             </div>
             <div class="form-group">
-                <label for="WTokenSaleFeePercent">
-                    {{ $t('AdminDashboardFieldWTokenSaleFeePercentLabel') }}
+                <label for="WTokenSaleFeePercent"><span v-html="$t('AdminDashboardFieldWTokenSaleFeePercentLabel')"></span>
                     <span class="labelTooltip" v-tooltip="$t('AdminDashboardFieldWTokenSaleFeePercentLabelMessage')">?</span>
                 </label>
                 <b-field id="WTokenSaleFeePercent">
@@ -127,8 +125,7 @@
             </div>
 
 
-            <b-notification :closable="false" v-if="disableWhiteListButton">
-                {{ $t('AdminDashboardWarning') }}
+            <b-notification :closable="false" v-if="disableWhiteListButton"><span v-html="$t('AdminDashboardWarning')"></span>
             </b-notification>
             <b-notification v-if="errorMessage !== ''" type="is-danger" has-icon>
                 {{ errorMessage }}
