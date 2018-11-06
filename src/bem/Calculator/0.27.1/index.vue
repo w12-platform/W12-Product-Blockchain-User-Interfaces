@@ -65,8 +65,7 @@
                     {{ $t('ErrorOnSaleMaxAmount', { max: currentToken.crowdSaleInformation.tokensOnSale }) }}
                 </b-notification>
 
-                <p v-if="currentToken.crowdSaleInformation.stageDiscount !== '0'">
-                    {{$t('InvestorDashboardCalculatorDiscount')}}
+                <p v-if="currentToken.crowdSaleInformation.stageDiscount !== '0'"><span v-html="$t('InvestorDashboardCalculatorDiscount')"></span>
                     <b-tag type="is-success">{{ currentToken.crowdSaleInformation.stageDiscount }}%</b-tag>
                     <br>{{$t('InvestorDashboardCalculatorDiscountBeforeEndTimeout', { countdown: countdown })}}
                 </p>
@@ -78,8 +77,7 @@
                     <b-tag type="is-success">+{{ bonusVolume }} {{ currentToken.symbol }}</b-tag>
                 </p>
 
-                <div class="Calculator__total">
-                    {{$t('InvestorDashboardCalculatorTotalBuy')}} {{ this.invoice ? this.invoice.tokens : 0 }} {{ currentToken.symbol }} - {{ this.invoice ? this.invoice.cost : 0 }} {{ paymentMethod }}
+                <div class="Calculator__total"><span v-html="$t('InvestorDashboardCalculatorTotalBuy')"></span> {{ this.invoice ? this.invoice.tokens : 0 }} {{ currentToken.symbol }} - {{ this.invoice ? this.invoice.cost : 0 }} {{ paymentMethod }}
                     <br>
                     {{$t('InvestorDashboardCalculatorTotalCost', { cost: this.invoice ? this.invoice.cost : 0 })}} {{ paymentMethod }}
                     <br>

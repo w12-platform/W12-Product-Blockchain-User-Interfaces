@@ -45,8 +45,7 @@
                     {{ $t('ErrorOnSaleMaxAmount', { max: currentToken.crowdSaleInformation.tokensOnSale }) }}
                 </b-notification>
 
-                <p v-if="currentToken.crowdSaleInformation.stageDiscount !== '0'">
-                    {{$t('InvestorDashboardCalculatorDiscount')}}
+                <p v-if="currentToken.crowdSaleInformation.stageDiscount !== '0'"><span v-html="$t('InvestorDashboardCalculatorDiscount')"></span>
                     <b-tag type="is-success">{{ currentToken.crowdSaleInformation.stageDiscount }}%</b-tag>
                     <br>{{$t('InvestorDashboardCalculatorDiscountBeforeEndTimeout', { countdown: countdown })}}
                     <!--{{ profitInEth }} ETH {{ countdown }}-->
@@ -59,8 +58,7 @@
                     <b-tag type="is-success">+{{ bonusVolume }} {{ currentToken.symbol }}</b-tag>
                 </p>
 
-                <div class="Calculator__total">
-                    {{$t('InvestorDashboardCalculatorTotalBuy')}} {{ totalToken }} {{ currentToken.symbol }} - {{ total }} ETH
+                <div class="Calculator__total"><span v-html="$t('InvestorDashboardCalculatorTotalBuy')"></span> {{ totalToken }} {{ currentToken.symbol }} - {{ total }} ETH
                     <br>
                     {{$t('InvestorDashboardCalculatorTotalCost', { cost: totalCost })}} ETH
                     <br>
