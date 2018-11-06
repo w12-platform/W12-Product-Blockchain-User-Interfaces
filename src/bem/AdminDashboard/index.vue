@@ -12,8 +12,8 @@
             </b-notification>
 
             <b-notification v-if="isLoading && !isError" :closable="false" class="AdminDashboard__loader">
-                <span v-if="ledgerMeta.loading">{{ $t('AdminDashboardLoadLedger') }}<br></span>
-                <span v-if="tokensListMeta.loading">{{ $t('AdminDashboardLoadTokens') }}<br></span>
+                <span v-if="ledgerMeta.loading"><span v-html="$t('AdminDashboardLoadLedger')"></span><br></span>
+                <span v-if="tokensListMeta.loading"><span v-html="$t('AdminDashboardLoadTokens')"></span><br></span>
 
                 <b-loading :is-full-page="false" :active="isLoading" :can-cancel="true"></b-loading>
             </b-notification>

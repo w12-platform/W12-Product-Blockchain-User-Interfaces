@@ -4,7 +4,7 @@
 
         <div class="WhiteListForm__form">
             <div class="form-group">
-                <label for="TokenAddress">{{ $t('AdminDashboardFieldTokenLabel') }}</label>
+                <label for="TokenAddress" v-html="$t('AdminDashboardFieldTokenLabel')"></label>
                 <input
                         :placeholder="$t('AdminDashboardFieldTokenPlaceholder')"
                         type="text"
@@ -13,7 +13,7 @@
                         v-model="whiteListForm.tokenAddress">
             </div>
             <div class="form-group">
-                <label for="OwnerAddress">{{ $t('AdminDashboardFieldOwnerLabel') }}</label>
+                <label for="OwnerAddress" v-html="$t('AdminDashboardFieldOwnerLabel')"></label>
                 <input
                         :placeholder="$t('AdminDashboardFieldOwnerPlaceholder')"
                         type="text"
@@ -134,11 +134,11 @@
                 {{ errorMessage }}
             </b-notification>
             <div class="pm-2" v-if="isPendingTx">
-                <p class="py-2">{{ $t('WaitingConfirm') }}:</p>
+                <p class="py-2"><span v-html="$t('WaitingConfirm')"></span>:</p>
                 <b-tag class="py-2">{{isPendingTx.hash}}</b-tag>
             </div>
             <div class="pm-2" v-if="isErrorTx">
-                <p class="py-2">{{ $t('TransactionFailed') }}:</p>
+                <p class="py-2"><span v-html="$t('TransactionFailed')"></span>:</p>
                 <b-tag class="py-2">{{isErrorTx.hash}}</b-tag>
                 <div class="pt-2 text-left">
                     <button class="btn btn-primary btn-sm" @click="TransactionsRetry(isErrorTx)" v-html="$t('ToRetry')"></button>

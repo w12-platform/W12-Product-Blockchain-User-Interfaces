@@ -8,7 +8,7 @@
                 {{ $t('ProjectDashboardStageWhitelist') }}
             </div>
             <div class="col-sm-2 text-center">
-                <b-tag type="is-success">{{ $t('ProjectDashboardStageWhitelistStatusWhitelisted') }}</b-tag>
+                <b-tag type="is-success" v-html="$t('ProjectDashboardStageWhitelistStatusWhitelisted')"></b-tag>
             </div>
             <div class="col-sm text-right"></div>
         </div>

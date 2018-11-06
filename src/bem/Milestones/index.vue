@@ -3,11 +3,11 @@
         <h2 v-html="$t('Milestones')"></h2>
 
         <div class="pm-2" v-if="isPendingTx">
-            <p class="py-2">{{ $t('WaitingConfirm') }}:</p>
+            <p class="py-2"><span v-html="$t('WaitingConfirm')"></span>:</p>
             <b-tag class="py-2">{{isPendingTx.hash}}</b-tag>
         </div>
         <div class="pm-2" v-if="isErrorTx">
-            <p class="py-2">{{ $t('TransactionFailed') }}:</p>
+            <p class="py-2"><span v-html="$t('TransactionFailed')"></span>:</p>
             <b-tag class="py-2">{{isErrorTx.hash}}</b-tag>
             <div class="pt-2 text-left">
                 <button class="btn btn-primary btn-sm" @click="TransactionsRetry(isErrorTx)" v-html="$t('ToRetry')"></button>
@@ -17,7 +17,7 @@
             <div class="card-content" v-if="tokenCrowdSaleMilestones.length">
                 <div class="">
                     <div v-for="(item, idx) in tokenCrowdSaleMilestones">
-                        <span class="Milestones__stageTitle">{{ $t('MilestoneTitle') }} #{{ idx+1 }}</span>
+                        <span class="Milestones__stageTitle"><span v-html="$t('MilestoneTitle')"></span> #{{ idx+1 }}</span>
                         <MilestoneCard
                                 v-model="tokenCrowdSaleMilestones[idx]"
                                 :stageIndex="idx"

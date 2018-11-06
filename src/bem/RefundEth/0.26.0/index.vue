@@ -51,11 +51,11 @@
             {{ error }}
         </b-notification>
         <div class="pm-2" v-if="isPendingTx">
-            <p class="py-2">{{ $t('WaitingConfirm') }}:</p>
+            <p class="py-2"><span v-html="$t('WaitingConfirm')"></span>:</p>
             <b-tag class="py-2">{{isPendingTx.hash}}</b-tag>
         </div>
         <div class="pm-2" v-if="isErrorTx">
-            <p class="py-2">{{ $t('TransactionFailed') }}:</p>
+            <p class="py-2"><span v-html="$t('TransactionFailed')"></span>:</p>
             <b-tag class="py-2">{{isErrorTx.hash}}</b-tag>
             <div class="pt-2 text-left">
                 <button class="btn btn-primary btn-sm" @click="TransactionsRetry(isErrorTx)" v-html="$t('ToRetry')"></button>

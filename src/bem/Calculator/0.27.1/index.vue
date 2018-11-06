@@ -98,11 +98,11 @@
             </b-notification>
 
             <div class="pm-2" v-if="isPendingTx">
-                <p class="py-2">{{ $t('WaitingConfirm') }}:</p>
+                <p class="py-2"><span v-html="$t('WaitingConfirm')"></span>:</p>
                 <b-tag class="py-2">{{isPendingTx.hash}}</b-tag>
             </div>
             <div class="pm-2" v-if="isErrorTx">
-                <p class="py-2">{{ $t('TransactionFailed') }}:</p>
+                <p class="py-2"><span v-html="$t('TransactionFailed')"></span>:</p>
                 <b-tag class="py-2">{{isErrorTx.hash}}</b-tag>
                 <div class="pt-2 text-left">
                     <button class="btn btn-primary btn-sm" @click="TransactionsRetry(isErrorTx)" v-html="$t('ToRetry')"></button>
@@ -110,8 +110,8 @@
             </div>
 
             <div class="Calculator__buy" v-if="!isPendingTx && !isErrorTx">
-                <button class="btn btn-primary" :disabled="disableBuy || fetchingInvoice" @click="buy">{{$t('InvestorDashboardCalculatorBuy')}}</button>
-                <button v-if="isNeedApprove" :disabled="fetchingInvoice" class="btn btn-primary" @click="approve">{{$t('InvestorDashboardCalculatorDoApprove')}}</button>
+                <button class="btn btn-primary" :disabled="disableBuy || fetchingInvoice" @click="buy" v-html="$t('InvestorDashboardCalculatorBuy')"></button>
+                <button v-if="isNeedApprove" :disabled="fetchingInvoice" class="btn btn-primary" @click="approve" v-html="$t('InvestorDashboardCalculatorDoApprove')"></button>
             </div>
         </div>
         <b-loading :is-full-page="false" :active.sync="loading" :can-cancel="true"></b-loading>

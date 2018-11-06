@@ -8,11 +8,11 @@
             <div class="col-12">
                 <div v-if="isCrowdsaleInited && hasPlacedWTokenAddress" class="text-left">
                     <div class="pm-2" v-if="isPendingTx">
-                        <p class="py-2">{{ $t('WaitingConfirm') }}:</p>
+                        <p class="py-2"><span v-html="$t('WaitingConfirm')"></span>:</p>
                         <b-tag class="py-2">{{isPendingTx.hash}}</b-tag>
                     </div>
                     <div class="pm-2" v-if="isErrorTx">
-                        <p class="py-2">{{ $t('TransactionFailed') }}:</p>
+                        <p class="py-2"><span v-html="$t('TransactionFailed')"></span>:</p>
                         <b-tag class="py-2">{{isErrorTx.hash}}</b-tag>
                         <div class="pt-2 text-left">
                             <button class="btn btn-primary btn-sm" @click="TransactionsRetry(isErrorTx)" v-html="$t('ToRetry')"></button>
@@ -26,7 +26,7 @@
                                      v-for="(stage, stageIndex) in tokenCrowdSaleStages" :key="stageIndex">
                                     <div class="col-12 pb-4">
                                         <div class="p-3 row align-items-center justify-content-between">
-                                            <span class="ProjectDashboard__stageTitle">{{ $t('ProjectDashboardStageBonusesStage') }} #{{ stageIndex+1 }}</span>
+                                            <span class="ProjectDashboard__stageTitle"><span v-html="$t('ProjectDashboardStageBonusesStage')"></span> #{{ stageIndex+1 }}</span>
                                             <button class="btn btn-primary btn-sm" :disabled="isStartCrowdSale"
                                                     @click="deleteStageAt(stageIndex)">{{ $t('ProjectDashboardStageBonusesRemove') }}
                                             </button>
@@ -158,9 +158,9 @@
                             </div>
 
                             <div class="p-3" v-if="tokenCrowdSaleMilestones.length">
-                                <h2 class="col-12 pb-4">{{ $t('Milestones') }}</h2>
+                                <h2 class="col-12 pb-4" v-html="$t('Milestones')"></h2>
                                 <div v-for="(item, idx) in tokenCrowdSaleMilestones">
-                                    <span class="Milestones__stageTitle">{{ $t('MilestoneTitle') }} #{{ idx+1 }}</span>
+                                    <span class="Milestones__stageTitle"><span v-html="$t('MilestoneTitle')"></span> #{{ idx+1 }}</span>
                                     <MilestoneCard
                                             v-model="tokenCrowdSaleMilestones[idx]"
                                             :stageIndex="idx"

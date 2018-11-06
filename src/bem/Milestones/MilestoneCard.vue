@@ -2,7 +2,7 @@
     <div class="MilestoneCard py-4 buefy">
         <div class="row justify-content-between">
             <div class="col-sm py-2">
-                <label for="MilestoneCard__name">{{ $t('MilestonesName') }}</label>
+                <label for="MilestoneCard__name" v-html="$t('MilestonesName')"></label>
                 <b-field id="MilestoneCard__name">
                     <b-input
                             :disabled="isStartCrowdSale"
@@ -10,7 +10,7 @@
                             :value="viewData.name"
                             @input="onInput('name', $event)"></b-input>
                 </b-field>
-                <label for="MilestoneCard__description">{{ $t('MilestonesDescription') }}</label>
+                <label for="MilestoneCard__description" v-html="$t('MilestonesDescription')"></label>
                 <b-field id="MilestoneCard__description">
                     <b-input
                             :disabled="isStartCrowdSale"
@@ -18,7 +18,7 @@
                             :value="viewData.description"
                             @input="onInput('description', $event)"></b-input>
                 </b-field>
-                <label for="MilestoneCard__tranche">{{ $t('MilestonesTranche') }}</label>
+                <label for="MilestoneCard__tranche" v-html="$t('MilestonesTranche')"></label>
                 <b-field id="MilestoneCard__tranche">
                     <b-input
                             :disabled="isStartCrowdSale"
@@ -30,7 +30,7 @@
 
             </div>
             <div class="col-sm py-2">
-                <label for="MilestoneCard__end">{{ $t('MilestonesDate') }}</label>
+                <label for="MilestoneCard__end" v-html="$t('MilestonesDate')"></label>
                 <b-field id="MilestoneCard__end">
                     <date-picker
                             :not-before="getNotBeforeEndDate(stageIndex)"
@@ -45,7 +45,7 @@
                             :time-picker-options="{ start: '00:00', step: '00:10', end: '23:50'}"
                     ></date-picker>
                 </b-field>
-                <!--<label for="MilestoneCard__voteEnd">{{ $t('MilestonesDateEndVoting') }}</label>-->
+                <!--<label for="MilestoneCard__voteEnd" v-html="$t('MilestonesDateEndVoting')"></label>-->
                 <!--<b-field id="MilestoneCard__voteEnd">-->
                 <!--<date-picker-->
                 <!--v-model="viewData.voteEndDate"-->
@@ -57,7 +57,7 @@
                 <!--confirm-->
                 <!--&gt;</date-picker>-->
                 <!--</b-field>-->
-                <label for="MilestoneCard__withdrawalEnd">{{ $t('MilestonesDateEndWithdrawal') }}</label>
+                <label for="MilestoneCard__withdrawalEnd" v-html="$t('MilestonesDateEndWithdrawal')"></label>
                 <b-field id="MilestoneCard__withdrawalEnd">
                     <date-picker
                             :not-before="getNotBeforeWithdrawalEndDate(stageIndex)"

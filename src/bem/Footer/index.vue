@@ -3,7 +3,7 @@
         <div class="container">
             <div class="footer__line">
                 <div class="footer-links first">
-                    <h5 class="footer-links__heading">{{ $t('FooterMenu1') }}</h5>
+                    <h5 class="footer-links__heading" v-html="$t('FooterMenu1')"></h5>
                     <ul class="footer-links__list">
                         <li class="footer-links__item"><a class="footer-links__link" :href="$t('FooterMenu2Url')" v-html="$t('FooterMenu2')"></a></li>
                         <li class="footer-links__item"><a class="footer-links__link" :href="$t('FooterMenu3Url')" v-html="$t('FooterMenu3')"></a></li>
@@ -14,7 +14,7 @@
                     </ul>
                 </div>
                 <div class="footer-links">
-                    <h5 class="footer-links__heading">{{ $t('FooterMenu8') }}</h5>
+                    <h5 class="footer-links__heading" v-html="$t('FooterMenu8')"></h5>
                     <ul class="footer-links__list">
                         <li class="footer-links__item"><a class="footer-links__link" :href="$t('FooterMenu9Url')" v-html="$t('FooterMenu9')"></a></li>
                         <li class="footer-links__item"><a class="footer-links__link" :href="$t('FooterMenu10Url')" v-html="$t('FooterMenu10')"></a></li>
@@ -32,14 +32,14 @@
                     </div>
                     <!--
                     <form class="footer-form">
-                        <label class="footer-form__label">{{ $t('FooterForm1') }}</label>
+                        <label class="footer-form__label" v-html="$t('FooterForm1')"></label>
                         <div class="footer-form__row">
                             <input type="email" :placeholder="$t('FooterForm2')">
                             <button type="submit" v-html="$t('FooterForm3')"></button>
-                        </div><span class="footer-form__tags">{{ $t('FooterForm4') }}</span>
+                        </div><span class="footer-form__tags" v-html="$t('FooterForm4')"></span>
                     </form>
                     -->
-                    <div class="footer-follow"><span class="footer-follow__heading">{{ $t('FooterFollow') }}</span>
+                    <div class="footer-follow"><span class="footer-follow__heading" v-html="$t('FooterFollow')"></span>
                         <div class="footer-follow__social">
                             <a :href="$t('FooterFollowFacebook')"><i class="fa fa-facebook"></i></a>
                             <a :href="$t('FooterFollowTelegram')"><i class="fa fa-telegram"></i></a>

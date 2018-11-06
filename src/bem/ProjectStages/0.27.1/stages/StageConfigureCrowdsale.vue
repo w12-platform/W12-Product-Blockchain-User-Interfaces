@@ -21,11 +21,11 @@
             </div>
             <div class="ProjectDashboard__configureCrowdsale col-12 text-left">
                 <div class="pm-2" v-if="isPendingTx">
-                    <p class="py-2">{{ $t('WaitingConfirm') }}:</p>
+                    <p class="py-2"><span v-html="$t('WaitingConfirm')"></span>:</p>
                     <b-tag class="py-2">{{isPendingTx.hash}}</b-tag>
                 </div>
                 <div class="pm-2" v-if="isErrorTx">
-                    <p class="py-2">{{ $t('TransactionFailed') }}:</p>
+                    <p class="py-2"><span v-html="$t('TransactionFailed')"></span>:</p>
                     <b-tag class="py-2">{{isErrorTx.hash}}</b-tag>
                     <div class="pt-2 text-left">
                         <button class="btn btn-primary btn-sm" @click="TransactionsRetry(isErrorTx)" v-html="$t('ToRetry')"></button>
@@ -41,7 +41,7 @@
                             {{ $t('ProjectDashboardStagePlaceCongratulations', {amount: tokensForSaleAmountToNumber, symbol: currentProject.symbol }) }}
                         </b-notification>
                         <div class="form-group">
-                            <label for="BaseTokenPrice">{{ $t('ProjectDashboardStageConfigureCrowdsalePrice') }}</label>
+                            <label for="BaseTokenPrice" v-html="$t('ProjectDashboardStageConfigureCrowdsalePrice')"></label>
                             <b-field id="BaseTokenPrice">
                                 <b-icon icon="currency-usd"></b-icon>
                                 <cleave
@@ -81,7 +81,7 @@
                     </div>
                     <div class="pt-2" v-if="isCrowdsaleInited && hasPlacedWTokenAddress && tokensForAddCrowdsale !== '0'">
                         <div class="form-group">
-                            <label for="AmountForSale">{{ $t('ProjectDashboardStageConfigureCrowdsaleAddTokensLabel') }}</label>
+                            <label for="AmountForSale" v-html="$t('ProjectDashboardStageConfigureCrowdsaleAddTokensLabel')"></label>
                             <b-field id="AmountForSale">
                                 <b-icon icon="shopping"></b-icon>
                                 <cleave

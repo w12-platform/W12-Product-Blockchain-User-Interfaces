@@ -12,64 +12,68 @@
             <div class="table-wrap">
                 <div class="test-steps__table">
                     <div class="test-steps__row">
-                        <span class="test-steps__head">{{ $t('HomeStepsNumber') }}</span>
-                        <span class="test-steps__head">{{ $t('HomeStepsName') }}</span>
-                        <span class="test-steps__head">{{ $t('HomeStepsRole') }}</span></div>
+                        <span class="test-steps__head" v-html="$t('HomeStepsNumber')"></span>
+                        <span class="test-steps__head" v-html="$t('HomeStepsName')"></span>
+                        <span class="test-steps__head" v-html="$t('HomeStepsRole')"></span></div>
                     <div class="test-steps__row">
                         <div class="test-steps__cell"><span class="num">1</span></div>
                         <div class="test-steps__cell"><a target="_blank" href="https://metamask.io" v-html="$t('HomeStepsNum1')"></a>
                             <p v-html="$t('HomeStepsForMetamask')"></p>
                         </div>
-                        <div class="test-steps__cell"><span class="icon icon-blue">{{ $t('HomeStepsProject') }}</span><span class="icon icon-green">{{ $t('HomeStepsBuyerTokens') }}</span><span class="icon icon-red">{{ $t('HomeStepsAdmin')}}</span></div>
+                        <div class="test-steps__cell">
+                            <span class="icon icon-blue" v-html="$t('HomeStepsProject')"></span>
+                            <span class="icon icon-green" v-html="$t('HomeStepsBuyerTokens')"></span>
+                            <span class="icon icon-red" v-html="$t('HomeStepsAdmin')"></span>
+                        </div>
                     </div>
                     <div class="test-steps__row">
                         <div class="test-steps__cell"><span class="num">2</span></div>
                         <div class="test-steps__cell"><a target="_blank" href="https://w12.io/test-ethereum-reg/" v-html="$t('HomeStepsNum2')"></a>
                             <p v-html="$t('HomeStepsForTest')"></p>
                         </div>
-                        <div class="test-steps__cell"><span class="icon icon-green">{{ $t('HomeStepsBuyerTokens') }}</span></div>
+                        <div class="test-steps__cell"><span class="icon icon-green" v-html="$t('HomeStepsBuyerTokens')"></span></div>
                     </div>
                     <div class="test-steps__row">
                         <div class="test-steps__cell"><span class="num">3</span></div>
                         <div class="test-steps__cell"><a href="/factory.html" v-html="$t('HomeStepsNum3')"></a></div>
-                        <div class="test-steps__cell"><span class="icon icon-blue">{{ $t('HomeStepsProject') }}</span></div>
+                        <div class="test-steps__cell"><span class="icon icon-blue" v-html="$t('HomeStepsProject')"></span></div>
                     </div>
                     <div class="test-steps__row">
                         <div class="test-steps__cell"><span class="num">4</span></div>
                         <div class="test-steps__cell"><a href="/listing.html" v-html="$t('HomeStepsNum4')"></a></div>
-                        <div class="test-steps__cell"><span class="icon icon-red">{{ $t('HomeStepsAdmin')}}</span></div>
+                        <div class="test-steps__cell"><span class="icon icon-red" v-html="$t('HomeStepsAdmin')"></span></div>
                     </div>
                     <div class="test-steps__row">
                         <div class="test-steps__cell"><span class="num">5</span></div>
                         <div class="test-steps__cell"><a href="/project.html" v-html="$t('HomeStepsNum5')"></a>
                             <p v-html="$t('HomeStepsSale')"></p>
                         </div>
-                        <div class="test-steps__cell"><span class="icon icon-blue">{{ $t('HomeStepsProject') }}</span></div>
+                        <div class="test-steps__cell"><span class="icon icon-blue" v-html="$t('HomeStepsProject')"></span></div>
                     </div>
                     <div class="test-steps__row">
                         <div class="test-steps__cell"><span class="num">6</span></div>
                         <div class="test-steps__cell"><a href="/crowdsale.html" v-html="$t('HomeStepsNum6')"></a></div>
-                        <div class="test-steps__cell"><span class="icon icon-green">{{ $t('HomeStepsBuyerTokens') }}</span></div>
+                        <div class="test-steps__cell"><span class="icon icon-green" v-html="$t('HomeStepsBuyerTokens')"></span></div>
                     </div>
                     <div class="test-steps__row">
                         <div class="test-steps__cell"><span class="num">7</span></div>
                         <div class="test-steps__cell"><a href="/investor-refund.html" v-html="$t('HomeStepsNum7')"></a></div>
-                        <div class="test-steps__cell"><span class="icon icon-green">{{ $t('HomeStepsBuyerTokens') }}</span></div>
+                        <div class="test-steps__cell"><span class="icon icon-green" v-html="$t('HomeStepsBuyerTokens')"></span></div>
                     </div>
                     <div class="test-steps__row">
                         <div class="test-steps__cell"><span class="num">8</span></div>
                         <div class="test-steps__cell"><a href="/investor-exchange.html" v-html="$t('HomeStepsNum8')"></a></div>
-                        <div class="test-steps__cell"><span class="icon icon-green">{{ $t('HomeStepsBuyerTokens') }}</span></div>
+                        <div class="test-steps__cell"><span class="icon icon-green" v-html="$t('HomeStepsBuyerTokens')"></span></div>
                     </div>
                     <div class="test-steps__row">
                         <div class="test-steps__cell"><span class="num">9</span></div>
                         <div class="test-steps__cell"><a href="/tranche.html" v-html="$t('HomeStepsNum9')"></a></div>
-                        <div class="test-steps__cell"><span class="icon icon-blue">{{ $t('HomeStepsProject') }}</span></div>
+                        <div class="test-steps__cell"><span class="icon icon-blue" v-html="$t('HomeStepsProject')"></span></div>
                     </div>
                     <div class="test-steps__row">
                         <div class="test-steps__cell"><span class="num">10</span></div>
                         <div class="test-steps__cell"><a href="/receiving.html" v-html="$t('HomeStepsNum10')"></a></div>
-                        <div class="test-steps__cell"><span class="icon icon-blue">{{ $t('HomeStepsProject') }}</span></div>
+                        <div class="test-steps__cell"><span class="icon icon-blue" v-html="$t('HomeStepsProject')"></span></div>
                     </div>
                 </div>
             </div>
@@ -79,17 +83,17 @@
               <a class="btn actions__buytokens" href="https://w12.io/buy-w12/?utm_source=test-net&amp;utm_medium=demo_page" target="_blank" v-html="$t('HeaderByuW12Tokens')"></a>
             </div>
             <h3 class="tech-adv__heading" v-html="$t('HomeBenefits')"></h3>
-            <h4 class="tech-adv__subheading">{{ $t('HomeBenefitsMaxFlexibility') }}</h4>
-            <p class="tech-adv__text">{{ $t('HomeBenefits1') }}</p>
-            <p class="tech-adv__text">{{ $t('HomeBenefits2') }}</p>
-            <p class="tech-adv__text">{{ $t('HomeBenefits3') }}</p>
-            <p class="tech-adv__text">{{ $t('HomeBenefits4') }}</p>
-            <h4 class="tech-adv__subheading">{{ $t('HomeBenefits5') }}</h4>
-            <p class="tech-adv__text no-points">{{ $t('HomeBenefits6') }}</p>
-            <h4 class="tech-adv__subheading">{{ $t('HomeBenefits7') }}</h4>
-            <p class="tech-adv__text no-points">{{ $t('HomeBenefits8') }}</p>
-            <h4 class="tech-adv__subheading">{{ $t('HomeBenefits9') }}</h4>
-            <p class="tech-adv__text no-points">{{ $t('HomeBenefits10') }}</p>
+            <h4 class="tech-adv__subheading" v-html="$t('HomeBenefitsMaxFlexibility')"></h4>
+            <p class="tech-adv__text" v-html="$t('HomeBenefits1')"></p>
+            <p class="tech-adv__text" v-html="$t('HomeBenefits2')"></p>
+            <p class="tech-adv__text" v-html="$t('HomeBenefits3')"></p>
+            <p class="tech-adv__text" v-html="$t('HomeBenefits4')"></p>
+            <h4 class="tech-adv__subheading" v-html="$t('HomeBenefits5')"></h4>
+            <p class="tech-adv__text no-points" v-html="$t('HomeBenefits6')"></p>
+            <h4 class="tech-adv__subheading" v-html="$t('HomeBenefits7')"></h4>
+            <p class="tech-adv__text no-points" v-html="$t('HomeBenefits8')"></p>
+            <h4 class="tech-adv__subheading" v-html="$t('HomeBenefits9')"></h4>
+            <p class="tech-adv__text no-points" v-html="$t('HomeBenefits10')"></p>
         </div>
         <div class="versions">
             <div class="mobile-btn">
@@ -100,7 +104,7 @@
                 <div class="versions__table">
                     <div class="versions__row">
                         <span class="versions__head" v-html="$t('HomeVersionsVersionProduct')"></span>
-                        <span class="versions__head">{{ $t('HomeVersionsMainFunction') }}</span></div>
+                        <span class="versions__head" v-html="$t('HomeVersionsMainFunction')"></span></div>
                     <div class="versions__row">
                         <div class="versions__cell"><span class="version">v.1</span></div>
                         <div class="versions__cell">

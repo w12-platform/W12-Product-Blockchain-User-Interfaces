@@ -11,15 +11,15 @@
                 <b-tag v-if="!hasPlacedWTokenAddress && !hasAllowance"
                        type="is-success">{{ $t('ProjectDashboardStagePlaceStatusPending') }}
                 </b-tag>
-                <b-tag v-else type="is-success">{{ $t('ProjectDashboardStagePlaceStatusPlaced') }}</b-tag>
+                <b-tag v-else type="is-success" v-html="$t('ProjectDashboardStagePlaceStatusPlaced')"></b-tag>
             </div>
             <div class="col-12 text-left">
                 <div class="pm-2" v-if="isPendingTx">
-                    <p class="py-2">{{ $t('WaitingConfirm') }}:</p>
+                    <p class="py-2"><span v-html="$t('WaitingConfirm')"></span>:</p>
                     <b-tag class="py-2">{{isPendingTx.hash}}</b-tag>
                 </div>
                 <div class="pm-2" v-if="isErrorTx">
-                    <p class="py-2">{{ $t('TransactionFailed') }}:</p>
+                    <p class="py-2"><span v-html="$t('TransactionFailed')"></span>:</p>
                     <b-tag class="py-2">{{isErrorTx.hash}}</b-tag>
                     <div class="pt-2 text-left">
                         <button class="btn btn-primary btn-sm" @click="TransactionsRetry(isErrorTx)" v-html="$t('ToRetry')"></button>
@@ -32,7 +32,7 @@
             <div class="ProjectDashboard__placeForm col-12 text-right" v-if="!isPendingTx && !isErrorTx">
                 <div v-if="hasAllowance" class="text-left">
                     <div class="form-group">
-                        <label for="PlaceAmount">{{ $t('ProjectDashboardStagePlaceAmountLabel') }}</label>
+                        <label for="PlaceAmount" v-html="$t('ProjectDashboardStagePlaceAmountLabel')"></label>
                         <cleave
                                 :placeholder="$t('ProjectDashboardStagePlaceAmountPlaceholder', {tokensAmount: tokensAmountThatApprovedToPlaceByTokenOwnerToNumber})"
                                 id="SpendFrom"
