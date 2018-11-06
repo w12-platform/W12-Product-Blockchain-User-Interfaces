@@ -1,6 +1,6 @@
 <template>
     <div class="Calculator byefy" v-if="currentToken && currentToken.crowdSaleInformation && currentToken.crowdSaleInformation.status">
-        <h2>{{ $t('InvestorDashboardCalculator', {WToken:currentToken.symbol}) }}</h2>
+        <h2 v-html="$t('InvestorDashboardCalculator', {WToken:currentToken.symbol})"></h2>
 
         <div class="Calculator__content">
             <div class="Calculator__infoToken">

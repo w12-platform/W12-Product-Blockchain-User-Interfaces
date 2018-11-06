@@ -1,6 +1,6 @@
 <template>
     <div class="RefundEth byefy" v-if="currentToken && currentAccountData">
-        <h2>{{ $t('InvestorDashboardRefundEth', { WToken: currentToken.symbol }) }}</h2>
+        <h2 v-html="$t('InvestorDashboardRefundEth', { WToken: currentToken.symbol })"></h2>
         <div v-if="refundInformation && !isPendingTx && !isErrorTx">
             <RefundCalculator v-if="canUserRefund"
                 v-model="refundValueInTokens"

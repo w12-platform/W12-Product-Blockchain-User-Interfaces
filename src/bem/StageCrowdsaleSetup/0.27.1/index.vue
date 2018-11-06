@@ -4,9 +4,7 @@
             <div class="col-auto">
                 <span class="ProjectDashboard__step-badge step-badge badge badge-pill badge-light">6</span>
             </div>
-            <div class="col-sm-5">
-                {{ $t('ProjectDashboardStageBonuses') }}
-            </div>
+            <div class="col-sm-5" v-html="$t('ProjectDashboardStageBonuses')"></div>
             <div class="col-12">
                 <div v-if="isCrowdsaleInited && hasPlacedWTokenAddress" class="text-left">
                     <div class="pm-2" v-if="isPendingTx">
@@ -17,7 +15,7 @@
                         <p class="py-2">{{ $t('TransactionFailed') }}:</p>
                         <b-tag class="py-2">{{isErrorTx.hash}}</b-tag>
                         <div class="pt-2 text-left">
-                            <button class="btn btn-primary btn-sm" @click="TransactionsRetry(isErrorTx)">{{ $t('ToRetry') }}</button>
+                            <button class="btn btn-primary btn-sm" @click="TransactionsRetry(isErrorTx)" v-html="$t('ToRetry')"></button>
                         </div>
                     </div>
 
@@ -30,15 +28,13 @@
                                         <div class="p-3 row align-items-center justify-content-between">
                                             <span class="ProjectDashboard__stageTitle">{{ $t('ProjectDashboardStageBonusesStage') }} #{{ stageIndex+1 }}</span>
                                             <button class="btn btn-primary btn-sm" :disabled="isStartCrowdSale"
-                                                    @click="deleteStageAt(stageIndex)">{{
-                                                $t('ProjectDashboardStageBonusesRemove') }}
+                                                    @click="deleteStageAt(stageIndex)">{{ $t('ProjectDashboardStageBonusesRemove') }}
                                             </button>
                                         </div>
                                         <div class="ProjectDashboard__stageBonus col-sm py-2">
                                             <div class="row justify-content-between">
                                                 <div class="col-sm py-2">
-                                                    <label>{{ $t('ProjectDashboardStageBonusesStartDateLabel')
-                                                        }}</label>
+                                                    <label v-html="$t('ProjectDashboardStageBonusesStartDateLabel')"></label>
                                                     <b-field class="ProjectDashboard__dateSelect">
                                                         <date-picker
                                                                 :not-before="getNotBeforeStart(stageIndex)"
@@ -54,7 +50,7 @@
                                                     </b-field>
                                                 </div>
                                                 <div class="col-sm py-2">
-                                                    <label>{{ $t('ProjectDashboardStageBonusesEndDateLabel') }}</label>
+                                                    <label v-html="$t('ProjectDashboardStageBonusesEndDateLabel')"></label>
                                                     <b-field class="ProjectDashboard__dateSelect">
                                                         <date-picker
                                                                 :not-before="getNotBeforeEnd(stageIndex)"
@@ -104,14 +100,13 @@
                                         </div>
 
                                         <div class="p-3 row align-items-center justify-content-between">
-                                            <span class="ProjectDashboard__stageTitle">{{ $t('ProjectDashboardStageBonusesVolume') }}</span>
+                                            <span class="ProjectDashboard__stageTitle" v-html="$t('ProjectDashboardStageBonusesVolume')"></span>
                                         </div>
                                         <div class="col-sm py-2">
                                             <div v-for="(bonusVolume, bonusVolumeIndex) in stage.bonusVolumes" :key="bonusVolumeIndex">
                                                 <div class="row justify-content-between">
                                                     <div class="col-sm py-2">
-                                                        <label v-if="bonusVolumeIndex === 0" for="bonusVolumeETH">{{
-                                                            $t('ProjectDashboardStageBonusesFieldsTitle', { currency: 'USD' }) }}</label>
+                                                        <label v-if="bonusVolumeIndex === 0" for="bonusVolumeETH" v-html="$t('ProjectDashboardStageBonusesFieldsTitle', { currency: 'USD' })"></label>
                                                         <b-field id="bonusVolumeUSD">
                                                             <b-input
                                                                     placeholder="USD"
@@ -128,8 +123,8 @@
                                                         <div class="row">
                                                             <div class="col-md-8">
                                                                 <label v-if="bonusVolumeIndex === 0"
-                                                                       for="bonusVolumePercent">{{
-                                                                    $t('ProjectDashboardStageBonusesBonus') }}</label>
+                                                                       for="bonusVolumePercent"
+                                                                       v-html="$t('ProjectDashboardStageBonusesBonus')"></label>
                                                                 <b-field id="bonusVolumePercent">
                                                                     <b-input
                                                                             type="number"
@@ -154,8 +149,7 @@
                                             <div class="text-left pt-2">
                                                 <button class="btn btn-primary btn-sm"
                                                         :disabled="isStartCrowdSale"
-                                                        @click="addBonusVolumesAt(stageIndex)">
-                                                    {{ $t('ProjectDashboardStageBonusesAddButton') }}
+                                                        @click="addBonusVolumesAt(stageIndex)" v-html="$t('ProjectDashboardStageBonusesAddButton')">
                                                 </button>
                                             </div>
                                         </div>

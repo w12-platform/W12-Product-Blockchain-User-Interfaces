@@ -1,6 +1,6 @@
 <template>
     <div class="Milestones buefy" v-if="currentProject && isCrowdsaleInited && isStagesSave">
-        <h2>{{ $t('Milestones') }}</h2>
+        <h2 v-html="$t('Milestones')"></h2>
 
         <div class="pm-2" v-if="isPendingTx">
             <p class="py-2">{{ $t('WaitingConfirm') }}:</p>

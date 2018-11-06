@@ -1,7 +1,7 @@
 <template>
     <div class="ProjectDashboardReceiving buefy" v-if="!langMeta.loading">
         <section class="container">
-            <h2>{{ $t('ProjectDashboard') }}</h2>
+            <h2 v-html="$t('ProjectDashboard')"></h2>
 
             <b-notification v-if="isError" type="is-danger" :closable="false" has-icon>
                 <span v-if="ledgerMeta.loadingError">{{ ledgerMeta.loadingError }}</span>
@@ -10,7 +10,7 @@
             </b-notification>
 
             <b-notification v-if="!isError && isLoading" :closable="false">
-                {{ $t('ProjectDashboardLoadExpect') }}
+                <span v-html="$t('ProjectDashboardLoadExpect')"></span>
                 <b-loading :is-full-page="false" :active="isLoading" :can-cancel="true"></b-loading>
             </b-notification>
 

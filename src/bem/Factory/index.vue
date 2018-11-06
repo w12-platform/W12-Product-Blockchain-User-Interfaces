@@ -1,7 +1,7 @@
 <template>
     <div class="Factory buefy" v-if="!langMeta.loading">
         <section class="container">
-            <h2>{{ $t('TokensFactoryTitle') }}</h2>
+            <h2 v-html="$t('TokensFactoryTitle')"></h2>
 
             <b-notification class="AdminDashboard__error" v-if="isError && !isLoading" type="is-danger"
                             :closable="false" has-icon>

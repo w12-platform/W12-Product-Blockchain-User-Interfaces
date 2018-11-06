@@ -1,6 +1,6 @@
 <template>
     <div class="TrancheInformation buefy" v-if="trancheInformationData">
-        <h2>{{ $t('trancheInformation') }}</h2>
+        <h2 v-html="$t('trancheInformation')"></h2>
 
         <div class="pm-2" v-if="isPendingTx">
             <p class="py-2">{{ $t('WaitingConfirm') }}:</p>

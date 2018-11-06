@@ -1,6 +1,6 @@
 <template>
     <div class="WhiteListForm buefy">
-        <h2>{{ $t('AdminDashboardWhiteListForm') }}</h2>
+        <h2 v-html="$t('AdminDashboardWhiteListForm')"></h2>
 
         <div class="WhiteListForm__form">
             <div class="form-group">

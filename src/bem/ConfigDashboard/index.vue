@@ -1,7 +1,7 @@
 <template>
     <div class="ConfigDashboad buefy">
         <section class="container">
-            <h2>{{ $t('ConfigDashboardTitle') }}</h2>
+            <h2 v-html="$t('ConfigDashboardTitle')"></h2>
             <div>
                 <div class="form-group">
                     <label class="mt-4">W12ListerList</label>

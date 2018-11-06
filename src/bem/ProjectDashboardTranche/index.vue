@@ -1,7 +1,7 @@
 <template>
     <div class="ProjectDashboardTranche buefy" v-if="!langMeta.loading">
         <section class="container">
-            <h2>{{ $t('ProjectDashboard') }}</h2>
+            <h2 v-html="$t('ProjectDashboard')"></h2>
 
             <b-notification v-if="isError" type="is-danger" :closable="false" has-icon>
                 <span v-if="ledgerMeta.loadingError">{{ ledgerMeta.loadingError }}</span>
