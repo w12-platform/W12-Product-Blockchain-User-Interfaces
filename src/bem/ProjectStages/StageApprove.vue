@@ -53,7 +53,7 @@
                                 <button
                                         class="btn btn-primary btn-sm"
                                         @click="approveTokensToSpend"
-                                        :disabled="disable">{{ $t('ProjectDashboardStageApproveButton') }}
+                                        :disabled="disable" v-html="$t('ProjectDashboardStageApproveButton')">
                                 </button>
                             </div>
                         </div>

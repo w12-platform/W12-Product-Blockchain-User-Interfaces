@@ -13,26 +13,27 @@
             >
             </RefundCalculator>
             <div class="py-2">
-                <button class="btn btn-primary py-2" :disabled="disable"
-                        @click="approveTheFundToSpend">{{ $t('InvestorDashboardRefundEthApprove') }}
+                <button class="btn btn-primary py-2"
+                        :disabled="disable"
+                        @click="approveTheFundToSpend"
+                        v-html="$t('InvestorDashboardRefundEthApprove')">
                 </button>
             </div>
-            <div v-if="this.currentAccountData.allowanceForTheFund !== '0'" class="py-2">
-                {{ $t('InvestorDashboardRefundEthMessagesBeforeRefund', {
+            <div v-if="this.currentAccountData.allowanceForTheFund !== '0'" class="py-2" v-html="$t('InvestorDashboardRefundEthMessagesBeforeRefund', {
                 allowance: toEth(currentAccountData.allowanceForTheFund),
                 WToken: currentToken.symbol,
                 refundAmount: toEth(currentAccountData.allowanceForTheFundInRefundAmount)
-                }) }}
+                })">
             </div>
             <div v-if="this.currentAccountData.allowanceForTheFund !== '0'" class="row pl-3 pr-3">
 
                 <button
                         class="btn btn-primary py-2"
-                        @click="decreaseTheFundApprovalToSpend">{{ $t('InvestorDashboardRefundEthDecreaseRefund') }}
+                        @click="decreaseTheFundApprovalToSpend" v-html="$t('InvestorDashboardRefundEthDecreaseRefund')">
                 </button>
                 <button
                         class="btn btn-primary py-2 ml-3"
-                        @click="refund">{{ $t('InvestorDashboardRefundEthTokensRefund') }}
+                        @click="refund" v-html="$t('InvestorDashboardRefundEthTokensRefund')">
                 </button>
             </div>
         </div>

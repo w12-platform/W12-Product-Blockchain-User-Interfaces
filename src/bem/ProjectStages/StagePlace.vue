@@ -8,7 +8,7 @@
             </div>
             <div class="col-sm-2 text-center">
                 <b-tag v-if="!hasPlacedWTokenAddress && !hasAllowance"
-                       type="is-success">{{ $t('ProjectDashboardStagePlaceStatusPending') }}
+                       type="is-success" v-html="$t('ProjectDashboardStagePlaceStatusPending')">
                 </b-tag>
                 <b-tag v-else type="is-success" v-html="$t('ProjectDashboardStagePlaceStatusPlaced')"></b-tag>
             </div>

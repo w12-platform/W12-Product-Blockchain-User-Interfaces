@@ -20,18 +20,16 @@
             <div class="ExchangeTokens__form">
                 <div class="ExchangeTokens__exchange py-2">
                     <button class="btn btn-primary py-2"
-                            v-if="this.currentAccountData.allowanceForSwap === '0'" @click="approveSwapToSpend">{{
-                        $t('ExchangeTokensProjectsApprove') }}
-                    </button>
-
-                    <div v-if="currentAccountData.allowanceForSwap !== '0'" class="py-2">{{ $t('ExchangeTokensProjectsMessagesBeforeSwap', {
+                            v-if="this.currentAccountData.allowanceForSwap === '0'"
+                            @click="approveSwapToSpend"
+                            v-html="$t('ExchangeTokensProjectsApprove')"></button>
+                    <div v-if="currentAccountData.allowanceForSwap !== '0'" class="py-2" v-html="$t('ExchangeTokensProjectsMessagesBeforeSwap', {
                         allowance: toEthDecimals(currentAccountData.allowanceForSwap),
                         WToken: currentProject.symbol,
-                        Token: currentProject.tokenInformation.symbol,
-                        })}}
+                        Token: currentProject.tokenInformation.symbol
+                        })">
                     </div>
                     <div v-if="this.currentAccountData.allowanceForSwap !== '0'" class="row pl-3 pr-3">
-
                         <button
                                 class="btn btn-primary py-2"
                                 :disabled="this.currentAccountData.allowanceForSwap === '0'"

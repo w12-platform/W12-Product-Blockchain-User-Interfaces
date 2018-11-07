@@ -29,8 +29,8 @@
                                         <div class="p-3 row align-items-center justify-content-between">
                                             <span class="ProjectDashboard__stageTitle"><span v-html="$t('ProjectDashboardStageBonusesStage')"></span> #{{ stageIndex+1 }}</span>
                                             <button class="btn btn-primary btn-sm" :disabled="isStartCrowdSale"
-                                                    @click="deleteStageAt(stageIndex)">{{
-                                                $t('ProjectDashboardStageBonusesRemove') }}
+                                                    @click="deleteStageAt(stageIndex)"
+                                                    v-html="$t('ProjectDashboardStageBonusesRemove')">
                                             </button>
                                         </div>
                                         <div class="ProjectDashboard__stageBonus col-sm py-2">
@@ -74,8 +74,7 @@
                                             </div>
                                             <div class="row justify-content-between">
                                                 <div class="col-sm py-2">
-                                                    <label for="StageDiscount">{{
-                                                        $t('ProjectDashboardStageBonusesDiscountLabel') }}</label>
+                                                    <label for="StageDiscount" v-html="$t('ProjectDashboardStageBonusesDiscountLabel')"></label>
                                                     <b-field id="StageDiscount">
                                                         <b-input
                                                                 type="number"
@@ -88,8 +87,7 @@
                                                     </b-field>
                                                 </div>
                                                 <div class="col-sm py-2">
-                                                    <label for="StageVestingDate">{{
-                                                        $t('ProjectDashboardStageBonusesVestingDateLabel') }}</label>
+                                                    <label for="StageVestingDate" v-html="$t('ProjectDashboardStageBonusesVestingDateLabel')"></label>
                                                     <b-field id="StageVestingDate"
                                                              class="ProjectDashboard__dateSelect">
                                                         <date-picker
@@ -112,8 +110,7 @@
                                             <div v-for="(bonusVolume, bonusVolumeIndex) in stage.bonusVolumes" :key="bonusVolumeIndex">
                                                 <div class="row justify-content-between">
                                                     <div class="col-sm py-2">
-                                                        <label v-if="bonusVolumeIndex === 0" for="bonusVolumeETH">{{
-                                                            $t('ProjectDashboardStageBonusesFromEth') }}</label>
+                                                        <label v-if="bonusVolumeIndex === 0" for="bonusVolumeETH" v-html="$t('ProjectDashboardStageBonusesFromEth')"></label>
                                                         <b-field id="bonusVolumeETH">
                                                             <b-input
                                                                     placeholder="ETH"
@@ -130,8 +127,7 @@
                                                         <div class="row">
                                                             <div class="col-md-8">
                                                                 <label v-if="bonusVolumeIndex === 0"
-                                                                       for="bonusVolumePercent">{{
-                                                                    $t('ProjectDashboardStageBonusesBonus') }}</label>
+                                                                       for="bonusVolumePercent" v-html="$t('ProjectDashboardStageBonusesBonus')"></label>
                                                                 <b-field id="bonusVolumePercent">
                                                                     <b-input
                                                                             type="number"

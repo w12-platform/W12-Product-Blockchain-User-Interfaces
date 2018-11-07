@@ -8,9 +8,9 @@
             </div>
             <div class="col-sm-3 text-center">
                 <b-tag v-if="!isCrowdsaleInited"
-                       type="is-success">{{ $t('ProjectDashboardStageConfigureCrowdsaleStatusPending') }}
+                       type="is-success" v-html="$t('ProjectDashboardStageConfigureCrowdsaleStatusPending')">
                 </b-tag>
-                <b-tag v-else type="is-success">{{ $t('ProjectDashboardStageConfigureCrowdsaleStatusInitialized') }}
+                <b-tag v-else type="is-success" v-html="$t('ProjectDashboardStageConfigureCrowdsaleStatusInitialized')">
                 </b-tag>
 
             </div>
@@ -36,8 +36,8 @@
                     </b-tag>
 
                     <div v-else-if="hasPlacedWTokenAddress && !isCrowdsaleInited" class="text-left">
-                        <b-notification class="ProjectStages__errorStage" type="is-success">
-                            {{ $t('ProjectDashboardStagePlaceCongratulations', {amount: tokensForSaleAmountToNumber, symbol: currentProject.symbol }) }}
+                        <b-notification class="ProjectStages__errorStage" type="is-success"
+                                        v-html="$t('ProjectDashboardStagePlaceCongratulations', {amount: tokensForSaleAmountToNumber, symbol: currentProject.symbol })">
                         </b-notification>
                         <div class="form-group">
                             <label for="BaseTokenPrice" v-html="$t('ProjectDashboardStageConfigureCrowdsalePrice')"></label>
@@ -56,8 +56,7 @@
                             </b-field>
                         </div>
                         <div class="form-group">
-                            <label for="AmountForSale">{{ $t('ProjectDashboardStageConfigureCrowdsaleAmountForSaleLabel')
-                                }}</label>
+                            <label for="AmountForSale" v-html="$t('ProjectDashboardStageConfigureCrowdsaleAmountForSaleLabel')"></label>
                             <b-field id="AmountForSale">
                                 <b-icon icon="shopping"></b-icon>
                                 <cleave
@@ -74,8 +73,7 @@
                             {{ error }}
                         </b-notification>
                         <div class="text-right">
-                            <button class="btn btn-primary btn-sm" :disabled="disable" @click="initCrawdsale">{{
-                                $t('ProjectDashboardStageConfigureCrowdsaleInitButton') }}
+                            <button class="btn btn-primary btn-sm" :disabled="disable" @click="initCrawdsale" v-html="$t('ProjectDashboardStageConfigureCrowdsaleInitButton')">
                             </button>
                         </div>
                     </div>
@@ -98,8 +96,7 @@
                             {{ error }}
                         </b-notification>
                         <div class="text-right">
-                            <button class="btn btn-primary btn-sm" :disabled="disableAdd" @click="addTokensToCrowdSale">{{
-                                $t('ProjectDashboardStageConfigureCrowdsaleAddButton') }}
+                            <button class="btn btn-primary btn-sm" :disabled="disableAdd" @click="addTokensToCrowdSale" v-html="$t('ProjectDashboardStageConfigureCrowdsaleAddButton')">
                             </button>
                         </div>
                     </div>

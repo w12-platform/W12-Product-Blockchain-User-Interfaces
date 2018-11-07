@@ -29,7 +29,7 @@
                 <td>{{ currentProject.decimals }}</td>
             </tr>
             <tr>
-                <td>{{ $t('AdminDashboardTableWTokenSaleFeePercent')  }}</td>
+                <td v-html="$t('AdminDashboardTableWTokenSaleFeePercent')"></td>
                 <td>{{ currentProject.WTokenSaleFeePercent | percentFractional }}%</td>
             </tr>
             <tr>

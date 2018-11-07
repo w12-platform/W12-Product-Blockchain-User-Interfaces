@@ -62,11 +62,11 @@
                 <td><span class="restriction">{{ currentToken.crowdSaleInformation.tokensOnSale }}</span></td>
             </tr>
             <tr>
-                <td>{{ $t('InvestorDashboardPrice', {'WToken': currentToken.symbol }) }}</td>
+                <td v-html="$t('InvestorDashboardPrice', {'WToken': currentToken.symbol })"></td>
                 <td>{{ currentToken.crowdSaleInformation.tokenPrice }} <span class="CrowdSale__eth">USD</span></td>
             </tr>
             <tr v-if="currentToken.crowdSaleInformation.status && currentToken.crowdSaleInformation.stageDiscount !== '0'">
-                <td>{{ $t('InvestorDashboardDiscountPercent', {'WToken': currentToken.symbol }) }}</td>
+                <td v-html="$t('InvestorDashboardDiscountPercent', {'WToken': currentToken.symbol })"></td>
                 <td>
                     <span v-if="currentToken.crowdSaleInformation.status" class="tag is-success">
                         {{ currentToken.crowdSaleInformation.stageDiscount }}%
@@ -75,7 +75,7 @@
                 </td>
             </tr>
             <tr v-if="currentToken.crowdSaleInformation.stageDiscount !== '0' && currentToken.crowdSaleInformation.status">
-                <td>{{ $t('InvestorDashboardPriceOneDiscount', {'WToken': currentToken.symbol }) }}</td>
+                <td v-html="$t('InvestorDashboardPriceOneDiscount', {'WToken': currentToken.symbol })"></td>
                 <td>
                     <span v-if="currentToken.crowdSaleInformation.status">{{ currentToken.crowdSaleInformation.price }}
                         <span class="CrowdSale__eth">USD</span>

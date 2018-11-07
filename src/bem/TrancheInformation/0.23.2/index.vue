@@ -34,8 +34,7 @@
             {{ error }}
         </b-notification>
 
-        <button v-if="!isPendingTx && !isErrorTx" class="btn btn-primary py-2 my-2" :disabled="disable" @click="tryTranche">{{
-            $t('trancheInformationReceive') }}
+        <button v-if="!isPendingTx && !isErrorTx" class="btn btn-primary py-2 my-2" :disabled="disable" @click="tryTranche" v-html="$t('trancheInformationReceive')">
         </button>
         <b-loading :is-full-page="false" :active.sync="loading" :can-cancel="true"></b-loading>
     </div>

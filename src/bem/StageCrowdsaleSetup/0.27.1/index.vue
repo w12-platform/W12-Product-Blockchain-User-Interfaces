@@ -68,8 +68,7 @@
                                             </div>
                                             <div class="row justify-content-between">
                                                 <div class="col-sm py-2">
-                                                    <label for="StageDiscount">{{
-                                                        $t('ProjectDashboardStageBonusesDiscountLabel') }}</label>
+                                                    <label for="StageDiscount" v-html="$t('ProjectDashboardStageBonusesDiscountLabel')"></label>
                                                     <b-field id="StageDiscount">
                                                         <b-input
                                                                 type="number"
@@ -82,8 +81,7 @@
                                                     </b-field>
                                                 </div>
                                                 <div class="col-sm py-2">
-                                                    <label for="StageVestingDate">{{
-                                                        $t('ProjectDashboardStageBonusesVestingDateLabel') }}</label>
+                                                    <label for="StageVestingDate" v-html="$t('ProjectDashboardStageBonusesVestingDateLabel')"></label>
                                                     <b-field id="StageVestingDate"
                                                              class="ProjectDashboard__dateSelect">
                                                         <date-picker

@@ -98,7 +98,7 @@
                 </b-field>
             </div>
             <div class="form-group">
-                <label for="FeeTokens">{{ $t('AdminDashboardFieldFeeTokensLabel') }}
+                <label for="FeeTokens"><span v-html="$t('AdminDashboardFieldFeeTokensLabel')"></span>
                     <span class="labelTooltip" v-tooltip="$t('AdminDashboardFieldFeeTokensLabelMessage')">?</span>
                 </label>
                 <b-field id="FeeTokens">
@@ -111,7 +111,7 @@
                 </b-field>
             </div>
             <div class="form-group">
-                <label for="FeeETH">{{ $t('AdminDashboardFieldFeeEthLabel') }}
+                <label for="FeeETH"><span v-html="$t('AdminDashboardFieldFeeEthLabel')"></span>
                     <span class="labelTooltip" v-tooltip="$t('AdminDashboardFieldFeeEthLabelMessage')">?</span>
                 </label>
                 <b-field id="FeeETH">
@@ -141,8 +141,7 @@
                     <button class="btn btn-primary btn-sm" @click="TransactionsRetry(isErrorTx)" v-html="$t('ToRetry')"></button>
                 </div>
             </div>
-            <button class="btn btn-primary py-2 my-2" @click="tryWhiteListToken" :disabled="disableWhiteListButton">{{
-                $t('AdminDashboardWhitelist') }}
+            <button class="btn btn-primary py-2 my-2" @click="tryWhiteListToken" :disabled="disableWhiteListButton" v-html="$t('AdminDashboardWhitelist')">
             </button>
             <b-loading  :is-full-page="false" :active.sync="whitelistingToken"></b-loading>
         </div>

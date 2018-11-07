@@ -11,11 +11,11 @@
                     <td>{{ decimals(data.refundTokensVolume) }} {{ data.tokenSymbol }}</td>
                 </tr>
                 <tr>
-                    <td>{{ $t('InvestorDashboardRefundEthInfoReturnOne', {WToken: data.tokenSymbol})}}</td>
+                    <td v-html="$t('InvestorDashboardRefundEthInfoReturnOne', {WToken: data.tokenSymbol})"></td>
                     <td>{{ data.refundAmountPerToken }} ETH</td>
                 </tr>
                 <tr>
-                    <td>{{ $t('InvestorDashboardRefundEthInfoInitial', {WToken: data.tokenSymbol}) }}</td>
+                    <td v-html="$t('InvestorDashboardRefundEthInfoInitial', {WToken: data.tokenSymbol})"></td>
                     <td>{{ data.tokenPrice }} ETH</td>
                 </tr>
                 <tr>
@@ -27,11 +27,11 @@
                     <td>{{ data.totalRefundPercent }} %</td>
                 </tr>
                 <tr>
-                    <td>{{ $t('InvestorDashboardRefundEthInfoBalance', {WToken: data.tokenSymbol}) }}</td>
+                    <td v-html="$t('InvestorDashboardRefundEthInfoBalance', {WToken: data.tokenSymbol})"></td>
                     <td>{{ decimals(data.currentWalletBalanceInTokens) }} {{ data.tokenSymbol }}</td>
                 </tr>
                 <tr>
-                    <td>{{ $t('InvestorDashboardRefundEthInfoAllSold', {WToken: data.tokenSymbol}) }}</td>
+                    <td v-html="$t('InvestorDashboardRefundEthInfoAllSold', {WToken: data.tokenSymbol})"></td>
                     <td>{{ data.currentWalletBalanceInRefundAmount }} ETH</td>
                 </tr>
                 <tr v-if="data.currentMilestoneNumber !== null">
@@ -40,20 +40,14 @@
                 </tr>
                 <tr>
                     <td v-html="$t('InvestorDashboardRefundActiveStatusTitle')"></td>
-                    <td>{{
-                        data.isRefundActive
-                            ? $t('InvestorDashboardRefundActiveStatusActive')
-                            : $t('InvestorDashboardRefundActiveStatusNotActive')
-                    }}</td>
+                    <td v-html="data.isRefundActive ? $t('InvestorDashboardRefundActiveStatusActive') : $t('InvestorDashboardRefundActiveStatusNotActive')"></td>
                 </tr>
                 <tr v-if="data.refundWindow">
                     <td v-html="$t('InvestorDashboardRefundWindowTitle')"></td>
-                    <td>{{
-                        $t('InvestorDashboardRefundWindowDates', {
-                            from: dateFormat(data.refundWindow[0]),
-                            to: dateFormat(data.refundWindow[1])
-                        })
-                    }}</td>
+                    <td v-html="$t('InvestorDashboardRefundWindowDates', {
+                        from: dateFormat(data.refundWindow[0]),
+                        to: dateFormat(data.refundWindow[1])
+                    })"></td>
                 </tr>
             </tbody>
         </table>

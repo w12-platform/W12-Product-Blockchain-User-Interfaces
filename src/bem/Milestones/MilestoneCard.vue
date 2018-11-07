@@ -73,9 +73,7 @@
                     ></date-picker>
                 </b-field>
 
-                <button :disabled="isStartCrowdSale" class="btn btn-sm btn-primary mt-4" @click="onDelete">{{
-                    $t('MilestonesDelete') }}
-                </button>
+                <button :disabled="isStartCrowdSale" class="btn btn-sm btn-primary mt-4" @click="onDelete" v-html="$t('MilestonesDelete')"></button>
             </div>
         </div>
     </div>

@@ -37,8 +37,7 @@
 
             <footer class="card-footer" v-if="!isStartCrowdSale">
                 <a class="card-footer-item" @click="addStage" v-html="$t('MilestonesAdd')"></a>
-                <a class="card-footer-item" @click="saveMilestones" v-if="saveDisable">{{
-                    $t('MilestonesSend') }}</a>
+                <a class="card-footer-item" @click="saveMilestones" v-if="saveDisable" v-html="$t('MilestonesSend')"></a>
             </footer>
 
             <b-loading :is-full-page="false" :active.sync="saveMilestonesLoading" :can-cancel="true"></b-loading>

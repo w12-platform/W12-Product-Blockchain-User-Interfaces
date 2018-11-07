@@ -14,7 +14,7 @@
             </RefundCalculator>
             <div class="py-2">
                 <button class="btn btn-primary py-2" :disabled="disable"
-                    @click="approveTheFundToSpend">{{ $t('InvestorDashboardRefundEthApprove') }}
+                    @click="approveTheFundToSpend" v-html="$t('InvestorDashboardRefundEthApprove')">
                 </button>
             </div>
             <div v-if="exchangeAmountPerAsset" class="row py-2">
@@ -37,11 +37,11 @@
             <div v-if="exchangeAmountPerAsset" class="pl-3 pr-3">
                 <button
                     class="btn btn-primary py-2"
-                    @click="decreaseTheFundApprovalToSpend">{{ $t('InvestorDashboardRefundEthDecreaseRefund') }}
+                    @click="decreaseTheFundApprovalToSpend" v-html="$t('InvestorDashboardRefundEthDecreaseRefund')">
                 </button>
                 <button
                     class="btn btn-primary py-2 ml-3"
-                    @click="refund">{{ $t('InvestorDashboardRefundEthTokensRefund') }}
+                    @click="refund" v-html="$t('InvestorDashboardRefundEthTokensRefund')">
                 </button>
             </div>
         </div>

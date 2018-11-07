@@ -113,8 +113,7 @@
                     <b-notification class="ProjectStages__errorStage" v-if="error" @close="error = false"
                                     type="is-danger" has-icon>{{ error }}
                     </b-notification>
-                    <button class="btn btn-primary py-2 my-2" @click="create" :disabled="disable">{{
-                        $t('TokensFactoryCreate') }}
+                    <button class="btn btn-primary py-2 my-2" @click="create" :disabled="disable" v-html="$t('TokensFactoryCreate')">
                     </button>
 
                     <b-loading :is-full-page="false" :active.sync="meta.creating" :can-cancel="true"></b-loading>
