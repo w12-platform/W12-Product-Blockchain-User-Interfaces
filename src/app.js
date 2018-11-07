@@ -48,12 +48,14 @@ import ProjectDashboard from 'bem/ProjectDashboard';
 import ProjectDashboardReceiving from 'bem/ProjectDashboardReceiving';
 import ProjectDashboardTranche from 'bem/ProjectDashboardTranche';
 import Versions from 'bem/Versions';
+import CrossPagesNotification from 'bem/CrossPagesNotification';
 
 new Vue({
     store,
     el: '#app',
     components: {
         LangSwitch,
+        CrossPagesNotification,
         HeaderBuyW12Tokens,
         AdminDashboard,
         SidebarMenu,
