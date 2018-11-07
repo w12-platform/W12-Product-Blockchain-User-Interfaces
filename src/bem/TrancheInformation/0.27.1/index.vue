@@ -1,22 +1,22 @@
 <template>
     <div class="TrancheInformation buefy" v-if="trancheInformationData">
-        <h2>{{ $t('trancheInformation') }}</h2>
+        <h2 v-html="$t('trancheInformation')"></h2>
 
         <div class="pm-2" v-if="isPendingTx">
-            <p class="py-2">{{ $t('WaitingConfirm') }}:</p>
+            <p class="py-2"><span v-html="$t('WaitingConfirm')"></span>:</p>
             <b-tag class="py-2">{{isPendingTx.hash}}</b-tag>
         </div>
         <div class="pm-2" v-if="isErrorTx">
-            <p class="py-2">{{ $t('TransactionFailed') }}:</p>
+            <p class="py-2"><span v-html="$t('TransactionFailed')"></span>:</p>
             <b-tag class="py-2">{{isErrorTx.hash}}</b-tag>
             <div class="pt-2 text-left">
-                <button class="btn btn-primary btn-sm" @click="TransactionsRetry(isErrorTx)">{{ $t('ToRetry') }}</button>
+                <button class="btn btn-primary btn-sm" @click="TransactionsRetry(isErrorTx)" v-html="$t('ToRetry')"></button>
             </div>
         </div>
         <table v-if="!isPendingTx && !isErrorTx" class="table table-striped table-bordered table-hover table-responsive-sm">
             <tbody>
             <tr>
-                <td>{{ $t('trancheInformationFundBalance') }}</td>
+                <td v-html="$t('trancheInformationFundBalance')"></td>
                 <td>
                     <div v-for="info in trancheInformationData.trancheInfo">
                         {{ info.Balance }} {{ info.Symbol }}
@@ -24,11 +24,11 @@
                 </td>
             </tr>
             <tr>
-                <td>{{ $t('trancheInformationDateNextTranche') }}</td>
+                <td v-html="$t('trancheInformationDateNextTranche')"></td>
                 <td>{{ nextTrancheDate | formatDate }}</td>
             </tr>
             <tr>
-                <td>{{ $t('trancheInformationFundsMoment') }}</td>
+                <td v-html="$t('trancheInformationFundsMoment')"></td>
                 <td>
                     <div v-for="info in trancheInformationData.trancheInfo">
                         {{ info.TrancheAmount }} {{ info.Symbol }}
@@ -42,8 +42,7 @@
             {{ error }}
         </b-notification>
 
-        <button v-if="!isPendingTx && !isErrorTx" class="btn btn-primary py-2 my-2" :disabled="disable" @click="tryTranche">{{
-            $t('trancheInformationReceive') }}
+        <button v-if="!isPendingTx && !isErrorTx" class="btn btn-primary py-2 my-2" :disabled="disable" @click="tryTranche" v-html="$t('trancheInformationReceive')">
         </button>
         <b-loading :is-full-page="false" :active.sync="loading" :can-cancel="true"></b-loading>
     </div>

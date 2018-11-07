@@ -1,14 +1,14 @@
 <template>
     <div class="Calculator byefy" v-if="currentToken && currentToken.crowdSaleInformation && currentToken.crowdSaleInformation.status">
-        <h2>{{ $t('InvestorDashboardCalculator', {WToken:currentToken.symbol}) }}</h2>
+        <h2 v-html="$t('InvestorDashboardCalculator', {WToken:currentToken.symbol})"></h2>
 
         <div class="Calculator__content">
             <div class="Calculator__infoToken">
-                <p>{{ $t('InvestorDashboardCalculatorTokenAddress') }}
+                <p><span v-html="$t('InvestorDashboardCalculatorTokenAddress')"></span>
                     <b-tag type="is-success">{{ currentToken.crowdSaleInformation.WTokenAddress }}</b-tag>
                 </p>
-                <p>{{ $t('InvestorDashboardCalculatorTokenName') }} {{ currentToken.name }}</p>
-                <p>{{ $t('InvestorDashboardCalculatorTokenSymbol') }} {{ currentToken.symbol }}</p>
+                <p><span v-html="$t('InvestorDashboardCalculatorTokenName')"></span> {{ currentToken.name }}</p>
+                <p><span v-html="$t('InvestorDashboardCalculatorTokenSymbol')"></span> {{ currentToken.symbol }}</p>
             </div>
 
             <div class="Calculator__inputs">
@@ -61,34 +61,32 @@
             </div>
 
             <div class="Calculator__info">
-                <b-notification v-if="!isMaxTokenOnSaleAmount" type="is-danger" has-icon :closable="false">
-                    {{ $t('ErrorOnSaleMaxAmount', { max: currentToken.crowdSaleInformation.tokensOnSale }) }}
+                <b-notification v-if="!isMaxTokenOnSaleAmount" type="is-danger" has-icon :closable="false"
+                                v-html="$t('ErrorOnSaleMaxAmount', { max: currentToken.crowdSaleInformation.tokensOnSale })">
                 </b-notification>
 
-                <p v-if="currentToken.crowdSaleInformation.stageDiscount !== '0'">
-                    {{$t('InvestorDashboardCalculatorDiscount')}}
+                <p v-if="currentToken.crowdSaleInformation.stageDiscount !== '0'"><span v-html="$t('InvestorDashboardCalculatorDiscount')"></span>
                     <b-tag type="is-success">{{ currentToken.crowdSaleInformation.stageDiscount }}%</b-tag>
-                    <br>{{$t('InvestorDashboardCalculatorDiscountBeforeEndTimeout', { countdown: countdown })}}
+                    <br><span v-html="$t('InvestorDashboardCalculatorDiscountBeforeEndTimeout', { countdown: countdown })"></span>
                 </p>
                 <p v-if="currentToken.crowdSaleInformation.vestingDate">
-                    {{$t('InvestorDashboardCalculatorDiscountVestingEndDate', { date: dateFormat(this.currentToken.crowdSaleInformation.vestingDate) })}}
-                    <br>{{$t('InvestorDashboardCalculatorDiscountVestingDateCaution')}}
+                    <span v-html="$t('InvestorDashboardCalculatorDiscountVestingEndDate', { date: dateFormat(this.currentToken.crowdSaleInformation.vestingDate) })"></span>
+                    <br><span v-html="$t('InvestorDashboardCalculatorDiscountVestingDateCaution')"></span>
                 </p>
-                <p v-if="bonusVolume !== '0.00'">{{$t('InvestorDashboardCalculatorBonus')}}
+                <p v-if="bonusVolume !== '0.00'"><span v-html="$t('InvestorDashboardCalculatorBonus')"></span>
                     <b-tag type="is-success">+{{ bonusVolume }} {{ currentToken.symbol }}</b-tag>
                 </p>
 
-                <div class="Calculator__total">
-                    {{$t('InvestorDashboardCalculatorTotalBuy')}} {{ this.invoice ? this.invoice.tokens : 0 }} {{ currentToken.symbol }} - {{ this.invoice ? this.invoice.cost : 0 }} {{ paymentMethod }}
+                <div class="Calculator__total"><span v-html="$t('InvestorDashboardCalculatorTotalBuy')"></span> {{ this.invoice ? this.invoice.tokens : 0 }} {{ currentToken.symbol }} - {{ this.invoice ? this.invoice.cost : 0 }} {{ paymentMethod }}
                     <br>
-                    {{$t('InvestorDashboardCalculatorTotalCost', { cost: this.invoice ? this.invoice.cost : 0 })}} {{ paymentMethod }}
+                    <span v-html="$t('InvestorDashboardCalculatorTotalCost', { cost: this.invoice ? this.invoice.cost : 0 })"></span> {{ paymentMethod }}
                     <br>
-                    {{$t('InvestorDashboardCalculatorChange', { change: this.invoice ? this.invoice.change : 0 })}} {{ paymentMethod }}
+                    <span v-html="$t('InvestorDashboardCalculatorChange', { change: this.invoice ? this.invoice.change : 0 })"></span> {{ paymentMethod }}
                     <br>
-                    {{$t('InvestorDashboardCalculatorTotalProfit', { profit: profit })}} {{ paymentMethod }}
+                    <span v-html="$t('InvestorDashboardCalculatorTotalProfit', { profit: profit })"></span> {{ paymentMethod }}
                     <span v-if="isToken">
                         <br>
-                        {{$t('InvestorDashboardCalculatorNeedToApprove', { approve: needToApproveAmount })}} {{ paymentMethod }}
+                        <span v-html="$t('InvestorDashboardCalculatorNeedToApprove', { approve: needToApproveAmount })"></span> {{ paymentMethod }}
                     </span>
                 </div>
             </div>
@@ -98,20 +96,20 @@
             </b-notification>
 
             <div class="pm-2" v-if="isPendingTx">
-                <p class="py-2">{{ $t('WaitingConfirm') }}:</p>
+                <p class="py-2"><span v-html="$t('WaitingConfirm')"></span>:</p>
                 <b-tag class="py-2">{{isPendingTx.hash}}</b-tag>
             </div>
             <div class="pm-2" v-if="isErrorTx">
-                <p class="py-2">{{ $t('TransactionFailed') }}:</p>
+                <p class="py-2"><span v-html="$t('TransactionFailed')"></span>:</p>
                 <b-tag class="py-2">{{isErrorTx.hash}}</b-tag>
                 <div class="pt-2 text-left">
-                    <button class="btn btn-primary btn-sm" @click="TransactionsRetry(isErrorTx)">{{ $t('ToRetry') }}</button>
+                    <button class="btn btn-primary btn-sm" @click="TransactionsRetry(isErrorTx)" v-html="$t('ToRetry')"></button>
                 </div>
             </div>
 
             <div class="Calculator__buy" v-if="!isPendingTx && !isErrorTx">
-                <button class="btn btn-primary" :disabled="disableBuy || fetchingInvoice" @click="buy">{{$t('InvestorDashboardCalculatorBuy')}}</button>
-                <button v-if="isNeedApprove" :disabled="fetchingInvoice" class="btn btn-primary" @click="approve">{{$t('InvestorDashboardCalculatorDoApprove')}}</button>
+                <button class="btn btn-primary" :disabled="disableBuy || fetchingInvoice" @click="buy" v-html="$t('InvestorDashboardCalculatorBuy')"></button>
+                <button v-if="isNeedApprove" :disabled="fetchingInvoice" class="btn btn-primary" @click="approve" v-html="$t('InvestorDashboardCalculatorDoApprove')"></button>
             </div>
         </div>
         <b-loading :is-full-page="false" :active.sync="loading" :can-cancel="true"></b-loading>

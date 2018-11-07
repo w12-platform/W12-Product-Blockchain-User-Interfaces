@@ -4,41 +4,36 @@
             <div class="col-auto">
                 <span class="ProjectDashboard__step-badge step-badge badge badge-pill badge-light">2</span>
             </div>
-            <div class="col-sm-4">
-                {{ $t('ProjectDashboardStageApprove') }}
+            <div class="col-sm-4"><span v-html="$t('ProjectDashboardStageApprove')"></span>
             </div>
             <div class="col-sm-2 text-center">
-                <b-tag v-if="!(hasAllowance || hasPlacedWTokenAddress)"
-                       type="is-success">{{ $t('ProjectDashboardStageApproveStatusPending') }}
-                </b-tag>
-                <b-tag v-else type="is-success">{{ $t('ProjectDashboardStageApproveStatusApproved') }}</b-tag>
+                <b-tag v-if="!(hasAllowance || hasPlacedWTokenAddress)" type="is-success" v-html="$t('ProjectDashboardStageApproveStatusPending')"></b-tag>
+                <b-tag v-else type="is-success" v-html="$t('ProjectDashboardStageApproveStatusApproved')"></b-tag>
             </div>
             <div class="col-sm text-right">
                 <span v-if="hasAllowance && !isPendingTx && !isErrorTx">{{ tokensAmountThatApprovedToPlaceByTokenOwnerToNumber }}</span>
                 <div v-else class="text-left">
                     <div class="pm-2" v-if="isPendingTx">
-                        <p class="py-2">{{ $t('WaitingConfirm') }}:</p>
+                        <p class="py-2"><span v-html="$t('WaitingConfirm')"></span>:</p>
                         <b-tag class="py-2">{{isPendingTx.hash}}</b-tag>
                     </div>
                     <div class="pm-2" v-if="isErrorTx">
-                        <p class="py-2">{{ $t('TransactionFailed') }}:</p>
+                        <p class="py-2"><span v-html="$t('TransactionFailed')"></span>:</p>
                         <b-tag class="py-2">{{isErrorTx.hash}}</b-tag>
                         <div class="pt-2 text-left">
-                            <button class="btn btn-primary btn-sm" @click="TransactionsRetry(isErrorTx)">{{ $t('ToRetry') }}</button>
+                            <button class="btn btn-primary btn-sm" @click="TransactionsRetry(isErrorTx)" v-html="$t('ToRetry')"></button>
                         </div>
                     </div>
-                    <b-tag class="ProjectDashboard__approveInfo" type="is-info" v-if="!isPendingTx && !isErrorTx">
-                        {{ $t('ProjectDashboardStageApproveSpendFrom') }} {{ currentAccount }}
+                    <b-tag class="ProjectDashboard__approveInfo" type="is-info" v-if="!isPendingTx && !isErrorTx"><span v-html="$t('ProjectDashboardStageApproveSpendFrom')"></span> {{ currentAccount }}
                     </b-tag>
                     <div v-if="!isPendingTx && !isErrorTx">
                         <div v-if="ownerBalance === '0'">
-                            <b-tag class="ProjectDashboard__approveNoTokens" type="is-danger">
-                                {{ $t('ProjectDashboardStageApproveNoTokens') }}
+                            <b-tag class="ProjectDashboard__approveNoTokens" type="is-danger"><span v-html="$t('ProjectDashboardStageApproveNoTokens')"></span>
                             </b-tag>
                         </div>
                         <div v-else>
                             <div class="form-group">
-                                <label for="SpendFrom">{{ $t('ProjectDashboardStageApproveAmountLabel') }}</label>
+                                <label for="SpendFrom" v-html="$t('ProjectDashboardStageApproveAmountLabel')"></label>
                                 <cleave
                                         :placeholder="$t('ProjectDashboardStageApproveAmountPlaceholder', {ownerBalance: maxAmountFormat})"
                                         id="SpendFrom"
@@ -52,14 +47,13 @@
                             <b-notification class="ProjectStages__errorStage" v-if="error" @close="error = false"
                                             type="is-danger" has-icon>{{ error }}
                             </b-notification>
-                            <b-notification class="ProjectStages__errorStage" v-if="amountError" :closable="false" type="is-danger" has-icon>
-                                {{ $t('ProjectDashboardStageApproveInsufficientTokens') }}
+                            <b-notification class="ProjectStages__errorStage" v-if="amountError" :closable="false" type="is-danger" has-icon><span v-html="$t('ProjectDashboardStageApproveInsufficientTokens')"></span>
                             </b-notification>
                             <div class="text-right">
                                 <button
                                         class="btn btn-primary btn-sm"
                                         @click="approveTokensToSpend"
-                                        :disabled="disable">{{ $t('ProjectDashboardStageApproveButton') }}
+                                        :disabled="disable" v-html="$t('ProjectDashboardStageApproveButton')">
                                 </button>
                             </div>
                         </div>

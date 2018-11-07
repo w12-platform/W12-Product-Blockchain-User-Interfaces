@@ -19,8 +19,8 @@
         <button
             class="btn btn-primary btn-md btn-block"
             :disabled="!isAllReadyForSetupCrowdsale"
-            @click="setupCrowdsale"
-        >{{ $t('SetupCrowdsale') }}</button>
+            @click="setupCrowdsale" v-html="$t('SetupCrowdsale')"
+        ></button>
     </div>
 </template>
 

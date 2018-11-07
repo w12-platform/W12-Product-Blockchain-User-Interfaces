@@ -4,25 +4,24 @@
             <div class="col-auto">
                 <span class="ProjectDashboard__step-badge step-badge badge badge-pill badge-light">3</span>
             </div>
-            <div class="col-sm-4">
-                {{ $t('ProjectDashboardStagePlace') }}
+            <div class="col-sm-4"><span v-html="$t('ProjectDashboardStagePlace')"></span>
             </div>
             <div class="col-sm-2 text-center">
                 <b-tag v-if="!hasPlacedWTokenAddress && !hasAllowance"
-                       type="is-success">{{ $t('ProjectDashboardStagePlaceStatusPending') }}
+                       type="is-success" v-html="$t('ProjectDashboardStagePlaceStatusPending')">
                 </b-tag>
-                <b-tag v-else type="is-success">{{ $t('ProjectDashboardStagePlaceStatusPlaced') }}</b-tag>
+                <b-tag v-else type="is-success" v-html="$t('ProjectDashboardStagePlaceStatusPlaced')"></b-tag>
             </div>
             <div class="col-12 text-left">
                 <div class="pm-2" v-if="isPendingTx">
-                    <p class="py-2">{{ $t('WaitingConfirm') }}:</p>
+                    <p class="py-2"><span v-html="$t('WaitingConfirm')"></span>:</p>
                     <b-tag class="py-2">{{isPendingTx.hash}}</b-tag>
                 </div>
                 <div class="pm-2" v-if="isErrorTx">
-                    <p class="py-2">{{ $t('TransactionFailed') }}:</p>
+                    <p class="py-2"><span v-html="$t('TransactionFailed')"></span>:</p>
                     <b-tag class="py-2">{{isErrorTx.hash}}</b-tag>
                     <div class="pt-2 text-left">
-                        <button class="btn btn-primary btn-sm" @click="TransactionsRetry(isErrorTx)">{{ $t('ToRetry') }}</button>
+                        <button class="btn btn-primary btn-sm" @click="TransactionsRetry(isErrorTx)" v-html="$t('ToRetry')"></button>
                     </div>
                 </div>
                 <b-tag class="ProjectDashboard__placedWTokenAddress" v-if="hasPlacedWTokenAddress"
@@ -32,7 +31,7 @@
             <div class="ProjectDashboard__placeForm col-12 text-right" v-if="!isPendingTx && !isErrorTx">
                 <div v-if="hasAllowance" class="text-left">
                     <div class="form-group">
-                        <label for="PlaceAmount">{{ $t('ProjectDashboardStagePlaceAmountLabel') }}</label>
+                        <label for="PlaceAmount" v-html="$t('ProjectDashboardStagePlaceAmountLabel')"></label>
                         <cleave
                                 :placeholder="$t('ProjectDashboardStagePlaceAmountPlaceholder', {tokensAmount: tokensAmountThatApprovedToPlaceByTokenOwnerToNumber})"
                                 id="SpendFrom"
@@ -48,15 +47,13 @@
                     <b-notification class="ProjectStages__errorStage" v-if="error" @close="error = false" type="is-danger" has-icon>
                         {{ error }}
                     </b-notification>
-                    <b-notification class="ProjectStages__errorStage" v-if="amountError" :closable="false" type="is-danger" has-icon>
-                        {{ $t('ProjectDashboardStagePlaceErrorAmount') }}
+                    <b-notification class="ProjectStages__errorStage" v-if="amountError" :closable="false" type="is-danger" has-icon><span v-html="$t('ProjectDashboardStagePlaceErrorAmount')"></span>
                     </b-notification>
                     <div class="text-right">
                         <button
                                 class="btn btn-primary btn-sm"
                                 @click="placeTokens"
-                                :disabled="disable">
-                            {{ $t('ProjectDashboardStagePlaceButton') }}
+                                :disabled="disable" v-html="$t('ProjectDashboardStagePlaceButton')">
                         </button>
                     </div>
                 </div>

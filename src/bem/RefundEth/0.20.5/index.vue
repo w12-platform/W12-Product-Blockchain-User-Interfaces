@@ -1,6 +1,6 @@
 <template>
     <div class="RefundEth byefy" v-if="currentToken && currentAccountData">
-        <h2>{{ $t('InvestorDashboardRefundEth', { WToken: currentToken.symbol }) }}</h2>
+        <h2 v-html="$t('InvestorDashboardRefundEth', { WToken: currentToken.symbol })"></h2>
         <div v-if="refundInformation && !isPendingTx && !isErrorTx">
             <RefundCalculator v-if="refundInformation.currentWalletBalanceInRefundAmount"
                               v-model="refundValueInTokens"
@@ -13,26 +13,27 @@
             >
             </RefundCalculator>
             <div class="py-2">
-                <button class="btn btn-primary py-2" :disabled="disable"
-                        @click="approveTheFundToSpend">{{ $t('InvestorDashboardRefundEthApprove') }}
+                <button class="btn btn-primary py-2"
+                        :disabled="disable"
+                        @click="approveTheFundToSpend"
+                        v-html="$t('InvestorDashboardRefundEthApprove')">
                 </button>
             </div>
-            <div v-if="this.currentAccountData.allowanceForTheFund !== '0'" class="py-2">
-                {{ $t('InvestorDashboardRefundEthMessagesBeforeRefund', {
+            <div v-if="this.currentAccountData.allowanceForTheFund !== '0'" class="py-2" v-html="$t('InvestorDashboardRefundEthMessagesBeforeRefund', {
                 allowance: toEth(currentAccountData.allowanceForTheFund),
                 WToken: currentToken.symbol,
                 refundAmount: toEth(currentAccountData.allowanceForTheFundInRefundAmount)
-                }) }}
+                })">
             </div>
             <div v-if="this.currentAccountData.allowanceForTheFund !== '0'" class="row pl-3 pr-3">
 
                 <button
                         class="btn btn-primary py-2"
-                        @click="decreaseTheFundApprovalToSpend">{{ $t('InvestorDashboardRefundEthDecreaseRefund') }}
+                        @click="decreaseTheFundApprovalToSpend" v-html="$t('InvestorDashboardRefundEthDecreaseRefund')">
                 </button>
                 <button
                         class="btn btn-primary py-2 ml-3"
-                        @click="refund">{{ $t('InvestorDashboardRefundEthTokensRefund') }}
+                        @click="refund" v-html="$t('InvestorDashboardRefundEthTokensRefund')">
                 </button>
             </div>
         </div>
@@ -42,14 +43,14 @@
             {{ error }}
         </b-notification>
         <div class="pm-2" v-if="isPendingTx">
-            <p class="py-2">{{ $t('WaitingConfirm') }}:</p>
+            <p class="py-2"><span v-html="$t('WaitingConfirm')"></span>:</p>
             <b-tag class="py-2">{{isPendingTx.hash}}</b-tag>
         </div>
         <div class="pm-2" v-if="isErrorTx">
-            <p class="py-2">{{ $t('TransactionFailed') }}:</p>
+            <p class="py-2"><span v-html="$t('TransactionFailed')"></span>:</p>
             <b-tag class="py-2">{{isErrorTx.hash}}</b-tag>
             <div class="pt-2 text-left">
-                <button class="btn btn-primary btn-sm" @click="TransactionsRetry(isErrorTx)">{{ $t('ToRetry') }}</button>
+                <button class="btn btn-primary btn-sm" @click="TransactionsRetry(isErrorTx)" v-html="$t('ToRetry')"></button>
             </div>
         </div>
 

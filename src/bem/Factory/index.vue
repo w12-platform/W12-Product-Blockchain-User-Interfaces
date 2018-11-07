@@ -1,7 +1,7 @@
 <template>
     <div class="Factory buefy" v-if="!langMeta.loading">
         <section class="container">
-            <h2>{{ $t('TokensFactoryTitle') }}</h2>
+            <h2 v-html="$t('TokensFactoryTitle')"></h2>
 
             <b-notification class="AdminDashboard__error" v-if="isError && !isLoading" type="is-danger"
                             :closable="false" has-icon>
@@ -10,7 +10,7 @@
             </b-notification>
 
             <b-notification v-if="isLoading && !isError" :closable="false" class="AdminDashboard__loader">
-                <span v-if="ledgerMeta.loading">{{ $t('AdminDashboardLoadLedger') }}<br></span>
+                <span v-if="ledgerMeta.loading"><span v-html="$t('AdminDashboardLoadLedger')"></span><br></span>
 
                 <b-loading :is-full-page="false" :active="isLoading" :can-cancel="true"></b-loading>
             </b-notification>
@@ -44,8 +44,7 @@
 
                     <template slot="detail" slot-scope="props">
                         <div class="WhiteListTable__detail">
-                            <div class="WhiteListTable__detailField">
-                                {{ $t('AdminDashboardTableToken') }} :
+                            <div class="WhiteListTable__detailField"><span v-html="$t('AdminDashboardTableToken')"></span> :
                                 <div class="WhiteListTable__detailToken">
                                     <span class="tag is-success">{{ props.row.address }}</span>
                                 </div>
@@ -56,19 +55,19 @@
                     <b-loading :is-full-page="false" :active.sync="meta.loading" :can-cancel="true"></b-loading>
                 </b-table>
                 <div class="pm-2" v-if="isPendingTx">
-                    <p class="py-2">{{ $t('WaitingConfirm') }}:</p>
+                    <p class="py-2"><span v-html="$t('WaitingConfirm')"></span>:</p>
                     <b-tag class="py-2">{{isPendingTx.hash}}</b-tag>
                 </div>
                 <div class="pm-2" v-if="isErrorTx">
-                    <p class="py-2">{{ $t('TransactionFailed') }}:</p>
+                    <p class="py-2"><span v-html="$t('TransactionFailed')"></span>:</p>
                     <b-tag class="py-2">{{isErrorTx.hash}}</b-tag>
                     <div class="pt-2 text-left">
-                        <button class="btn btn-primary btn-sm" @click="TransactionsRetry(isErrorTx)">{{ $t('ToRetry') }}</button>
+                        <button class="btn btn-primary btn-sm" @click="TransactionsRetry(isErrorTx)" v-html="$t('ToRetry')"></button>
                     </div>
                 </div>
                 <div v-if="!isPendingTx && !isErrorTx">
                     <div class="form-group">
-                        <label for="FactoryName">{{ $t('TokensFactoryCreateFormName') }}</label>
+                        <label for="FactoryName" v-html="$t('TokensFactoryCreateFormName')"></label>
                         <b-field
                             id="FactoryName"
                             :type="typeName"
@@ -80,7 +79,7 @@
                         </b-field>
                     </div>
                     <div class="form-group">
-                        <label for="FactorySymbol">{{ $t('TokensFactoryCreateFormSymbol') }}</label>
+                        <label for="FactorySymbol" v-html="$t('TokensFactoryCreateFormSymbol')"></label>
                         <b-field
                             id="FactorySymbol"
                             :type="typeSymbol"
@@ -93,7 +92,7 @@
                         </b-field>
                     </div>
                     <div class="form-group">
-                        <label for="FactoryDecimals">{{ $t('TokensFactoryCreateFormDecimals') }}</label>
+                        <label for="FactoryDecimals" v-html="$t('TokensFactoryCreateFormDecimals')"></label>
                         <b-field id="FactoryDecimals" :type="typeDecimals" :message="messageDecimals">
                             <cleave v-model="createForm.decimals"
                                     class="form-control"
@@ -102,7 +101,7 @@
                         </b-field>
                     </div>
                     <div class="form-group">
-                        <label for="FactoryAmount">{{ $t('TokensFactoryCreateFormAmount') }}</label>
+                        <label for="FactoryAmount" v-html="$t('TokensFactoryCreateFormAmount')"></label>
                         <b-field id="FactoryAmount" :type="typeAmount" :message="messageAmount">
                             <cleave v-model="createForm.amount"
                                     class="form-control"
@@ -114,8 +113,7 @@
                     <b-notification class="ProjectStages__errorStage" v-if="error" @close="error = false"
                                     type="is-danger" has-icon>{{ error }}
                     </b-notification>
-                    <button class="btn btn-primary py-2 my-2" @click="create" :disabled="disable">{{
-                        $t('TokensFactoryCreate') }}
+                    <button class="btn btn-primary py-2 my-2" @click="create" :disabled="disable" v-html="$t('TokensFactoryCreate')">
                     </button>
 
                     <b-loading :is-full-page="false" :active.sync="meta.creating" :can-cancel="true"></b-loading>

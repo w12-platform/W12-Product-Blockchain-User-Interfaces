@@ -4,8 +4,7 @@
             <div class="col-auto">
                 <span class="ProjectDashboard__step-badge step-badge badge badge-pill badge-light">4</span>
             </div>
-            <div class="col-sm-4">
-                {{ $t('ProjectDashboardStageCurrenciesList') }}
+            <div class="col-sm-4"><span v-html="$t('ProjectDashboardStageCurrenciesList')"></span>
             </div>
             <div class="col-sm-2 text-center">
             </div>

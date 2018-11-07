@@ -4,22 +4,22 @@
                class="CrowdSale__table table table-striped table-bordered table-hover table-responsive-sm">
             <tbody>
             <tr>
-                <td>{{ $t('InvestorDashboardShortName') }}</td>
+                <td v-html="$t('InvestorDashboardShortName')"></td>
                 <td>{{ currentToken.tokenInformation.symbol }}</td>
             </tr>
             <tr>
-                <td>{{ $t('InvestorDashboardFullName') }}</td>
+                <td v-html="$t('InvestorDashboardFullName')"></td>
                 <td>
                     <a :href="'https://etherscan.io/token/' + currentToken.tokenAddress" target="_blank">
                         {{ currentToken.tokenInformation.name }}</a>
                 </td>
             </tr>
             <tr>
-                <td>{{ $t('InvestorDashboardShortWName') }}</td>
+                <td v-html="$t('InvestorDashboardShortWName')"></td>
                 <td>{{ currentToken.symbol }}</td>
             </tr>
             <tr>
-                <td>{{ $t('InvestorDashboardFullWName') }}</td>
+                <td v-html="$t('InvestorDashboardFullWName')"></td>
                 <td>
                     <a :href="'https://etherscan.io/token/' + currentToken.crowdSaleInformation.WTokenAddress"
                        target="_blank">
@@ -27,46 +27,46 @@
                 </td>
             </tr>
             <tr>
-                <td>{{ $t('InvestorDashboardStatus') }}</td>
+                <td v-html="$t('InvestorDashboardStatus')"></td>
                 <td>
                     <span v-if="currentToken.crowdSaleInformation.status" class="tag is-success">Active</span>
                     <span v-else class="">Inactive</span>
                 </td>
             </tr>
             <tr>
-                <td>{{ $t('InvestorDashboardStartDate') }}</td>
+                <td v-html="$t('InvestorDashboardStartDate')"></td>
                 <td>
                     <span class="tag is-success">{{ currentToken.crowdSaleInformation.startDate|dateFormat }} UTC</span>
                 </td>
             </tr>
             <tr>
-                <td>{{ $t('InvestorDashboardEndDate') }}</td>
+                <td v-html="$t('InvestorDashboardEndDate')"></td>
                 <td>
                     <span class="tag is-danger">{{ currentToken.crowdSaleInformation.endDate|dateFormat }} UTC</span>
                 </td>
             </tr>
             <tr>
-                <td>{{ $t('InvestorDashboardTotalTokens') }}</td>
+                <td v-html="$t('InvestorDashboardTotalTokens')"></td>
                 <td>{{ currentToken.crowdSaleInformation.WTokenTotal }}</td>
             </tr>
             <tr>
-                <td>{{ $t('InvestorDashboardTokensSold') }}</td>
+                <td v-html="$t('InvestorDashboardTokensSold')"></td>
                 <td>{{ currentToken.crowdSaleInformation.saleAmount }}</td>
             </tr>
             <tr>
-                <td>{{ $t('InvestorDashboardShareSoldTokens') }}</td>
+                <td v-html="$t('InvestorDashboardShareSoldTokens')"></td>
                 <td>{{ currentToken.crowdSaleInformation.salePercent }}%</td>
             </tr>
             <tr>
-                <td>{{ $t('InvestorDashboardTokensOnSale') }}</td>
+                <td v-html="$t('InvestorDashboardTokensOnSale')"></td>
                 <td><span class="restriction">{{ currentToken.crowdSaleInformation.tokensOnSale }}</span></td>
             </tr>
             <tr>
-                <td>{{ $t('InvestorDashboardPrice', {'WToken': currentToken.symbol }) }}</td>
+                <td v-html="$t('InvestorDashboardPrice', {'WToken': currentToken.symbol })"></td>
                 <td>{{ currentToken.crowdSaleInformation.tokenPrice }} <span class="CrowdSale__eth">USD</span></td>
             </tr>
             <tr v-if="currentToken.crowdSaleInformation.status && currentToken.crowdSaleInformation.stageDiscount !== '0'">
-                <td>{{ $t('InvestorDashboardDiscountPercent', {'WToken': currentToken.symbol }) }}</td>
+                <td v-html="$t('InvestorDashboardDiscountPercent', {'WToken': currentToken.symbol })"></td>
                 <td>
                     <span v-if="currentToken.crowdSaleInformation.status" class="tag is-success">
                         {{ currentToken.crowdSaleInformation.stageDiscount }}%
@@ -75,7 +75,7 @@
                 </td>
             </tr>
             <tr v-if="currentToken.crowdSaleInformation.stageDiscount !== '0' && currentToken.crowdSaleInformation.status">
-                <td>{{ $t('InvestorDashboardPriceOneDiscount', {'WToken': currentToken.symbol }) }}</td>
+                <td v-html="$t('InvestorDashboardPriceOneDiscount', {'WToken': currentToken.symbol })"></td>
                 <td>
                     <span v-if="currentToken.crowdSaleInformation.status">{{ currentToken.crowdSaleInformation.price }}
                         <span class="CrowdSale__eth">USD</span>
@@ -83,11 +83,11 @@
                 </td>
             </tr>
             <tr v-if="currentToken.crowdSaleInformation.status && countdown">
-                <td>{{ $t('InvestorDashboardCountdown') }}</td>
+                <td v-html="$t('InvestorDashboardCountdown')"></td>
                 <td>{{ countdown }}</td>
             </tr>
             <tr v-if="currentToken.crowdSaleInformation.vestingDate">
-                <td>{{ $t('InvestorDashboardCrowdsaleTableVestingDate') }}</td>
+                <td v-html="$t('InvestorDashboardCrowdsaleTableVestingDate')"></td>
                 <td>{{ currentToken.crowdSaleInformation.vestingDate | dateFormat }}</td>
             </tr>
             </tbody>

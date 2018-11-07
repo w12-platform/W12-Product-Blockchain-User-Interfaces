@@ -1,7 +1,7 @@
 <template>
     <div class="InvestorDashboardExchange buefy" v-if="!langMeta.loading">
         <section class="container">
-            <h2>{{ $t('InvestorDashboard') }}</h2>
+            <h2 v-html="$t('InvestorDashboard')"></h2>
 
             <b-notification class="InvestorDashboardExchange__error" v-if="isError" type="is-danger" has-icon>
                 <span v-if="ledgerMeta.loadingError">{{ ledgerMeta.loadingError }}</span>
@@ -10,8 +10,8 @@
             </b-notification>
 
             <b-notification v-if="isLoading && !isError" :closable="false" class="InvestorDashboardExchange__loader">
-                <span v-if="ledgerMeta.loading">{{ $t('InvestorDashboardLoadLedger') }}<br></span>
-                <span v-if="tokensListMeta.loading">{{ $t('InvestorDashboardLoadTokens') }}<br></span>
+                <span v-if="ledgerMeta.loading"><span v-html="$t('InvestorDashboardLoadLedger')"></span><br></span>
+                <span v-if="tokensListMeta.loading"><span v-html="$t('InvestorDashboardLoadTokens')"></span><br></span>
 
                 <b-loading :is-full-page="false" :active="isLoading" :can-cancel="true"></b-loading>
             </b-notification>

@@ -1,6 +1,6 @@
 <template>
     <div class="SaleTable buefy" v-if="currentToken && saleTableData">
-        <h2>{{ $t('InvestorDashboardDiscounts') }}</h2>
+        <h2 v-html="$t('InvestorDashboardDiscounts')"></h2>
         <b-table :data="saleTableData" class="table table-striped table-bordered table-responsive-sm"
                  :mobile-cards="false">
             <template slot-scope="props">
