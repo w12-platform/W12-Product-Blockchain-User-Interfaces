@@ -28,6 +28,7 @@ export default {
         timerId: false,
         currentAccount: false,
         currentAccountData: false,
+        networkId: null
     },
     modules: {},
     getters: {},
@@ -39,6 +40,9 @@ export default {
             clearInterval(this.state.Account.timerId);
             const timerId = payload ? payload.timerId || false : false;
             Object.assign(state, {timerId});
+        },
+        UPDATE_NETWORK_ID(state, payload) {
+            Object.assign(state, {networkId: payload});
         },
         [UPDATE](state, payload) {
             const currentAccount = payload.currentAccount || false;
@@ -60,6 +64,8 @@ export default {
             const watcher = async () => {
                 try {
                     const { web3: connectedWeb3, netId } = await Connector.connect();
+
+                    commit('UPDATE_NETWORK_ID', netId);
 
                     if (Connector.isProvider('metamask')) {
                         const getAccounts = promisify(connectedWeb3.eth.getAccounts.bind(connectedWeb3.eth.getAccounts));
