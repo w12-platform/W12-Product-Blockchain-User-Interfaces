@@ -35,6 +35,7 @@
 
 <script>
     import './default.scss';
+    import { resolveAbiVersion } from '@/lib/Blockchain/ContractsLedger';
     import ProjectSwitch from 'bem/ProjectSwitch';
     import Steps from "bem/Steps";
 
@@ -77,11 +78,11 @@
                 );
             },
             TokenInfoVersion(){
-                const v = this.currentProject.version;
+                const v = resolveAbiVersion(this.currentProject.version);
                 return () => import("bem/TokenInfo/" + v);
             },
             ProjectStagesVersion(){
-                const v = this.currentProject.version;
+                const v = resolveAbiVersion(this.currentProject.version);
                 return () => import("bem/ProjectStages/" + v);
             },
             isCurrentToken(){
