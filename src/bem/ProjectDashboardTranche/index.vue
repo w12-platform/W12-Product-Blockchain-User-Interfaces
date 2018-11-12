@@ -34,6 +34,7 @@
 
 <script>
     import './default.scss';
+    import { resolveAbiVersion } from '@/lib/Blockchain/ContractsLedger';
     import ProjectSwitch from 'bem/ProjectSwitch';
     import Receiving from 'bem/Receiving';
     import Steps from "bem/Steps";
@@ -94,7 +95,8 @@
             },
             TrancheInformationComponent() {
                 if (!this.currentProject) return () => {};
-                return () => import(`@/bem/TrancheInformation/${this.currentProject.version}/index.vue`);
+                const version = resolveAbiVersion(this.currentProject.version);
+                return () => import(`@/bem/TrancheInformation/${version}/index.vue`);
             },
         },
         watch: {

@@ -29,6 +29,7 @@
 
 <script>
     import './default.scss';
+    import { resolveAbiVersion } from '@/lib/Blockchain/ContractsLedger';
 
     import {createNamespacedHelpers} from "vuex";
     import Web3 from 'web3';
@@ -99,18 +100,18 @@
             },
             CalculatorComponent() {
                 if (!this.currentToken) return () => {};
-
-                return () => import(`@/bem/Calculator/${this.currentToken.version}/index.vue`);
+                const version = resolveAbiVersion(this.currentToken.version);
+                return () => import(`@/bem/Calculator/${version}/index.vue`);
             },
             SaleTableComponent() {
                 if (!this.currentToken) return () => {};
-
-                return () => import(`@/bem/SaleTable/${this.currentToken.version}/index.vue`);
+                const version = resolveAbiVersion(this.currentToken.version);
+                return () => import(`@/bem/SaleTable/${version}/index.vue`);
             },
             CrowdSaleComponent() {
                 if (!this.currentToken) return () => {};
-
-                return () => import(`@/bem/CrowdSale/${this.currentToken.version}/index.vue`);
+                const version = resolveAbiVersion(this.currentToken.version);
+                return () => import(`@/bem/CrowdSale/${version}/index.vue`);
             },
         },
         methods: {
