@@ -1,10 +1,17 @@
 import { dynamicImport, jsonLoader } from 'lib/utils.js';
 import semver from 'semver';
-
 import Connector from './DefaultConnector.js';
 import { ContractWrappersFactory } from './Factory.js';
 
+export function resolveAbiVersion(v) {
+    if (semver.satisfies(v, '0.23.x')) return '0.23.2';
+
+    return v;
+}
+
 export async function loadContracts(v) {
+    v = resolveAbiVersion(v);
+
     const {DetailedERC20FactoryStrategy} = await dynamicImport("FactoryStrategies", v, "DetailedERC20");
     const {ERC20FactoryStrategy} = await dynamicImport("FactoryStrategies", v, "ERC20");
     const {W12CrowdsaleFactoryStrategy} = await dynamicImport("FactoryStrategies", v, "W12Crowdsale");
