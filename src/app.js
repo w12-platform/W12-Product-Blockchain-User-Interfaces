@@ -8,9 +8,21 @@ import 'vue-directive-tooltip/css/index.css';
 import {createNamespacedHelpers} from "vuex";
 import { LANG_UPDATE_META } from "@/store/modules/Lang.js";
 const LangNS = createNamespacedHelpers("Lang");
+import Config from '@/config';
+import * as Sentry from '@sentry/browser';
 
 import 'src/bem/buefy/default.scss';
 import store from "store";
+
+Sentry.init({
+    dsn: 'https://9accf8a0540e45cebd4205d53297ca13@sentry.io/1309666',
+    beforeSend(event) {
+        if(event.level){
+            return Config.sentry.allowedLevel.match(event.level) ? event : null;
+        }
+        return event;
+    }
+});
 
 Vue.use(Buefy);
 Vue.use(Cleave);
@@ -36,12 +48,14 @@ import ProjectDashboard from 'bem/ProjectDashboard';
 import ProjectDashboardReceiving from 'bem/ProjectDashboardReceiving';
 import ProjectDashboardTranche from 'bem/ProjectDashboardTranche';
 import Versions from 'bem/Versions';
+import CrossPagesNotification from 'bem/CrossPagesNotification';
 
 new Vue({
     store,
     el: '#app',
     components: {
         LangSwitch,
+        CrossPagesNotification,
         HeaderBuyW12Tokens,
         AdminDashboard,
         SidebarMenu,

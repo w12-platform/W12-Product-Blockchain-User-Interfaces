@@ -1,6 +1,6 @@
 <template>
     <div class="RefundEth byefy" v-if="currentToken && currentAccountData">
-        <h2>{{ $t('InvestorDashboardRefundEth', { WToken: currentToken.symbol }) }}</h2>
+        <h2 v-html="$t('InvestorDashboardRefundEth', { WToken: currentToken.symbol })"></h2>
         <div v-if="refundInformation && !isPendingTx && !isErrorTx">
             <RefundCalculator v-if="refundInformation.currentWalletBalanceInRefundAmount"
                               v-model="refundValueInTokens"
@@ -13,26 +13,27 @@
             >
             </RefundCalculator>
             <div class="py-2">
-                <button class="btn btn-primary py-2" :disabled="disable"
-                        @click="approveTheFundToSpend">{{ $t('InvestorDashboardRefundEthApprove') }}
+                <button class="btn btn-primary py-2"
+                        :disabled="disable"
+                        @click="approveTheFundToSpend"
+                        v-html="$t('InvestorDashboardRefundEthApprove')">
                 </button>
             </div>
-            <div v-if="this.currentAccountData.allowanceForTheFund !== '0'" class="py-2">
-                {{ $t('InvestorDashboardRefundEthMessagesBeforeRefund', {
+            <div v-if="this.currentAccountData.allowanceForTheFund !== '0'" class="py-2" v-html="$t('InvestorDashboardRefundEthMessagesBeforeRefund', {
                 allowance: toEth(currentAccountData.allowanceForTheFund),
                 WToken: currentToken.symbol,
                 refundAmount: toEth(currentAccountData.allowanceForTheFundInRefundAmount)
-                }) }}
+                })">
             </div>
             <div v-if="this.currentAccountData.allowanceForTheFund !== '0'" class="row pl-3 pr-3">
 
                 <button
                         class="btn btn-primary py-2"
-                        @click="decreaseTheFundApprovalToSpend">{{ $t('InvestorDashboardRefundEthDecreaseRefund') }}
+                        @click="decreaseTheFundApprovalToSpend" v-html="$t('InvestorDashboardRefundEthDecreaseRefund')">
                 </button>
                 <button
                         class="btn btn-primary py-2 ml-3"
-                        @click="refund">{{ $t('InvestorDashboardRefundEthTokensRefund') }}
+                        @click="refund" v-html="$t('InvestorDashboardRefundEthTokensRefund')">
                 </button>
             </div>
         </div>
@@ -42,14 +43,14 @@
             {{ error }}
         </b-notification>
         <div class="pm-2" v-if="isPendingTx">
-            <p class="py-2">{{ $t('WaitingConfirm') }}:</p>
+            <p class="py-2"><span v-html="$t('WaitingConfirm')"></span>:</p>
             <b-tag class="py-2">{{isPendingTx.hash}}</b-tag>
         </div>
         <div class="pm-2" v-if="isErrorTx">
-            <p class="py-2">{{ $t('TransactionFailed') }}:</p>
+            <p class="py-2"><span v-html="$t('TransactionFailed')"></span>:</p>
             <b-tag class="py-2">{{isErrorTx.hash}}</b-tag>
             <div class="pt-2 text-left">
-                <button class="btn btn-primary btn-sm" @click="TransactionsRetry(isErrorTx)">{{ $t('ToRetry') }}</button>
+                <button class="btn btn-primary btn-sm" @click="TransactionsRetry(isErrorTx)" v-html="$t('ToRetry')"></button>
             </div>
         </div>
 
@@ -61,15 +62,11 @@
     import Connector from "lib/Blockchain/DefaultConnector";
     import { waitTransactionReceipt, formatNumber, toWeiDecimals, fromWeiDecimals, fromWeiDecimalsString} from 'lib/utils.js';
     import {createNamespacedHelpers} from "vuex";
-    import RefundInformation from 'bem/RefundInformation';
-    import RefundCalculator from 'bem/RefundCalculator';
-    import {RefundInformationModel} from 'bem/RefundInformation/shared.js';
+    import RefundInformation from 'bem/RefundInformation/0.20.5';
+    import RefundCalculator from 'bem/RefundCalculator/0.20.5';
+    import {RefundInformationModel} from 'bem/RefundInformation/0.20.5/shared.js';
     import {UPDATE_TX, CONFIRM_TX} from "store/modules/Transactions.js";
-    import Web3 from 'web3';
-    import { getRefundWindow, isRefundActive } from '../../lib/utils';
-
-    const web3 = new Web3();
-    const BigNumber = web3.BigNumber;
+    import { getRefundWindow, isRefundActive, web3, BigNumber } from '@/lib/utils';
 
     const TokensListNS = createNamespacedHelpers("TokensList");
     const AccountNS = createNamespacedHelpers("Account");
@@ -359,14 +356,14 @@
                 if (!error) {
                     const tx = result.transactionHash;
                     await this.updateAccountData();
-                    await this.tokensListUpdate({Index: this.currentToken.index});
+                    await this.tokensListUpdate(this.currentToken);
                     this.$store.commit(`Transactions/${CONFIRM_TX}`, tx);
                 }
             },
             async onApprovalW12Event(error, result) {
                 if (!error) {
                     const tx = result.transactionHash;
-                    await this.tokensListUpdate({Index: this.currentToken.index});
+                    await this.tokensListUpdate(this.currentToken);
                     await this.updateAccountData();
                     this.$store.commit(`Transactions/${CONFIRM_TX}`, tx);
                 }

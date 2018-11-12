@@ -1,16 +1,16 @@
 <template>
     <div class="ExchangeTokens buefy" v-if="balance !== '0'">
-        <h2>{{ $t('ExchangeTokensProjects', {Balance: balance, WToken: currentProject.symbol, Token:
-            currentProject.tokenInformation.symbol})}}</h2>
+        <h2 v-html="$t('ExchangeTokensProjects', {Balance: balance, WToken: currentProject.symbol, Token:
+            currentProject.tokenInformation.symbol})"></h2>
         <div class="pm-2" v-if="isPendingTx">
-            <p class="py-2">{{ $t('WaitingConfirm') }}:</p>
+            <p class="py-2"><span v-html="$t('WaitingConfirm')"></span>:</p>
             <b-tag class="py-2">{{isPendingTx.hash}}</b-tag>
         </div>
         <div class="pm-2" v-if="isErrorTx">
-            <p class="py-2">{{ $t('TransactionFailed') }}:</p>
+            <p class="py-2"><span v-html="$t('TransactionFailed')"></span>:</p>
             <b-tag class="py-2">{{isErrorTx.hash}}</b-tag>
             <div class="pt-2 text-left">
-                <button class="btn btn-primary btn-sm" @click="TransactionsRetry(isErrorTx)">{{ $t('ToRetry') }}</button>
+                <button class="btn btn-primary btn-sm" @click="TransactionsRetry(isErrorTx)" v-html="$t('ToRetry')"></button>
             </div>
         </div>
         <b-notification class="" v-if="error" @close="error = false" type="is-danger" has-icon>
@@ -20,28 +20,25 @@
             <div class="ExchangeTokens__form">
                 <div class="ExchangeTokens__exchange py-2">
                     <button class="btn btn-primary py-2"
-                            v-if="this.currentAccountData.allowanceForSwap === '0'" @click="approveSwapToSpend">{{
-                        $t('ExchangeTokensProjectsApprove') }}
-                    </button>
-
-                    <div v-if="currentAccountData.allowanceForSwap !== '0'" class="py-2">
-                        {{ $t('ExchangeTokensProjectsMessagesBeforeSwap', {
+                            v-if="this.currentAccountData.allowanceForSwap === '0'"
+                            @click="approveSwapToSpend"
+                            v-html="$t('ExchangeTokensProjectsApprove')"></button>
+                    <div v-if="currentAccountData.allowanceForSwap !== '0'" class="py-2" v-html="$t('ExchangeTokensProjectsMessagesBeforeSwap', {
                         allowance: toEthDecimals(currentAccountData.allowanceForSwap),
                         WToken: currentProject.symbol,
-                        Token: currentProject.tokenInformation.symbol,
-                        })}}
+                        Token: currentProject.tokenInformation.symbol
+                        })">
                     </div>
                     <div v-if="this.currentAccountData.allowanceForSwap !== '0'" class="row pl-3 pr-3">
-
                         <button
                                 class="btn btn-primary py-2"
                                 :disabled="this.currentAccountData.allowanceForSwap === '0'"
-                                @click="decreaseSwapApprovalToSpend">{{ $t('ExchangeTokensProjectsDecrease')}}
+                                @click="decreaseSwapApprovalToSpend" v-html="$t('ExchangeTokensProjectsDecrease')">
                         </button>
                         <button
                                 class="btn btn-primary py-2 ml-3"
                                 :disabled="this.currentAccountData.allowanceForSwap === '0'"
-                                @click="exchange">{{ $t('ExchangeTokensProjectsExchange')}}
+                                @click="exchange" v-html="$t('ExchangeTokensProjectsExchange')">
                         </button>
                     </div>
                 </div>

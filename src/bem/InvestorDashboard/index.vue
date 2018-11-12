@@ -1,7 +1,7 @@
 <template>
     <div class="InvestorDashboard buefy" v-if="!langMeta.loading">
         <section class="container">
-            <h2>{{ $t('InvestorDashboard') }}</h2>
+            <h2 v-html="$t('InvestorDashboard')"></h2>
 
             <b-notification class="InvestorDashboard__error" v-if="isError" type="is-danger" has-icon>
                 <span v-if="ledgerMeta.loadingError">{{ ledgerMeta.loadingError }}</span>
@@ -10,17 +10,17 @@
             </b-notification>
 
             <b-notification v-if="isLoading && !isError" :closable="false" class="InvestorDashboard__loader">
-                <span v-if="ledgerMeta.loading">{{ $t('InvestorDashboardLoadLedger') }}<br></span>
-                <span v-if="tokensListMeta.loading">{{ $t('InvestorDashboardLoadTokens') }}<br></span>
+                <span v-if="ledgerMeta.loading"><span v-html="$t('InvestorDashboardLoadLedger')"></span><br></span>
+                <span v-if="tokensListMeta.loading"><span v-html="$t('InvestorDashboardLoadTokens')"></span><br></span>
 
                 <b-loading :is-full-page="false" :active="isLoading" :can-cancel="true"></b-loading>
             </b-notification>
 
             <div v-if="!isLoading && currentToken">
                 <TokenSwitch v-if="!isCurrentToken"></TokenSwitch>
-                <Calculator></Calculator>
-                <SaleTable></SaleTable>
-                <CrowdSale></CrowdSale>
+                <component :is="CalculatorComponent"></component>
+                <component :is="SaleTableComponent"></component>
+                <component :is="CrowdSaleComponent"></component>
             </div>
         </section>
         <Steps :number="6"></Steps>
@@ -34,9 +34,6 @@
     import Web3 from 'web3';
 
     import TokenSwitch from 'bem/TokenSwitch';
-    import CrowdSale from 'bem/CrowdSale';
-    import SaleTable from 'bem/SaleTable';
-    import Calculator from 'bem/Calculator';
     import Steps from "bem/Steps";
 
     const LedgerNS = createNamespacedHelpers("Ledger");
@@ -64,9 +61,6 @@
         },
         components: {
             TokenSwitch,
-            CrowdSale,
-            SaleTable,
-            Calculator,
             Steps
         },
         data() {
@@ -102,7 +96,22 @@
             },
             isCurrentToken(){
                 return typeof CurrentToken !== 'undefined';
-            }
+            },
+            CalculatorComponent() {
+                if (!this.currentToken) return () => {};
+
+                return () => import(`@/bem/Calculator/${this.currentToken.version}/index.vue`);
+            },
+            SaleTableComponent() {
+                if (!this.currentToken) return () => {};
+
+                return () => import(`@/bem/SaleTable/${this.currentToken.version}/index.vue`);
+            },
+            CrowdSaleComponent() {
+                if (!this.currentToken) return () => {};
+
+                return () => import(`@/bem/CrowdSale/${this.currentToken.version}/index.vue`);
+            },
         },
         methods: {
             ...TokensListNS.mapActions({

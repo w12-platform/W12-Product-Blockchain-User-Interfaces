@@ -1,7 +1,7 @@
 <template>
     <div class="ProjectDashboardTranche buefy" v-if="!langMeta.loading">
         <section class="container">
-            <h2>{{ $t('ProjectDashboard') }}</h2>
+            <h2 v-html="$t('ProjectDashboard')"></h2>
 
             <b-notification v-if="isError" type="is-danger" :closable="false" has-icon>
                 <span v-if="ledgerMeta.loadingError">{{ ledgerMeta.loadingError }}</span>
@@ -9,8 +9,7 @@
                 <span v-if="accountMeta.loadingError">{{ accountMeta.loadingError }}</span>
             </b-notification>
 
-            <b-notification v-if="!isError && isLoading" :closable="false">
-                {{ $t('ProjectDashboardLoadExpect') }}
+            <b-notification v-if="!isError && isLoading" :closable="false"><span v-html="$t('ProjectDashboardLoadExpect')"></span>
                 <b-loading :is-full-page="false" :active="isLoading" :can-cancel="true"></b-loading>
             </b-notification>
 
@@ -22,7 +21,8 @@
                 </b-notification>
 
                 <div class="ProjectDashboardTranche__project" >
-                    <TrancheInformation v-if="!ProjectMeta.loadingProjectError"></TrancheInformation>
+                    <!--<TrancheInformation v-if="!ProjectMeta.loadingProjectError"></TrancheInformation>-->
+                    <component :is="TrancheInformationComponent"  v-if="!ProjectMeta.loadingProjectError"></component>
 
                     <b-loading :is-full-page="false" :active="ProjectMeta.loadingProject" :can-cancel="true"></b-loading>
                 </div>
@@ -36,7 +36,6 @@
     import './default.scss';
     import ProjectSwitch from 'bem/ProjectSwitch';
     import Receiving from 'bem/Receiving';
-    import TrancheInformation from 'bem/TrancheInformation';
     import Steps from "bem/Steps";
 
     import {CONFIRM_TX} from "store/modules/Transactions.js";
@@ -54,7 +53,6 @@
         components: {
             ProjectSwitch,
             Receiving,
-            TrancheInformation,
             Steps
         },
         data() {
@@ -93,7 +91,11 @@
             },
             isCurrentToken(){
                 return typeof CurrentToken !== 'undefined';
-            }
+            },
+            TrancheInformationComponent() {
+                if (!this.currentProject) return () => {};
+                return () => import(`@/bem/TrancheInformation/${this.currentProject.version}/index.vue`);
+            },
         },
         watch: {
             'currentAccount': {

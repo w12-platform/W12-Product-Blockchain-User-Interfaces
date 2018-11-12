@@ -1,6 +1,6 @@
 <template>
     <div class="SaleTable buefy" v-if="currentToken && saleTableData">
-        <h2>{{ $t('InvestorDashboardDiscounts') }}</h2>
+        <h2 v-html="$t('InvestorDashboardDiscounts')"></h2>
         <b-table :data="saleTableData" class="table table-striped table-bordered table-responsive-sm"
                  :mobile-cards="false">
             <template slot-scope="props">
@@ -12,7 +12,7 @@
                     <span v-if="props.row.sale !== '0'" class="tag is-success">{{ props.row.sale }} %</span>
                 </b-table-column>
 
-                <b-table-column v-if="props.row.bonusVolume.length" field="volume" :label="$t('InvestorDashboardDiscountsEthAmount')" centered>
+                <b-table-column v-if="props.row.bonusVolume.length" field="volume" :label="$t('InvestorDashboardDiscountsAmountTitle', { currency: 'USD' })" centered>
                     <div class="SaleTable__volumeElem" v-for="bonusVolume in props.row.bonusVolume.slice().reverse()">
                         <span>{{ bonusVolume[0] }}</span>
                     </div>
@@ -61,10 +61,10 @@
     import './default.scss';
     import {createNamespacedHelpers} from "vuex";
     import Web3 from 'web3';
+    import moment from "moment";
 
     const TokensListNS = createNamespacedHelpers("TokensList");
 
-    const moment = window.moment;
     const web3 = new Web3();
 
     export default {

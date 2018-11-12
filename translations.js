@@ -28,7 +28,6 @@
 //         "en": "BUY W12 TOKENS",
 //         "ru": "КУПИТЬ W12 TOKENS"
 //     },
-//
 //     "TokenInfoAddress": {
 //         "en": "Token Address",
 //         "ru": "Адрес токена"
@@ -1299,9 +1298,49 @@
 //     "StepsBlockedTx": {
 //         "en": "Please wait for confirmation of the transaction",
 //         "ru": "Пожалуйста дождитесь подтверждения транзакции"
-//     }
+//     },
 //     "FirstStageStartDateRecommendedDateInfoMessage": {
 //         "en": "Дату начала первой стадии рекомендуется устанавливать больше текущей даты на час и выше",
 //         "ru": "Дату начала первой стадии рекомендуется устанавливать больше текущей даты на час и выше"
-//     }
+//     },
+//     "ProjectDashboardStageCurrenciesListPickCurrencies": {
+//         "en": "Выберите валюту",
+//         "ru": "Выберите валюту"
+//     },
+//     "ProjectDashboardStageBonusesFieldsTitle": {
+//         "en": "от {currency}",
+//         "ru": "от {currency}"
+//     },
+//     "InvestorDashboardCalculatorChange": {
+//         "en": "Сдача: {change}",
+//         "ru": "Сдача: {change}"
+//     },
+//     "InvestorDashboardCalculatorPaymentMethods": {
+//         "en": "Оплатить",
+//         "ru": "Оплатить"
+//     },
+//     "InvestorDashboardCalculatorPaymentMethodsSelect": {
+//         "en": "Выберите валюту",
+//         "ru": "Выберите валюту"
+//     },
+//     "InvestorDashboardCalculatorNeedToApprove": {
+//         "en": "Разрешить снятие средств на сумму: {approve}",
+//         "ru": "Разрешить снятие средств на сумму: {approve}"
+//     },
+//     "InvestorDashboardCalculatorDoApprove": {
+//         "en": "Разрешить снятие средств для оплаты",
+//         "ru": "Разрешить снятие средств для оплаты"
+//     },
+//     "InvestorDashboardDiscountsAmountTitle": {
+//         "en": "В {currency}",
+//         "ru": "В {currency}"
+//     },
+//     "InvestorDashboardRefundExchangeForAssetsTitle": {
+//         "en": "Обменять {amount} {symbol} на: ",
+//         "ru": "Обменять {amount} {symbol} на: "
+//     },
+//     "CrossPagesNotificationYouUseTestNetwork": {
+//         "en": "Вы используете тестовую сеть. Любое взаимодействие с тестовой сетью не требует криптавалюты, которая имеет ценность в денежном эквиваленте.",
+//         "ru": "Вы используете тестовую сеть. Любое взаимодействие с тестовой сетью не требует криптавалюты, которая имеет ценность в денежном эквиваленте."
+//     },
 // };

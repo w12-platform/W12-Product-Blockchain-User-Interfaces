@@ -1,7 +1,7 @@
 <template>
     <div class="InvestorDashboardRefund buefy" v-if="!langMeta.loading">
         <section class="container">
-            <h2>{{ $t('InvestorDashboard') }}</h2>
+            <h2 v-html="$t('InvestorDashboard')"></h2>
 
             <b-notification class="InvestorDashboardRefund__error" v-if="isError" type="is-danger" has-icon>
                 <span v-if="ledgerMeta.loadingError">{{ ledgerMeta.loadingError }}</span>
@@ -10,15 +10,15 @@
             </b-notification>
 
             <b-notification v-if="isLoading && !isError" :closable="false" class="InvestorDashboardRefund__loader">
-                <span v-if="ledgerMeta.loading">{{ $t('InvestorDashboardLoadLedger') }}<br></span>
-                <span v-if="tokensListMeta.loading">{{ $t('InvestorDashboardLoadTokens') }}<br></span>
+                <span v-if="ledgerMeta.loading"><span v-html="$t('InvestorDashboardLoadLedger')"></span><br></span>
+                <span v-if="tokensListMeta.loading"><span v-html="$t('InvestorDashboardLoadTokens')"></span><br></span>
 
                 <b-loading :is-full-page="false" :active="isLoading" :can-cancel="true"></b-loading>
             </b-notification>
 
             <div v-if="!isLoading">
-                <TokenSwitch v-if="!isCurrentToken"></TokenSwitch>
-                <RefundEth></RefundEth>
+                <TokenSwitch v-if="!hasCurrentToken"></TokenSwitch>
+                <component :is="RefundEthComponent"></component>
             </div>
         </section>
         <Steps :number="7"></Steps>
@@ -28,10 +28,10 @@
 <script>
     import './default.scss';
 
+    import semver from 'semver';
     import {createNamespacedHelpers} from "vuex";
 
     import TokenSwitch from 'bem/TokenSwitch';
-    import RefundEth from 'bem/RefundEth';
     import Steps from "bem/Steps";
 
     const LedgerNS = createNamespacedHelpers("Ledger");
@@ -44,14 +44,14 @@
         name: 'InvestorDashboardRefund',
         components: {
             TokenSwitch,
-            RefundEth,
             Steps
         },
         data() {
             return {
                 meta: {
                     loading: false,
-                }
+                },
+                hasCurrentToken: !!window.CurrentToken
             };
         },
         computed: {
@@ -78,8 +78,16 @@
             isError() {
                 return this.ledgerMeta.loadingError || this.tokensListMeta.loadingError || this.accountMeta.loadingError;
             },
-            isCurrentToken(){
-                return typeof CurrentToken !== 'undefined';
+            RefundEthComponent() {
+                if (!this.currentToken) return;
+
+                const {version} = this.currentToken;
+
+                if (semver.satisfies(version, '<0.26.0')) {
+                    return () => import('@/bem/RefundEth/0.20.5/index.vue');
+                } else if (semver.satisfies(version, '>=0.26.0')) {
+                    return () => import('@/bem/RefundEth/0.26.0/index.vue');
+                }
             }
         },
         methods: {
@@ -102,8 +110,8 @@
             async handleCurrentAccountChange(currentAccount) {
                 if(currentAccount){
                     await this.transactionsUpStatusTx();
-                    if(this.isCurrentToken){
-                        await this.FetchTokenByCurrentToken(CurrentToken);
+                    if(this.hasCurrentToken){
+                        await this.FetchTokenByCurrentToken(window.CurrentToken);
                     } else {
                         await this.tokensListFetch();
                     }

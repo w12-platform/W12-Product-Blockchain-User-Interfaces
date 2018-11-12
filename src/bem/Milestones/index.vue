@@ -1,23 +1,23 @@
 <template>
     <div class="Milestones buefy" v-if="currentProject && isCrowdsaleInited && isStagesSave">
-        <h2>{{ $t('Milestones') }}</h2>
+        <h2 v-html="$t('Milestones')"></h2>
 
         <div class="pm-2" v-if="isPendingTx">
-            <p class="py-2">{{ $t('WaitingConfirm') }}:</p>
+            <p class="py-2"><span v-html="$t('WaitingConfirm')"></span>:</p>
             <b-tag class="py-2">{{isPendingTx.hash}}</b-tag>
         </div>
         <div class="pm-2" v-if="isErrorTx">
-            <p class="py-2">{{ $t('TransactionFailed') }}:</p>
+            <p class="py-2"><span v-html="$t('TransactionFailed')"></span>:</p>
             <b-tag class="py-2">{{isErrorTx.hash}}</b-tag>
             <div class="pt-2 text-left">
-                <button class="btn btn-primary btn-sm" @click="TransactionsRetry(isErrorTx)">{{ $t('ToRetry') }}</button>
+                <button class="btn btn-primary btn-sm" @click="TransactionsRetry(isErrorTx)" v-html="$t('ToRetry')"></button>
             </div>
         </div>
         <div class="card" v-if="!isPendingTx && !isErrorTx">
             <div class="card-content" v-if="tokenCrowdSaleMilestones.length">
                 <div class="">
                     <div v-for="(item, idx) in tokenCrowdSaleMilestones">
-                        <span class="Milestones__stageTitle">{{ $t('MilestoneTitle') }} #{{ idx+1 }}</span>
+                        <span class="Milestones__stageTitle"><span v-html="$t('MilestoneTitle')"></span> #{{ idx+1 }}</span>
                         <MilestoneCard
                                 v-model="tokenCrowdSaleMilestones[idx]"
                                 :stageIndex="idx"
@@ -28,8 +28,7 @@
                 </div>
             </div>
 
-            <b-notification class="ProjectStages__errorStage" v-if="tokenCrowdSaleMilestones.length && !isOneHundredPercent" type="is-danger" has-icon>
-                {{ $t('MilestoneTitleErrorNotOneHundredPercent') }}
+            <b-notification class="ProjectStages__errorStage" v-if="tokenCrowdSaleMilestones.length && !isOneHundredPercent" type="is-danger" has-icon><span v-html="$t('MilestoneTitleErrorNotOneHundredPercent')"></span>
             </b-notification>
 
             <b-notification class="ProjectStages__errorStage" v-if="error" @close="error = false" type="is-danger" has-icon>
@@ -37,9 +36,8 @@
             </b-notification>
 
             <footer class="card-footer" v-if="!isStartCrowdSale">
-                <a class="card-footer-item" @click="addStage">{{ $t('MilestonesAdd') }}</a>
-                <a class="card-footer-item" @click="saveMilestones" v-if="saveDisable">{{
-                    $t('MilestonesSend') }}</a>
+                <a class="card-footer-item" @click="addStage" v-html="$t('MilestonesAdd')"></a>
+                <a class="card-footer-item" @click="saveMilestones" v-if="saveDisable" v-html="$t('MilestonesSend')"></a>
             </footer>
 
             <b-loading :is-full-page="false" :active.sync="saveMilestonesLoading" :can-cancel="true"></b-loading>

@@ -1,8 +1,8 @@
 import { countStringBytes, decodeStringFromBytes, encodeStringToBytes, promisify } from 'lib/utils.js';
 import { BaseWrapper } from 'src/lib/Blockchain/Wrappers/NoVersion/BaseWrapper.js';
 import Web3 from 'web3';
+import moment from "moment";
 
-const moment = window.moment;
 const DATE_FORMAT = 'YYYY-MM-DD';
 const web3 = new Web3();
 const BigNumber = web3.BigNumber;

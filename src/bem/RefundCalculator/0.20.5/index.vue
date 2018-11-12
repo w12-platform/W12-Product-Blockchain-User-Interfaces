@@ -1,6 +1,6 @@
 <template>
     <div class="RefundCalculator buefy">
-            <label for="Amount">{{ $t('InvestorDashboardRefundEthCalculator', {WToken: tokenSymbol}) }}</label>
+            <label for="Amount" v-html="$t('InvestorDashboardRefundEthCalculator', {WToken: tokenSymbol})"></label>
             <b-field id="Amount">
                 <b-icon icon="shopping"></b-icon>
                 <cleave
@@ -15,8 +15,7 @@
                 ></cleave>
             </b-field>
         <div class="row">
-            <div class="col">
-                {{ $t('InvestorDashboardRefundEthCalculatorMessage') }}
+            <div class="col"><span v-html="$t('InvestorDashboardRefundEthCalculatorMessage')"></span>
             </div>
             <div class="col">
                 {{ refundAmount | ETH }} ETH
@@ -26,14 +25,13 @@
     </div>
 </template>
 <script>
-    import 'src/bem/RefundCalculator/default.scss';
-    import { RefundInformationModel } from 'bem/RefundInformation/shared.js';
-    import { toWeiDecimals } from 'lib/utils.js';
-    import Web3 from 'web3';
+    import './default.scss';
+    import { RefundInformationModel } from 'bem/RefundInformation/0.20.5/shared.js';
+    import {web3, toWeiDecimals} from 'lib/utils';
 
-    const web3 = new Web3();
-    const BigNumber = web3.BigNumber.another({ EXPONENTIAL_AT: [-30, 30] });
     import {createNamespacedHelpers} from "vuex";
+
+    const BigNumber = web3.BigNumber.another({ EXPONENTIAL_AT: [-30, 30] });
 
     const LedgerNS = createNamespacedHelpers("Ledger");
     const TokensListNS = createNamespacedHelpers("TokensList");

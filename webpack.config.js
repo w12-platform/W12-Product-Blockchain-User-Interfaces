@@ -27,7 +27,7 @@ const resolvePublicPath = (env) => {
     }
 };
 const validateBlockchainNetId = (id) => {
-    if (id != 1 && id != 4) throw new Error(`blockchain network id ${id} is not supported`);
+    if (id != 1 && id != 4 && id != 5777) throw new Error(`blockchain network id ${id} is not supported`);
 };
 
 const MODE = process.env.NODE_ENV || 'development'; // production || development
@@ -48,7 +48,8 @@ module.exports = [
         output: {
             path: BUILD_DIR_PATH,
             publicPath,
-            filename: "App.js"
+            filename: "App.js",
+            chunkFilename: 'js/[name].app.js',
         },
         resolve: {
             extensions: ['.js', '.vue', '.json'],

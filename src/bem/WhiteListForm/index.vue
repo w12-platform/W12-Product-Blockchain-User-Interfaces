@@ -1,10 +1,10 @@
 <template>
     <div class="WhiteListForm buefy">
-        <h2>{{ $t('AdminDashboardWhiteListForm') }}</h2>
+        <h2 v-html="$t('AdminDashboardWhiteListForm')"></h2>
 
         <div class="WhiteListForm__form">
             <div class="form-group">
-                <label for="TokenAddress">{{ $t('AdminDashboardFieldTokenLabel') }}</label>
+                <label for="TokenAddress" v-html="$t('AdminDashboardFieldTokenLabel')"></label>
                 <input
                         :placeholder="$t('AdminDashboardFieldTokenPlaceholder')"
                         type="text"
@@ -13,7 +13,7 @@
                         v-model="whiteListForm.tokenAddress">
             </div>
             <div class="form-group">
-                <label for="OwnerAddress">{{ $t('AdminDashboardFieldOwnerLabel') }}</label>
+                <label for="OwnerAddress" v-html="$t('AdminDashboardFieldOwnerLabel')"></label>
                 <input
                         :placeholder="$t('AdminDashboardFieldOwnerPlaceholder')"
                         type="text"
@@ -72,8 +72,7 @@
                 </b-field>
             </div>
             <div class="form-group">
-                <label for="trancheFeePercent">
-                    {{ $t('AdminDashboardFieldTrancheFeePercentLabel') }}
+                <label for="trancheFeePercent"><span v-html="$t('AdminDashboardFieldTrancheFeePercentLabel')"></span>
                     <span class="labelTooltip" v-tooltip="$t('AdminDashboardFieldTrancheFeePercentLabelMessage')">?</span>
                 </label>
                 <b-field id="trancheFeePercent">
@@ -86,8 +85,7 @@
                 </b-field>
             </div>
             <div class="form-group">
-                <label for="WTokenSaleFeePercent">
-                    {{ $t('AdminDashboardFieldWTokenSaleFeePercentLabel') }}
+                <label for="WTokenSaleFeePercent"><span v-html="$t('AdminDashboardFieldWTokenSaleFeePercentLabel')"></span>
                     <span class="labelTooltip" v-tooltip="$t('AdminDashboardFieldWTokenSaleFeePercentLabelMessage')">?</span>
                 </label>
                 <b-field id="WTokenSaleFeePercent">
@@ -100,7 +98,7 @@
                 </b-field>
             </div>
             <div class="form-group">
-                <label for="FeeTokens">{{ $t('AdminDashboardFieldFeeTokensLabel') }}
+                <label for="FeeTokens"><span v-html="$t('AdminDashboardFieldFeeTokensLabel')"></span>
                     <span class="labelTooltip" v-tooltip="$t('AdminDashboardFieldFeeTokensLabelMessage')">?</span>
                 </label>
                 <b-field id="FeeTokens">
@@ -113,7 +111,7 @@
                 </b-field>
             </div>
             <div class="form-group">
-                <label for="FeeETH">{{ $t('AdminDashboardFieldFeeEthLabel') }}
+                <label for="FeeETH"><span v-html="$t('AdminDashboardFieldFeeEthLabel')"></span>
                     <span class="labelTooltip" v-tooltip="$t('AdminDashboardFieldFeeEthLabelMessage')">?</span>
                 </label>
                 <b-field id="FeeETH">
@@ -127,25 +125,23 @@
             </div>
 
 
-            <b-notification :closable="false" v-if="disableWhiteListButton">
-                {{ $t('AdminDashboardWarning') }}
+            <b-notification :closable="false" v-if="disableWhiteListButton"><span v-html="$t('AdminDashboardWarning')"></span>
             </b-notification>
             <b-notification v-if="errorMessage !== ''" type="is-danger" has-icon>
                 {{ errorMessage }}
             </b-notification>
             <div class="pm-2" v-if="isPendingTx">
-                <p class="py-2">{{ $t('WaitingConfirm') }}:</p>
+                <p class="py-2"><span v-html="$t('WaitingConfirm')"></span>:</p>
                 <b-tag class="py-2">{{isPendingTx.hash}}</b-tag>
             </div>
             <div class="pm-2" v-if="isErrorTx">
-                <p class="py-2">{{ $t('TransactionFailed') }}:</p>
+                <p class="py-2"><span v-html="$t('TransactionFailed')"></span>:</p>
                 <b-tag class="py-2">{{isErrorTx.hash}}</b-tag>
                 <div class="pt-2 text-left">
-                    <button class="btn btn-primary btn-sm" @click="TransactionsRetry(isErrorTx)">{{ $t('ToRetry') }}</button>
+                    <button class="btn btn-primary btn-sm" @click="TransactionsRetry(isErrorTx)" v-html="$t('ToRetry')"></button>
                 </div>
             </div>
-            <button class="btn btn-primary py-2 my-2" @click="tryWhiteListToken" :disabled="disableWhiteListButton">{{
-                $t('AdminDashboardWhitelist') }}
+            <button class="btn btn-primary py-2 my-2" @click="tryWhiteListToken" :disabled="disableWhiteListButton" v-html="$t('AdminDashboardWhitelist')">
             </button>
             <b-loading  :is-full-page="false" :active.sync="whitelistingToken"></b-loading>
         </div>
@@ -394,9 +390,8 @@
 
                     const {DetailedERC20Factory} = await this.ledgerFetch(this.W12Lister.version);
                     const DetailedERC20 = DetailedERC20Factory.at(address);
-                    const isExists = await DetailedERC20.isCurrentAddressСompatibleWithToken();
 
-                    this.isTokenExists = isExists;
+                    this.isTokenExists = await DetailedERC20.isCurrentAddressCompatibleWithToken();
                     this.checkingToken = false;
                 }
             },

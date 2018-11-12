@@ -1,8 +1,6 @@
 import Connector from 'src/lib/Blockchain/DefaultConnector.js';
 import {map} from 'p-iteration';
 
-const moment = window.moment;
-
 export const UPDATE_TX = "UPDATE_TX";
 export const CONFIRM_TX = "CONFIRM_TX";
 export const CANCEL_TX = "CANCEL_TX";
@@ -25,7 +23,7 @@ export default {
             state.list = state.list.filter((tr)=> tr.hash && tr.hash !== tx);
         },
         [RESET](state) {
-            state.list = null;
+            state.list = [];
         }
     },
     actions: {
