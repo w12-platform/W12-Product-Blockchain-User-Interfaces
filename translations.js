@@ -1351,4 +1351,24 @@
 //         "en": "No freeze",
 //         "ru": "Нет заморозки",
 //     },
+//     "InvestorDashboardCalculatorAmount": {
+//         "en": "The number of tokens available to purchase",
+//         "ru": "Количество токенов доступных к покупке",
+//     },
+//     "RoadMapTitle": {
+//         "en": "Stages",
+//         "ru": "Этапы",
+//     },
+//     "RoadMapStage": {
+//         "en": "Stage",
+//         "ru": "Этап",
+//     },
+//     "RoadMapDates": {
+//         "en": "Dates",
+//         "ru": "Даты",
+//     },
+//     "RoadMapRefund": {
+//         "en": "Refund Period",
+//         "ru": "Период возврата средств",
+//     }
 // };
