@@ -1304,4 +1304,12 @@
 //         "en": "Дату начала первой стадии рекомендуется устанавливать больше текущей даты на час и выше",
 //         "ru": "Дату начала первой стадии рекомендуется устанавливать больше текущей даты на час и выше"
 //     }
+//     "InvestorDashboardDiscountsStagesDefrosting": {
+//         "en": "Date of defrosting",
+//         "ru": "Дата разморозки",
+//     },
+//     "InvestorDashboardDiscountsStagesDefrostingNot": {
+//         "en": "No freeze",
+//         "ru": "Нет заморозки",
+//     },
 // };
