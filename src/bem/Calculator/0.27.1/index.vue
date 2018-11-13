@@ -71,7 +71,7 @@
                 </p>
                 <p v-if="currentToken.crowdSaleInformation.vestingDate">
                     <span v-html="$t('InvestorDashboardCalculatorDiscountVestingEndDate', { date: dateFormat(this.currentToken.crowdSaleInformation.vestingDate) })"></span>
-                    <br><span v-html="$t('InvestorDashboardCalculatorDiscountVestingDateCaution')"></span>
+                    <br><span v-html="$t('InvestorDashboardCalculatorDiscountVestingDateCaution', {WToken:currentToken.symbol})"></span>
                 </p>
                 <p v-if="bonusVolume !== '0.00'"><span v-html="$t('InvestorDashboardCalculatorBonus')"></span>
                     <b-tag type="is-success">+{{ bonusVolume }} {{ currentToken.symbol }}</b-tag>
