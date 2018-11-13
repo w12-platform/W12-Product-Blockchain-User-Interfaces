@@ -9,6 +9,8 @@
                 </p>
                 <p>{{ $t('InvestorDashboardCalculatorTokenName') }} {{ currentToken.name }}</p>
                 <p>{{ $t('InvestorDashboardCalculatorTokenSymbol') }} {{ currentToken.symbol }}</p>
+                <p><span v-html="$t('InvestorDashboardCalculatorAmount')"></span>
+                    {{ tokensOnSaleFixed }} {{ currentToken.symbol }} - ({{ tokensOnSaleSumFixed }} ETH)</p>
             </div>
 
             <div class="Calculator__inputs row">
@@ -240,6 +242,14 @@
             disable() {
                 const amount = new BigNumber(this.total);
                 return !amount.greaterThan(0) || !this.isMaxTokenOnSaleAmount;
+            },
+            tokensOnSaleFixed(){
+                return new BigNumber(this.currentToken.crowdSaleInformation.tokensOnSale).toFixed(2);
+            },
+            tokensOnSaleSumFixed(){
+                return new BigNumber(this.currentToken.crowdSaleInformation.tokensOnSale)
+                    .mul(new BigNumber(this.currentToken.crowdSaleInformation.tokenPrice))
+                    .toFixed(2);
             }
         },
         methods: {
