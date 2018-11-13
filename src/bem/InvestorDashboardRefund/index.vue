@@ -10,7 +10,7 @@
             </b-notification>
 
             <b-notification v-if="isLoading && !isError" :closable="false" class="InvestorDashboardRefund__loader">
-                <span v-html="$t('InvestorDashboardLoadLedger')"></span><br>
+                <p v-html="$t('InvestorDashboardLoadLedger')"></p>
 
                 <b-loading :is-full-page="false" :active="isLoading" :can-cancel="true"></b-loading>
             </b-notification>
