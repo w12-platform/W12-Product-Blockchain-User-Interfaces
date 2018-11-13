@@ -53,7 +53,7 @@
                 </p>
                 <p>
                     {{$t('InvestorDashboardCalculatorDiscountVestingEndDate', { date: dateFormat(this.currentToken.crowdSaleInformation.vestingDate) })}}
-                    <br>{{$t('InvestorDashboardCalculatorDiscountVestingDateCaution')}}
+                    <br><span v-html="$t('InvestorDashboardCalculatorDiscountVestingDateCaution', {WToken:currentToken.symbol})"></span>
                 </p>
                 <p v-if="bonusVolume !== '0.00'">{{$t('InvestorDashboardCalculatorBonus')}}
                     <b-tag type="is-success">+{{ bonusVolume }} {{ currentToken.symbol }}</b-tag>
