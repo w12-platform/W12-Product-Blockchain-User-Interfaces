@@ -10,7 +10,7 @@
                 <p><span v-html="$t('InvestorDashboardCalculatorTokenName')"></span> {{ currentToken.name }}</p>
                 <p><span v-html="$t('InvestorDashboardCalculatorTokenSymbol')"></span> {{ currentToken.symbol }}</p>
                 <p v-if="maxSum"><span v-html="$t('InvestorDashboardCalculatorAmount')"></span>
-                    {{ tokensOnSaleFixed }} {{ currentToken.symbol }} - ({{ maxSum }} {{ paymentMethod }})</p>
+                    {{ tokensOnSaleFixed }} {{ currentToken.symbol }} - ({{ maxSum }})</p>
             </div>
 
             <div class="Calculator__inputs">
@@ -344,6 +344,7 @@
                 await this.fetchInvoiceByPaymentAmount();
             },
             async handlePaymentMethodChange() {
+                await this.fetchMaxSumInvoiceByTokensOnSale();
                 await this.fetchInvoiceByPaymentAmount();
             },
             async buy() {
@@ -501,14 +502,6 @@
                         cost: reverseConversionByDecimals(invoice[1], decimals).toString(),
                         change: reverseConversionByDecimals(invoice[3], decimals).toString()
                     };
-
-                    if (new BigNumber(this.currentToken.crowdSaleInformation.tokensOnSale || 0).gt(0)) {
-                        invoice = await Crowdsale.getInvoiceByTokenAmount(
-                            this.paymentMethod,
-                            convertionByDecimals(this.currentToken.crowdSaleInformation.tokensOnSale, this.currentToken.decimals)
-                        );
-                    }
-                    this.maxSum = reverseConversionByDecimals(invoice[1], this.paymentMethodExtendInfo.decimals).toFixed(2);
                 } catch (e) {
                     console.error(e);
                     this.error = e.message;
@@ -552,6 +545,27 @@
                 await this.updateAllowanceAmount();
                 await this.$nextTick();
                 this.fetchingInvoice = false;
+            },
+            async fetchMaxSumInvoiceByTokensOnSale(){
+                if (!this.paymentMethod) return;
+
+                try {
+                    const {W12CrowdsaleFactory} = await this.fetchLedger(this.currentToken.version);
+                    const Crowdsale = W12CrowdsaleFactory.at(this.currentToken.crowdsaleAddress);
+
+                    let invoice = ['0', '0', '0', '0', '0'];
+
+                    if (new BigNumber(this.currentToken.crowdSaleInformation.tokensOnSale || 0).gt(0)) {
+                        invoice = await Crowdsale.getInvoiceByTokenAmount(
+                            this.paymentMethod,
+                            convertionByDecimals(this.currentToken.crowdSaleInformation.tokensOnSale, this.currentToken.decimals)
+                        );
+                    }
+                    this.maxSum = reverseConversionByDecimals(invoice[1], this.paymentMethodExtendInfo.decimals).toFixed(2) + " " + this.paymentMethod;
+                } catch (e) {
+                    console.error(e);
+                    this.error = e.message;
+                }
             },
             async onCurrentTokenDeepUpdate (value, prevValue) {
                 if (!this.paymentMethod) {
