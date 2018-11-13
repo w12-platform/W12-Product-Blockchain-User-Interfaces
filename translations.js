@@ -1304,4 +1304,32 @@
 //         "en": "Дату начала первой стадии рекомендуется устанавливать больше текущей даты на час и выше",
 //         "ru": "Дату начала первой стадии рекомендуется устанавливать больше текущей даты на час и выше"
 //     }
+//     "InvestorDashboardDiscountsStagesDefrosting": {
+//         "en": "Date of defrosting",
+//         "ru": "Дата разморозки",
+//     },
+//     "InvestorDashboardDiscountsStagesDefrostingNot": {
+//         "en": "No freeze",
+//         "ru": "Нет заморозки",
+//     },
+//     "InvestorDashboardCalculatorAmount": {
+//         "en": "The number of tokens available to purchase",
+//         "ru": "Количество токенов доступных к покупке",
+//     },
+//     "RoadMapTitle": {
+//         "en": "Stages",
+//         "ru": "Этапы",
+//     },
+//     "RoadMapStage": {
+//         "en": "Stage",
+//         "ru": "Этап",
+//     },
+//     "RoadMapDates": {
+//         "en": "Dates",
+//         "ru": "Даты",
+//     },
+//     "RoadMapRefund": {
+//         "en": "Refund Period",
+//         "ru": "Период возврата средств",
+//     }
 // };

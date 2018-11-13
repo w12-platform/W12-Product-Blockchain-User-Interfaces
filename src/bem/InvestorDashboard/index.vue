@@ -10,8 +10,7 @@
             </b-notification>
 
             <b-notification v-if="isLoading && !isError" :closable="false" class="InvestorDashboard__loader">
-                <span v-if="ledgerMeta.loading">{{ $t('InvestorDashboardLoadLedger') }}<br></span>
-                <span v-if="tokensListMeta.loading">{{ $t('InvestorDashboardLoadTokens') }}<br></span>
+                <p v-html="$t('InvestorDashboardLoadLedger')"></p>
 
                 <b-loading :is-full-page="false" :active="isLoading" :can-cancel="true"></b-loading>
             </b-notification>
@@ -20,6 +19,7 @@
                 <TokenSwitch v-if="!isCurrentToken"></TokenSwitch>
                 <Calculator></Calculator>
                 <SaleTable></SaleTable>
+                <RoadMap></RoadMap>
                 <CrowdSale></CrowdSale>
             </div>
         </section>
@@ -38,6 +38,7 @@
     import SaleTable from 'bem/SaleTable';
     import Calculator from 'bem/Calculator';
     import Steps from "bem/Steps";
+    import RoadMap from "bem/RoadMap";
 
     const LedgerNS = createNamespacedHelpers("Ledger");
     const AccountNS = createNamespacedHelpers("Account");
@@ -67,7 +68,8 @@
             CrowdSale,
             SaleTable,
             Calculator,
-            Steps
+            Steps,
+            RoadMap
         },
         data() {
             return {

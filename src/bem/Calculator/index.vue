@@ -9,6 +9,8 @@
                 </p>
                 <p>{{ $t('InvestorDashboardCalculatorTokenName') }} {{ currentToken.name }}</p>
                 <p>{{ $t('InvestorDashboardCalculatorTokenSymbol') }} {{ currentToken.symbol }}</p>
+                <p><span v-html="$t('InvestorDashboardCalculatorAmount')"></span>
+                    {{ tokensOnSaleFixed }} {{ currentToken.symbol }} - ({{ tokensOnSaleSumFixed }} ETH)</p>
             </div>
 
             <div class="Calculator__inputs row">
@@ -53,7 +55,7 @@
                 </p>
                 <p>
                     {{$t('InvestorDashboardCalculatorDiscountVestingEndDate', { date: dateFormat(this.currentToken.crowdSaleInformation.vestingDate) })}}
-                    <br>{{$t('InvestorDashboardCalculatorDiscountVestingDateCaution')}}
+                    <br><span v-html="$t('InvestorDashboardCalculatorDiscountVestingDateCaution', {WToken:currentToken.symbol})"></span>
                 </p>
                 <p v-if="bonusVolume !== '0.00'">{{$t('InvestorDashboardCalculatorBonus')}}
                     <b-tag type="is-success">+{{ bonusVolume }} {{ currentToken.symbol }}</b-tag>
@@ -240,6 +242,14 @@
             disable() {
                 const amount = new BigNumber(this.total);
                 return !amount.greaterThan(0) || !this.isMaxTokenOnSaleAmount;
+            },
+            tokensOnSaleFixed(){
+                return new BigNumber(this.currentToken.crowdSaleInformation.tokensOnSale).toFixed(2);
+            },
+            tokensOnSaleSumFixed(){
+                return new BigNumber(this.currentToken.crowdSaleInformation.tokensOnSale)
+                    .mul(new BigNumber(this.currentToken.crowdSaleInformation.tokenPrice))
+                    .toFixed(2);
             }
         },
         methods: {

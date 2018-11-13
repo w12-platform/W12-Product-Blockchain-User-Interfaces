@@ -45,18 +45,18 @@
                     <span class="tag is-danger">{{ currentToken.crowdSaleInformation.endDate|dateFormat }} UTC</span>
                 </td>
             </tr>
-            <tr>
-                <td>{{ $t('InvestorDashboardTotalTokens') }}</td>
-                <td>{{ currentToken.crowdSaleInformation.WTokenTotal }}</td>
-            </tr>
-            <tr>
-                <td>{{ $t('InvestorDashboardTokensSold') }}</td>
-                <td>{{ currentToken.crowdSaleInformation.saleAmount }}</td>
-            </tr>
-            <tr>
-                <td>{{ $t('InvestorDashboardShareSoldTokens') }}</td>
-                <td>{{ currentToken.crowdSaleInformation.salePercent }}%</td>
-            </tr>
+            <!--<tr>-->
+                <!--<td>{{ $t('InvestorDashboardTotalTokens') }}</td>-->
+                <!--<td>{{ currentToken.crowdSaleInformation.WTokenTotal }}</td>-->
+            <!--</tr>-->
+            <!--<tr>-->
+                <!--<td>{{ $t('InvestorDashboardTokensSold') }}</td>-->
+                <!--<td>{{ currentToken.crowdSaleInformation.saleAmount }}</td>-->
+            <!--</tr>-->
+            <!--<tr>-->
+                <!--<td>{{ $t('InvestorDashboardShareSoldTokens') }}</td>-->
+                <!--<td>{{ currentToken.crowdSaleInformation.salePercent }}%</td>-->
+            <!--</tr>-->
             <tr>
                 <td>{{ $t('InvestorDashboardTokensOnSale') }}</td>
                 <td><span class="restriction">{{ currentToken.crowdSaleInformation.tokensOnSale }}</span></td>

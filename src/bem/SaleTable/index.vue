@@ -50,7 +50,10 @@
                             }} %</span>
                     </div>
                 </b-table-column>
-
+                <b-table-column field="vesting" :label="$t('InvestorDashboardDiscountsStagesDefrosting')" centered :title="props.row.vestingFull">
+                    <span v-if="props.row.vesting">{{ props.row.vesting }}</span>
+                    <span v-else v-html="$t('InvestorDashboardDiscountsStagesDefrostingNot')"></span>
+                </b-table-column>
             </template>
         </b-table>
     </div>
@@ -84,6 +87,8 @@
                         return {
                             'date': this.dateFormat(stage.startDate) + " - " + this.dateFormat(stage.endDate),
                             'fullDate': this.fullDateFormat(stage.startDate) + " - " + this.fullDateFormat(stage.endDate),
+                            'vesting': stage.vestingDate !== 0 ? this.dateFormat(stage.vestingDate) : null,
+                            'vestingFull': stage.vestingDate !== 0 ? this.fullDateFormat(stage.vestingDate) : null,
                             'sale': stage.discount,
                             'price': this.currentToken.crowdSaleInformation.tokenPrice,
                             'bonusVolume': stage.bonusVolumes
