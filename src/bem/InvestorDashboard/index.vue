@@ -19,6 +19,7 @@
                 <TokenSwitch v-if="!isCurrentToken"></TokenSwitch>
                 <component :is="CalculatorComponent"></component>
                 <component :is="SaleTableComponent"></component>
+                <RoadMap></RoadMap>
                 <component :is="CrowdSaleComponent"></component>
             </div>
         </section>
@@ -35,6 +36,7 @@
 
     import TokenSwitch from 'bem/TokenSwitch';
     import Steps from "bem/Steps";
+    import RoadMap from "bem/RoadMap";
 
     const LedgerNS = createNamespacedHelpers("Ledger");
     const AccountNS = createNamespacedHelpers("Account");
@@ -61,7 +63,8 @@
         },
         components: {
             TokenSwitch,
-            Steps
+            Steps,
+            RoadMap
         },
         data() {
             return {
