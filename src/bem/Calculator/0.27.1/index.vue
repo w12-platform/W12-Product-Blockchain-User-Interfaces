@@ -9,6 +9,8 @@
                 </p>
                 <p><span v-html="$t('InvestorDashboardCalculatorTokenName')"></span> {{ currentToken.name }}</p>
                 <p><span v-html="$t('InvestorDashboardCalculatorTokenSymbol')"></span> {{ currentToken.symbol }}</p>
+                <p v-if="maxSum"><span v-html="$t('InvestorDashboardCalculatorAmount')"></span>
+                    {{ tokensOnSaleFixed }} {{ currentToken.symbol }} - ({{ maxSum }} {{ paymentMethod }})</p>
             </div>
 
             <div class="Calculator__inputs">
@@ -154,7 +156,8 @@
                 invoice: null,
                 countdownTmId: false,
                 countdown: false,
-                allowance: '0'
+                allowance: '0',
+                maxSum: null
             };
         },
         watch: {
@@ -312,7 +315,10 @@
                 }
 
                 return '0';
-            }
+            },
+            tokensOnSaleFixed(){
+                return new BigNumber(this.currentToken.crowdSaleInformation.tokensOnSale).toFixed(2);
+            },
         },
         methods: {
             ...LedgerNS.mapActions({
@@ -495,6 +501,14 @@
                         cost: reverseConversionByDecimals(invoice[1], decimals).toString(),
                         change: reverseConversionByDecimals(invoice[3], decimals).toString()
                     };
+
+                    if (new BigNumber(this.currentToken.crowdSaleInformation.tokensOnSale || 0).gt(0)) {
+                        invoice = await Crowdsale.getInvoiceByTokenAmount(
+                            this.paymentMethod,
+                            convertionByDecimals(this.currentToken.crowdSaleInformation.tokensOnSale, this.currentToken.decimals)
+                        );
+                    }
+                    this.maxSum = reverseConversionByDecimals(invoice[1], this.paymentMethodExtendInfo.decimals).toFixed(2);
                 } catch (e) {
                     console.error(e);
                     this.error = e.message;
