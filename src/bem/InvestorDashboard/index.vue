@@ -19,6 +19,7 @@
                 <TokenSwitch v-if="!isCurrentToken"></TokenSwitch>
                 <Calculator></Calculator>
                 <SaleTable></SaleTable>
+                <RoadMap></RoadMap>
                 <CrowdSale></CrowdSale>
             </div>
         </section>
@@ -37,6 +38,7 @@
     import SaleTable from 'bem/SaleTable';
     import Calculator from 'bem/Calculator';
     import Steps from "bem/Steps";
+    import RoadMap from "bem/RoadMap";
 
     const LedgerNS = createNamespacedHelpers("Ledger");
     const AccountNS = createNamespacedHelpers("Account");
@@ -66,7 +68,8 @@
             CrowdSale,
             SaleTable,
             Calculator,
-            Steps
+            Steps,
+            RoadMap
         },
         data() {
             return {
