@@ -10,8 +10,7 @@
             </b-notification>
 
             <b-notification v-if="isLoading && !isError" :closable="false" class="InvestorDashboard__loader">
-                <span v-if="ledgerMeta.loading"><span v-html="$t('InvestorDashboardLoadLedger')"></span><br></span>
-                <span v-if="tokensListMeta.loading"><span v-html="$t('InvestorDashboardLoadTokens')"></span><br></span>
+                <p v-html="$t('InvestorDashboardLoadLedger')"></p>
 
                 <b-loading :is-full-page="false" :active="isLoading" :can-cancel="true"></b-loading>
             </b-notification>
@@ -20,6 +19,7 @@
                 <TokenSwitch v-if="!isCurrentToken"></TokenSwitch>
                 <component :is="CalculatorComponent"></component>
                 <component :is="SaleTableComponent"></component>
+                <RoadMap></RoadMap>
                 <component :is="CrowdSaleComponent"></component>
             </div>
         </section>
@@ -36,6 +36,7 @@
 
     import TokenSwitch from 'bem/TokenSwitch';
     import Steps from "bem/Steps";
+    import RoadMap from "bem/RoadMap";
 
     const LedgerNS = createNamespacedHelpers("Ledger");
     const AccountNS = createNamespacedHelpers("Account");
@@ -62,7 +63,8 @@
         },
         components: {
             TokenSwitch,
-            Steps
+            Steps,
+            RoadMap
         },
         data() {
             return {

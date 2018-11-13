@@ -45,18 +45,18 @@
                     <span class="tag is-danger">{{ currentToken.crowdSaleInformation.endDate|dateFormat }} UTC</span>
                 </td>
             </tr>
-            <tr>
-                <td v-html="$t('InvestorDashboardTotalTokens')"></td>
-                <td>{{ currentToken.crowdSaleInformation.WTokenTotal }}</td>
-            </tr>
-            <tr>
-                <td v-html="$t('InvestorDashboardTokensSold')"></td>
-                <td>{{ currentToken.crowdSaleInformation.saleAmount }}</td>
-            </tr>
-            <tr>
-                <td v-html="$t('InvestorDashboardShareSoldTokens')"></td>
-                <td>{{ currentToken.crowdSaleInformation.salePercent }}%</td>
-            </tr>
+            <!--<tr>-->
+                <!--<td v-html="$t('InvestorDashboardTotalTokens')"></td>-->
+                <!--<td>{{ currentToken.crowdSaleInformation.WTokenTotal }}</td>-->
+            <!--</tr>-->
+            <!--<tr>-->
+                <!--<td v-html="$t('InvestorDashboardTokensSold')"></td>-->
+                <!--<td>{{ currentToken.crowdSaleInformation.saleAmount }}</td>-->
+            <!--</tr>-->
+            <!--<tr>-->
+                <!--<td v-html="$t('InvestorDashboardShareSoldTokens')"></td>-->
+                <!--<td>{{ currentToken.crowdSaleInformation.salePercent }}%</td>-->
+            <!--</tr>-->
             <tr>
                 <td v-html="$t('InvestorDashboardTokensOnSale')"></td>
                 <td><span class="restriction">{{ currentToken.crowdSaleInformation.tokensOnSale }}</span></td>

@@ -9,6 +9,8 @@
                 </p>
                 <p><span v-html="$t('InvestorDashboardCalculatorTokenName')"></span> {{ currentToken.name }}</p>
                 <p><span v-html="$t('InvestorDashboardCalculatorTokenSymbol')"></span> {{ currentToken.symbol }}</p>
+                <p v-if="maxSum"><span v-html="$t('InvestorDashboardCalculatorAmount')"></span>
+                    {{ tokensOnSaleFixed }} {{ currentToken.symbol }} - ({{ maxSum }})</p>
             </div>
 
             <div class="Calculator__inputs">
@@ -71,7 +73,7 @@
                 </p>
                 <p v-if="currentToken.crowdSaleInformation.vestingDate">
                     <span v-html="$t('InvestorDashboardCalculatorDiscountVestingEndDate', { date: dateFormat(this.currentToken.crowdSaleInformation.vestingDate) })"></span>
-                    <br><span v-html="$t('InvestorDashboardCalculatorDiscountVestingDateCaution')"></span>
+                    <br><span v-html="$t('InvestorDashboardCalculatorDiscountVestingDateCaution', {WToken:currentToken.symbol})"></span>
                 </p>
                 <p v-if="bonusVolume !== '0.00'"><span v-html="$t('InvestorDashboardCalculatorBonus')"></span>
                     <b-tag type="is-success">+{{ bonusVolume }} {{ currentToken.symbol }}</b-tag>
@@ -154,7 +156,8 @@
                 invoice: null,
                 countdownTmId: false,
                 countdown: false,
-                allowance: '0'
+                allowance: '0',
+                maxSum: null
             };
         },
         watch: {
@@ -312,7 +315,10 @@
                 }
 
                 return '0';
-            }
+            },
+            tokensOnSaleFixed(){
+                return new BigNumber(this.currentToken.crowdSaleInformation.tokensOnSale).toFixed(2);
+            },
         },
         methods: {
             ...LedgerNS.mapActions({
@@ -338,6 +344,7 @@
                 await this.fetchInvoiceByPaymentAmount();
             },
             async handlePaymentMethodChange() {
+                await this.fetchMaxSumInvoiceByTokensOnSale();
                 await this.fetchInvoiceByPaymentAmount();
             },
             async buy() {
@@ -538,6 +545,27 @@
                 await this.updateAllowanceAmount();
                 await this.$nextTick();
                 this.fetchingInvoice = false;
+            },
+            async fetchMaxSumInvoiceByTokensOnSale(){
+                if (!this.paymentMethod) return;
+
+                try {
+                    const {W12CrowdsaleFactory} = await this.fetchLedger(this.currentToken.version);
+                    const Crowdsale = W12CrowdsaleFactory.at(this.currentToken.crowdsaleAddress);
+
+                    let invoice = ['0', '0', '0', '0', '0'];
+
+                    if (new BigNumber(this.currentToken.crowdSaleInformation.tokensOnSale || 0).gt(0)) {
+                        invoice = await Crowdsale.getInvoiceByTokenAmount(
+                            this.paymentMethod,
+                            convertionByDecimals(this.currentToken.crowdSaleInformation.tokensOnSale, this.currentToken.decimals)
+                        );
+                    }
+                    this.maxSum = reverseConversionByDecimals(invoice[1], this.paymentMethodExtendInfo.decimals).toFixed(2) + " " + this.paymentMethod;
+                } catch (e) {
+                    console.error(e);
+                    this.error = e.message;
+                }
             },
             async onCurrentTokenDeepUpdate (value, prevValue) {
                 if (!this.paymentMethod) {
