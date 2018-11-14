@@ -39,13 +39,7 @@ const getReleases = () => {
                 res.on('end', () => {
                     try {
                         data = JSON.parse(data);
-                        data.sort((a, b) => {
-                            a = a.tag_name.slice(1), b = b.tag_name.slice(1);
-
-                            if (semver.gt(a, b)) return 1;
-                            if (semver.gt(b, a)) return -1;
-                            return 0;
-                        });
+                        data.reverse();
                         resolve(data);
                     } catch (e) {
                         reject(e);
@@ -59,8 +53,7 @@ const getReleases = () => {
 
 const main = async () => {
     if (!await exists('./bundle.tar')) {
-        console.log('you must generate bundle before upload');
-        return;
+        throw new Error('you must generate bundle before upload');
     }
 
     const file = fs.createReadStream('./bundle.tar');
@@ -100,7 +93,7 @@ const main = async () => {
 };
 
 main()
-    .then(c => console.log('release bundle has been uploaded!', c))
+    .then(() => console.log('release bundle has been uploaded!'))
     .catch(e => console.error(e));
 
 
