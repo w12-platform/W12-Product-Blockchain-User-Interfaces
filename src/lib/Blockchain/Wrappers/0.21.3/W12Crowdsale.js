@@ -56,6 +56,9 @@ export class W12CrowdsaleWrapper extends BaseWrapper {
     }
 
     async setBonusVolumes(index, list) {
+        list = Array.from(list);
+        list.sort((a, b) => new BigNumber(a[0]).minus(b[0]).toNumber());
+
         const volumeBoundaries = [];
         const volumeBonuses = [];
 
