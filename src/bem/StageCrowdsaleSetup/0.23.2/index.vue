@@ -165,7 +165,9 @@
                                 <div v-for="(item, idx) in tokenCrowdSaleMilestones">
                                     <span class="Milestones__stageTitle"><span v-html="$t('MilestoneTitle')"></span> #{{ idx+1 }}</span>
                                     <MilestoneCard
-                                            v-model="tokenCrowdSaleMilestones[idx]"
+                                            :value="tokenCrowdSaleMilestones[idx]"
+                                            @input="onMilestoneUpdateAtIndex($event, idx)"
+                                            :tranche-percent-valid-flag="milestonesValidFlags[idx].tranchePercent"
                                             :stageIndex="idx"
                                             @delete="onDelete"
                                             :key="idx"
@@ -175,9 +177,6 @@
 
                             <b-notification class="ProjectStages__errorStage" v-if="error" @close="error = false"
                                             type="is-danger" has-icon>{{ error }}
-                            </b-notification>
-
-                            <b-notification class="ProjectStages__errorStage" v-if="tokenCrowdSaleMilestones.length && !isOneHundredPercent" type="is-danger" has-icon><span v-html="$t('MilestoneTitleErrorNotOneHundredPercent')"></span>
                             </b-notification>
 
                             <footer class="card-footer" v-if="!isStartCrowdSale">
@@ -199,9 +198,9 @@
     import Connector from 'lib/Blockchain/DefaultConnector.js';
     import DatePicker from 'vue2-datepicker';
     import {createNamespacedHelpers} from "vuex";
-    import {MilestoneModel} from 'bem/StageCrowdsaleSetup/0.23.2/shared.js';
+    import {MilestoneModel} from './shared.js';
     import {waitTransactionReceipt} from 'lib/utils.js';
-    import MilestoneCard from 'bem/StageCrowdsaleSetup/0.23.2/MilestoneCard.vue';
+    import MilestoneCard from './MilestoneCard.vue';
     import {UPDATE_TX} from "store/modules/Transactions.js";
     import moment from "moment";
 
@@ -223,6 +222,7 @@
                 tokenCrowdSaleStages: [],
                 saveLoading: false,
                 tokenCrowdSaleMilestones: [],
+                milestonesValidFlags: [],
                 error: false,
             };
         },
@@ -241,6 +241,13 @@
                 handler(value) {
                     this.tokenCrowdSaleMilestones = value;
                 },
+                immediate: true
+            },
+            tokenCrowdSaleMilestones: {
+                handler() {
+                    this.resetMilestonesValidFlags();
+                },
+                deep: true,
                 immediate: true
             },
         },
@@ -275,16 +282,6 @@
                 TransactionsList: "list"
             }),
 
-            isOneHundredPercent(){
-                const Ml = this.tokenCrowdSaleMilestones;
-                if(Ml && Ml.length){
-                    const percent = Ml.reduce(function(sum, ml) {
-                        return sum + parseFloat(ml.tranchePercent);
-                    }, 0);
-                    return percent === 100;
-                }
-                return false;
-            },
             // returns bool if first stage and first stage start date exists, otherwise undefined
             isFirstStageStartDateGreaterOrEqualRecommended() {
                 if (this.tokenCrowdSaleStages.length) {
@@ -394,10 +391,11 @@
                 }
             },
             addMilestone() {
+                const sum = this.getMilestonesTotalTranchePercent();
                 this.tokenCrowdSaleMilestones.push(new MilestoneModel({
                     name: '',
                     description: '',
-                    tranchePercent: '100',
+                    tranchePercent: sum > 100 ? 0 : 100 - sum,
                     wasCreated: false
                 }))
             },
@@ -486,6 +484,30 @@
                 }
                 return false;
             },
+            onMilestoneUpdateAtIndex(data, idx) {
+                this.tokenCrowdSaleMilestones[idx] = data;
+                this.validateAndSetErrorsMilestone(data, idx);
+            },
+            resetMilestonesValidFlags() {
+                this.$set(this, 'milestonesValidFlags', this.tokenCrowdSaleMilestones.map(() => ({tranchePercent: true})));
+            },
+            getMilestonesTotalTranchePercent() {
+                return this.tokenCrowdSaleMilestones
+                    .reduce(
+                        (sum, item) => sum + parseInt(item.tranchePercent),
+                        0
+                    );
+            },
+            validateAndSetErrorsMilestone(data, idx) {
+                const sum = this.tokenCrowdSaleMilestones
+                    .filter((item, _idx) => _idx !== idx)
+                    .reduce(
+                        (sum, item) => sum + parseInt(item.tranchePercent),
+                        parseInt(data.tranchePercent)
+                    );
+                this.resetMilestonesValidFlags();
+                this.milestonesValidFlags[idx].tranchePercent = sum === 100;
+            }
         },
     };
 </script>
