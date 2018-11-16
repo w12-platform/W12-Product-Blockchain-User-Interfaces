@@ -304,7 +304,7 @@
             },
             checkSetupCrowdsale(){
                 const Ml = this.tokenCrowdSaleMilestones;
-                return Ml && Ml.length && this.checkAddMilestone && this.isOneHundredPercent
+                return Ml && Ml.length && this.checkAddMilestone && this.getMilestonesTotalTranchePercent() === 100
                     ? Ml.length === Ml.filter((ml)=>ml.name && ml.tranchePercent && ml.endDate && ml.withdrawalEndDate).length
                     : false;
             },
