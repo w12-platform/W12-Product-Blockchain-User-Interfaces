@@ -42,7 +42,10 @@ export class W12CrowdsaleWrapper extends BaseWrapper {
                 let volumeBoundaries = [];
                 let bonusVolumes = [];
 
-                stage.bonusVolumes.forEach((bonus)=>{
+                const list = Array.from(stage.bonusVolumes);
+                list.sort((a, b) => new BigNumber(a[0]).minus(b[0]).toNumber());
+
+                list.forEach((bonus)=>{
                     volumeBoundaries.push(encodeUSD(bonus[0]));
                     bonusVolumes.push(Math.floor(bonus[1] * 100));
                 });
