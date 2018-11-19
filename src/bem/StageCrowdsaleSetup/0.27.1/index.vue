@@ -300,13 +300,16 @@
 
             checkAddMilestone(){
                 const St = this.tokenCrowdSaleStages;
-                return St && St.length ? St.length === St.filter((st)=>st.startDate && st.endDate).length : false;
+                return St && St.length && St.every((st) => st.startDate && st.endDate);
             },
-            checkSetupCrowdsale(){
-                const Ml = this.tokenCrowdSaleMilestones;
-                return Ml && Ml.length && this.checkAddMilestone && this.getMilestonesTotalTranchePercent() === 100
-                    ? Ml.length === Ml.filter((ml)=>ml.name && ml.tranchePercent && ml.endDate && ml.withdrawalEndDate).length
-                    : false;
+            checkSetupCrowdsale() {
+                if (this.tokenCrowdSaleMilestones) {
+                    return this.tokenCrowdSaleMilestones.length
+                        && this.checkAddMilestone
+                        && this.getMilestonesTotalTranchePercent() === 100
+                        && this.tokenCrowdSaleMilestones.every(this.validateMilestone);
+                }
+                return false;
             },
             isErrorTx() {
                 return this.TransactionsList && this.TransactionsList.length
@@ -358,9 +361,10 @@
             },
             addMilestone() {
                 const sum = this.getMilestonesTotalTranchePercent();
+                const number = this.tokenCrowdSaleMilestones.length + 1;
                 this.tokenCrowdSaleMilestones.push(new MilestoneModel({
-                    name: '',
-                    description: '',
+                    name: `Milestone ${number}`,
+                    description: `Milestone ${number} description`,
                     tranchePercent: sum > 100 ? 0 : 100 - sum,
                     wasCreated: false
                 }))
@@ -473,6 +477,13 @@
                     );
                 this.resetMilestonesValidFlags();
                 this.milestonesValidFlags[idx].tranchePercent = sum === 100;
+            },
+            validateMilestone(milestone) {
+                return milestone.name
+                    && milestone.description
+                    && milestone.tranchePercent
+                    && milestone.endDate
+                    && milestone.withdrawalEndDate;
             }
         },
     };
