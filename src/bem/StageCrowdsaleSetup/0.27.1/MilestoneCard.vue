@@ -27,7 +27,11 @@
                             @input="onInput('description', $event)"></b-input>
                 </b-field>
                 <label for="MilestoneCard__tranche" v-html="$t('MilestonesTranche')"></label>
-                <b-field id="MilestoneCard__tranche">
+                <b-field
+                        label-for="MilestoneCard__tranche"
+                        :message="tranchePercentFieldParameters.message"
+                        :type="tranchePercentFieldParameters.type"
+                >
                     <b-input
                             :disabled="isStartCrowdSale"
                             :value="viewData.tranchePercent"
@@ -97,6 +101,10 @@
             },
             stageIndex: {
                 required: true
+            },
+            tranchePercentValidFlag: {
+                type: Boolean,
+                default: true
             }
         },
         data() {
@@ -118,6 +126,12 @@
                 translationsDef: 'current'
             }),
 
+            tranchePercentFieldParameters() {
+                return {
+                    message: !this.tranchePercentValidFlag ? this.$t('MilestoneTitleErrorNotOneHundredPercent') : '',
+                    type: !this.tranchePercentValidFlag ? 'is-danger' : ''
+                }
+            },
             isNameValid() {
                 return !!this.value.name;
             },
