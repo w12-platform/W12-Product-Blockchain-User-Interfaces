@@ -83,7 +83,7 @@
             }),
 
             isError() {
-                return this.ledgerMeta.loadingError || this.ProjectMeta.loadingProjectError || this.accountMeta.loadingError;
+                return this.ledgerMeta.loadingError || this.ProjectMeta.loadingError || this.accountMeta.loadingError;
             },
             isLoading() {
                 return (
