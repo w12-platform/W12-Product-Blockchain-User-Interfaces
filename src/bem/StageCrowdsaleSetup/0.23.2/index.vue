@@ -19,15 +19,18 @@
                             <button class="btn btn-primary btn-sm" @click="TransactionsRetry(isErrorTx)" v-html="$t('ToRetry')"></button>
                         </div>
                     </div>
-
                     <div class="ProjectDashboard__setup card" v-if="!isPendingTx">
                         <div class="card-content">
                             <div class="content" v-if="tokenCrowdSaleStages.length">
-                                <div class="ProjectDashboard__stageBonus card"
-                                     v-for="(stage, stageIndex) in tokenCrowdSaleStages" :key="stageIndex">
+                                <div
+                                        v-for="(stage, stageIndex) in tokenCrowdSaleStages"
+                                        :key="stageIndex"
+                                        class="ProjectDashboard__stageBonus card"
+                                >
                                     <div class="col-12 pb-4">
                                         <div class="p-3 row align-items-center justify-content-between">
-                                            <span class="ProjectDashboard__stageTitle"><span v-html="$t('ProjectDashboardStageBonusesStage')"></span> #{{ stageIndex+1 }}</span>
+                                            <span class="ProjectDashboard__stageTitle"><span
+                                                    v-html="$t('ProjectDashboardStageBonusesStage')"></span> #{{ stageIndex+1 }}</span>
                                             <button class="btn btn-primary btn-sm" :disabled="isStartCrowdSale"
                                                     @click="deleteStageAt(stageIndex)"
                                                     v-html="$t('ProjectDashboardStageBonusesRemove')">
@@ -74,7 +77,8 @@
                                             </div>
                                             <div class="row justify-content-between">
                                                 <div class="col-sm py-2">
-                                                    <label for="StageDiscount" v-html="$t('ProjectDashboardStageBonusesDiscountLabel')"></label>
+                                                    <label for="StageDiscount"
+                                                           v-html="$t('ProjectDashboardStageBonusesDiscountLabel')"></label>
                                                     <b-field id="StageDiscount">
                                                         <b-input
                                                                 type="number"
@@ -87,7 +91,8 @@
                                                     </b-field>
                                                 </div>
                                                 <div class="col-sm py-2">
-                                                    <label for="StageVestingDate" v-html="$t('ProjectDashboardStageBonusesVestingDateLabel')"></label>
+                                                    <label for="StageVestingDate"
+                                                           v-html="$t('ProjectDashboardStageBonusesVestingDateLabel')"></label>
                                                     <b-field id="StageVestingDate"
                                                              class="ProjectDashboard__dateSelect">
                                                         <date-picker
@@ -104,13 +109,16 @@
                                         </div>
 
                                         <div class="p-3 row align-items-center justify-content-between">
-                                            <span class="ProjectDashboard__stageTitle" v-html="$t('ProjectDashboardStageBonusesVolume')"></span>
+                                            <span class="ProjectDashboard__stageTitle"
+                                                  v-html="$t('ProjectDashboardStageBonusesVolume')"></span>
                                         </div>
                                         <div class="col-sm py-2">
-                                            <div v-for="(bonusVolume, bonusVolumeIndex) in stage.bonusVolumes" :key="bonusVolumeIndex">
+                                            <div v-for="(bonusVolume, bonusVolumeIndex) in stage.bonusVolumes"
+                                                 :key="bonusVolumeIndex">
                                                 <div class="row justify-content-between">
                                                     <div class="col-sm py-2">
-                                                        <label v-if="bonusVolumeIndex === 0" for="bonusVolumeETH" v-html="$t('ProjectDashboardStageBonusesFromEth')"></label>
+                                                        <label v-if="bonusVolumeIndex === 0" for="bonusVolumeETH"
+                                                               v-html="$t('ProjectDashboardStageBonusesFromEth')"></label>
                                                         <b-field id="bonusVolumeETH">
                                                             <b-input
                                                                     placeholder="ETH"
@@ -127,7 +135,8 @@
                                                         <div class="row">
                                                             <div class="col-md-8">
                                                                 <label v-if="bonusVolumeIndex === 0"
-                                                                       for="bonusVolumePercent" v-html="$t('ProjectDashboardStageBonusesBonus')"></label>
+                                                                       for="bonusVolumePercent"
+                                                                       v-html="$t('ProjectDashboardStageBonusesBonus')"></label>
                                                                 <b-field id="bonusVolumePercent">
                                                                     <b-input
                                                                             type="number"
@@ -152,15 +161,23 @@
                                             <div class="text-left pt-2">
                                                 <button class="btn btn-primary btn-sm"
                                                         :disabled="isStartCrowdSale"
-                                                        @click="addBonusVolumesAt(stageIndex)" v-html="$t('ProjectDashboardStageBonusesAddButton')">
+                                                        @click="addBonusVolumesAt(stageIndex)"
+                                                        v-html="$t('ProjectDashboardStageBonusesAddButton')">
                                                 </button>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
-                            <div class="p-3" v-if="tokenCrowdSaleMilestones.length">
+                        </div>
+                        <footer class="card-footer" v-if="!isStartCrowdSale">
+                            <a class="card-footer-item" @click="addStage"
+                               v-html="$t('ProjectDashboardStageBonusesAddStageButton')"></a>
+                        </footer>
+                    </div>
+                    <div class="ProjectDashboard__setup card" v-if="!isPendingTx && checkAddMilestone">
+                        <div v-if="tokenCrowdSaleMilestones.length" class="card-content">
+                            <div class="p-3" >
                                 <h2 class="col-12 pb-4" v-html="$t('Milestones')"></h2>
                                 <div v-for="(item, idx) in tokenCrowdSaleMilestones">
                                     <span class="Milestones__stageTitle"><span v-html="$t('MilestoneTitle')"></span> #{{ idx+1 }}</span>
@@ -174,18 +191,17 @@
                                     ></MilestoneCard>
                                 </div>
                             </div>
-
-                            <b-notification class="ProjectStages__errorStage" v-if="error" @close="error = false"
-                                            type="is-danger" has-icon>{{ error }}
-                            </b-notification>
-
-                            <footer class="card-footer" v-if="!isStartCrowdSale">
-                                <a class="card-footer-item" @click="addStage" v-html="$t('ProjectDashboardStageBonusesAddStageButton')"></a>
-                                <a class="card-footer-item" v-if="checkAddMilestone" @click="addMilestone" v-html="$t('MilestonesAdd')"></a>
-                                <a class="card-footer-item" v-if="checkSetupCrowdsale" @click="saveSettings" v-html="$t('SetupCrowdsale')"></a>
-                            </footer>
                         </div>
+                        <footer class="card-footer" v-if="!isStartCrowdSale">
+                            <a class="card-footer-item"  @click="addMilestone"
+                               v-html="$t('MilestonesAdd')"></a>
+                            <a class="card-footer-item" v-if="checkSetupCrowdsale" @click="saveSettings"
+                               v-html="$t('SetupCrowdsale')"></a>
+                        </footer>
                     </div>
+                    <b-notification class="ProjectStages__errorStage" v-if="error" @close="error = false"
+                                    type="is-danger" has-icon>{{ error }}
+                    </b-notification>
                 </div>
             </div>
         </div>
@@ -489,7 +505,7 @@
                 return false;
             },
             onMilestoneUpdateAtIndex(data, idx) {
-                this.tokenCrowdSaleMilestones[idx] = data;
+                this.tokenCrowdSaleMilestones.splice(idx, 1, data);
                 this.validateAndSetErrorsMilestone(data, idx);
             },
             resetMilestonesValidFlags() {
