@@ -300,7 +300,7 @@
 
             checkAddMilestone(){
                 const St = this.tokenCrowdSaleStages;
-                return St && St.length ? St.length === St.filter((st)=>st.startDate && st.endDate).length : false;
+                return St && St.length && St.every((st) => st.startDate && st.endDate);
             },
             checkSetupCrowdsale(){
                 const Ml = this.tokenCrowdSaleMilestones;

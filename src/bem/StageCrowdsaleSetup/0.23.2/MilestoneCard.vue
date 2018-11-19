@@ -3,7 +3,11 @@
         <div class="row justify-content-between">
             <div class="col-sm py-2">
                 <label for="MilestoneCard__name" v-html="$t('MilestonesName')"></label>
-                <b-field id="MilestoneCard__name">
+                <b-field
+                    label-for="MilestoneCard__name"
+                    :message="nameFieldParameters.message"
+                    :type="nameFieldParameters.type"
+                >
                     <b-input
                             :disabled="isStartCrowdSale"
                             type="text"
@@ -11,7 +15,11 @@
                             @input="onInput('name', $event)"></b-input>
                 </b-field>
                 <label for="MilestoneCard__description" v-html="$t('MilestonesDescription')"></label>
-                <b-field id="MilestoneCard__description">
+                <b-field
+                    label-for="MilestoneCard__description"
+                    :message="descriptionFieldParameters.message"
+                    :type="descriptionFieldParameters.type"
+                >
                     <b-input
                             :disabled="isStartCrowdSale"
                             type="textarea"
@@ -117,11 +125,29 @@
             ...LangNS.mapState({
                 translationsDef: 'current'
             }),
-
+            
             tranchePercentFieldParameters() {
                 return {
                     message: !this.tranchePercentValidFlag ? this.$t('MilestoneTitleErrorNotOneHundredPercent') : '',
                     type: !this.tranchePercentValidFlag ? 'is-danger' : ''
+                }
+            },    
+            isNameValid() {
+                return !!this.value.name;
+            },
+            nameFieldParameters() {
+                return {
+                    message: !this.isNameValid ? this.$t('MilestonesNameIsNotValidError') : '',
+                    type: !this.isNameValid ? 'is-danger' : ''
+                }
+            },
+            isDescriptionValid() {
+                return !!this.value.description;
+            },
+            descriptionFieldParameters() {
+                return {
+                    message: !this.isDescriptionValid ? this.$t('MilestonesDescriptionIsNotValidError') : '',
+                    type: !this.isDescriptionValid ? 'is-danger' : ''
                 }
             }
         },
