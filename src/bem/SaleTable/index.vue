@@ -29,27 +29,27 @@
                 <!--</div>-->
                 <!--</b-table-column>-->
 
-                <b-table-column :visible="columnsVisible" field="bonusVolume"
-                                :label="$t('InvestorDashboardDiscountsTokenAmountVolumeBonus')" centered>
-                    <div class="SaleTable__volumeElem" v-for="bonusVolume in props.row.bonusVolume.slice().reverse()">
-                        <span>{{
-                            ((bonusVolume[0] * (1 / props.row.price)) / (1 - (props.row.sale/100)) +
-                            (bonusVolume[0] * (1 / props.row.price)) / (1 - (props.row.sale/100)) * (bonusVolume[1]/100))
-                            .toFixed(2)
-                            }}</span>
-                    </div>
-                </b-table-column>
-                <b-table-column :visible="columnsVisible" field="bonusVolume" :label="$t('InvestorDashboardDiscountsGainTotalPercent')"
-                                centered>
-                    <div class="SaleTable__volumeElem" v-for="bonusVolume in props.row.bonusVolume.slice().reverse()">
-                        <span>{{
-                            ((((bonusVolume[0] * (1 / props.row.price)) / (1 - (props.row.sale/100))
-                            + (bonusVolume[0] * (1 / props.row.price)) / (1 - (props.row.sale/100)) * (bonusVolume[1]/100))
-                            / (bonusVolume[0] * (1 / props.row.price)) - 1)
-                            *100).toFixed(2)
-                            }} %</span>
-                    </div>
-                </b-table-column>
+                <!--<b-table-column :visible="columnsVisible" field="bonusVolume"-->
+                                <!--:label="$t('InvestorDashboardDiscountsTokenAmountVolumeBonus')" centered>-->
+                    <!--<div class="SaleTable__volumeElem" v-for="bonusVolume in props.row.bonusVolume.slice().reverse()">-->
+                        <!--<span>{{-->
+                            <!--((bonusVolume[0] * (1 / props.row.price)) / (1 - (props.row.sale/100)) +-->
+                            <!--(bonusVolume[0] * (1 / props.row.price)) / (1 - (props.row.sale/100)) * (bonusVolume[1]/100))-->
+                            <!--.toFixed(2)-->
+                            <!--}}</span>-->
+                    <!--</div>-->
+                <!--</b-table-column>-->
+                <!--<b-table-column :visible="columnsVisible" field="bonusVolume" :label="$t('InvestorDashboardDiscountsGainTotalPercent')"-->
+                                <!--centered>-->
+                    <!--<div class="SaleTable__volumeElem" v-for="bonusVolume in props.row.bonusVolume.slice().reverse()">-->
+                        <!--<span>{{-->
+                            <!--((((bonusVolume[0] * (1 / props.row.price)) / (1 - (props.row.sale/100))-->
+                            <!--+ (bonusVolume[0] * (1 / props.row.price)) / (1 - (props.row.sale/100)) * (bonusVolume[1]/100))-->
+                            <!--/ (bonusVolume[0] * (1 / props.row.price)) - 1)-->
+                            <!--*100).toFixed(2)-->
+                            <!--}} %</span>-->
+                    <!--</div>-->
+                <!--</b-table-column>-->
                 <b-table-column field="vesting" :label="$t('InvestorDashboardDiscountsStagesDefrosting')" centered :title="props.row.vestingFull">
                     <span v-if="props.row.vesting">{{ props.row.vesting }}</span>
                     <span v-else v-html="$t('InvestorDashboardDiscountsStagesDefrostingNot')"></span>
