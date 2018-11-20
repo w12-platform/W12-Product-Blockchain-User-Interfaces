@@ -1,5 +1,5 @@
 <template>
-    <div class="ProjectStages ProjectStages_v1" v-if="currentProject && currentAccount">
+    <div class="ProjectStages ProjectStages_v2" v-if="currentProject && currentAccount">
         <StageWhiteList></StageWhiteList>
         <StageApprove></StageApprove>
         <StagePlace></StagePlace>
@@ -122,9 +122,9 @@
                 this.subscribedEvents = null;
             },
             async subscribeToEvents() {
-                if (this.isSubscribedToEvent) return;
                 if (!this.currentProject) return;
                 if (this.subscribedEvents) return;
+                if (this.isSubscribedToEvent) return;
 
                 this.subscribeToEventsLoading = true;
 
@@ -173,6 +173,7 @@
                         TrancheReleased
                     };
                 } catch (e) {
+                    console.error(e);
                     this.error = e.message;
                 }
 
@@ -263,6 +264,7 @@
                     if (tokenAddress.toString() === this.currentProject.tokenAddress) {
                         await this.updateProject(this.currentProject);
                     }
+
                     this.$store.commit(`Transactions/${CONFIRM_TX}`, tx);
                 }
             },

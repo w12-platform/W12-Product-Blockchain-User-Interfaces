@@ -141,9 +141,6 @@
     export default {
         name: 'Calculator',
         template: '#CalculatorTemplate',
-        async created() {
-            await this.fetchRates();
-        },
         data() {
             return {
                 loading: false,
@@ -188,12 +185,15 @@
             ...TransactionsNS.mapState({
                 TransactionsList: "list"
             }),
-            ...RatesNS.mapState({
-                storedRatesList: "list"
-            }),
             ...AccountNS.mapState({
                 currentAccount: 'currentAccount'
             }),
+            ...RatesNS.mapGetters({
+                filterRates: "filter"
+            }),
+            storedRatesList() {
+                return this.filterRates({version: this.currentToken.version});
+            },
             isMaxTokenOnSaleAmount() {
                 return this.currentToken.crowdSaleInformation.tokensOnSale && this.tokens
                     ? new BigNumber(this.tokens).lte(this.currentToken.crowdSaleInformation.tokensOnSale)
@@ -402,7 +402,7 @@
             async approve() {
                 if (!this.isNeedApprove) return;
 
-                const value = convertionByDecimals(this.needToApproveAmount, this.paymentMethodExtendInfo.decimals);
+                const value = convertionByDecimals(this.invoice.cost, this.paymentMethodExtendInfo.decimals);
 
                 try {
                     const {ERC20Factory} = await this.fetchLedger(this.currentToken.version);
@@ -568,6 +568,7 @@
                 }
             },
             async onCurrentTokenDeepUpdate (value, prevValue) {
+                await this.fetchRates({version: value.version});
                 if (!this.paymentMethod) {
                     this.paymentMethod = value.crowdSaleInformation.paymentMethods[0];
                     await this.fetchInvoiceByPaymentAmount();

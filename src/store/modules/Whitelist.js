@@ -41,6 +41,7 @@ export default {
                 list = list.filter((token) => Boolean(token.tokenAddress));
                 commit(UPDATE, {list});
             } catch (e) {
+                console.error(e);
                 commit(UPDATE_META, {loading: false, loadingError: e.message || ERROR_FETCH_TOKENS_LIST});
             }
             commit(UPDATE_META, {loading: false});

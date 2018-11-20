@@ -1,3 +1,4 @@
+import { filterByVersion } from '@/lib/selectors/general';
 import { decodeUSD } from '@/lib/utils';
 import {map, forEach} from 'p-iteration';
 import {BigNumber} from '@/lib/utils';
@@ -12,6 +13,7 @@ class Rate {
         this.decimals = model.symbol === 'ETH' ? '18' : model.decimals;
         this.address = model.address;
         this.rate = model.rate;
+        this.version = model.version;
     }
 }
 
@@ -22,6 +24,9 @@ export default {
     },
     modules: {},
     getters: {
+        filter(state) {
+            return ({ version }) => state.list.filter(filterByVersion(version));
+        }
     },
     mutations: {
         [RATES_UPDATE](state, payload) {
@@ -29,25 +34,31 @@ export default {
             Object.assign(state, {list});
         },
         UPDATE_RATE(state, payload) {
-            const currentIndex = state.list.findIndex(record => record.symbol === payload.symbol);
+            const current = state.list
+                .filter(filterByVersion(payload.version))
+                .find(record => record.symbol === payload.symbol);
 
-            if (currentIndex === -1) {
+            if (!current) {
                 state.list.push(payload);
             } else {
-                state.list.splice(currentIndex, 1, payload);
+                state.list.splice(state.list.indexOf(current), 1, payload);
             }
         }
     },
     actions: {
-        async fetch({commit, dispatch}) {
-            const {RatesFactory} = await this.dispatch('Ledger/fetch', this.state.Config.W12Lister.version);
-            const Rates = await RatesFactory.at(this.state.Config.Rates.address);
+        async fetch({commit, dispatch, rootState}, {version}) {
+            version = version || rootState.Config.W12Lister.version;
+            const {RatesFactory} = await dispatch('Ledger/fetch', version, {root:true});
+            const Rates = await RatesFactory.at(rootState.Config.Rates.find(filterByVersion(version)).address);
 
-            const list = await forEach(await Rates.getList(), async (symbol) => dispatch('fetchBySymbol', symbol));
+            const list = await forEach(await Rates.getList(), async (symbol) => dispatch('fetchBySymbol', {symbol, version}));
+
+            return list;
         },
-        async fetchBySymbol({commit, state}, symbol) {
-            const {RatesFactory, DetailedERC20Factory} = await this.dispatch('Ledger/fetch', this.state.Config.W12Lister.version);
-            const Rates = await RatesFactory.at(this.state.Config.Rates.address);
+        async fetchBySymbol({commit, state, dispatch, rootState}, {symbol, version}) {
+            version = version || rootState.Config.W12Lister.version;
+            const {RatesFactory, ERC20DetailedFactory} = await dispatch('Ledger/fetch', version, {root:true});
+            const Rates = await RatesFactory.at(rootState.Config.Rates.find(filterByVersion(version)).address);
 
             let isToken, address;
 
@@ -55,20 +66,21 @@ export default {
                 isToken: isToken = await Rates.isToken(symbol),
                 symbol,
                 address: isToken ? (address = await Rates.getTokenAddress(symbol)) : null,
-                decimals: isToken ? (await DetailedERC20Factory.at(address).methods.decimals()) : null,
-                rate: decodeUSD(await Rates.get(symbol))
+                decimals: isToken ? (await ERC20DetailedFactory.at(address).methods.decimals()) : null,
+                rate: decodeUSD(await Rates.get(symbol)),
+                version
             });
 
             commit('UPDATE_RATE', payload);
 
             return payload;
         },
-        async resolveDecimals({ dispatch }, symbol) {
+        async resolveDecimals({ dispatch, }, {symbol, version}) {
             const decimals = symbol === 'ETH'
                 ? 18
                 : symbol === 'USD'
                     ? 8
-                    : (await dispatch('fetchBySymbol', symbol)).decimals
+                    : (await dispatch('fetchBySymbol', {symbol, version})).decimals
 
             return new BigNumber(decimals);
         }

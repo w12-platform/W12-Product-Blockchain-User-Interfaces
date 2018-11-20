@@ -29,7 +29,7 @@
 
 <script>
     import './default.scss';
-    import { resolveAbiVersion } from '@/lib/Blockchain/ContractsLedger';
+    import { resolveComponentVersion } from '@/bem/utils';
 
     import {createNamespacedHelpers} from "vuex";
     import Web3 from 'web3';
@@ -102,17 +102,17 @@
             },
             CalculatorComponent() {
                 if (!this.currentToken) return () => {};
-                const version = resolveAbiVersion(this.currentToken.version);
+                const version = resolveComponentVersion(this.currentToken.version, 'Calculator');
                 return () => import(`@/bem/Calculator/${version}/index.vue`);
             },
             SaleTableComponent() {
                 if (!this.currentToken) return () => {};
-                const version = resolveAbiVersion(this.currentToken.version);
+                const version = resolveComponentVersion(this.currentToken.version, 'SaleTable');
                 return () => import(`@/bem/SaleTable/${version}/index.vue`);
             },
             CrowdSaleComponent() {
                 if (!this.currentToken) return () => {};
-                const version = resolveAbiVersion(this.currentToken.version);
+                const version = resolveComponentVersion(this.currentToken.version, 'CrowdSale');
                 return () => import(`@/bem/CrowdSale/${version}/index.vue`);
             },
         },

@@ -1,13 +1,33 @@
-import {promisify, isZeroAddress, fromWeiDecimalsString, fromWeiDecimals} from "src/lib/utils";
+import { updateTokenInfo as updateTokenInfo_v0_20_x } from '@/store/modules/Project/0.20.x/actions';
+import { updateTokenInfo as updateTokenInfo_v0_28_x } from '@/store/modules/Project/0.28.x/actions';
+import { updateReceivingInformation as updateReceivingInformation_v0_20_x } from '@/store/modules/Project/0.20.x/actions';
+import { updateReceivingInformation as updateReceivingInformation_v0_28_x } from '@/store/modules/Project/0.28.x/actions';
+import {promisify, isZeroAddress, fromWeiDecimalsString} from "src/lib/utils";
 import {map} from 'p-iteration';
 import {ReceivingModel} from 'src/bem/Receiving/model.js';
-import {MilestoneModel} from 'src/bem/Milestones/shared.js';
 import Connector from "src/lib/Blockchain/DefaultConnector";
 import isEqual from 'lodash/isEqual'
-import { web3, BigNumber } from 'src/lib/utils';
+import { BigNumber } from 'src/lib/utils';
 import semver from 'semver';
-import { convertionByDecimals, reverseConversionByDecimals } from '@/lib/selectors/units';
-import {getActualBalanceInAssets} from '@/lib/selectors/fund';
+import { reverseConversionByDecimals } from '@/lib/selectors/units';
+import {
+    UPDATE_PROJECT,
+    UPDATE_TOKENS_APPROVED,
+    UPDATE_PLACED_TOKEN_ADDRESS,
+    UPDATE_OWNER_BALANCE,
+    UPDATE_CROWD_SALE_ADDRESS,
+    UPDATE_CROWD_SALE_INFO,
+    UPDATE_CROWD_SALE_STAGES_LIST,
+    UPDATE_CROWD_SALE_IS_START,
+    UPDATE_CROWD_SALE_MILESTONES_LIST,
+    REMEMBER_APPROVE_TOKENS_TX,
+    UPDATE_RECEVING_INFO,
+    UPDATE_FUND_DATA,
+    UPDATE_PAYMENT_METHODS_LIST,
+    UPDATE_META,
+    UPDATE,
+    RESET
+} from './Project/mutations';
 
 BigNumber.config({
     DECIMAL_PLACES: 36,
@@ -21,23 +41,6 @@ BigNumber.config({
         fractionGroupSize: 0
     }
 });
-
-export const UPDATE_PROJECT = "UPDATE_PROJECT";
-export const UPDATE_TOKENS_APPROVED = "UPDATE_TOKENS_APPROVED";
-export const UPDATE_PLACED_TOKEN_ADDRESS = "UPDATE_PLACED_TOKEN_ADDRESS";
-export const UPDATE_OWNER_BALANCE = "UPDATE_OWNER_BALANCE";
-export const UPDATE_CROWD_SALE_ADDRESS = "UPDATE_CROWD_SALE_ADDRESS";
-export const UPDATE_CROWD_SALE_INFO = "UPDATE_CROWD_SALE_INFO";
-export const UPDATE_CROWD_SALE_STAGES_LIST = "UPDATE_CROWD_SALE_STAGES_LIST";
-export const UPDATE_CROWD_SALE_IS_START = "UPDATE_CROWD_SALE_IS_START";
-export const UPDATE_CROWD_SALE_MILESTONES_LIST = "UPDATE_CROWD_SALE_MILESTONES_LIST";
-export const REMEMBER_APPROVE_TOKENS_TX = "REMEMBER_APPROVE_TOKENS_TX";
-export const UPDATE_RECEVING_INFO = "UPDATE_RECEVING_INFO";
-export const UPDATE_FUND_DATA = "UPDATE_FUND_DATA";
-export const UPDATE_PAYMENT_METHODS_LIST = "UPDATE_PAYMENT_METHODS_LIST";
-export const UPDATE_META = "UPDATE_META";
-export const UPDATE = "UPDATE";
-export const RESET = "RESET";
 
 export default {
     namespaced: true,
@@ -243,6 +246,7 @@ export default {
                     commit(UPDATE_META, {loading: false});
                 });
             } catch (e) {
+                console.error(e);
                 commit(UPDATE_META, {loading: false, loadingError: e.message});
             }
         },
@@ -287,25 +291,18 @@ export default {
                     commit(UPDATE_META, {loadingProject: false, loadingProjectError: "ERROR_FETCH_PROJECT"});
                 }
             } catch (e) {
+                console.error(e);
                 commit(UPDATE_META, {loadingProject: false, loadingProjectError: e.message});
             }
         },
-        async updateTokenInfo({commit}, {Token}) {
-            try {
-                if (Token.tokenAddress) {
-                    const {W12ListerFactory, DetailedERC20Factory} = await this.dispatch('Ledger/fetch', Token.version);
-                    const W12Lister = W12ListerFactory.at(Token.listerAddress);
-                    let token = await W12Lister.fetchComposedTokenInformationByTokenAddress(Token);
-                    const DetailedERC20 = DetailedERC20Factory.at(token.tokenAddress);
-                    token.tokenInformation = (await DetailedERC20.getDescription());
-
-                    commit(UPDATE_PROJECT, {currentProject: token});
-                } else {
-                    commit(UPDATE_META, {loadingProject: false, loadingProjectError: "ERROR_FETCH_PROJECT"});
-                }
-            } catch (e) {
-                commit(UPDATE_META, {loadingProject: false, loadingProjectError: e.message});
+        async updateTokenInfo(context, payload) {
+            if (semver.satisfies(payload.Token.version, '0.20.x - 0.27.x')) {
+                return await updateTokenInfo_v0_20_x.call(this, context, payload);
+            } else if (semver.satisfies(payload.Token.version, '>=0.28.x')) {
+                return await updateTokenInfo_v0_28_x.call(this, context, payload);
             }
+
+            throw new Error(`token version ${payload.Token.version} does not supported`);
         },
         async updateTokensApprovedToPlaceValue({commit}, {Token}) {
             try {
@@ -319,6 +316,7 @@ export default {
 
                 commit(UPDATE_TOKENS_APPROVED, {allowance});
             } catch (e) {
+                console.error(e);
                 commit(UPDATE_META, {loadingProjectError: e.message});
             }
         },
@@ -335,6 +333,7 @@ export default {
                     commit(UPDATE_PLACED_TOKEN_ADDRESS);
                 }
             } catch (e) {
+                console.error(e);
                 commit(UPDATE_PLACED_TOKEN_ADDRESS);
                 commit(UPDATE_META, {loadingProjectError: e.message});
             }
@@ -349,6 +348,7 @@ export default {
 
                 commit(UPDATE_OWNER_BALANCE, balance);
             } catch (e) {
+                console.error(e);
                 commit(UPDATE_META, {loadingProjectError: e.message});
             }
         },
@@ -376,9 +376,11 @@ export default {
                         commit(UPDATE_CROWD_SALE_ADDRESS);
                     }
                 } catch (e) {
+                    console.error(e);
                     commit(UPDATE_CROWD_SALE_ADDRESS);
                 }
             } catch (e) {
+                console.error(e);
                 commit(UPDATE_META, {loadingProjectError: e.message});
             }
         },
@@ -397,6 +399,7 @@ export default {
 
                 commit(UPDATE_CROWD_SALE_STAGES_LIST, list);
             } catch (e) {
+                console.error(e);
                 commit(UPDATE_CROWD_SALE_STAGES_LIST, []);
                 commit(UPDATE_META, {loadingProjectError: e.message});
             }
@@ -414,6 +417,7 @@ export default {
                     commit(UPDATE_CROWD_SALE_IS_START, false);
                 }
             } catch (e) {
+                console.error(e);
                 commit(UPDATE_META, {loadingProjectError: e.message});
             }
         },
@@ -423,34 +427,24 @@ export default {
                 const W12Crowdsale = W12CrowdsaleFactory.at(Token.tokenCrowdsaleAddress);
                 if(Token.tokenCrowdsaleAddress) {
                     const milestones = await W12Crowdsale.getMilestones();
-                    commit(UPDATE_CROWD_SALE_MILESTONES_LIST, milestones.map((obj) => new MilestoneModel(obj)));
+                    commit(UPDATE_CROWD_SALE_MILESTONES_LIST, milestones);
                 } else {
                     commit(UPDATE_CROWD_SALE_MILESTONES_LIST, []);
                 }
             } catch (e) {
+                console.error(e);
                 commit(UPDATE_CROWD_SALE_MILESTONES_LIST, []);
                 commit(UPDATE_META, {loadingProjectError: e.message});
             }
         },
-        async updateReceivingInformation({commit, state}, {Token}) {
-            try {
-                const {W12TokenFactory, DetailedERC20Factory} = await this.dispatch('Ledger/fetch', Token.version);
-                const W12Token = W12TokenFactory.at(Token.wTokenAddress);
-                const DetailedERC20 = DetailedERC20Factory.at(Token.tokenAddress);
-                const token = await DetailedERC20.getDescription();
-
-                const receiving = new ReceivingModel({
-                    symbol: token.symbol,
-                    symbolW: Token.symbol,
-                    amountUnSold: fromWeiDecimalsString(await W12Token.methods.balanceOf(Token.tokenCrowdsaleAddress), state.currentProject.decimals),
-                    amountRemainingInTokenChanger: 0,
-                    amountRemainingAfterTheExchange: 0,
-                    amountTotalAvailable: 0,
-                });
-                commit(UPDATE_RECEVING_INFO, receiving);
-            } catch (e) {
-                commit(UPDATE_META, {loadingProjectError: e.message});
+        async updateReceivingInformation(context, payload) {
+            if (semver.satisfies(payload.Token.version, '0.20.x - 0.27.x')) {
+                return await updateReceivingInformation_v0_20_x.call(this, context, payload);
+            } else if (semver.satisfies(payload.Token.version, '>=0.28.x')) {
+                return await updateReceivingInformation_v0_28_x.call(this, context, payload);
             }
+
+            throw new Error(`token version ${payload.Token.version} does not supported`);
         },
         async updateFundInformation({commit, state}, {Token}) {
             try {
@@ -479,7 +473,7 @@ export default {
 
                     fundData.trancheInfo = await map((await W12Fund.getTotalFundedAssetsSymbols()),
                         async (symbol) => {
-                            const decimals = await this.dispatch('Rates/resolveDecimals', symbol);
+                            const decimals = await this.dispatch('Rates/resolveDecimals', {symbol, version: Token.version});
                             const totalAmount = await W12Fund.getTotalFundedAmount(symbol);
                             const totalReleased = await W12Fund.getTotalFundedReleased(symbol);
 
@@ -500,6 +494,7 @@ export default {
 
                 commit(UPDATE_FUND_DATA, fundData);
             } catch (e) {
+                console.error(e);
                 commit(UPDATE_META, {loadingProjectError: e.message});
             }
         },
@@ -521,6 +516,7 @@ export default {
                     commit(UPDATE_PAYMENT_METHODS_LIST, list);
                 }
             } catch (e) {
+                console.error(e);
                 commit(UPDATE_META, {loadingProjectError: e.message});
             }
         },

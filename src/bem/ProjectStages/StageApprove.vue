@@ -218,6 +218,7 @@
                     });
                     await waitTransactionReceipt(tx, connectedWeb3);
                 } catch (e) {
+                    console.error(e);
                     this.error = e.message;
                 }
 

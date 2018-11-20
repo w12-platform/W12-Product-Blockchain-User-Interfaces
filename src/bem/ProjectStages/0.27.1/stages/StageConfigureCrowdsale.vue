@@ -321,6 +321,7 @@
                         await this.upTokenAfterEvent({Token: this.currentProject});
                     }
                 } catch (e) {
+                    console.error(e);
                     this.error = e.message;
 
                     if (tx) {
@@ -356,6 +357,7 @@
 
                         await waitTransactionReceipt(tx, connectedWeb3);
                     } catch (e) {
+                        console.error(e);
                         this.error = e.message;
                     }
 

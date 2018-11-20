@@ -73,8 +73,7 @@
                             {{ error }}
                         </b-notification>
                         <div class="text-right">
-                            <button class="btn btn-primary btn-sm" :disabled="disable" @click="initCrawdsale"
-                                    v-html="$t('ProjectDashboardStageConfigureCrowdsaleInitButton')">
+                            <button class="btn btn-primary btn-sm" :disabled="disable" @click="initCrawdsale" v-html="$t('ProjectDashboardStageConfigureCrowdsaleInitButton')">
                             </button>
                         </div>
                     </div>
@@ -97,8 +96,7 @@
                             {{ error }}
                         </b-notification>
                         <div class="text-right">
-                            <button class="btn btn-primary btn-sm" :disabled="disableAdd" @click="addTokensToCrowdSale"
-                                    v-html="$t('ProjectDashboardStageConfigureCrowdsaleAddButton')">
+                            <button class="btn btn-primary btn-sm" :disabled="disableAdd" @click="addTokensToCrowdSale" v-html="$t('ProjectDashboardStageConfigureCrowdsaleAddButton')">
                             </button>
                         </div>
                     </div>
@@ -296,6 +294,7 @@
                     });
                     await waitTransactionReceipt(tx, connectedWeb3);
                 } catch (e) {
+                    console.error(e);
                     this.error = e.message;
                 }
 
@@ -327,6 +326,7 @@
 
                         await waitTransactionReceipt(tx, connectedWeb3);
                     } catch (e) {
+                        console.error(e);
                         this.error = e.message;
                     }
 

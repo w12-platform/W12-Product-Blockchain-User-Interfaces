@@ -55,8 +55,6 @@
                 (value, prevValue) => this.$emit('ready-status', value),
                 {immediate: true}
             );
-
-            await this.ratesFetch();
         },
         beforeDestroy() {
             this.__statusWatcher();
@@ -72,6 +70,12 @@
             storedList: {
                 handler(value) { this.$emit('input', value); },
                 immediate: true
+            },
+            'currentProject.version': {
+                async handler(value) {
+                    await this.fetchRates({version:value});
+                },
+                immediate: true
             }
         },
         data() {
@@ -80,18 +84,22 @@
             };
         },
         computed: {
-            ...RatesNS.mapState({
-                storedRatesList: "list",
-            }),
             ...ProjectNS.mapState({
                 storedList: (state) =>
                     (state.currentProject && state.currentProject.paymentMethodsList)
                     || []
                 ,
+                currentProject: 'currentProject'
             }),
             ...ProjectNS.mapGetters({
                 isStartCrowdSale: 'isStartCrowdSale',
             }),
+            ...RatesNS.mapGetters({
+                filterRates: "filter"
+            }),
+            storedRatesList() {
+                return this.filterRates({version: this.currentProject.version});
+            },
             ratesList() {
                return this.storedRatesList.map(r => r.symbol);
             },
@@ -101,7 +109,7 @@
         },
         methods: {
             ...RatesNS.mapActions({
-                ratesFetch: "fetch"
+                fetchRates: "fetch"
             })
         }
     };

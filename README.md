@@ -1,21 +1,22 @@
-# W12-Product-UI
+# W12 product UI
 
 [![CircleCI](https://circleci.com/gh/w12-platform/W12-Product-Blockchain-User-Interfaces.svg?style=svg)](https://circleci.com/gh/w12-platform/W12-Product-Blockchain-User-Interfaces)
 
-Blockchain UI (W12 product)
+# Development
 
-```sh
-$ git clone git@github.com:w12-platform/W12-Product-UI.git
-```
-
-```sh
+```bash
 $ npm install
 $ npm run serve
 ```
 
+# Development tips
+
+* After release new contract version and before create new component or class or whatever for that version of contract check out `src/components/utils.js` for `resolveComponentVersion` and `src/lib/Blockchain/ContractsLedger.js` for `loadContracts`.
+* Resolving component version. Component version may be resolved manually in `resolveComponentVersion`(see `src/components/utils.js`).
+* Resolving contracts ledger version. See `loadContracts` in `src/lib/Blockchain/ContractsLedger.js`.
+
 ## Configuration
 
-To configurate application and application building process use env variables:
 ```
 // Blockchain network id to use in client
 BLOCKCHAIN_NETWORK_ID=(4|1)

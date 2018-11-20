@@ -398,6 +398,7 @@
                     this.tokenCrowdSaleStages.forEach(stage => stage.wasCreated = true);
                     this.tokenCrowdSaleMilestones.forEach(stage => stage.wasCreated = true);
                 } catch (e) {
+                    console.error(e);
                     this.error = e.message;
                 }
 

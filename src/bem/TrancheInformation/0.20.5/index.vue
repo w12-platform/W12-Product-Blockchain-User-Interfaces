@@ -170,6 +170,7 @@
                     });
                     await waitTransactionReceipt(tx, web3);
                 } catch (e) {
+                    console.error(e);
                     this.error = e.message;
                 }
                 this.loading = false;

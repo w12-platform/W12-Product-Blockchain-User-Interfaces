@@ -272,6 +272,7 @@
                     await waitTransactionReceipt(tx, web3);
                     await this.updateAccountData();
                 } catch (e) {
+                    console.error(e);
                     this.error = e.message;
                 }
                 this.loading = false;
@@ -300,6 +301,7 @@
                     await waitTransactionReceipt(tx, web3);
                     await this.updateAccountData();
                 } catch (e) {
+                    console.error(e);
                     this.error = e.message;
                 }
                 this.loading = false;
@@ -326,6 +328,7 @@
                     await waitTransactionReceipt(tx, web3);
                     await this.updateAccountData();
                 } catch (e) {
+                    console.error(e);
                     this.error = e.message;
                 }
                 this.loading = false;
@@ -368,6 +371,7 @@
                         ExchangeEvent
                     };
                 } catch (e) {
+                    console.error(e);
                     this.error = e.message;
                 }
 
