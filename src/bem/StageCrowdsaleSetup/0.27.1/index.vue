@@ -18,7 +18,6 @@
                             <button class="btn btn-primary btn-sm" @click="TransactionsRetry(isErrorTx)" v-html="$t('ToRetry')"></button>
                         </div>
                     </div>
-
                     <div class="ProjectDashboard__setup card" v-if="!isPendingTx">
                         <div class="card-content">
                             <div class="content" v-if="tokenCrowdSaleStages.length">
@@ -26,9 +25,11 @@
                                      v-for="(stage, stageIndex) in tokenCrowdSaleStages" :key="stageIndex">
                                     <div class="col-12 pb-4">
                                         <div class="p-3 row align-items-center justify-content-between">
-                                            <span class="ProjectDashboard__stageTitle"><span v-html="$t('ProjectDashboardStageBonusesStage')"></span> #{{ stageIndex+1 }}</span>
+                                            <span class="ProjectDashboard__stageTitle"><span
+                                                    v-html="$t('ProjectDashboardStageBonusesStage')"></span> #{{ stageIndex+1 }}</span>
                                             <button class="btn btn-primary btn-sm" :disabled="isStartCrowdSale"
-                                                    @click="deleteStageAt(stageIndex)" v-html="$t('ProjectDashboardStageBonusesRemove')">
+                                                    @click="deleteStageAt(stageIndex)"
+                                                    v-html="$t('ProjectDashboardStageBonusesRemove')">
                                             </button>
                                         </div>
                                         <div class="ProjectDashboard__stageBonus col-sm py-2">
@@ -68,7 +69,8 @@
                                             </div>
                                             <div class="row justify-content-between">
                                                 <div class="col-sm py-2">
-                                                    <label for="StageDiscount" v-html="$t('ProjectDashboardStageBonusesDiscountLabel')"></label>
+                                                    <label for="StageDiscount"
+                                                           v-html="$t('ProjectDashboardStageBonusesDiscountLabel')"></label>
                                                     <b-field id="StageDiscount">
                                                         <b-input
                                                                 type="number"
@@ -81,7 +83,8 @@
                                                     </b-field>
                                                 </div>
                                                 <div class="col-sm py-2">
-                                                    <label for="StageVestingDate" v-html="$t('ProjectDashboardStageBonusesVestingDateLabel')"></label>
+                                                    <label for="StageVestingDate"
+                                                           v-html="$t('ProjectDashboardStageBonusesVestingDateLabel')"></label>
                                                     <b-field id="StageVestingDate"
                                                              class="ProjectDashboard__dateSelect">
                                                         <date-picker
@@ -98,13 +101,16 @@
                                         </div>
 
                                         <div class="p-3 row align-items-center justify-content-between">
-                                            <span class="ProjectDashboard__stageTitle" v-html="$t('ProjectDashboardStageBonusesVolume')"></span>
+                                            <span class="ProjectDashboard__stageTitle"
+                                                  v-html="$t('ProjectDashboardStageBonusesVolume')"></span>
                                         </div>
                                         <div class="col-sm py-2">
-                                            <div v-for="(bonusVolume, bonusVolumeIndex) in stage.bonusVolumes" :key="bonusVolumeIndex">
+                                            <div v-for="(bonusVolume, bonusVolumeIndex) in stage.bonusVolumes"
+                                                 :key="bonusVolumeIndex">
                                                 <div class="row justify-content-between">
                                                     <div class="col-sm py-2">
-                                                        <label v-if="bonusVolumeIndex === 0" for="bonusVolumeETH" v-html="$t('ProjectDashboardStageBonusesFieldsTitle', { currency: 'USD' })"></label>
+                                                        <label v-if="bonusVolumeIndex === 0" for="bonusVolumeETH"
+                                                               v-html="$t('ProjectDashboardStageBonusesFieldsTitle', { currency: 'USD' })"></label>
                                                         <b-field id="bonusVolumeUSD">
                                                             <b-input
                                                                     placeholder="USD"
@@ -147,7 +153,8 @@
                                             <div class="text-left pt-2">
                                                 <button class="btn btn-primary btn-sm"
                                                         :disabled="isStartCrowdSale"
-                                                        @click="addBonusVolumesAt(stageIndex)" v-html="$t('ProjectDashboardStageBonusesAddButton')">
+                                                        @click="addBonusVolumesAt(stageIndex)"
+                                                        v-html="$t('ProjectDashboardStageBonusesAddButton')">
                                                 </button>
                                             </div>
                                         </div>
@@ -155,6 +162,14 @@
                                 </div>
                             </div>
 
+                            <footer class="card-footer" v-if="!isStartCrowdSale">
+                                <a class="card-footer-item" @click="addStage"
+                                   v-html="$t('ProjectDashboardStageBonusesAddStageButton')"></a>
+                            </footer>
+                        </div>
+                    </div>
+                    <div class="ProjectDashboard__setup card" v-if="!isPendingTx && checkAddMilestone">
+                        <div class="card-content">
                             <div class="p-3" v-if="tokenCrowdSaleMilestones.length">
                                 <h2 class="col-12 pb-4" v-html="$t('Milestones')"></h2>
                                 <div v-for="(item, idx) in tokenCrowdSaleMilestones">
@@ -170,16 +185,15 @@
                                 </div>
                             </div>
 
-                            <b-notification class="ProjectStages__errorStage" v-if="error" @close="error = false"
-                                            type="is-danger" has-icon>{{ error }}
-                            </b-notification>
-
                             <footer class="card-footer" v-if="!isStartCrowdSale">
-                                <a class="card-footer-item" @click="addStage" v-html="$t('ProjectDashboardStageBonusesAddStageButton')"></a>
-                                <a class="card-footer-item" v-if="checkAddMilestone" @click="addMilestone" v-html="$t('MilestonesAdd')"></a>
+                                <a class="card-footer-item" @click="addMilestone" v-html="$t('MilestonesAdd')"></a>
                             </footer>
                         </div>
                     </div>
+
+                    <b-notification class="ProjectStages__errorStage" v-if="error" @close="error = false"
+                                    type="is-danger" has-icon>{{ error }}
+                    </b-notification>
                 </div>
             </div>
         </div>
@@ -455,7 +469,7 @@
                 return false;
             },
             onMilestoneUpdateAtIndex(data, idx) {
-                this.tokenCrowdSaleMilestones[idx] = data;
+                this.tokenCrowdSaleMilestones.splice(idx, 1, data);
                 this.validateAndSetErrorsMilestone(data, idx);
             },
             resetMilestonesValidFlags() {
