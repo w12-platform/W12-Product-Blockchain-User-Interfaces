@@ -28,7 +28,7 @@
 
 <script>
     import './default.scss';
-    import { resolveAbiVersion } from '@/lib/Blockchain/ContractsLedger';
+    import { resolveComponentVersion } from '@/bem/utils';
 
     import ListerSwitch from 'bem/ListerSwitch';
     import Steps from "bem/Steps";
@@ -88,7 +88,7 @@
                 return this.ledgerMeta.loadingError || this.tokensListMeta.loadingError || this.accountMeta.loadingError;
             },
             WhiteListTableVersion(){
-                const v = resolveAbiVersion(this.W12Lister.version);
+                const v = resolveComponentVersion(this.W12Lister.version, 'WhiteListTable');
                 return () => import("bem/WhiteListTable/" + v);
             },
             nextStepBlocked(){

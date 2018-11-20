@@ -376,6 +376,7 @@
                         await waitTransactionReceipt(tx, connectedWeb3);
                         this.endTokenWhiteListOperation();
                     } catch (e) {
+                        console.error(e);
                         this.setErrorMessage(e.message);
                     }
                 }
@@ -388,10 +389,10 @@
                 if (address) {
                     this.checkingToken = true;
 
-                    const {DetailedERC20Factory} = await this.ledgerFetch(this.W12Lister.version);
-                    const DetailedERC20 = DetailedERC20Factory.at(address);
+                    const {ERC20DetailedFactory} = await this.ledgerFetch(this.W12Lister.version);
+                    const ERC20Detailed = ERC20DetailedFactory.at(address);
 
-                    this.isTokenExists = await DetailedERC20.isCurrentAddressCompatibleWithToken();
+                    this.isTokenExists = await ERC20Detailed.isCurrentAddressCompatibleWithToken();
                     this.checkingToken = false;
                 }
             },
@@ -402,9 +403,9 @@
                 const currentAccount = (await getAccounts())[0];
 
                 if (this.isTokenExists) {
-                    const {DetailedERC20Factory} = await this.ledgerFetch(this.W12Lister.version);
-                    const DetailedERC20 = DetailedERC20Factory.at(address);
-                    const tokenInformation = await DetailedERC20.getDescription();
+                    const {ERC20DetailedFactory} = await this.ledgerFetch(this.W12Lister.version);
+                    const ERC20Detailed = ERC20DetailedFactory.at(address);
+                    const tokenInformation = await ERC20Detailed.getDescription();
                     const {name, symbol, decimals} = tokenInformation;
 
                     Object.assign(this.whiteListForm, {
@@ -428,6 +429,7 @@
                                 OwnerWhitelisted,
                             };
                         } catch (e) {
+                            console.error(e);
                             this.setErrorMessage(e.message);
                         }
                     }

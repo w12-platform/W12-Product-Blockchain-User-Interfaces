@@ -211,6 +211,7 @@
                         TrancheReleased
                     };
                 } catch (e) {
+                    console.error(e);
                     this.error = e.message;
                 }
 
@@ -348,6 +349,7 @@
                     await this.fetchPaymentMethodsList({Token: this.currentProject});
 
                 } catch (e) {
+                    console.error(e);
                     this.error = e.message;
 
                     if (tx) {

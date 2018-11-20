@@ -378,6 +378,7 @@
                     stages.forEach(stage => stage.wasCreated = true);
                     this.tokenCrowdSaleStagesChange = false;
                 } catch (e) {
+                    console.error(e);
                     this.error = e.message;
                 }
 
@@ -418,6 +419,7 @@
                     const connectedWeb3 = (await Connector.connect()).web3;
                     await waitTransactionReceipt(tx, connectedWeb3);
                 } catch (e) {
+                    console.error(e);
                     this.error = e.message;
                 }
 

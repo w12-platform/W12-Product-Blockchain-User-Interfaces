@@ -380,22 +380,24 @@
 
                     await waitTransactionReceipt(tx, connectedWeb3);
                 } catch (e) {
+                    console.error(e);
                     this.error = e.message;
                 }
                 this.meta.creating = false;
             },
             async fetchList() {
                 try {
-                    const {DetailedERC20Factory} = await this.ledgerFetch(this.Default.version);
+                    const {ERC20DetailedFactory} = await this.ledgerFetch(this.Default.version);
                     let listInfo = [];
                     await this.FactoryList.forEach(async (address) => {
-                        const DetailedERC20 = DetailedERC20Factory.at(address);
-                        const tokenInformation = await DetailedERC20.getDescription();
+                        const ERC20Detailed = ERC20DetailedFactory.at(address);
+                        const tokenInformation = await ERC20Detailed.getDescription();
                         const {name, symbol, decimals} = tokenInformation;
                         listInfo.push({address, name, symbol, decimals});
                     });
                     this.list = listInfo;
                 } catch (e) {
+                    console.error(e);
                     this.error = e.message;
                 }
             },
@@ -418,6 +420,7 @@
                         NewToken,
                     };
                 } catch (e) {
+                    console.error(e);
                     this.error = e.message;
                 }
 

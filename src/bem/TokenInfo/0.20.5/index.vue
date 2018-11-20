@@ -1,5 +1,5 @@
 <template>
-    <div class="TokenInfo_v1" v-if="currentProject">
+    <div class="TokenInfo_v2" v-if="currentProject">
         <table class="table table-striped table-bordered table-hover table-responsive-sm">
             <tbody>
             <tr>

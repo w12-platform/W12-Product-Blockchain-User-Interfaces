@@ -85,7 +85,7 @@
                 if (semver.satisfies(version, '<0.26.0')) {
                     return () => import('@/bem/RefundEth/0.20.5/index.vue');
                 } else if (semver.satisfies(version, '>=0.26.0')) {
-                    return () => import('@/bem/RefundEth/0.26.0/index.vue');
+                    return () => import('@/bem/RefundEth/0.27.1/index.vue');
                 }
             }
         },

@@ -101,6 +101,7 @@ export default {
                         });
                     }
                 } catch (e) {
+                    console.error(e);
                     commit(UPDATE_META, {loading: false, loadingError: e.message || ERROR_FETCH_ACCOUNT});
                 }
             };
@@ -170,7 +171,7 @@ export default {
                             const amount = await W12Fund
                                 .getInvestorFundedAmount(this.state.Account.currentAccount, s);
                           
-                            const decimals = await dispatch('Rates/resolveDecimals', s, {root: true});
+                            const decimals = await dispatch('Rates/resolveDecimals', {symbol: s, version}, {root: true});
 
                             return reverseConversionByDecimals(amount, decimals).toString();
                         }

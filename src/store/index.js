@@ -40,8 +40,7 @@ const store = {
                 "Transactions.list",
                 "Lang.current",
                 "Lang.vocabulary",
-                "Factory.list",
-                "Rates"
+                "Factory.list"
             ]
         })
     ]
