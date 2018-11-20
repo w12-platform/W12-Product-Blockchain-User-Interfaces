@@ -50,7 +50,7 @@
             roadMapTableData() {
                 if (this.currentToken && this.currentToken.crowdSaleInformation) {
                     const list = this.currentToken.crowdSaleInformation.milestones.map((milestone, index, milestones) => {
-
+                        if(index === 0 && milestone.tranchePercent === 0) return false;
                         return {
                             'index': index,
                             'name': milestone.name,
@@ -94,7 +94,7 @@
                                     from: this.fullDateFormat(milestone.withdrawalEndDate),
                                     to: this.fullDateFormat(milestones[index + 1].endDate)
                                 }),
-                            'financing': index === 0 && milestone.tranchePercent === 0 ? '' : milestone.tranchePercent,
+                            'financing': milestone.tranchePercent,
                         }
                     });
                     return list.filter(Boolean);
