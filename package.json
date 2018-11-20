@@ -6,7 +6,7 @@
   "scripts": {
     "serve": "webpack-dev-server --host localhost --mode development",
     "dev": "webpack --mode development",
-    "gen-release": "conventional-github-releaser -p angular",
+    "gen-release": "conventional-github-releaser -p angular -v",
     "gen-release-bundle": "chmod +x ./scripts/generate-bundle.sh && ./scripts/generate-bundle.sh",
     "upload-release-bundle": "node ./scripts/upload-bundle.js",
     "build": "cross-env NODE_ENV=production webpack -p",
