@@ -1299,11 +1299,11 @@
 //     "StepsBlockedTx": {
 //         "en": "Please wait for confirmation of the transaction",
 //         "ru": "Пожалуйста дождитесь подтверждения транзакции"
-//     }
+//     },
 //     "FirstStageStartDateRecommendedDateInfoMessage": {
 //         "en": "Дату начала первой стадии рекомендуется устанавливать больше текущей даты на час и выше",
 //         "ru": "Дату начала первой стадии рекомендуется устанавливать больше текущей даты на час и выше"
-//     }
+//     },
 //     "InvestorDashboardDiscountsStagesDefrosting": {
 //         "en": "Date of defrosting",
 //         "ru": "Дата разморозки",
@@ -1331,5 +1331,29 @@
 //     "RoadMapRefund": {
 //         "en": "Refund Period",
 //         "ru": "Период возврата средств",
-//     }
+//     },
+//     "RoadMapReceipt": {
+//         "en": "Dates of receipt of funds by the project",
+//         "ru": "Даты получения средств проектом",
+//     },
+//     "RoadMapFinancing": {
+//         "en": "% financing",
+//         "ru": "% финансирования",
+//     },
+//     "RoadMapIndex": {
+//         "en": "№",
+//         "ru": "№",
+//     },
+//     "RoadMapDatesFromTo": {
+//         "en": "from {from} to {to}",
+//         "ru": "c {from} по {to}",
+//     },
+//     "RoadMapDatesFirst": {
+//         "en": "to {to}",
+//         "ru": "по {to}",
+//     },
+//     "RoadMapDatesLast": {
+//         "en": "from {from}",
+//         "ru": "c {from}",
+//     },
 // };
