@@ -1371,6 +1371,30 @@
 //         "en": "Refund Period",
 //         "ru": "Период возврата средств",
 //     },
+//     "RoadMapReceipt": {
+//         "en": "Dates of receipt of funds by the project",
+//         "ru": "Даты получения средств проектом",
+//     },
+//     "RoadMapFinancing": {
+//         "en": "% financing",
+//         "ru": "% финансирования",
+//     },
+//     "RoadMapIndex": {
+//         "en": "№",
+//         "ru": "№",
+//     },
+//     "RoadMapDatesFromTo": {
+//         "en": "from {from} to {to}",
+//         "ru": "c {from} по {to}",
+//     },
+//     "RoadMapDatesFirst": {
+//         "en": "to {to}",
+//         "ru": "по {to}",
+//     },
+//     "RoadMapDatesLast": {
+//         "en": "from {from}",
+//         "ru": "c {from}",
+//     },
 //     "MilestonesNameIsNotValidError": {
 //         "en": "Название должно содержать минимум 1 символ",
 //         "ru": "Название должно содержать минимум 1 символ",
@@ -1380,3 +1404,5 @@
 //         "ru": "Описание должно содержать минимум 1 символ",
 //     },
 // };
+
+
