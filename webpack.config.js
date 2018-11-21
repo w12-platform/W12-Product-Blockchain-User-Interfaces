@@ -48,7 +48,8 @@ module.exports = [
         output: {
             path: BUILD_DIR_PATH,
             publicPath,
-            filename: "App.js"
+            filename: "App.js",
+            chunkFilename: "[id].[contenthash].chunk.js"
         },
         resolve: {
             extensions: ['.js', '.vue', '.json'],
