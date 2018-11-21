@@ -19,8 +19,8 @@ export class W12CrowdsaleWrapper extends BaseWrapper {
                 countStringBytes(description)
             ],
             namesAndDescriptions: null,
-            descriptionHex: encodeStringToBytes(name),
-            nameHex: encodeStringToBytes(description)
+            descriptionHex: encodeStringToBytes(description),
+            nameHex: encodeStringToBytes(name)
         };
 
         result.namesAndDescriptions = `${result.nameHex}${result.descriptionHex.slice(2)}`;
