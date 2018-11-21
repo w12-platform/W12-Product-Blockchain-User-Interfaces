@@ -1403,6 +1403,14 @@
 //         "en": "Описание должно содержать минимум 1 символ",
 //         "ru": "Описание должно содержать минимум 1 символ",
 //     },
+//     "NotInitializedCrowdsale": {
+//         "en": "Не инициализированный",
+//         "ru": "Не инициализированный",
+//     },
+//     "WhiteListTableCrowdsales": {
+//         "en": "Crowdsales",
+//         "ru": "Crowdsales",
+//     },
 //     "UnexpectedError": {
 //         "en": "An unexpected error has occurred. Reload page",
 //         "ru": "Произошла непредвиденная ошибка. Перезагрузите страницу",

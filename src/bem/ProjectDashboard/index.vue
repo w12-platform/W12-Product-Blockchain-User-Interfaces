@@ -85,7 +85,7 @@
                 return () => import("bem/ProjectStages/" + v);
             },
             isCurrentToken(){
-                return typeof CurrentToken !== 'undefined';
+                return typeof window.CurrentToken !== 'undefined';
             }
         },
         watch: {
@@ -111,7 +111,8 @@
             async handleCurrentAccountChange(currentAccount) {
                 if(currentAccount){
                     if(this.isCurrentToken){
-                        await this.FetchProjectByCurrentToken(CurrentToken);
+                        window.CurrentToken.__customerPointer = true;
+                        await this.FetchProjectByCurrentToken(window.CurrentToken);
                     } else {
                         await this.ProjectFetchList();
                     }

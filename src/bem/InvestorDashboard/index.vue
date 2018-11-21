@@ -98,7 +98,7 @@
                 return this.ledgerMeta.loadingError || this.tokensListMeta.loadingError || this.accountMeta.loadingError;
             },
             isCurrentToken(){
-                return typeof CurrentToken !== 'undefined';
+                return typeof window.CurrentToken !== 'undefined';
             },
             CalculatorComponent() {
                 if (!this.currentToken) return () => {};
@@ -134,6 +134,7 @@
                 if(currentAccount){
                     await this.transactionsUpStatusTx();
                     if(this.isCurrentToken){
+                        window.CurrentToken.__customerPointer = true;
                         await this.FetchTokenByCurrentToken(CurrentToken);
                     } else {
                         await this.tokensListFetch();

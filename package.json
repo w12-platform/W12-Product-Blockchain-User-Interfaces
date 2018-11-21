@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "serve": "webpack-dev-server --host localhost --mode development",
-    "d-up": "cross-env BLOCKCHAIN_NETWORK_ID=5777 webpack-dev-server --host localhost --mode development",
+    "d-up": "cross-env BLOCKCHAIN_NETWORK_ID=5777 DEV_DEBUG_WARNINGS=1 DEV_DEBUG_LOGS=1 DEV_DEBUG_ERRORS=1 webpack-dev-server --host localhost --mode development",
     "dev": "webpack --mode development",
     "gen-release": "conventional-github-releaser -p angular",
     "gen-release-bundle": "chmod +x ./scripts/generate-bundle.sh && ./scripts/generate-bundle.sh",

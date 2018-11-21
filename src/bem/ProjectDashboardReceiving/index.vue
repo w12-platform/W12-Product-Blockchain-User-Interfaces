@@ -124,6 +124,7 @@
             async handleCurrentAccountChange(currentAccount) {
                 if(currentAccount){
                     if(this.isCurrentToken){
+                        window.CurrentToken.__customerPointer = true;
                         await this.FetchProjectByCurrentToken(CurrentToken);
                     } else {
                         await this.ProjectFetchList();

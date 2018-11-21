@@ -1,12 +1,11 @@
-import {map} from 'p-iteration';
-import {errorMessageSubstitution} from 'lib/utils';
-
-export const ERROR_FETCH_TOKENS_LIST = 'An unknown error while trying get tokens';
-
-export const UPDATE_META = "UPDATE_META";
-export const UPDATE = "UPDATE";
-export const RESET = "RESET";
-
+import {
+    UPDATE_META,
+    UPDATE,
+    RESET
+} from './Whitelist/mutations';
+import semver from 'semver';
+import {fetch as fetch_v0_20_x} from './Whitelist/0.20.x/actions';
+import {fetch as fetch_v0_28_x} from './Whitelist/0.28.x/actions';
 
 export default {
     namespaced: true,
@@ -25,27 +24,24 @@ export default {
             Object.assign(state.meta, payload);
         },
         [UPDATE](state, payload) {
-            const list = payload.list || false;
+            const list = payload.list || [];
             Object.assign(state, {list});
         },
         [RESET](state) {
-            state.list = false;
+            state.list = [];
         },
     },
     actions: {
-        async fetch({commit}) {
-            commit(UPDATE_META, {loading: true});
-            try {
-                const {W12ListerFactory} = await this.dispatch('Ledger/fetch', this.state.Config.W12Lister.version);
-                const W12Lister = W12ListerFactory.at(this.state.Config.W12Lister.address);
-                let list = (await W12Lister.fetchAllTokensComposedInformation());
-                list = list.filter((token) => Boolean(token.tokenAddress));
-                commit(UPDATE, {list});
-            } catch (e) {
-                console.error(e);
-                commit(UPDATE_META, {loading: false, loadingError: errorMessageSubstitution(e) || ERROR_FETCH_TOKENS_LIST});
+        async fetch(context, payload) {
+            const version = context.rootState.Config.W12Lister.version;
+
+            if (semver.satisfies(version, '0.20.x - 0.27.x')) {
+                return await fetch_v0_20_x.call(this, context, payload);
+            } else if (semver.satisfies(version, '>=0.28.x')) {
+                return await fetch_v0_28_x.call(this, context, payload);
             }
-            commit(UPDATE_META, {loading: false});
+
+            throw new Error(`version ${version} does not supported`);
         },
         async reset({commit}) {
             commit(RESET);

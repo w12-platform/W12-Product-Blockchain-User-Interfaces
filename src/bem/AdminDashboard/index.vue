@@ -97,7 +97,7 @@
         },
         methods: {
             ...WhitelistNS.mapActions({
-                whitelistFetch: "fetch",
+                fetchWhitelist: "fetch",
             }),
             ...AccountNS.mapActions({
                 watchCurrentAccount: 'watch',
@@ -107,7 +107,7 @@
             }),
 
             async handleW12ListerChange(){
-                await this.whitelistFetch();
+                await this.fetchWhitelist();
             },
         },
         watch: {
@@ -127,7 +127,7 @@
             ) {
                 this.updateLister({ W12Lister: this.W12ListerLastVersion });
             } else {
-                await this.whitelistFetch();
+                await this.fetchWhitelist();
             }
 
             this.meta.loading = false;

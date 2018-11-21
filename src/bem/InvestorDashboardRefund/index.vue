@@ -110,6 +110,7 @@
                 if(currentAccount){
                     await this.transactionsUpStatusTx();
                     if(this.hasCurrentToken){
+                        window.CurrentToken.__customerPointer = true;
                         await this.FetchTokenByCurrentToken(window.CurrentToken);
                     } else {
                         await this.tokensListFetch();

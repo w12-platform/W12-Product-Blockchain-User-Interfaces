@@ -98,11 +98,14 @@
             ...ConfigNS.mapState({
                 W12Lister: "W12Lister"
             }),
-
+            ...ProjectNS.mapGetters({
+                isStartCrowdSale: 'isStartCrowdSale',
+            }),
             isAllReadyForSetupCrowdsale() {
                 return (
                     this.stagesAndMilestonesReadyStatus
                     && this.paymentMethodsReadyStatus
+                    && !this.isStartCrowdSale
                 );
             }
         },

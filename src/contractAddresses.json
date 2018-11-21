@@ -53,13 +53,25 @@
     },
     "W12Lister": [
       {
-        "address": "0xc8a98b031ac67e92c291f061e74314de70e500c6",
+        "address": "0x0dd474c41e74e307d85fc8375610e7bcfaa8d419",
+        "version": "0.23.2"
+      },
+      {
+        "address": "0x41823004d458fd99aa23081c60e8bf93848dd701",
+        "version": "0.27.1"
+      },
+      {
+        "address": "0xebb879c887ab90859a6193a2a3914a61c9058e23",
         "version": "0.28.0"
       }
     ],
     "Rates": [
       {
-        "address": "0xcf6e2e195f0a8c4a6ad7eef38dc3096452f1af7b",
+        "address": "0x9e01b7391c991419de6a5decf157fd6428a6140b",
+        "version": "0.27.1"
+      },
+      {
+        "address": "0x2424c411e759f8fc50911380f3ae3dd954fb5861",
         "version": "0.28.0"
       }
     ]

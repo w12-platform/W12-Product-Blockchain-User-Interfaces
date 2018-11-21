@@ -1,6 +1,12 @@
 import { ReceivingModel } from '@/bem/Receiving/model';
-import { fromWeiDecimalsString, errorMessageSubstitution } from '@/lib/utils';
-import { UPDATE_META, UPDATE_PROJECT, UPDATE_RECEVING_INFO } from '../mutations';
+import { fromWeiDecimalsString, isZeroAddress, errorMessageSubstitution } from '@/lib/utils';
+import {
+    UPDATE_CROWD_SALE_ADDRESS,
+    UPDATE_CROWD_SALE_INFO,
+    UPDATE_META,
+    UPDATE_PROJECT,
+    UPDATE_RECEVING_INFO
+} from '../mutations';
 
 export async function updateTokenInfo({commit, dispatch}, {Token}) {
     try {
@@ -37,6 +43,37 @@ export async function updateReceivingInformation({commit, state, dispatch}, {Tok
             amountTotalAvailable: 0,
         });
         commit(UPDATE_RECEVING_INFO, receiving);
+    } catch (e) {
+        console.error(e);
+        commit(UPDATE_META, {loadingProjectError: errorMessageSubstitution(e)});
+    }
+}
+
+export async function fetchCrowdSaleAddressAndInfo({commit, dispatch}, {Token}) {
+    try {
+        const {W12ListerFactory, W12CrowdsaleFactory} = await dispatch('Ledger/fetch', Token.version, {root: true});
+        const W12Lister = W12ListerFactory.at(Token.listerAddress);
+
+        try {
+            const token = await W12Lister.fetchComposedTokenInformationByTokenAddress(Token);
+            const {crowdsaleAddress: address} = token;
+            if (address && !isZeroAddress(address)) {
+                const W12Crowdsale = W12CrowdsaleFactory.at(address);
+                const tokensForSaleAmount = token.wTokensIssuedAmount;
+                const tokenPrice = (await W12Crowdsale.methods.price()).toString();
+
+                commit(UPDATE_CROWD_SALE_ADDRESS, address);
+                commit(UPDATE_CROWD_SALE_INFO, {
+                    tokensForSaleAmount,
+                    tokenPrice
+                });
+            } else {
+                commit(UPDATE_CROWD_SALE_ADDRESS);
+            }
+        } catch (e) {
+            console.error(e);
+            commit(UPDATE_CROWD_SALE_ADDRESS);
+        }
     } catch (e) {
         console.error(e);
         commit(UPDATE_META, {loadingProjectError: errorMessageSubstitution(e)});

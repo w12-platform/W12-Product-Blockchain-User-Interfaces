@@ -76,7 +76,7 @@
         getTokenPriceForInvestor,
         getTotalTokenRefundedPercent
     } from '@/lib/selectors/fund';
-    import { convertionByDecimals, reverseConversionByDecimals } from '@/lib/selectors/units';
+    import { conversionByDecimals, reverseConversionByDecimals } from '@/lib/selectors/units';
     import { CANCEL_TX } from '@/store/modules/Transactions';
     import Connector from "lib/Blockchain/DefaultConnector";
     import { waitTransactionReceipt, errorMessageSubstitution } from 'lib/utils.js';
@@ -262,7 +262,7 @@
                     return '0';
                 }
 
-                return convertionByDecimals(value, decimals).toString();
+                return conversionByDecimals(value, decimals).toString();
             },
             isRefundActive() {
                 if (getMilestoneNumber(this.currentToken.crowdSaleInformation.currentMilestoneIndex) === 0) {
