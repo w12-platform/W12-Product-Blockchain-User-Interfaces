@@ -36,5 +36,16 @@
         "version": "0.23.2"
       }
     ]
+  },
+  "5777": {
+    "FactoryTokens": {
+      "address": "0x15bfbebcace798a18c42c2ff1f23388449355ea4"
+    },
+    "W12Lister": [
+      {
+        "address": "0x992b7a57abcb64ee37593d782166a81ab0f99353",
+        "version": "0.23.2"
+      }
+    ]
   }
 }
