@@ -200,7 +200,7 @@
                         </footer>
                     </div>
                     <b-notification class="ProjectStages__errorStage" v-if="error" @close="error = false"
-                                    type="is-danger" has-icon>{{ error }}
+                                    type="is-danger" has-icon>{{ $t('error') }}
                     </b-notification>
                 </div>
             </div>
@@ -215,7 +215,7 @@
     import DatePicker from 'vue2-datepicker';
     import {createNamespacedHelpers} from "vuex";
     import {MilestoneModel} from './shared.js';
-    import {waitTransactionReceipt} from 'lib/utils.js';
+    import {waitTransactionReceipt, errorMessageSubstitution} from 'lib/utils.js';
     import MilestoneCard from './MilestoneCard.vue';
     import {UPDATE_TX} from "store/modules/Transactions.js";
     import moment from "moment";
@@ -399,7 +399,7 @@
                     this.tokenCrowdSaleMilestones.forEach(stage => stage.wasCreated = true);
                 } catch (e) {
                     console.error(e);
-                    this.error = e.message;
+                    this.error = errorMessageSubstitution(e);
                 }
 
                 this.saveLoading = false;

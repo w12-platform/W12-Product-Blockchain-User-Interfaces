@@ -2,7 +2,7 @@ import { updateTokenInfo as updateTokenInfo_v0_20_x } from '@/store/modules/Proj
 import { updateTokenInfo as updateTokenInfo_v0_28_x } from '@/store/modules/Project/0.28.x/actions';
 import { updateReceivingInformation as updateReceivingInformation_v0_20_x } from '@/store/modules/Project/0.20.x/actions';
 import { updateReceivingInformation as updateReceivingInformation_v0_28_x } from '@/store/modules/Project/0.28.x/actions';
-import {promisify, isZeroAddress, fromWeiDecimalsString} from "src/lib/utils";
+import {promisify, isZeroAddress, fromWeiDecimalsString, errorMessageSubstitution} from "src/lib/utils";
 import {map} from 'p-iteration';
 import {ReceivingModel} from 'src/bem/Receiving/model.js';
 import Connector from "src/lib/Blockchain/DefaultConnector";
@@ -247,7 +247,7 @@ export default {
                 });
             } catch (e) {
                 console.error(e);
-                commit(UPDATE_META, {loading: false, loadingError: e.message});
+                commit(UPDATE_META, {loading: false, loadingError: errorMessageSubstitution(e)});
             }
         },
         async fetchProject({commit}, Token) {
@@ -292,7 +292,7 @@ export default {
                 }
             } catch (e) {
                 console.error(e);
-                commit(UPDATE_META, {loadingProject: false, loadingProjectError: e.message});
+                commit(UPDATE_META, {loadingProject: false, loadingProjectError: errorMessageSubstitution(e)});
             }
         },
         async updateTokenInfo(context, payload) {
@@ -317,7 +317,7 @@ export default {
                 commit(UPDATE_TOKENS_APPROVED, {allowance});
             } catch (e) {
                 console.error(e);
-                commit(UPDATE_META, {loadingProjectError: e.message});
+                commit(UPDATE_META, {loadingProjectError: errorMessageSubstitution(e)});
             }
         },
         async updatePlacedTokenStatus({commit}, {Token}) {
@@ -335,7 +335,7 @@ export default {
             } catch (e) {
                 console.error(e);
                 commit(UPDATE_PLACED_TOKEN_ADDRESS);
-                commit(UPDATE_META, {loadingProjectError: e.message});
+                commit(UPDATE_META, {loadingProjectError: errorMessageSubstitution(e)});
             }
         },
         async updateOwnerBalance({commit}, {Token}) {
@@ -349,7 +349,7 @@ export default {
                 commit(UPDATE_OWNER_BALANCE, balance);
             } catch (e) {
                 console.error(e);
-                commit(UPDATE_META, {loadingProjectError: e.message});
+                commit(UPDATE_META, {loadingProjectError: errorMessageSubstitution(e)});
             }
         },
         async fetchCrowdSaleAddressAndInfo({commit}, {Token}) {
@@ -381,7 +381,7 @@ export default {
                 }
             } catch (e) {
                 console.error(e);
-                commit(UPDATE_META, {loadingProjectError: e.message});
+                commit(UPDATE_META, {loadingProjectError: errorMessageSubstitution(e)});
             }
         },
         async fetchCrowdSaleStagesList({commit}, {Token}) {
@@ -401,7 +401,7 @@ export default {
             } catch (e) {
                 console.error(e);
                 commit(UPDATE_CROWD_SALE_STAGES_LIST, []);
-                commit(UPDATE_META, {loadingProjectError: e.message});
+                commit(UPDATE_META, {loadingProjectError: errorMessageSubstitution(e)});
             }
         },
         async upCrowdSaleStart({commit}, {Token}) {
@@ -418,7 +418,7 @@ export default {
                 }
             } catch (e) {
                 console.error(e);
-                commit(UPDATE_META, {loadingProjectError: e.message});
+                commit(UPDATE_META, {loadingProjectError: errorMessageSubstitution(e)});
             }
         },
         async fetchCrowdSaleMilestonesList({commit}, {Token}) {
@@ -434,7 +434,7 @@ export default {
             } catch (e) {
                 console.error(e);
                 commit(UPDATE_CROWD_SALE_MILESTONES_LIST, []);
-                commit(UPDATE_META, {loadingProjectError: e.message});
+                commit(UPDATE_META, {loadingProjectError: errorMessageSubstitution(e)});
             }
         },
         async updateReceivingInformation(context, payload) {
@@ -495,7 +495,7 @@ export default {
                 commit(UPDATE_FUND_DATA, fundData);
             } catch (e) {
                 console.error(e);
-                commit(UPDATE_META, {loadingProjectError: e.message});
+                commit(UPDATE_META, {loadingProjectError: errorMessageSubstitution(e)});
             }
         },
         async fetchPaymentMethodsList({commit, state}, {Token}) {
@@ -517,7 +517,7 @@ export default {
                 }
             } catch (e) {
                 console.error(e);
-                commit(UPDATE_META, {loadingProjectError: e.message});
+                commit(UPDATE_META, {loadingProjectError: errorMessageSubstitution(e)});
             }
         },
     }

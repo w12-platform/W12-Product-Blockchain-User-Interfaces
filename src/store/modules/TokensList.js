@@ -3,7 +3,7 @@ import { fetchTokenFull as fetchTokenFull_v0_20_x } from '@/store/modules/Tokens
 import { fetchTokenFull as fetchTokenFull_v0_27_x } from '@/store/modules/TokensList/0.27.x/actions';
 import { fetchTokenFull as fetchTokenFull_v0_28_x } from '@/store/modules/TokensList/0.28.x/actions';
 import semver from 'semver';
-import { isZeroAddress} from "src/lib/utils";
+import { isZeroAddress, errorMessageSubstitution } from "src/lib/utils";
 import {map, reduce} from 'p-iteration';
 
 export const ERROR_FETCH_TOKENS_LIST = 'An unknown error while trying get tokens';
@@ -111,7 +111,7 @@ export default {
                 commit(UPDATE, {list});
             } catch (e) {
                 console.error(e);
-                commit(UPDATE_META, {loading: false, loadingError: e.message || ERROR_FETCH_TOKENS_LIST});
+                commit(UPDATE_META, {loading: false, loadingError: errorMessageSubstitution(e) || ERROR_FETCH_TOKENS_LIST});
             }
             commit(UPDATE_META, {loading: false});
         },
@@ -125,7 +125,7 @@ export default {
                 commit(UPDATE, {list: [token]});
             } catch (e) {
                 console.error(e);
-                commit(UPDATE_META, {loading: false, loadingError: e.message || ERROR_FETCH_TOKENS_LIST});
+                commit(UPDATE_META, {loading: false, loadingError: errorMessageSubstitution(e) || ERROR_FETCH_TOKENS_LIST});
             }
             commit(UPDATE_META, {loading: false});
         },
@@ -138,7 +138,7 @@ export default {
                 commit(UPDATE_META, {
                     loading: false,
                     updated: false,
-                    loadingError: e.message || ERROR_FETCH_TOKENS_LIST
+                    loadingError: errorMessageSubstitution(e) || ERROR_FETCH_TOKENS_LIST
                 });
             }
 

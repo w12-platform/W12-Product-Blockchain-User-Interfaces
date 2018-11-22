@@ -19,7 +19,7 @@
 
     import {createNamespacedHelpers} from "vuex";
     import {CONFIRM_TX} from "store/modules/Transactions.js";
-    import {isZeroAddress} from 'lib/utils';
+    import {isZeroAddress, errorMessageSubstitution} from 'lib/utils';
 
     const ConfigNS = createNamespacedHelpers('Config');
     const ProjectNS = createNamespacedHelpers("Project");
@@ -174,7 +174,7 @@
                     };
                 } catch (e) {
                     console.error(e);
-                    this.error = e.message;
+                    this.error = errorMessageSubstitution(e);
                 }
 
                 this.isSubscribedToEvent = true;

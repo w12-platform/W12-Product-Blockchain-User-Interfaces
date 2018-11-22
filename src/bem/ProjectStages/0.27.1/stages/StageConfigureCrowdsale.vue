@@ -69,7 +69,7 @@
                             </b-field>
                         </div>
                         <b-notification class="ProjectStages__errorStage" v-if="error" @close="error = false" type="is-danger" has-icon>
-                            {{ error }}
+                            {{ $t('error') }}
                         </b-notification>
                         <div class="text-right">
                             <button class="btn btn-primary btn-sm" :disabled="disable" @click="initCrawdsale" v-html="$t('ProjectDashboardStageConfigureCrowdsaleInitButton')">
@@ -92,7 +92,7 @@
                             </b-field>
                         </div>
                         <b-notification class="ProjectStages__errorStage" v-if="error" @close="error = false" type="is-danger" has-icon>
-                            {{ error }}
+                            {{ $t('error') }}
                         </b-notification>
                         <div class="text-right">
                             <button class="btn btn-primary btn-sm" :disabled="disableAdd" @click="addTokensToCrowdSale" v-html="$t('ProjectDashboardStageConfigureCrowdsaleAddButton')">
@@ -118,7 +118,8 @@
         toWeiDecimals,
         fromWeiDecimals,
         fromWeiDecimalsString,
-        BigNumber
+        BigNumber,
+        errorMessageSubstitution,
     } from 'lib/utils.js';
 
     import {createNamespacedHelpers} from "vuex";
@@ -322,7 +323,7 @@
                     }
                 } catch (e) {
                     console.error(e);
-                    this.error = e.message;
+                    this.error = errorMessageSubstitution(e);
 
                     if (tx) {
                         this.$store.commit(`Transactions/${CANCEL_TX}`, tx);
@@ -358,7 +359,7 @@
                         await waitTransactionReceipt(tx, connectedWeb3);
                     } catch (e) {
                         console.error(e);
-                        this.error = e.message;
+                        this.error = errorMessageSubstitution(e);
                     }
 
                     this.initCrawdsaleLoading = false;

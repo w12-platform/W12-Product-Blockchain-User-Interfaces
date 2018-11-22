@@ -70,7 +70,7 @@
                             </b-field>
                         </div>
                         <b-notification class="ProjectStages__errorStage" v-if="error" @close="error = false" type="is-danger" has-icon>
-                            {{ error }}
+                            {{ $t('error') }}
                         </b-notification>
                         <div class="text-right">
                             <button class="btn btn-primary btn-sm" :disabled="disable" @click="initCrawdsale" v-html="$t('ProjectDashboardStageConfigureCrowdsaleInitButton')">
@@ -93,7 +93,7 @@
                             </b-field>
                         </div>
                         <b-notification class="ProjectStages__errorStage" v-if="error" @close="error = false" type="is-danger" has-icon>
-                            {{ error }}
+                            {{ $t('error') }}
                         </b-notification>
                         <div class="text-right">
                             <button class="btn btn-primary btn-sm" :disabled="disableAdd" @click="addTokensToCrowdSale" v-html="$t('ProjectDashboardStageConfigureCrowdsaleAddButton')">
@@ -111,7 +111,7 @@
 <script>
     import './default.scss';
     import Connector from 'lib/Blockchain/DefaultConnector.js';
-    import { waitTransactionReceipt, formatNumber, toWeiDecimals, fromWeiDecimals, fromWeiDecimalsString} from 'lib/utils.js';
+    import { waitTransactionReceipt, formatNumber, toWeiDecimals, fromWeiDecimals, fromWeiDecimalsString, errorMessageSubstitution} from 'lib/utils.js';
 
     import {createNamespacedHelpers} from "vuex";
     import {UPDATE_TX} from "store/modules/Transactions.js";
@@ -295,7 +295,7 @@
                     await waitTransactionReceipt(tx, connectedWeb3);
                 } catch (e) {
                     console.error(e);
-                    this.error = e.message;
+                    this.error = errorMessageSubstitution(e);
                 }
 
                 this.initCrawdsaleLoading = false;
@@ -327,7 +327,7 @@
                         await waitTransactionReceipt(tx, connectedWeb3);
                     } catch (e) {
                         console.error(e);
-                        this.error = e.message;
+                        this.error = errorMessageSubstitution(e);
                     }
 
                     this.initCrawdsaleLoading = false;

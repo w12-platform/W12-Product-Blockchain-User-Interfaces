@@ -31,7 +31,7 @@
         </table>
 
         <b-notification class="" v-if="error" @close="error = false" type="is-danger" has-icon>
-            {{ error }}
+            {{ $t('error') }}
         </b-notification>
 
         <button v-if="!isPendingTx && !isErrorTx" class="btn btn-primary py-2 my-2" :disabled="disable" @click="tryTranche" v-html="$t('trancheInformationReceive')">
@@ -46,7 +46,7 @@
     import {createNamespacedHelpers} from "vuex";
     import Connector from "lib/Blockchain/DefaultConnector";
     import {UPDATE_TX} from "store/modules/Transactions.js";
-    import {waitTransactionReceipt} from 'lib/utils.js';
+    import {waitTransactionReceipt, errorMessageSubstitution} from 'lib/utils.js';
     import Web3 from 'web3';
 
     const ProjectNS = createNamespacedHelpers("Project");
@@ -170,7 +170,7 @@
                     });
                     await waitTransactionReceipt(tx, web3);
                 } catch (e) {
-                    this.error = e.message;
+                    this.error = errorMessageSubstitution(e);
                 }
                 this.loading = false;
             },

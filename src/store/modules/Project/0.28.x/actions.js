@@ -1,5 +1,5 @@
 import { ReceivingModel } from '@/bem/Receiving/model';
-import { fromWeiDecimalsString } from '@/lib/utils';
+import { fromWeiDecimalsString, errorMessageSubstitution } from '@/lib/utils';
 import { UPDATE_META, UPDATE_PROJECT, UPDATE_RECEVING_INFO } from '../mutations';
 
 export async function updateTokenInfo({commit, dispatch}, {Token}) {
@@ -17,7 +17,7 @@ export async function updateTokenInfo({commit, dispatch}, {Token}) {
         }
     } catch (e) {
         console.error(e);
-        commit(UPDATE_META, {loadingProject: false, loadingProjectError: e.message});
+        commit(UPDATE_META, {loadingProject: false, loadingProjectError: errorMessageSubstitution(e)});
     }
 }
 
@@ -39,6 +39,6 @@ export async function updateReceivingInformation({commit, state, dispatch}, {Tok
         commit(UPDATE_RECEVING_INFO, receiving);
     } catch (e) {
         console.error(e);
-        commit(UPDATE_META, {loadingProjectError: e.message});
+        commit(UPDATE_META, {loadingProjectError: errorMessageSubstitution(e)});
     }
 }

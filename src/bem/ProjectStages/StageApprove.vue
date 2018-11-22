@@ -45,7 +45,7 @@
                                 ></cleave>
                             </div>
                             <b-notification class="ProjectStages__errorStage" v-if="error" @close="error = false"
-                                            type="is-danger" has-icon>{{ error }}
+                                            type="is-danger" has-icon>{{ $t('error') }}
                             </b-notification>
                             <b-notification class="ProjectStages__errorStage" v-if="amountError" :closable="false" type="is-danger" has-icon><span v-html="$t('ProjectDashboardStageApproveInsufficientTokens')"></span>
                             </b-notification>
@@ -70,7 +70,7 @@
     import './default.scss';
     import Connector from 'lib/Blockchain/DefaultConnector.js';
     import {UPDATE_TX} from "store/modules/Transactions.js";
-    import {waitTransactionReceipt, formatNumber, toWeiDecimals} from 'lib/utils.js';
+    import {waitTransactionReceipt, formatNumber, toWeiDecimals, errorMessageSubstitution} from 'lib/utils.js';
     import Web3 from 'web3';
     import {createNamespacedHelpers} from "vuex";
 
@@ -219,7 +219,7 @@
                     await waitTransactionReceipt(tx, connectedWeb3);
                 } catch (e) {
                     console.error(e);
-                    this.error = e.message;
+                    this.error = errorMessageSubstitution(e);
                 }
 
                 this.approveTokensToSpendLoading = false;

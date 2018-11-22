@@ -4,9 +4,9 @@
             <h2 v-html="$t('InvestorDashboard')"></h2>
 
             <b-notification class="InvestorDashboardRefund__error" v-if="isError" type="is-danger" has-icon>
-                <span v-if="ledgerMeta.loadingError">{{ ledgerMeta.loadingError }}</span>
-                <span v-if="tokensListMeta.loadingError">{{ tokensListMeta.loadingError }}</span>
-                <span v-if="accountMeta.loadingError">{{ accountMeta.loadingError }}</span>
+                <span v-if="ledgerMeta.loadingError">{{ $t('ledgerMeta.loadingError') }}</span>
+                <span v-if="tokensListMeta.loadingError">{{ $t('tokensListMeta.loadingError') }}</span>
+                <span v-if="accountMeta.loadingError">{{ $t('accountMeta.loadingError') }}</span>
             </b-notification>
 
             <b-notification v-if="isLoading && !isError" :closable="false" class="InvestorDashboardRefund__loader">

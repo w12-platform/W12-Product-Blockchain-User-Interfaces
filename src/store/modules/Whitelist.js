@@ -1,4 +1,5 @@
 import {map} from 'p-iteration';
+import {errorMessageSubstitution} from 'lib/utils';
 
 export const ERROR_FETCH_TOKENS_LIST = 'An unknown error while trying get tokens';
 
@@ -42,7 +43,7 @@ export default {
                 commit(UPDATE, {list});
             } catch (e) {
                 console.error(e);
-                commit(UPDATE_META, {loading: false, loadingError: e.message || ERROR_FETCH_TOKENS_LIST});
+                commit(UPDATE_META, {loading: false, loadingError: errorMessageSubstitution(e) || ERROR_FETCH_TOKENS_LIST});
             }
             commit(UPDATE_META, {loading: false});
         },

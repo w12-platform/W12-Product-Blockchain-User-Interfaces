@@ -14,7 +14,7 @@
             </div>
         </div>
         <b-notification class="" v-if="error" @close="error = false" type="is-danger" has-icon>
-            {{ error }}
+            {{ $t('error') }}
         </b-notification>
         <div class="ExchangeTokens__content" v-if="!isPendingTx && !isErrorTx">
             <div class="ExchangeTokens__form">
@@ -51,7 +51,7 @@
 <script>
     import './default.scss';
     import Connector from "lib/Blockchain/DefaultConnector";
-    import { waitTransactionReceipt, formatNumber, toWeiDecimals, fromWeiDecimals, fromWeiDecimalsString} from 'lib/utils.js';
+    import { waitTransactionReceipt, formatNumber, toWeiDecimals, fromWeiDecimals, fromWeiDecimalsString, errorMessageSubstitution} from 'lib/utils.js';
     import {createNamespacedHelpers} from "vuex";
     import {UPDATE_TX} from "store/modules/Transactions.js";
     import Web3 from 'web3';
@@ -186,7 +186,7 @@
                     await this.updateAccountData();
                 } catch (e) {
                     console.error(e);
-                    this.error = e.message;
+                    this.error = errorMessageSubstitution(e);
                 }
                 this.loading = false;
             },
@@ -214,7 +214,7 @@
                     await this.updateAccountData();
                 } catch (e) {
                     console.error(e);
-                    this.error = e.message;
+                    this.error = errorMessageSubstitution(e);
                 }
                 this.loading = false;
             },
@@ -240,7 +240,7 @@
                     await this.updateAccountData();
                 } catch (e) {
                     console.error(e);
-                    this.error = e.message;
+                    this.error = errorMessageSubstitution(e);
                 }
                 this.loading = false;
             },
