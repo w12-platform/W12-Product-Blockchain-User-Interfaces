@@ -146,3 +146,7 @@ export function isRefundActive(milestones, currentMilestoneIndex) {
 export async function jsonLoader(version, name) {
     return import("abi/" + version + "/" + name + ".json");
 }
+
+export function errorMessageSubstitution(e) {
+    return e.name === 'BigNumber Error' ? 'UnexpectedError' : e.message;
+}

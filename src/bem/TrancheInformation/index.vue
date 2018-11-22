@@ -47,7 +47,7 @@
     import {createNamespacedHelpers} from "vuex";
     import Connector from "lib/Blockchain/DefaultConnector";
     import {UPDATE_TX} from "store/modules/Transactions.js";
-    import {waitTransactionReceipt} from 'lib/utils.js';
+    import {waitTransactionReceipt, errorMessageSubstitution} from 'lib/utils.js';
     import Web3 from 'web3';
 
     const ProjectNS = createNamespacedHelpers("Project");
@@ -171,7 +171,7 @@
                     });
                     await waitTransactionReceipt(tx, web3);
                 } catch (e) {
-                    this.error = e.message;
+                    this.error = errorMessageSubstitution(e);
                 }
                 this.loading = false;
             },

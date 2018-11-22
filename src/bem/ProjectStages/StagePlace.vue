@@ -70,7 +70,7 @@
 <script>
     import './default.scss';
     import Connector from 'lib/Blockchain/DefaultConnector.js';
-    import { waitTransactionReceipt, formatNumber, toWeiDecimals, fromWeiDecimals} from 'lib/utils.js';
+    import { waitTransactionReceipt, formatNumber, toWeiDecimals, fromWeiDecimals, errorMessageSubstitution} from 'lib/utils.js';
     import {UPDATE_TX} from "store/modules/Transactions.js";
     import Web3 from 'web3';
     import {createNamespacedHelpers} from "vuex";
@@ -236,7 +236,7 @@
                     });
                     await waitTransactionReceipt(tx, connectedWeb3);
                 } catch (e) {
-                    this.error = e.message;
+                    this.error = errorMessageSubstitution(e);
                 }
 
                 this.placeTokensLoading = false;

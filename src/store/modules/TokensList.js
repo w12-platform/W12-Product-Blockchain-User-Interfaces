@@ -1,5 +1,5 @@
 import Connector from "lib/Blockchain/DefaultConnector";
-import {promisify, isZeroAddress, fromWeiDecimalsString} from "src/lib/utils";
+import {promisify, isZeroAddress, fromWeiDecimalsString, errorMessageSubstitution} from "src/lib/utils";
 import {map} from 'p-iteration';
 import Web3 from 'web3';
 
@@ -201,7 +201,7 @@ export default {
                     commit(UPDATE, {list});
                 });
             } catch (e) {
-                commit(UPDATE_META, {loading: false, loadingError: e.message || ERROR_FETCH_TOKENS_LIST});
+                commit(UPDATE_META, {loading: false, loadingError: errorMessageSubstitution(e) || ERROR_FETCH_TOKENS_LIST});
             }
             commit(UPDATE_META, {loading: false});
         },
@@ -331,7 +331,7 @@ export default {
                 commit(UPDATE, {list});
 
             } catch (e) {
-                commit(UPDATE_META, {loading: false, loadingError: e.message || ERROR_FETCH_TOKENS_LIST});
+                commit(UPDATE_META, {loading: false, loadingError: errorMessageSubstitution(e) || ERROR_FETCH_TOKENS_LIST});
             }
             commit(UPDATE_META, {loading: false});
         },
@@ -434,7 +434,7 @@ export default {
                 commit(UPDATE_META, {
                     loading: false,
                     updated: false,
-                    loadingError: e.message || ERROR_FETCH_TOKENS_LIST
+                    loadingError: errorMessageSubstitution(e) || ERROR_FETCH_TOKENS_LIST
                 });
             }
             commit(UPDATE_META, {updated: false});

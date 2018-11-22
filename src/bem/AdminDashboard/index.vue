@@ -6,9 +6,9 @@
             <ListerSwitch></ListerSwitch>
 
             <b-notification class="AdminDashboard__error" v-if="isError && !isLoading" type="is-danger" :closable="false" has-icon>
-                <span v-if="ledgerMeta.loadingError">{{ ledgerMeta.loadingError }}</span>
-                <span v-if="tokensListMeta.loadingError">{{ tokensListMeta.loadingError }}</span>
-                <span v-if="accountMeta.loadingError">{{ accountMeta.loadingError }}</span>
+                <span v-if="ledgerMeta.loadingError">{{ $t(ledgerMeta.loadingError) }}</span>
+                <span v-if="tokensListMeta.loadingError">{{ $t(tokensListMeta.loadingError) }}</span>
+                <span v-if="accountMeta.loadingError">{{ $t(accountMeta.loadingError)  }}</span>
             </b-notification>
 
             <b-notification v-if="isLoading && !isError" :closable="false" class="AdminDashboard__loader">

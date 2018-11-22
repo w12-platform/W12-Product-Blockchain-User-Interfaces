@@ -1,5 +1,5 @@
 import Connector from 'lib/Blockchain/DefaultConnector.js';
-import {promisify} from 'lib/utils.js';
+import {promisify, errorMessageSubstitution} from 'lib/utils.js';
 import config from '@/config.js';
 import Web3 from 'web3';
 
@@ -93,7 +93,7 @@ export default {
                         });
                     }
                 } catch (e) {
-                    commit(UPDATE_META, {loading: false, loadingError: e.message || ERROR_FETCH_ACCOUNT});
+                    commit(UPDATE_META, {loading: false, loadingError: errorMessageSubstitution(e) || ERROR_FETCH_ACCOUNT});
                 }
             };
 
@@ -159,7 +159,7 @@ export default {
                 };
                 commit(UPDATE_DATA, {currentAccountData});
             } catch (e) {
-                commit(UPDATE_META, {loading: false, updated: false, loadingError: e.message || ERROR_FETCH_ACCOUNT});
+                commit(UPDATE_META, {loading: false, updated: false, loadingError: errorMessageSubstitution(e) || ERROR_FETCH_ACCOUNT});
             }
 
             commit(UPDATE_META, {updated: false});

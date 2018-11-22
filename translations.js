@@ -1356,4 +1356,8 @@
 //         "en": "from {from}",
 //         "ru": "c {from}",
 //     },
+//     "UnexpectedError": {
+//         "en": "An unexpected error has occurred. Reload page",
+//         "ru": "Произошла непредвиденная ошибка. Перезагрузите страницу",
+//     },
 // };
