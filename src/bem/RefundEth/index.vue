@@ -39,7 +39,7 @@
         <RefundInformation v-if="refundInformation" :data="refundInformation"></RefundInformation>
 
         <b-notification class="" v-if="error" @close="error = false" type="is-danger" has-icon>
-            {{ error }}
+            {{ $t(error) }}
         </b-notification>
         <div class="pm-2" v-if="isPendingTx">
             <p class="py-2">{{ $t('WaitingConfirm') }}:</p>
@@ -59,7 +59,7 @@
 <script>
     import './default.scss';
     import Connector from "lib/Blockchain/DefaultConnector";
-    import { waitTransactionReceipt, formatNumber, toWeiDecimals, fromWeiDecimals, fromWeiDecimalsString} from 'lib/utils.js';
+    import { waitTransactionReceipt, formatNumber, toWeiDecimals, fromWeiDecimals, fromWeiDecimalsString, ErrorMessageSubstitution} from 'lib/utils.js';
     import {createNamespacedHelpers} from "vuex";
     import RefundInformation from 'bem/RefundInformation';
     import RefundCalculator from 'bem/RefundCalculator';
@@ -260,6 +260,7 @@
                     await waitTransactionReceipt(tx, web3);
                     await this.updateAccountData();
                 } catch (e) {
+                    ErrorMessageSubstitution(e);
                     this.error = e.message;
                 }
                 this.loading = false;
@@ -286,6 +287,7 @@
                     await waitTransactionReceipt(tx, web3);
                     await this.updateAccountData();
                 } catch (e) {
+                    ErrorMessageSubstitution(e);
                     this.error = e.message;
                 }
                 this.loading = false;
@@ -311,6 +313,7 @@
                         await this.updateAccountData();
                     }
                 } catch (e) {
+                    ErrorMessageSubstitution(e);
                     this.error = e.message;
                 }
                 this.loading = false;
@@ -350,6 +353,7 @@
                         FundsRefunded,
                     };
                 } catch (e) {
+                    ErrorMessageSubstitution(e);
                     this.error = e.message;
                 }
 

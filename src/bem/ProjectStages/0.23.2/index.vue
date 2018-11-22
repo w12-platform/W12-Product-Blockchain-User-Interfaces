@@ -21,7 +21,7 @@
 
     import {createNamespacedHelpers} from "vuex";
     import {CONFIRM_TX} from "store/modules/Transactions.js";
-    import {isZeroAddress} from 'lib/utils';
+    import {isZeroAddress, ErrorMessageSubstitution} from 'lib/utils';
 
     const ConfigNS = createNamespacedHelpers('Config');
     const ProjectNS = createNamespacedHelpers("Project");
@@ -176,6 +176,7 @@
                         TrancheReleased
                     };
                 } catch (e) {
+                    ErrorMessageSubstitution(e);
                     this.error = e.message;
                 }
 

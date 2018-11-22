@@ -208,7 +208,7 @@
     import DatePicker from 'vue2-datepicker';
     import {createNamespacedHelpers} from "vuex";
     import {MilestoneModel} from 'bem/StageCrowdsaleSetup/0.23.2/shared.js';
-    import {waitTransactionReceipt} from 'lib/utils.js';
+    import {waitTransactionReceipt, ErrorMessageSubstitution} from 'lib/utils.js';
     import MilestoneCard from 'bem/StageCrowdsaleSetup/0.23.2/MilestoneCard.vue';
     import {UPDATE_TX} from "store/modules/Transactions.js";
 
@@ -390,6 +390,7 @@
                     this.tokenCrowdSaleStages.forEach(stage => stage.wasCreated = true);
                     this.tokenCrowdSaleMilestones.forEach(stage => stage.wasCreated = true);
                 } catch (e) {
+                    ErrorMessageSubstitution(e);
                     this.error = e.message;
                 }
 

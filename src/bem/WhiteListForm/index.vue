@@ -131,7 +131,7 @@
                 {{ $t('AdminDashboardWarning') }}
             </b-notification>
             <b-notification v-if="errorMessage !== ''" type="is-danger" has-icon>
-                {{ errorMessage }}
+                {{ $t(errorMessage) }}
             </b-notification>
             <div class="pm-2" v-if="isPendingTx">
                 <p class="py-2">{{ $t('WaitingConfirm') }}:</p>
@@ -156,7 +156,7 @@
     import './default.scss';
     import 'bem/labelTooltip/default.scss';
     import Connector from 'lib/Blockchain/DefaultConnector.js';
-    import {promisify, waitTransactionReceipt} from 'lib/utils.js';
+    import {promisify, waitTransactionReceipt, ErrorMessageSubstitution} from 'lib/utils.js';
     import {UPDATE_TX} from "store/modules/Transactions.js";
     import tokenValidationMixinGenerator from '@/lib/views/mixins/validation/token-validation';
     import {createNamespacedHelpers} from "vuex";
@@ -380,6 +380,7 @@
                         await waitTransactionReceipt(tx, connectedWeb3);
                         this.endTokenWhiteListOperation();
                     } catch (e) {
+                        ErrorMessageSubstitution(e);
                         this.setErrorMessage(e.message);
                     }
                 }
@@ -433,6 +434,7 @@
                                 OwnerWhitelisted,
                             };
                         } catch (e) {
+                            ErrorMessageSubstitution(e);
                             this.setErrorMessage(e.message);
                         }
                     }

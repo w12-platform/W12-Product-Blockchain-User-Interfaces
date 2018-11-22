@@ -5,8 +5,8 @@
 
             <b-notification class="AdminDashboard__error" v-if="isError && !isLoading" type="is-danger"
                             :closable="false" has-icon>
-                <span v-if="ledgerMeta.loadingError">{{ ledgerMeta.loadingError }}</span>
-                <span v-if="accountMeta.loadingError">{{ accountMeta.loadingError }}</span>
+                <span v-if="ledgerMeta.loadingError">{{ $t(ledgerMeta.loadingError) }}</span>
+                <span v-if="accountMeta.loadingError">{{ $t(accountMeta.loadingError)  }}</span>
             </b-notification>
 
             <b-notification v-if="isLoading && !isError" :closable="false" class="AdminDashboard__loader">
@@ -129,7 +129,7 @@
 <script>
     import './default.scss';
     import Connector from 'lib/Blockchain/DefaultConnector.js';
-    import {waitTransactionReceipt} from 'lib/utils.js';
+    import {waitTransactionReceipt, ErrorMessageSubstitution} from 'lib/utils.js';
     import {UPDATE_TX, CONFIRM_TX} from "store/modules/Transactions.js";
     import {FACTORY_ADD} from "store/modules/Factory.js";
     import tokenValidationMixinGenerator from '@/lib/views/mixins/validation/token-validation';
@@ -382,6 +382,7 @@
 
                     await waitTransactionReceipt(tx, connectedWeb3);
                 } catch (e) {
+                    ErrorMessageSubstitution(e);
                     this.error = e.message;
                 }
                 this.meta.creating = false;
@@ -398,6 +399,7 @@
                     });
                     this.list = listInfo;
                 } catch (e) {
+                    ErrorMessageSubstitution(e);
                     this.error = e.message;
                 }
             },
@@ -420,6 +422,7 @@
                         NewToken,
                     };
                 } catch (e) {
+                    ErrorMessageSubstitution(e);
                     this.error = e.message;
                 }
 

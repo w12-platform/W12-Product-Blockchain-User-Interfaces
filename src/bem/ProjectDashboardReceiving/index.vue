@@ -4,9 +4,9 @@
             <h2>{{ $t('ProjectDashboard') }}</h2>
 
             <b-notification v-if="isError" type="is-danger" :closable="false" has-icon>
-                <span v-if="ledgerMeta.loadingError">{{ ledgerMeta.loadingError }}</span>
-                <span v-if="ProjectMeta.loadingError">{{ ProjectMeta.loadingError }}</span>
-                <span v-if="accountMeta.loadingError">{{ accountMeta.loadingError }}</span>
+                <span v-if="ledgerMeta.loadingError">{{ $t(ledgerMeta.loadingError) }}</span>
+                <span v-if="ProjectMeta.loadingError">{{ $t(ProjectMeta.loadingError) }}</span>
+                <span v-if="accountMeta.loadingError">{{ $t(accountMeta.loadingError) }}</span>
             </b-notification>
 
             <b-notification v-if="!isError && isLoading" :closable="false">
@@ -40,7 +40,7 @@
     import Steps from "bem/Steps";
 
     import {createNamespacedHelpers} from 'vuex';
-    import {isZeroAddress} from 'lib/utils';
+    import {isZeroAddress, ErrorMessageSubstitution} from 'lib/utils';
 
     const ConfigNS = createNamespacedHelpers('Config');
     const LedgerNS = createNamespacedHelpers("Ledger");
@@ -185,6 +185,7 @@
                         UnsoldTokenReturned,
                     };
                 } catch (e) {
+                    ErrorMessageSubstitution(e);
                     this.error = e.message;
                 }
 

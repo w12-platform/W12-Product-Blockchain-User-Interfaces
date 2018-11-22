@@ -1,5 +1,5 @@
 import config from '../../config.js';
-import { promisify } from '../utils.js';
+import { promisify, ErrorMessageSubstitution} from '../utils.js';
 import Web3 from 'web3';
 
 
@@ -60,7 +60,8 @@ export class Connector {
                 // Request account access if needed
                 await ethereum.enable();
                 return window.web3.currentProvider;
-            } catch (error) {
+            } catch (e) {
+                ErrorMessageSubstitution(e);
                 throw new Error('User denied account access...');
             }
         } else if (typeof window.web3 !== 'undefined') {

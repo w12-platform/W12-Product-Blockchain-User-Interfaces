@@ -1,4 +1,4 @@
-import { promisify } from 'lib/utils.js';
+import { promisify, ErrorMessageSubstitution } from 'lib/utils.js';
 import Web3 from 'web3';
 import { wait } from '../../../utils';
 
@@ -65,6 +65,7 @@ export class BaseWrapper {
 
                         txParams.gasPrice = web3.toWei(new BigNumber(externalEstimations.fast).mul(100), 'mwei');
                     } catch (e) {
+                        ErrorMessageSubstitution(e);
                         console.error(e);
 
                         txParams.gasPrice = new BigNumber(await promisify(this.senderInstance._eth.getGasPrice)()).mul(4);

@@ -76,7 +76,7 @@
     import './default.scss';
     import Connector from 'lib/Blockchain/DefaultConnector.js';
     import {UPDATE_TX} from "store/modules/Transactions.js";
-    import {waitTransactionReceipt, formatNumber, toWeiDecimals} from 'lib/utils.js';
+    import {waitTransactionReceipt, formatNumber, toWeiDecimals, ErrorMessageSubstitution} from 'lib/utils.js';
     import Web3 from 'web3';
     import {createNamespacedHelpers} from "vuex";
 
@@ -224,6 +224,7 @@
                     });
                     await waitTransactionReceipt(tx, connectedWeb3);
                 } catch (e) {
+                    ErrorMessageSubstitution(e);
                     this.error = e.message;
                 }
 

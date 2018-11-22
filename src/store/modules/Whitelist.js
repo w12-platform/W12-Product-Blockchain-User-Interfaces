@@ -1,4 +1,5 @@
 import {map} from 'p-iteration';
+import {ErrorMessageSubstitution} from 'lib/utils';
 
 const moment = window.moment;
 
@@ -43,6 +44,7 @@ export default {
                 list = list.filter((token) => Boolean(token.tokenAddress));
                 commit(UPDATE, {list});
             } catch (e) {
+                ErrorMessageSubstitution(e);
                 commit(UPDATE_META, {loading: false, loadingError: e.message || ERROR_FETCH_TOKENS_LIST});
             }
             commit(UPDATE_META, {loading: false});

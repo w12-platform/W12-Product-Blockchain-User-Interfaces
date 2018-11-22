@@ -657,7 +657,7 @@
 //         "ru": "Комиссия с продажи токенов"
 //     },
 //     "AdminDashboardTableTrancheFeePercent": {
-//         "en": "Commission for the withdrawal of project funds from the fund",
+//         "en": "Commission for the withбdrawal of project funds from the fund",
 //         "ru": "Комиссия при выводе средств проектом из фонда"
 //     },
 //     "AdminDashboardSelectLister": {
@@ -1355,5 +1355,9 @@
 //     "RoadMapDatesLast": {
 //         "en": "from {from}",
 //         "ru": "c {from}",
+//     },
+//     "UnexpectedError": {
+//         "en": "An unexpected error has occurred. Reload page",
+//         "ru": "Произошла непредвиденная ошибка. Перезагрузите страницу",
 //     },
 // };

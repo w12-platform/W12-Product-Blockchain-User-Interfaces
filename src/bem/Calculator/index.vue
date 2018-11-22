@@ -71,7 +71,7 @@
             </div>
 
             <b-notification class="" v-if="error" @close="error = false" type="is-danger" has-icon>
-                {{ error }}
+                {{ $t(error) }}
             </b-notification>
 
             <div class="pm-2" v-if="isPendingTx">
@@ -97,7 +97,7 @@
 <script>
     import './default.scss';
     import {createNamespacedHelpers} from "vuex";
-    import {waitTransactionReceipt} from 'lib/utils.js';
+    import {waitTransactionReceipt, ErrorMessageSubstitution} from 'lib/utils.js';
     import {UPDATE_TX, CONFIRM_TX} from "store/modules/Transactions.js";
     import Web3 from 'web3';
     import countdown from 'countdown';
@@ -411,6 +411,7 @@
                     });
                     await waitTransactionReceipt(tx, connectedWeb3);
                 } catch (e) {
+                    ErrorMessageSubstitution(e);
                     console.error(e);
                     this.error = e.message;
                 }
@@ -447,6 +448,7 @@
                         TokenPurchase,
                     };
                 } catch (e) {
+                    ErrorMessageSubstitution(e);
                     this.error = e.message;
                 }
 

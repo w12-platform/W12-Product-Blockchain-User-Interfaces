@@ -107,7 +107,7 @@
 <script>
     import './default.scss';
     import Connector from "lib/Blockchain/DefaultConnector";
-    import { waitTransactionReceipt, formatNumber, toWeiDecimals, fromWeiDecimals, fromWeiDecimalsString} from 'lib/utils.js';
+    import { waitTransactionReceipt, formatNumber, toWeiDecimals, fromWeiDecimals, fromWeiDecimalsString, ErrorMessageSubstitution} from 'lib/utils.js';
     import {createNamespacedHelpers} from "vuex";
     import {UPDATE_TX, CONFIRM_TX} from "store/modules/Transactions.js";
     import Web3 from 'web3';
@@ -276,6 +276,7 @@
                     await waitTransactionReceipt(tx, web3);
                     await this.updateAccountData();
                 } catch (e) {
+                    ErrorMessageSubstitution(e);
                     this.error = e.message;
                 }
                 this.loading = false;
@@ -304,6 +305,7 @@
                     await waitTransactionReceipt(tx, web3);
                     await this.updateAccountData();
                 } catch (e) {
+                    ErrorMessageSubstitution(e);
                     this.error = e.message;
                 }
                 this.loading = false;
@@ -330,6 +332,7 @@
                     await waitTransactionReceipt(tx, web3);
                     await this.updateAccountData();
                 } catch (e) {
+                    ErrorMessageSubstitution(e);
                     this.error = e.message;
                 }
                 this.loading = false;
@@ -372,6 +375,7 @@
                         ExchangeEvent
                     };
                 } catch (e) {
+                    ErrorMessageSubstitution(e);
                     this.error = e.message;
                 }
 
