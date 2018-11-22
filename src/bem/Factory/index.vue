@@ -129,7 +129,7 @@
 <script>
     import './default.scss';
     import Connector from 'lib/Blockchain/DefaultConnector.js';
-    import {waitTransactionReceipt, ErrorMessageSubstitution} from 'lib/utils.js';
+    import {waitTransactionReceipt, errorMessageSubstitution} from 'lib/utils.js';
     import {UPDATE_TX, CONFIRM_TX} from "store/modules/Transactions.js";
     import {FACTORY_ADD} from "store/modules/Factory.js";
     import tokenValidationMixinGenerator from '@/lib/views/mixins/validation/token-validation';
@@ -382,8 +382,7 @@
 
                     await waitTransactionReceipt(tx, connectedWeb3);
                 } catch (e) {
-                    ErrorMessageSubstitution(e);
-                    this.error = e.message;
+                    this.error = errorMessageSubstitution(e);
                 }
                 this.meta.creating = false;
             },
@@ -399,8 +398,7 @@
                     });
                     this.list = listInfo;
                 } catch (e) {
-                    ErrorMessageSubstitution(e);
-                    this.error = e.message;
+                    this.error = errorMessageSubstitution(e);
                 }
             },
             unsubscribeFromEvents() {
@@ -422,8 +420,7 @@
                         NewToken,
                     };
                 } catch (e) {
-                    ErrorMessageSubstitution(e);
-                    this.error = e.message;
+                    this.error = errorMessageSubstitution(e);
                 }
 
                 this.subscribeToEventsLoading = false;

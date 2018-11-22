@@ -40,7 +40,7 @@
     import Steps from "bem/Steps";
 
     import {createNamespacedHelpers} from 'vuex';
-    import {isZeroAddress, ErrorMessageSubstitution} from 'lib/utils';
+    import {isZeroAddress, errorMessageSubstitution} from 'lib/utils';
 
     const ConfigNS = createNamespacedHelpers('Config');
     const LedgerNS = createNamespacedHelpers("Ledger");
@@ -185,8 +185,7 @@
                         UnsoldTokenReturned,
                     };
                 } catch (e) {
-                    ErrorMessageSubstitution(e);
-                    this.error = e.message;
+                    this.error = errorMessageSubstitution(e);
                 }
 
                 this.subscribeToEventsLoading = false;

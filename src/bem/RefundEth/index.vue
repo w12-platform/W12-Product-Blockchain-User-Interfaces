@@ -59,7 +59,7 @@
 <script>
     import './default.scss';
     import Connector from "lib/Blockchain/DefaultConnector";
-    import { waitTransactionReceipt, formatNumber, toWeiDecimals, fromWeiDecimals, fromWeiDecimalsString, ErrorMessageSubstitution} from 'lib/utils.js';
+    import { waitTransactionReceipt, formatNumber, toWeiDecimals, fromWeiDecimals, fromWeiDecimalsString, errorMessageSubstitution} from 'lib/utils.js';
     import {createNamespacedHelpers} from "vuex";
     import RefundInformation from 'bem/RefundInformation';
     import RefundCalculator from 'bem/RefundCalculator';
@@ -260,8 +260,7 @@
                     await waitTransactionReceipt(tx, web3);
                     await this.updateAccountData();
                 } catch (e) {
-                    ErrorMessageSubstitution(e);
-                    this.error = e.message;
+                    this.error = errorMessageSubstitution(e)
                 }
                 this.loading = false;
             },
@@ -287,8 +286,7 @@
                     await waitTransactionReceipt(tx, web3);
                     await this.updateAccountData();
                 } catch (e) {
-                    ErrorMessageSubstitution(e);
-                    this.error = e.message;
+                    this.error = errorMessageSubstitution(e);
                 }
                 this.loading = false;
             },
@@ -313,8 +311,7 @@
                         await this.updateAccountData();
                     }
                 } catch (e) {
-                    ErrorMessageSubstitution(e);
-                    this.error = e.message;
+                    this.error = errorMessageSubstitution(e);
                 }
                 this.loading = false;
             },
@@ -353,8 +350,7 @@
                         FundsRefunded,
                     };
                 } catch (e) {
-                    ErrorMessageSubstitution(e);
-                    this.error = e.message;
+                    this.error = errorMessageSubstitution(e);
                 }
 
                 this.subscribeToEventsLoading = false;

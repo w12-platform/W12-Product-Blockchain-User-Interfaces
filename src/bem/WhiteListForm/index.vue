@@ -156,7 +156,7 @@
     import './default.scss';
     import 'bem/labelTooltip/default.scss';
     import Connector from 'lib/Blockchain/DefaultConnector.js';
-    import {promisify, waitTransactionReceipt, ErrorMessageSubstitution} from 'lib/utils.js';
+    import {promisify, waitTransactionReceipt, errorMessageSubstitution} from 'lib/utils.js';
     import {UPDATE_TX} from "store/modules/Transactions.js";
     import tokenValidationMixinGenerator from '@/lib/views/mixins/validation/token-validation';
     import {createNamespacedHelpers} from "vuex";
@@ -380,8 +380,7 @@
                         await waitTransactionReceipt(tx, connectedWeb3);
                         this.endTokenWhiteListOperation();
                     } catch (e) {
-                        ErrorMessageSubstitution(e);
-                        this.setErrorMessage(e.message);
+                        this.setErrorMessage(errorMessageSubstitution(e));
                     }
                 }
 
@@ -434,8 +433,7 @@
                                 OwnerWhitelisted,
                             };
                         } catch (e) {
-                            ErrorMessageSubstitution(e);
-                            this.setErrorMessage(e.message);
+                            this.setErrorMessage(errorMessageSubstitution(e));
                         }
                     }
                 }

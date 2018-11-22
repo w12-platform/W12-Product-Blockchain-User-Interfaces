@@ -53,7 +53,7 @@
     import {MilestoneModel} from 'bem/Milestones/shared.js';
     import Connector from 'lib/Blockchain/DefaultConnector.js';
     import {UPDATE_TX} from "store/modules/Transactions.js";
-    import {waitTransactionReceipt, ErrorMessageSubstitution} from 'lib/utils.js';
+    import {waitTransactionReceipt, errorMessageSubstitution} from 'lib/utils.js';
 
     import {createNamespacedHelpers} from "vuex";
 
@@ -210,8 +210,7 @@
                     await waitTransactionReceipt(tx, connectedWeb3);
                     this.tokenCrowdSaleMilestones.forEach(stage => stage.wasCreated = true);
                 } catch (e) {
-                    ErrorMessageSubstitution(e);
-                    this.error = e.message;
+                    this.error = errorMessageSubstitution(e);
                 }
                 this.saveMilestonesLoading = false;
             },

@@ -1,7 +1,6 @@
 import jsunicode from 'jsunicode';
 import Web3 from 'web3';
 import moment from 'moment';
-import Vue from "vue";
 
 const web3 = new Web3();
 const BigNumber = web3.BigNumber;
@@ -148,6 +147,6 @@ export async function jsonLoader(version, name) {
     return import("abi/" + version + "/" + name + ".json");
 }
 
-export function ErrorMessageSubstitution(e) {
-    e.message = e.name === 'BigNumber Error' ? 'UnexpectedError' : e.message;
+export function errorMessageSubstitution(e) {
+    return e.name === 'BigNumber Error' ? 'UnexpectedError' : e.message;
 }

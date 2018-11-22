@@ -41,7 +41,7 @@
 
     import {CONFIRM_TX} from "store/modules/Transactions.js";
     import {createNamespacedHelpers} from 'vuex';
-    import {isZeroAddress, ErrorMessageSubstitution} from 'lib/utils';
+    import {isZeroAddress, errorMessageSubstitution} from 'lib/utils';
 
     const LedgerNS = createNamespacedHelpers("Ledger");
     const AccountNS = createNamespacedHelpers("Account");
@@ -167,8 +167,7 @@
                         TrancheReleased,
                     };
                 } catch (e) {
-                    ErrorMessageSubstitution(e);
-                    this.error = e.message;
+                    this.error = errorMessageSubstitution(e);
                 }
 
                 this.subscribeToEventsLoading = false;

@@ -97,7 +97,7 @@
 <script>
     import './default.scss';
     import {createNamespacedHelpers} from "vuex";
-    import {waitTransactionReceipt, ErrorMessageSubstitution} from 'lib/utils.js';
+    import {waitTransactionReceipt, errorMessageSubstitution} from 'lib/utils.js';
     import {UPDATE_TX, CONFIRM_TX} from "store/modules/Transactions.js";
     import Web3 from 'web3';
     import countdown from 'countdown';
@@ -411,9 +411,8 @@
                     });
                     await waitTransactionReceipt(tx, connectedWeb3);
                 } catch (e) {
-                    ErrorMessageSubstitution(e);
                     console.error(e);
-                    this.error = e.message;
+                    this.error = errorMessageSubstitution(e);
                 }
                 this.loading = false;
             },
@@ -448,8 +447,7 @@
                         TokenPurchase,
                     };
                 } catch (e) {
-                    ErrorMessageSubstitution(e);
-                    this.error = e.message;
+                    this.error = errorMessageSubstitution(e);
                 }
 
                 this.subscribeToEventsLoading = false;

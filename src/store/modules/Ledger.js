@@ -1,5 +1,5 @@
 import {loadContracts} from "src/lib/Blockchain/ContractsLedger.js";
-import {ErrorMessageSubstitution} from 'lib/utils';
+import {errorMessageSubstitution} from 'lib/utils';
 
 export const ERROR_FETCH_LEDGER = 'LoadLedger: An unknown error';
 export const UPDATE_META = "UPDATE_META";
@@ -28,9 +28,8 @@ export default {
             try {
                 ledger = await loadContracts(version);
             } catch (e) {
-                ErrorMessageSubstitution(e);
                 console.error(e);
-                commit(UPDATE_META, {loading: false, loadingError: e.message || ERROR_FETCH_LEDGER});
+                commit(UPDATE_META, {loading: false, loadingError: errorMessageSubstitution(e) || ERROR_FETCH_LEDGER});
             }
 
             commit(UPDATE_META, {loading: false, loadingError: false});

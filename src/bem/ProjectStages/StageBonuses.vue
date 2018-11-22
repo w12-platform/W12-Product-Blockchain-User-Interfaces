@@ -206,7 +206,7 @@
 <script>
     import './default.scss';
     import Connector from 'lib/Blockchain/DefaultConnector.js';
-    import {waitTransactionReceipt, ErrorMessageSubstitution} from 'lib/utils.js';
+    import {waitTransactionReceipt, errorMessageSubstitution} from 'lib/utils.js';
     import DatePicker from 'vue2-datepicker';
     import Web3 from 'web3';
     import {createNamespacedHelpers} from "vuex";
@@ -386,8 +386,7 @@
                     stages.forEach(stage => stage.wasCreated = true);
                     this.tokenCrowdSaleStagesChange = false;
                 } catch (e) {
-                    ErrorMessageSubstitution(e);
-                    this.error = e.message;
+                    this.error = errorMessageSubstitution(e);
                 }
 
                 this.setStagesLoading = false;
@@ -427,8 +426,7 @@
                     const connectedWeb3 = (await Connector.connect()).web3;
                     await waitTransactionReceipt(tx, connectedWeb3);
                 } catch (e) {
-                    ErrorMessageSubstitution(e);
-                    this.error = e.message;
+                    this.error = errorMessageSubstitution(e);
                 }
 
                 this.setStagesLoading = false;

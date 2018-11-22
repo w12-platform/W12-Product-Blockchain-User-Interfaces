@@ -53,7 +53,7 @@
 <script>
     import "./default.scss";
     import ExchangeTokensProjects from 'bem/ExchangeTokensProjects';
-    import {waitTransactionReceipt, ErrorMessageSubstitution} from 'lib/utils.js';
+    import {waitTransactionReceipt, errorMessageSubstitution} from 'lib/utils.js';
     import Connector from 'lib/Blockchain/DefaultConnector.js';
     import {UPDATE_TX} from "store/modules/Transactions.js";
     import Web3 from 'web3';
@@ -151,8 +151,7 @@
                     });
                     await waitTransactionReceipt(tx, connectedWeb3);
                 } catch (e) {
-                    ErrorMessageSubstitution(e);
-                    this.error = e.message;
+                    this.error = errorMessageSubstitution(e);
                 }
                 this.loadingClaim = false;
             },

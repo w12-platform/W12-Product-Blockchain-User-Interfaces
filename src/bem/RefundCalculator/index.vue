@@ -28,7 +28,7 @@
 <script>
     import 'src/bem/RefundCalculator/default.scss';
     import { RefundInformationModel } from 'bem/RefundInformation/shared.js';
-    import { toWeiDecimals, ErrorMessageSubstitution } from 'lib/utils.js';
+    import { toWeiDecimals } from 'lib/utils.js';
     import Web3 from 'web3';
 
     const web3 = new Web3();
@@ -130,7 +130,6 @@
                         };
                     }
                 } catch (e) {
-                    ErrorMessageSubstitution(e);
                     console.log(e);
                 }
 
@@ -152,7 +151,6 @@
                         this.refundAmount = value.toString();
                     }
                 } catch (e) {
-                    ErrorMessageSubstitution(e);
                     console.log(e);
                 }
 
