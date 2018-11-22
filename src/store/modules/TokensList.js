@@ -235,6 +235,7 @@ export default {
                     const tokensForSaleAmount = fromWeiDecimalsString(token.tokensForSaleAmount, token.decimals);
                     const tokenPrice = web3.fromWei(await W12Crowdsale.methods.price(), 'ether').toString();
                     const stages = (await W12Crowdsale.getStagesList());
+                    const milestones = (await W12Crowdsale.getMilestones());
                     const startDate = stages.length ? stages[0].startDate : null;
 
                     let endDate = false;
@@ -295,6 +296,7 @@ export default {
                         startDate: startDate,
                         crowdsaleAddress: token.crowdsaleAddress,
                         stages,
+                        milestones,
                         status,
                         bonusVolumes,
                         stageDiscount,
