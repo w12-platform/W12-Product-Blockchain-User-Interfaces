@@ -111,7 +111,7 @@
                         </b-field>
                     </div>
                     <b-notification class="ProjectStages__errorStage" v-if="error" @close="error = false"
-                                    type="is-danger" has-icon>{{ $t('error') }}
+                                    type="is-danger" has-icon>{{ $t(error) }}
                     </b-notification>
                     <button class="btn btn-primary py-2 my-2" @click="create" :disabled="disable" v-html="$t('TokensFactoryCreate')">
                     </button>

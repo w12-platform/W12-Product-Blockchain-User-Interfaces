@@ -31,7 +31,7 @@
         </table>
 
         <b-notification class="" v-if="error" @close="error = false" type="is-danger" has-icon>
-            {{ $t('error') }}
+            {{ $t(error) }}
         </b-notification>
 
         <button v-if="!isPendingTx && !isErrorTx" class="btn btn-primary py-2 my-2" :disabled="disable" @click="tryTranche" v-html="$t('trancheInformationReceive')">

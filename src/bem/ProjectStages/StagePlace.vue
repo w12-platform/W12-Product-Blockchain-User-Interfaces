@@ -45,7 +45,7 @@
                         ></cleave>
                     </div>
                     <b-notification class="ProjectStages__errorStage" v-if="error" @close="error = false" type="is-danger" has-icon>
-                        {{ $t('error') }}
+                        {{ $t(error) }}
                     </b-notification>
                     <b-notification class="ProjectStages__errorStage" v-if="amountError" :closable="false" type="is-danger" has-icon><span v-html="$t('ProjectDashboardStagePlaceErrorAmount')"></span>
                     </b-notification>
