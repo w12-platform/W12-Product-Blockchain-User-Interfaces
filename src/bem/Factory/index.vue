@@ -127,7 +127,7 @@
 <script>
     import './default.scss';
     import Connector from 'lib/Blockchain/DefaultConnector.js';
-    import {waitTransactionReceipt, errorMessageSubstitution, errorMessageSubstitution, errorMessageSubstitution} from 'lib/utils.js';
+    import {waitTransactionReceipt, errorMessageSubstitution} from 'lib/utils.js';
     import {UPDATE_TX, CONFIRM_TX} from "store/modules/Transactions.js";
     import {FACTORY_ADD} from "store/modules/Factory.js";
     import tokenValidationMixinGenerator from '@/lib/views/mixins/validation/token-validation';
