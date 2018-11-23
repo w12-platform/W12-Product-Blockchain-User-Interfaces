@@ -169,7 +169,7 @@
                                 </div>
 
                                 <b-notification class="ProjectStages__errorStage" v-if="error" @close="error = false"
-                                                type="is-danger" has-icon>{{ error }}
+                                                type="is-danger" has-icon>{{ $t('error') }}
                                 </b-notification>
                             </div>
 
@@ -199,7 +199,7 @@
 <script>
     import './default.scss';
     import Connector from 'lib/Blockchain/DefaultConnector.js';
-    import {waitTransactionReceipt} from 'lib/utils.js';
+    import {waitTransactionReceipt, errorMessageSubstitution} from 'lib/utils.js';
     import DatePicker from 'vue2-datepicker';
     import Web3 from 'web3';
     import {createNamespacedHelpers} from "vuex";
@@ -379,7 +379,7 @@
                     this.tokenCrowdSaleStagesChange = false;
                 } catch (e) {
                     console.error(e);
-                    this.error = e.message;
+                    this.error = errorMessageSubstitution(e);
                 }
 
                 this.setStagesLoading = false;
@@ -420,7 +420,7 @@
                     await waitTransactionReceipt(tx, connectedWeb3);
                 } catch (e) {
                     console.error(e);
-                    this.error = e.message;
+                    this.error = errorMessageSubstitution(e);
                 }
 
                 this.setStagesLoading = false;

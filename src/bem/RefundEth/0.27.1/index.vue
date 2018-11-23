@@ -48,7 +48,7 @@
         <RefundInformation v-if="refundInformation" :data="refundInformation"></RefundInformation>
 
         <b-notification class="" v-if="error" @close="error = false" type="is-danger" has-icon>
-            {{ error }}
+            {{ $t('error') }}
         </b-notification>
         <div class="pm-2" v-if="isPendingTx">
             <p class="py-2"><span v-html="$t('WaitingConfirm')"></span>:</p>
@@ -79,7 +79,7 @@
     import { convertionByDecimals, reverseConversionByDecimals } from '@/lib/selectors/units';
     import { CANCEL_TX } from '@/store/modules/Transactions';
     import Connector from "lib/Blockchain/DefaultConnector";
-    import { waitTransactionReceipt } from 'lib/utils.js';
+    import { waitTransactionReceipt, errorMessageSubstitution } from 'lib/utils.js';
     import {createNamespacedHelpers} from "vuex";
     import RefundInformation from 'bem/RefundInformation/0.27.1';
     import RefundCalculator from 'bem/RefundCalculator/0.27.1';
@@ -388,7 +388,7 @@
                     await this.updateAccountData();
                 } catch (e) {
                     console.error(e);
-                    this.error = e.message;
+                    this.error = errorMessageSubstitution(e);
 
                     if (tx) {
                         this.$store.commit(`Transactions/${CANCEL_TX}`, tx);
@@ -433,7 +433,7 @@
                     await this.updateAccountData();
                 } catch (e) {
                     console.error(e);
-                    this.error = e.message;
+                    this.error = errorMessageSubstitution(e);
 
                     if (tx) {
                         this.$store.commit(`Transactions/${CANCEL_TX}`, tx);
@@ -478,7 +478,7 @@
                     }
                 } catch (e) {
                     console.error(e);
-                    this.error = e.message;
+                    this.error = errorMessageSubstitution(e);
 
                     if (tx) {
                         this.$store.commit(`Transactions/${CANCEL_TX}`, tx);

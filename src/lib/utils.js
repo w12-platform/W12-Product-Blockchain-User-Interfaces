@@ -238,3 +238,7 @@ export function round(value) {
 
     return new BigNumber(value.toFixed(0, 1));
 }
+
+export function errorMessageSubstitution(e) {
+    return e.name === 'BigNumber Error' ? 'UnexpectedError' : e.message;
+}

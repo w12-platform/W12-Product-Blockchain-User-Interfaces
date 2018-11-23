@@ -26,7 +26,7 @@
 
 <script>
     import './default.scss';
-    import { waitContractEventOnce, waitTransactionReceipt } from '@/lib/utils';
+    import { waitContractEventOnce, waitTransactionReceipt, errorMessageSubstitution } from '@/lib/utils';
     import { CANCEL_TX } from '@/store/modules/Transactions';
     import cloneDeep from 'lodash/cloneDeep';
     import Connector from 'lib/Blockchain/DefaultConnector.js';
@@ -212,7 +212,7 @@
                     };
                 } catch (e) {
                     console.error(e);
-                    this.error = e.message;
+                    this.error = errorMessageSubstitution(e);
                 }
 
                 this.subscribeToEventsLoading = false;
@@ -350,7 +350,7 @@
 
                 } catch (e) {
                     console.error(e);
-                    this.error = e.message;
+                    this.error = errorMessageSubstitution(e);
 
                     if (tx) {
                         this.$store.commit(`Transactions/${CANCEL_TX}`, tx);

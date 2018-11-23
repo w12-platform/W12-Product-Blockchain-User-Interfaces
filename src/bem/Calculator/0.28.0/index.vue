@@ -94,7 +94,7 @@
             </div>
 
             <b-notification class="" v-if="error" @close="error = false" type="is-danger" has-icon>
-                {{ error }}
+                {{ $t('error') }}
             </b-notification>
 
             <div class="pm-2" v-if="isPendingTx">
@@ -124,7 +124,7 @@
     import { round, waitContractEventOnce } from '@/lib/utils';
     import { CANCEL_TX } from '@/store/modules/Transactions';
     import {createNamespacedHelpers} from "vuex";
-    import {waitTransactionReceipt} from 'lib/utils.js';
+    import {waitTransactionReceipt, errorMessageSubstitution} from 'lib/utils.js';
     import {UPDATE_TX, CONFIRM_TX} from "store/modules/Transactions.js";
     import {web3, BigNumber} from 'lib/utils';
     import countdown from 'countdown';
@@ -390,7 +390,7 @@
                     await this.tokensListUpdate(this.currentToken);
                 } catch (e) {
                     console.error(e);
-                    this.error = e.message;
+                    this.error = errorMessageSubstitution(e);
 
                     if (tx) {
                         this.$store.commit(`Transactions/${CANCEL_TX}`, tx);
@@ -415,7 +415,7 @@
                     await this.updateAllowanceAmount();
                 } catch (e) {
                     console.error(e);
-                    this.error = e.message;
+                    this.error = errorMessageSubstitution(e);
                 }
             },
             async updateAllowanceAmount() {
@@ -440,7 +440,7 @@
                     );
                 } catch (e) {
                     console.error(e);
-                    this.error = e.message;
+                    this.error = errorMessageSubstitution(e);
                 }
             },
             async handleSelectedChange(newSelected, oldSelected) {
@@ -504,7 +504,7 @@
                     };
                 } catch (e) {
                     console.error(e);
-                    this.error = e.message;
+                    this.error = errorMessageSubstitution(e);
                 }
 
                 await this.updateAllowanceAmount();
@@ -539,7 +539,7 @@
                     };
                 } catch (e) {
                     console.error(e);
-                    this.error = e.message;
+                    this.error = errorMessageSubstitution(e);
                 }
 
                 await this.updateAllowanceAmount();
@@ -564,7 +564,7 @@
                     this.maxSum = reverseConversionByDecimals(invoice[1], this.paymentMethodExtendInfo.decimals).toFixed(2) + " " + this.paymentMethod;
                 } catch (e) {
                     console.error(e);
-                    this.error = e.message;
+                    this.error = errorMessageSubstitution(e);
                 }
             },
             async onCurrentTokenDeepUpdate (value, prevValue) {
