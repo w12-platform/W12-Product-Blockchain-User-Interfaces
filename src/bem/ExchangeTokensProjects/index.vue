@@ -14,7 +14,7 @@
             </div>
         </div>
         <b-notification class="" v-if="error" @close="error = false" type="is-danger" has-icon>
-            {{ $t('error') }}
+            {{ $t(error) }}
         </b-notification>
         <div class="ExchangeTokens__content" v-if="!isPendingTx && !isErrorTx">
             <div class="ExchangeTokens__form">

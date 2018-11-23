@@ -70,7 +70,7 @@
                             </b-field>
                         </div>
                         <b-notification class="ProjectStages__errorStage" v-if="error" @close="error = false" type="is-danger" has-icon>
-                            {{ $t('error') }}
+                            {{ $t(error) }}
                         </b-notification>
                         <div class="text-right">
                             <button class="btn btn-primary btn-sm" :disabled="disable" @click="initCrawdsale" v-html="$t('ProjectDashboardStageConfigureCrowdsaleInitButton')">
@@ -93,7 +93,7 @@
                             </b-field>
                         </div>
                         <b-notification class="ProjectStages__errorStage" v-if="error" @close="error = false" type="is-danger" has-icon>
-                            {{ $t('error') }}
+                            {{ $t(error) }}
                         </b-notification>
                         <div class="text-right">
                             <button class="btn btn-primary btn-sm" :disabled="disableAdd" @click="addTokensToCrowdSale" v-html="$t('ProjectDashboardStageConfigureCrowdsaleAddButton')">

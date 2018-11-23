@@ -22,7 +22,7 @@
                 </tbody>
             </table>
             <b-notification class="" v-if="error" @close="error = false" type="is-danger" has-icon>
-                {{ $t('error') }}
+                {{ $t(error) }}
             </b-notification>
             <div class="pm-2" v-if="isPendingTx">
                 <p class="py-2"><span v-html="$t('WaitingConfirm')"></span>:</p>

@@ -5,8 +5,8 @@
 
             <b-notification class="AdminDashboard__error" v-if="isError && !isLoading" type="is-danger"
                             :closable="false" has-icon>
-                <span v-if="ledgerMeta.loadingError">{{ $t('ledgerMeta.loadingError') }}</span>
-                <span v-if="accountMeta.loadingError">{{ $t('accountMeta.loadingError') }}</span>
+                <span v-if="ledgerMeta.loadingError">{{ $t(ledgerMeta.loadingError) }}</span>
+                <span v-if="accountMeta.loadingError">{{ $t(accountMeta.loadingError) }}</span>
             </b-notification>
 
             <b-notification v-if="isLoading && !isError" :closable="false" class="AdminDashboard__loader">
@@ -111,7 +111,7 @@
                         </b-field>
                     </div>
                     <b-notification class="ProjectStages__errorStage" v-if="error" @close="error = false"
-                                    type="is-danger" has-icon>{{ $t('error') }}
+                                    type="is-danger" has-icon>{{ $t(error) }}
                     </b-notification>
                     <button class="btn btn-primary py-2 my-2" @click="create" :disabled="disable" v-html="$t('TokensFactoryCreate')">
                     </button>
