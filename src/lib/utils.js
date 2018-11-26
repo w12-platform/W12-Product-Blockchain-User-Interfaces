@@ -148,5 +148,6 @@ export async function jsonLoader(version, name) {
 }
 
 export function errorMessageSubstitution(e) {
+    console.log(e);
     return e.name === 'BigNumber Error' ? 'UnexpectedError' : e.message;
 }

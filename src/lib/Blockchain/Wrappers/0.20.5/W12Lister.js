@@ -7,8 +7,8 @@ const web3 = new Web3();
 const BigNumber = web3.BigNumber;
 
 export class W12ListerWrapper extends BaseWrapper {
-    constructor(contractArtifacts, instance) {
-        super(contractArtifacts, instance);
+    constructor(contractArtifacts, instance, version) {
+        super(contractArtifacts, instance, version);
 
         this.W12CrowdsaleFactory = null;
     }

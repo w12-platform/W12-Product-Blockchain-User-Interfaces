@@ -182,6 +182,7 @@
 
             async onTrancheReleasedEvent(error, result) {
                 if (!error) {
+                    await this.$store.dispatch('Cache/blockNumberUp');
                     await this.updateFundInformation({Token: this.currentProject});
                     await this.updateAccountData();
                     const tx = result.transactionHash;
@@ -190,6 +191,7 @@
             },
             async onUnsoldTokenReturnedEvent(error, result) {
                 if (!error) {
+                    await this.$store.dispatch('Cache/blockNumberUp');
                     await this.updateReceivingInformation({Token: this.currentProject});
                     await this.updateAccountData();
                     const tx = result.transactionHash;
@@ -198,6 +200,7 @@
             },
             async onStageUpdatedEvent(error, result) {
                 if (!error) {
+                    await this.$store.dispatch('Cache/blockNumberUp');
                     await this.fetchCrowdSaleStagesList({Token: this.currentProject});
                     const tx = result.transactionHash;
                     this.$store.commit(`Transactions/${CONFIRM_TX}`, tx);
@@ -205,6 +208,7 @@
             },
             async onMilestonesUpdatedEvent(error, result) {
                 if (!error) {
+                    await this.$store.dispatch('Cache/blockNumberUp');
                     await this.fetchCrowdSaleMilestonesList({Token: this.currentProject});
                     const tx = result.transactionHash;
                     this.$store.commit(`Transactions/${CONFIRM_TX}`, tx);
@@ -212,6 +216,7 @@
             },
             async onStagesUpdatedEvent(error, result) {
                 if (!error) {
+                    await this.$store.dispatch('Cache/blockNumberUp');
                     await this.fetchCrowdSaleStagesList({Token: this.currentProject});
                     const tx = result.transactionHash;
                     this.$store.commit(`Transactions/${CONFIRM_TX}`, tx);
@@ -219,6 +224,7 @@
             },
             async onApprovalEvent(error, result) {
                 if (!error) {
+                    await this.$store.dispatch('Cache/blockNumberUp');
                     const tx = result.transactionHash;
                     await this.updateTokensApprovedToPlaceValue({Token: this.currentProject});
                     await this.updateAccountData();
@@ -227,6 +233,7 @@
             },
             async onApprovalW12Event(error, result) {
                 if (!error) {
+                    await this.$store.dispatch('Cache/blockNumberUp');
                     const tx = result.transactionHash;
                     await this.updateTokensApprovedToPlaceValue({Token: this.currentProject});
                     await this.updateAccountData();
@@ -235,6 +242,7 @@
             },
             async onTokenPlacedEvent(error, result) {
                 if (!error) {
+                    await this.$store.dispatch('Cache/blockNumberUp');
                     const {originalTokenAddress} = result.args;
 
                     const tx = result.transactionHash;
@@ -246,6 +254,7 @@
             },
             async onCrowdsaleInitializedEvent(error, result) {
                 if (!error) {
+                    await this.$store.dispatch('Cache/blockNumberUp');
                     const {tokenAddress} = result.args;
 
                     const tx = result.transactionHash;
@@ -257,6 +266,7 @@
             },
             async onCrowdsaleTokenMintedEvent(error, result) {
                 if (!error) {
+                    await this.$store.dispatch('Cache/blockNumberUp');
                     const {tokenAddress} = result.args;
 
                     const tx = result.transactionHash;

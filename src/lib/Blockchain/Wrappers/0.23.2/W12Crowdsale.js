@@ -84,7 +84,7 @@ export class W12CrowdsaleWrapper extends BaseWrapper {
     }
 
     async getStagesList() {
-        const stagesLength = (await this.methods.stagesLength()).toNumber();
+        const stagesLength = new BigNumber((await this.methods.stagesLength())).toNumber();
         const list = [];
 
         if (stagesLength > 0) {
@@ -93,10 +93,10 @@ export class W12CrowdsaleWrapper extends BaseWrapper {
                 const bonusVolumes = await this.getBonusVolumesAtStage(i);
 
                 const internalStageStructure = {
-                    startDate: stage[0].toNumber(),
-                    endDate: stage[1].toNumber(),
-                    discount: stage[2].toNumber() / 100,
-                    vestingDate: stage[3].toNumber(),
+                    startDate: new BigNumber(stage[0]).toNumber(),
+                    endDate: new BigNumber(stage[1]).toNumber(),
+                    discount: new BigNumber(stage[2]).toNumber() / 100,
+                    vestingDate: new BigNumber(stage[3]).toNumber(),
                     bonusVolumes,
                     wasCreated: true
                 };
@@ -136,7 +136,7 @@ export class W12CrowdsaleWrapper extends BaseWrapper {
     }
 
     async getMilestones() {
-        const milestonesLenght = (await this.methods.milestonesLength()).toNumber();
+        const milestonesLenght = new BigNumber((await this.methods.milestonesLength())).toNumber();
         const list = [];
 
         if (milestonesLenght > 0) {
@@ -147,9 +147,9 @@ export class W12CrowdsaleWrapper extends BaseWrapper {
                     name: decodeStringFromBytes(milestone[4]),
                     description: decodeStringFromBytes(milestone[5]),
                     tranchePercent: milestone[1].toString() / 100,
-                    endDate: milestone[0].toNumber(),
-                    voteEndDate: milestone[2].toNumber(),
-                    withdrawalEndDate: milestone[3].toNumber(),
+                    endDate: new BigNumber(milestone[0]).toNumber(),
+                    voteEndDate: new BigNumber(milestone[2]).toNumber(),
+                    withdrawalEndDate: new BigNumber(milestone[3]).toNumber(),
                     wasCreated: true
                 };
 

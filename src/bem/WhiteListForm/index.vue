@@ -347,6 +347,7 @@
             },
             async onOwnerWhitelistedEvent(errors) {
                 if (!errors) {
+                    await this.$store.dispatch('Cache/blockNumberUp');
                     await this.whitelistFetch();
                     await this.updateStatusTx();
                 } else {
