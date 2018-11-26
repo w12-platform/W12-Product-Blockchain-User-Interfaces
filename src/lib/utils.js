@@ -10,10 +10,6 @@ const BigNumber = web3.BigNumber;
 BigNumber.TEN = new BigNumber(10);
 BigNumber.TWO = new BigNumber(2);
 BigNumber.UINT_MAX = BigNumber.TWO.pow(256).minus(1);
-
-export { web3 };
-export { BigNumber };
-
 BigNumber.config({
     DECIMAL_PLACES: 36,
     FORMAT: {
@@ -25,6 +21,10 @@ BigNumber.config({
         fractionGroupSize: 0
     }
 });
+
+export { web3 };
+export { BigNumber };
+export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 
 export function promisify (funct) {
     return function (...args) {
@@ -237,6 +237,12 @@ export function round(value) {
     value = new BigNumber(value);
 
     return new BigNumber(value.toFixed(0, 1));
+}
+
+export function instanceOf(instance, Ctor) {
+    if (!(instance instanceof Ctor)) {
+        throw new Error(`Instance [${instance.constructor.name}] is not a instance of [${Ctor.name}]`);
+    }
 }
 
 export function errorMessageSubstitution(e) {

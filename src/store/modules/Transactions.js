@@ -11,7 +11,37 @@ export default {
     state: {
         list: [],
     },
-    getters: {},
+    getters: {
+        isPending(state) {
+            return ({name, hash}) => {
+                if (!name && !hash) throw new Error('no filters');
+                return state.list.some(item => {
+                    return item.status === 'pending'
+                        && (name ? item.name === name : true)
+                        && (hash ? item.hash === hash : true)
+                })
+            }
+        },
+        isFail(state) {
+            return ({name, hash}) => {
+                if (!name && !hash) throw new Error('no filters');
+                return state.list.some(item => {
+                    return item.status === 'error'
+                        && (name ? item.name === name : true)
+                        && (hash ? item.hash === hash : true)
+                })
+            }
+        },
+        get(state) {
+            return ({name, hash}) => {
+                if (!name && !hash) throw new Error('no filters');
+                return state.list.find(item => {
+                    return (name ? item.name === name : true)
+                        && (hash ? item.hash === hash : true)
+                })
+            }
+        }
+    },
     mutations: {
         [UPDATE_TX](state, tx) {
             state.list.push(tx);

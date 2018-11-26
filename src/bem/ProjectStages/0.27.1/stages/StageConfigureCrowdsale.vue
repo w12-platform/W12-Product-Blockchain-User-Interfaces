@@ -295,7 +295,7 @@
                     const W12Lister = W12ListerFactory.at(this.currentProject.listerAddress);
 
                     const connectedWeb3 = (await Connector.connect()).web3get;
-                    const event = waitContractEventOnce(W12Lister, 'CrowdsaleInitialized');
+                    const event = waitContractEventOnce(W12Lister, 'CrowdsaleInitialized', {tokenAddress: this.currentProject.tokenAddress});
 
                     tx = await W12Lister.methods.initCrowdsale(
                         this.currentProject.tokenAddress,

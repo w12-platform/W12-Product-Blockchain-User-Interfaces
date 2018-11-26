@@ -2,11 +2,15 @@ import { getEndDate } from '@/lib/selectors/crowdsaleStages';
 import { fetchTokenFull as fetchTokenFull_v0_20_x } from '@/store/modules/TokensList/0.20.x/actions';
 import { fetchTokenFull as fetchTokenFull_v0_27_x } from '@/store/modules/TokensList/0.27.x/actions';
 import { fetchTokenFull as fetchTokenFull_v0_28_x } from '@/store/modules/TokensList/0.28.x/actions';
+import { fetchTokenMinimal as fetchTokenMinimal_v0_20_x } from '@/store/modules/TokensList/0.20.x/actions';
+import { fetchTokenMinimal as fetchTokenMinimal_v0_28_x } from '@/store/modules/TokensList/0.28.x/actions';
+import { fetch as fetch_v0_20_x } from '@/store/modules/TokensList/0.20.x/actions';
+import { fetch as fetch_v0_28_x } from '@/store/modules/TokensList/0.28.x/actions';
+import { fetchTokenByCurrentToken as fetchTokenByCurrentToken_v0_20_x } from '@/store/modules/TokensList/0.20.x/actions';
+import { fetchTokenByCurrentToken as fetchTokenByCurrentToken_v0_28_x } from '@/store/modules/TokensList/0.28.x/actions';
 import semver from 'semver';
-import { isZeroAddress, errorMessageSubstitution } from "src/lib/utils";
-import {map, reduce} from 'p-iteration';
-
-export const ERROR_FETCH_TOKENS_LIST = 'An unknown error while trying get tokens';
+import { errorMessageSubstitution } from "src/lib/utils";
+const ERROR_FETCH_TOKENS_LIST = 'An unknown error while trying get tokens';
 
 export const UPDATE_TIMER_ID = 'UPDATE_TIMER_ID';
 export const TOKEN_SELECTED = "TOKEN_SELECTED";
@@ -47,8 +51,11 @@ export default {
             Object.assign(state, {list});
 
             if(state.currentToken) {
-                const index = payload.list.findIndex(
-                    t => t.index === state.currentToken.index && t.version === state.currentToken.version);
+                const index = payload.list.findIndex(t => {
+                    return t.index === state.currentToken.index
+                        && t.tokenAddress === state.currentToken.tokenAddress
+                        && t.version === state.currentToken.version;
+                });
 
                 state.currentToken = index === -1 ? null : payload.list[index];
             }
@@ -61,23 +68,19 @@ export default {
             Object.assign(state, payload);
         },
         [RESET](state) {
-            state.list = false;
-            state.currentToken = false;
+            state.list = [];
+            state.currentToken = null;
         },
     },
     actions: {
-        async fetchTokenMinimal({}, token){
-            const {
-                W12CrowdsaleFactory
-            } = await this.dispatch('Ledger/fetch', token.version);
-            const W12Crowdsale = W12CrowdsaleFactory.at(token.crowdsaleAddress);
-            const stages = (await W12Crowdsale.getStagesList());
-            const endDate = getEndDate(stages);
-            token.crowdSaleInformation = {
-                stages,
-                endDate,
-            };
-            return endDate ? token : null;
+        async fetchTokenMinimal(context, payload){
+            if (semver.satisfies(payload.version, '0.20.x - 0.27.x')) {
+                return await fetchTokenMinimal_v0_20_x.call(this, context, payload);
+            } else if (semver.satisfies(payload.version, '>=0.28.x')) {
+                return await fetchTokenMinimal_v0_28_x.call(this, context, payload);
+            }
+
+            throw new Error(`token version ${payload.version} does not supported`);
         },
         async fetchTokenFull(context, payload){
             if (semver.satisfies(payload.version, '0.20.x - 0.26.x')) {
@@ -90,49 +93,30 @@ export default {
 
             throw new Error(`token version ${payload.version} does not supported`);
         },
+        async fetch(context, payload) {
+            const version = context.rootState.Config.W12Lister.version;
 
-        async fetch({commit, state}) {
-            commit(UPDATE_META, {loading: true});
-            try {
-                const fetchToken = async (list, Lister) => {
-                    const {W12ListerFactory} = await this.dispatch('Ledger/fetch', Lister.version);
-                    const W12Lister = W12ListerFactory.at(Lister.address);
-                    let tokens = (await W12Lister.fetchAllTokensComposedInformation()).filter(t => !isZeroAddress(t.crowdsaleAddress));
-                    tokens = await map(tokens, async token => await this.dispatch('TokensList/fetchTokenMinimal', token));
-                    return list.concat(tokens.filter(token => token && !isZeroAddress(token.tokenAddress)));
-                };
-
-                const list = await reduce(this.state.Config.W12ListerList, fetchToken, []);
-
-                if (!state.currentToken && list.length) {
-                    commit(TOKEN_SELECTED, {currentToken: await this.dispatch('TokensList/fetchTokenFull', list[0])});
-                }
-
-                commit(UPDATE, {list});
-            } catch (e) {
-                console.error(e);
-                commit(UPDATE_META, {loading: false, loadingError: errorMessageSubstitution(e) || ERROR_FETCH_TOKENS_LIST});
+            if (semver.satisfies(version, '0.20.x - 0.27.x')) {
+                return await fetch_v0_20_x.call(this, context, payload);
+            } else if (semver.satisfies(version, '>=0.28.x')) {
+                return await fetch_v0_28_x.call(this, context, payload);
             }
-            commit(UPDATE_META, {loading: false});
+
+            throw new Error(`token version ${payload.version} does not supported`);
         },
-        async fetchTokenByCurrentToken({commit}, CurrentToken) {
-            commit(UPDATE_META, {loading: true});
-            try {
-                const {W12ListerFactory} = await this.dispatch('Ledger/fetch', CurrentToken.version);
-                const W12Lister = W12ListerFactory.at(CurrentToken.listerAddress);
-                const token = await W12Lister.fetchComposedTokenInformationByTokenAddress(CurrentToken);
-                commit(TOKEN_SELECTED, {currentToken: await this.dispatch('TokensList/fetchTokenFull', token)});
-                commit(UPDATE, {list: [token]});
-            } catch (e) {
-                console.error(e);
-                commit(UPDATE_META, {loading: false, loadingError: errorMessageSubstitution(e) || ERROR_FETCH_TOKENS_LIST});
+        async fetchTokenByCurrentToken(context, payload) {
+            if (semver.satisfies(payload.version, '0.20.x - 0.27.x')) {
+                return await fetchTokenByCurrentToken_v0_20_x.call(this, context, payload);
+            } else if (semver.satisfies(payload.version, '>=0.28.x')) {
+                return await fetchTokenByCurrentToken_v0_28_x.call(this, context, payload);
             }
-            commit(UPDATE_META, {loading: false});
+
+            throw new Error(`token version ${payload.version} does not supported`);
         },
         async update({commit, dispatch}, token) {
             commit(UPDATE_META, {updated: true});
             try {
-                commit(TOKEN_SELECTED, {currentToken: await this.dispatch('TokensList/fetchTokenFull', token)});
+                commit(TOKEN_SELECTED, {currentToken: await dispatch('fetchTokenFull', token)});
             } catch (e) {
                 console.error(e);
                 commit(UPDATE_META, {

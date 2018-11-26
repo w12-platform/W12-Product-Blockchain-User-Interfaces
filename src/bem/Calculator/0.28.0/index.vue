@@ -120,7 +120,7 @@
 
 <script>
     import './default.scss';
-    import { convertionByDecimals, reverseConversionByDecimals } from '@/lib/selectors/units';
+    import { conversionByDecimals, reverseConversionByDecimals } from '@/lib/selectors/units';
     import { round, waitContractEventOnce } from '@/lib/utils';
     import { CANCEL_TX } from '@/store/modules/Transactions';
     import {createNamespacedHelpers} from "vuex";
@@ -358,7 +358,7 @@
                     const {W12CrowdsaleFactory} = await this.fetchLedger(this.currentToken.version);
                     const connectedWeb3 = (await Connector.connect()).web3;
                     const Crowdsale = W12CrowdsaleFactory.at(this.currentToken.crowdSaleInformation.crowdsaleAddress);
-                    const amount = convertionByDecimals(this.invoice.cost, this.paymentMethodExtendInfo.decimals);
+                    const amount = conversionByDecimals(this.invoice.cost, this.paymentMethodExtendInfo.decimals);
                     const event = waitContractEventOnce(Crowdsale, 'TokenPurchase', { buyer: this.currentAccount });
                     
                     tx = await Crowdsale.buyTokens(
@@ -402,7 +402,7 @@
             async approve() {
                 if (!this.isNeedApprove) return;
 
-                const value = convertionByDecimals(this.invoice.cost, this.paymentMethodExtendInfo.decimals);
+                const value = conversionByDecimals(this.invoice.cost, this.paymentMethodExtendInfo.decimals);
 
                 try {
                     const {ERC20Factory} = await this.fetchLedger(this.currentToken.version);
@@ -492,7 +492,7 @@
                     if (new BigNumber(this.paymentAmount || 0).gt(0)) {
                         invoice = await Crowdsale.getInvoice(
                             this.paymentMethod,
-                            convertionByDecimals(this.paymentAmount, decimals)
+                            conversionByDecimals(this.paymentAmount, decimals)
                         );
                     }
 
@@ -527,7 +527,7 @@
                     if (new BigNumber(this.tokens || 0).gt(0)) {
                         invoice = await Crowdsale.getInvoiceByTokenAmount(
                             this.paymentMethod,
-                            convertionByDecimals(this.tokens, this.currentToken.decimals)
+                            conversionByDecimals(this.tokens, this.currentToken.decimals)
                         );
                     }
 
@@ -558,7 +558,7 @@
                     if (new BigNumber(this.currentToken.crowdSaleInformation.tokensOnSale || 0).gt(0)) {
                         invoice = await Crowdsale.getInvoiceByTokenAmount(
                             this.paymentMethod,
-                            convertionByDecimals(this.currentToken.crowdSaleInformation.tokensOnSale, this.currentToken.decimals)
+                            conversionByDecimals(this.currentToken.crowdSaleInformation.tokensOnSale, this.currentToken.decimals)
                         );
                     }
                     this.maxSum = reverseConversionByDecimals(invoice[1], this.paymentMethodExtendInfo.decimals).toFixed(2) + " " + this.paymentMethod;

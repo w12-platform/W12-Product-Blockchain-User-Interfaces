@@ -8,6 +8,8 @@ export function resolveComponentVersion(v, componentName) {
     if (semver.satisfies(v, '0.26.x - 0.27.x')) return '0.27.1';
     if (semver.satisfies(v, '0.28.x')) {
         if (componentName === 'Calculator') return '0.28.0';
+        if (componentName === 'WhiteListTable') return '0.28.0';
+        if (componentName === 'ProjectStages') return '0.28.x';
         return '0.27.1';
     }
 

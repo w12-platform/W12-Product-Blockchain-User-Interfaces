@@ -2,9 +2,10 @@ import { updateTokenInfo as updateTokenInfo_v0_20_x } from '@/store/modules/Proj
 import { updateTokenInfo as updateTokenInfo_v0_28_x } from '@/store/modules/Project/0.28.x/actions';
 import { updateReceivingInformation as updateReceivingInformation_v0_20_x } from '@/store/modules/Project/0.20.x/actions';
 import { updateReceivingInformation as updateReceivingInformation_v0_28_x } from '@/store/modules/Project/0.28.x/actions';
+import { fetchCrowdSaleAddressAndInfo as fetchCrowdSaleAddressAndInfo_v0_20_x } from '@/store/modules/Project/0.20.x/actions';
+import { fetchCrowdSaleAddressAndInfo as fetchCrowdSaleAddressAndInfo_v0_28_x } from '@/store/modules/Project/0.28.x/actions';
 import {promisify, isZeroAddress, fromWeiDecimalsString, errorMessageSubstitution} from "src/lib/utils";
 import {map} from 'p-iteration';
-import {ReceivingModel} from 'src/bem/Receiving/model.js';
 import Connector from "src/lib/Blockchain/DefaultConnector";
 import isEqual from 'lodash/isEqual'
 import { BigNumber } from 'src/lib/utils';
@@ -352,37 +353,14 @@ export default {
                 commit(UPDATE_META, {loadingProjectError: errorMessageSubstitution(e)});
             }
         },
-        async fetchCrowdSaleAddressAndInfo({commit}, {Token}) {
-            try {
-                const {W12ListerFactory, W12CrowdsaleFactory} = await this.dispatch('Ledger/fetch', Token.version);
-                const W12Lister = W12ListerFactory.at(Token.listerAddress);
-
-                try {
-                    const address = await W12Lister.methods.getTokenCrowdsale(
-                        Token.tokenAddress,
-                        this.state.Account.currentAccount
-                    );
-                    if (address && !isZeroAddress(address)) {
-                        const W12Crowdsale = W12CrowdsaleFactory.at(address);
-                        const tokensForSaleAmount = Token.wTokensIssuedAmount;
-                        const tokenPrice = (await W12Crowdsale.methods.price()).toString();
-
-                        commit(UPDATE_CROWD_SALE_ADDRESS, address);
-                        commit(UPDATE_CROWD_SALE_INFO, {
-                            tokensForSaleAmount,
-                            tokenPrice
-                        });
-                    } else {
-                        commit(UPDATE_CROWD_SALE_ADDRESS);
-                    }
-                } catch (e) {
-                    console.error(e);
-                    commit(UPDATE_CROWD_SALE_ADDRESS);
-                }
-            } catch (e) {
-                console.error(e);
-                commit(UPDATE_META, {loadingProjectError: errorMessageSubstitution(e)});
+        async fetchCrowdSaleAddressAndInfo(context, payload) {
+            if (semver.satisfies(payload.Token.version, '0.20.x - 0.27.x')) {
+                return await fetchCrowdSaleAddressAndInfo_v0_20_x.call(this, context, payload);
+            } else if (semver.satisfies(payload.Token.version, '>=0.28.x')) {
+                return await fetchCrowdSaleAddressAndInfo_v0_28_x.call(this, context, payload);
             }
+
+            throw new Error(`token version ${payload.Token.version} does not supported`);
         },
         async fetchCrowdSaleStagesList({commit}, {Token}) {
             try {

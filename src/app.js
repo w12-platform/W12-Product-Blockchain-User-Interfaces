@@ -10,7 +10,7 @@ import { LANG_UPDATE_META } from "@/store/modules/Lang.js";
 const LangNS = createNamespacedHelpers("Lang");
 import Config from '@/config';
 import * as Sentry from '@sentry/browser';
-
+import Filters from '@/lib/views/plugins/filters';
 import 'src/bem/buefy/default.scss';
 import store from "store";
 
@@ -25,6 +25,7 @@ Sentry.init({
 });
 
 Vue.use(Buefy);
+Vue.use(Filters);
 Vue.use(Cleave);
 Vue.use(Tooltip);
 Vue.component('multiselect', MultiSelect);

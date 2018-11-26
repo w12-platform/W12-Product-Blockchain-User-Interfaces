@@ -13,13 +13,14 @@
                         v-model="whiteListForm.tokenAddress">
             </div>
             <div class="form-group">
-                <label for="OwnerAddress" v-html="$t('AdminDashboardFieldOwnerLabel')"></label>
-                <input
+                <b-field :label="$t('AdminDashboardFieldOwnerLabel')">
+                    <b-taginput
                         :placeholder="$t('AdminDashboardFieldOwnerPlaceholder')"
-                        type="text"
-                        class="form-control"
-                        id="OwnerAddress"
-                        v-model="whiteListForm.ownerAddress">
+                        v-model="whiteListForm.owners"
+                        attached
+                    >
+                    </b-taginput>
+                </b-field>
             </div>
             <div class="form-group">
                 <b-field
@@ -132,11 +133,11 @@
             </b-notification>
             <div class="pm-2" v-if="isPendingTx">
                 <p class="py-2"><span v-html="$t('WaitingConfirm')"></span>:</p>
-                <b-tag class="py-2">{{isPendingTx.hash}}</b-tag>
+                <b-tag class="py-2">{{whitelistingTransaction.hash}}</b-tag>
             </div>
             <div class="pm-2" v-if="isErrorTx">
                 <p class="py-2"><span v-html="$t('TransactionFailed')"></span>:</p>
-                <b-tag class="py-2">{{isErrorTx.hash}}</b-tag>
+                <b-tag class="py-2">{{whitelistingTransaction.hash}}</b-tag>
                 <div class="pt-2 text-left">
                     <button class="btn btn-primary btn-sm" @click="TransactionsRetry(isErrorTx)" v-html="$t('ToRetry')"></button>
                 </div>
@@ -151,15 +152,16 @@
 <script>
     import './default.scss';
     import 'bem/labelTooltip/default.scss';
+    import { encodePercent } from '@/lib/selectors/units';
+    import { waitContractEventOnce } from '@/lib/utils';
+    import { CANCEL_TX, CONFIRM_TX } from '@/store/modules/Transactions';
     import Connector from 'lib/Blockchain/DefaultConnector.js';
     import {promisify, waitTransactionReceipt, errorMessageSubstitution} from 'lib/utils.js';
     import {UPDATE_TX} from "store/modules/Transactions.js";
     import tokenValidationMixinGenerator from '@/lib/views/mixins/validation/token-validation';
     import {createNamespacedHelpers} from "vuex";
-    import Web3 from "web3";
-
-    const web3 = new Web3();
-    const BigNumber = web3.BigNumber;
+    import {web3, BigNumber} from '@/lib/utils';
+    import pick from 'lodash/pick';
 
     const LedgerNS = createNamespacedHelpers("Ledger");
     const WhitelistNS = createNamespacedHelpers("Whitelist");
@@ -195,7 +197,7 @@
                 },
                 whiteListForm: {
                     tokenAddress: '',
-                    ownerAddress: '',
+                    owners: [],
                     symbol: 'TN' + EndOfSymbol,
                     decimals: '18',
                     name: 'Token Name',
@@ -215,11 +217,16 @@
                 tokensList: "list",
                 whiteMeta: "meta"
             }),
-            ...ConfigNS.mapState({
-                W12Lister: "W12Lister"
+            ...ConfigNS.mapGetters({
+                W12Lister: "W12ListerLastVersion"
             }),
             ...TransactionsNS.mapState({
                 TransactionsList: "list"
+            }),
+            ...TransactionsNS.mapGetters({
+                isTransactionPending: "isPending",
+                isTransactionFail: "isFail",
+                getTransaction: "get"
             }),
 
             optionsNumber() {
@@ -236,24 +243,14 @@
             disableWhiteListButton() {
                 return (
                     !this.whiteListForm.tokenAddress
-                    || !this.whiteListForm.ownerAddress
+                    || !this.whiteListForm.owners.length
                     || !this.whiteListForm.symbol
                     || !this.whiteListForm.decimals
                     || !this.whiteListForm.name
                     || !this.whiteListForm.feePercent
                     || !this.whiteListForm.feeETHPercent
-                    || !this.tokenExistsAndAllowedToWhiteList
+                    || !this.isTokenExists
                 );
-            },
-            tokenExistsAndAllowedToWhiteList() {
-                const foundInList = this.tokensList.find(token => token.tokenAddress === this.whiteListForm.tokenAddress);
-                const isTheSameOwner = foundInList ? foundInList.tokenOwner === this.whiteListForm.ownerAddress : false;
-                const isWhiteListed = !!foundInList;
-
-                return (
-                    this.isTokenExists
-                    && (!isWhiteListed || !isTheSameOwner)
-                )
             },
             typeDecimals () {
                 if (!this.whiteListForm.decimals) return '';
@@ -285,31 +282,14 @@
 
                 return this.isTokenSymbolValid ? "" : this.$t("ErrorTokenSymbolsIsNotValid");
             },
+            whitelistingTransaction() {
+                return this.getTransaction({ name: 'whitelistToken' });
+            },
             isErrorTx() {
-                return this.TransactionsList && this.TransactionsList.length
-                    ? this.TransactionsList.find((tr) => {
-                        return tr.name
-                        && tr.hash
-                        && tr.status
-                        && tr.name === "whitelistToken"
-                        && tr.status === "error"
-                            ? tr
-                            : false
-                    })
-                    : false;
+                return this.isTransactionFail({ name: 'whitelistToken' });
             },
             isPendingTx() {
-                return this.TransactionsList && this.TransactionsList.length
-                    ? this.TransactionsList.find((tr) => {
-                        return tr.name
-                        && tr.hash
-                        && tr.status
-                        && tr.name === "whitelistToken"
-                        && tr.status === "pending"
-                            ? tr
-                            : false
-                    })
-                    : false;
+                return this.isTransactionPending({ name: 'whitelistToken' });
             },
         },
         watch: {
@@ -322,18 +302,14 @@
         },
         methods: {
             ...LedgerNS.mapActions({
-                ledgerFetch: "fetch"
+                fetchLedger: "fetch"
             }),
             ...WhitelistNS.mapActions({
-                whitelistFetch: "fetch",
-            }),
-            ...TransactionsNS.mapActions({
-                updateStatusTx: "updateStatusTx",
-                TransactionsRetry: "retry"
+                fetchWhitelist: "fetch",
             }),
             async tryWhiteListToken() {
                 this.clearErrorMessage();
-                await this.whiteListToken(this.whiteListForm);
+                await this.whitelistToken(this.whiteListForm);
             },
             clearErrorMessage() {
                 this.errorMessage = '';
@@ -341,44 +317,41 @@
             setErrorMessage(message) {
                 this.errorMessage = message;
             },
-            async onOwnerWhitelistedEvent(errors) {
-                if (!errors) {
-                    await this.whitelistFetch();
-                    await this.updateStatusTx();
-                } else {
-                    this.setErrorMessage(errors.message);
-                }
-            },
-            async whiteListToken(data) {
+            async whitelistToken(data) {
                 this.whitelistingToken = true;
-                const {W12ListerFactory} = await this.ledgerFetch(this.W12Lister.version);
+                const {W12ListerFactory} = await this.fetchLedger(this.W12Lister.version);
 
-                if (W12ListerFactory) {
-                    try {
-                        const W12Lister = W12ListerFactory.at(this.W12Lister.address);
-                        const connectedWeb3 = (await Connector.connect()).web3;
-                        const tx = await W12Lister.methods.whitelistToken(
-                            data.ownerAddress,
-                            data.tokenAddress,
-                            data.name,
-                            data.symbol,
-                            data.decimals,
-                            parseInt((parseFloat(data.feePercent).toFixed(2) * 100)),
-                            parseInt((parseFloat(data.feeETHPercent).toFixed(2) * 100)),
-                            parseInt((parseFloat(data.WTokenSaleFeePercent).toFixed(2) * 100)),
-                            parseInt((parseFloat(data.trancheFeePercent).toFixed(2) * 100))
-                        );
-                        this.$store.commit(`Transactions/${UPDATE_TX}`, {
-                            name: "whitelistToken",
-                            hash: tx,
-                            status: "pending"
-                        });
-                        await waitTransactionReceipt(tx, connectedWeb3);
-                        this.endTokenWhiteListOperation();
-                    } catch (e) {
-                        console.error(e);
-                        this.setErrorMessage(errorMessageSubstitution(e));
-                    }
+                try {
+                    const W12Lister = W12ListerFactory.at(this.W12Lister.address);
+                    const connectedWeb3 = (await Connector.connect()).web3;
+                    const event = waitContractEventOnce(W12Lister, 'TokenWhitelisted', { token: data.tokenAddress });
+
+                    const tx = await W12Lister.methods.whitelistToken(
+                        data.tokenAddress,
+                        data.name,
+                        data.symbol,
+                        data.decimals,
+                        data.owners,
+                        encodePercent(data.feePercent),
+                        encodePercent(data.feeETHPercent),
+                        encodePercent(data.WTokenSaleFeePercent),
+                        encodePercent(data.trancheFeePercent)
+                    );
+
+                    this.$store.commit(`Transactions/${UPDATE_TX}`, {
+                        name: "whitelistToken",
+                        hash: tx,
+                        status: "pending"
+                    });
+
+                    await this.$nextTick();
+                    await waitTransactionReceipt(tx, connectedWeb3);
+                    await event;
+                    await this.fetchWhitelist();
+                    this.resetWhitelistForm();
+                } catch (e) {
+                    console.error(e);
+                    this.setErrorMessage(errorMessageSubstitution(e));
                 }
 
                 this.whitelistingToken = false;
@@ -389,7 +362,7 @@
                 if (address) {
                     this.checkingToken = true;
 
-                    const {ERC20DetailedFactory} = await this.ledgerFetch(this.W12Lister.version);
+                    const {ERC20DetailedFactory} = await this.fetchLedger(this.W12Lister.version);
                     const ERC20Detailed = ERC20DetailedFactory.at(address);
 
                     this.isTokenExists = await ERC20Detailed.isCurrentAddressCompatibleWithToken();
@@ -397,48 +370,40 @@
                 }
             },
             async predefineTokenInformation() {
-                const address = this.whiteListForm.tokenAddress;
-                const {web3} = await Connector.connect();
-                const getAccounts = promisify(web3.eth.getAccounts.bind(web3.eth));
-                const currentAccount = (await getAccounts())[0];
+                const {tokenAddress} = this.whiteListForm;
 
                 if (this.isTokenExists) {
-                    const {ERC20DetailedFactory} = await this.ledgerFetch(this.W12Lister.version);
-                    const ERC20Detailed = ERC20DetailedFactory.at(address);
-                    const tokenInformation = await ERC20Detailed.getDescription();
-                    const {name, symbol, decimals} = tokenInformation;
+                    const {W12ListerFactory, ERC20DetailedFactory} = await this.fetchLedger(this.W12Lister.version);
+                    const W12Lister = W12ListerFactory.at(this.W12Lister.address);
+                    const isTokenWhitelisted = await W12Lister.methods.isTokenWhitelisted(tokenAddress);
 
-                    Object.assign(this.whiteListForm, {
-                        name,
-                        symbol: symbol + EndOfSymbol,
-                        ownerAddress: currentAccount,
-                        decimals: decimals.toString()
-                    });
-                }
-            },
-            async createEventsHelpers() {
-                if (!this.EventHelpers) {
-                    const {W12ListerFactory} = await this.ledgerFetch(this.W12Lister.version);
+                    if (isTokenWhitelisted) {
+                        const tokenRecord = await W12Lister.getTokenExtended(tokenAddress);
+                        Object.assign(this.whiteListForm, pick(tokenRecord, [
+                            'name',
+                            'symbol',
+                            'decimals',
+                            'owners',
+                            'feePercent',
+                            'feeETHPercent',
+                            'WTokenSaleFeePercent',
+                            'trancheFeePercent'
+                        ]));
+                    } else {
+                        const {web3} = await Connector.connect();
+                        const getAccounts = promisify(web3.eth.getAccounts.bind(web3.eth));
+                        const currentAccount = (await getAccounts())[0];
+                        const ERC20Detailed = ERC20DetailedFactory.at(tokenAddress);
+                        const tokenInformation = await ERC20Detailed.getDescription();
+                        const {name, symbol, decimals} = tokenInformation;
 
-                    if (W12ListerFactory) {
-                        try {
-                            const W12Lister = W12ListerFactory.at(this.W12Lister.address);
-                            const OwnerWhitelisted = W12Lister.events.OwnerWhitelisted(null, null, this.onOwnerWhitelistedEvent);
-
-                            this.EventHelpers = {
-                                OwnerWhitelisted,
-                            };
-                        } catch (e) {
-                            console.error(e);
-                            this.setErrorMessage(errorMessageSubstitution(e));
-                        }
+                        Object.assign(this.whiteListForm, {
+                            name,
+                            symbol: symbol + EndOfSymbol,
+                            owners: [currentAccount],
+                            decimals: decimals.toString()
+                        });
                     }
-                }
-            },
-            destroyEventsHelpers() {
-                if (this.EventHelpers) {
-                    this.EventHelpers.OwnerWhitelisted.stopWatching();
-                    delete this.EventHelpers;
                 }
             },
             async onSymbolBlur(){
@@ -457,7 +422,7 @@
             async onTokenListChange() {
                 await this.checkToken();
             },
-            endTokenWhiteListOperation() {
+            resetWhitelistForm() {
                 Object.assign(this.whiteListForm, {
                     tokenAddress: '',
                     ownerAddress: '',
@@ -467,19 +432,8 @@
                 });
             }
         },
-        async created() {
-            this.meta.loading = true;
-
-            await this.createEventsHelpers();
-            await this.updateStatusTx();
-
-            this.meta.loading = false;
-        },
         errorCaptured(error, vm, info) {
-            this.errorMessage = info || error.message;
-        },
-        beforeDestroy() {
-            this.destroyEventsHelpers();
+            this.errorMessage = info || errorMessageSubstitution(error);
         }
     };
 </script>

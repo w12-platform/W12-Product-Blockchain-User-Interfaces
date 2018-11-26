@@ -1,4 +1,4 @@
-import { convertionByDecimals, reverseConversionByDecimals } from '@/lib/selectors/units';
+import { conversionByDecimals, reverseConversionByDecimals } from '@/lib/selectors/units';
 import Connector from 'lib/Blockchain/DefaultConnector.js';
 import {promisify, errorMessageSubstitution} from 'lib/utils.js';
 import config from '@/config.js';

@@ -17,8 +17,8 @@
                 <b-loading :is-full-page="false" :active="isLoading" :can-cancel="true"></b-loading>
             </b-notification>
 
-            <div v-if="!isLoading && this.currentAccount">
-                <WhiteListTable :is="WhiteListTableVersion"></WhiteListTable>
+            <div v-if="!isLoading && currentAccount">
+                <component :is="WhiteListTableComponent"></component>
                 <WhiteListForm></WhiteListForm>
             </div>
         </section>
@@ -87,7 +87,7 @@
             isError() {
                 return this.ledgerMeta.loadingError || this.tokensListMeta.loadingError || this.accountMeta.loadingError;
             },
-            WhiteListTableVersion(){
+            WhiteListTableComponent(){
                 const v = resolveComponentVersion(this.W12Lister.version, 'WhiteListTable');
                 return () => import("bem/WhiteListTable/" + v);
             },
@@ -97,7 +97,7 @@
         },
         methods: {
             ...WhitelistNS.mapActions({
-                whitelistFetch: "fetch",
+                fetchWhitelist: "fetch",
             }),
             ...AccountNS.mapActions({
                 watchCurrentAccount: 'watch',
@@ -107,7 +107,7 @@
             }),
 
             async handleW12ListerChange(){
-                await this.whitelistFetch();
+                await this.fetchWhitelist();
             },
         },
         watch: {
@@ -127,7 +127,7 @@
             ) {
                 this.updateLister({ W12Lister: this.W12ListerLastVersion });
             } else {
-                await this.whitelistFetch();
+                await this.fetchWhitelist();
             }
 
             this.meta.loading = false;
