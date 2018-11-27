@@ -37,11 +37,11 @@ export function cacheController(meta) {
 
             const functCache = (data) => {
                 if(Array.isArray(data.result)){
-                    accept(data.result.map((item, index) => data.meta.typesOutput[index].search(/int/) !== -1
+                    accept(data.result.map((item, index) => data.meta.typesOutput[index].search(/(.*)int([0-9]*)$/gm) !== -1
                         ? new BigNumber(item)
                         : item))
                 } else {
-                    if(data.meta.typesOutput[0].search(/int/) !== -1){
+                    if(data.meta.typesOutput[0].search(/(.*)int([0-9]*)$/gm) !== -1){
                         accept(new BigNumber(data.result));
                     } else {
                         accept(data.result);
