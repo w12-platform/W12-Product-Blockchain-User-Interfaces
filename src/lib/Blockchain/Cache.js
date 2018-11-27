@@ -31,7 +31,6 @@ export function cacheController(meta) {
             const functCache = (data) => accept(data.result);
 
             const cacheData = store.getters["Cache/get"](hash);
-            console.log(cacheData);
 
             return cacheData ? functCache(cacheData) : meta.funct(...args, callback);
         });
