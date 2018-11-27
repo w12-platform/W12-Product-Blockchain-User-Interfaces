@@ -224,6 +224,7 @@
 
             async onTrancheReleasedEvent(error, result) {
                 if (!error) {
+                    await this.$store.dispatch('Cache/blockNumberUp');
                     await this.$nextTick();
 
                     await this.updateFundInformation({Token: this.currentProject});
@@ -234,6 +235,7 @@
             },
             async onUnsoldTokenReturnedEvent(error, result) {
                 if (!error) {
+                    await this.$store.dispatch('Cache/blockNumberUp');
                     await this.$nextTick();
 
                     await this.updateReceivingInformation({Token: this.currentProject});
@@ -244,6 +246,7 @@
             },
             async onApprovalEvent(error, result) {
                 if (!error) {
+                    await this.$store.dispatch('Cache/blockNumberUp');
                     await this.$nextTick();
 
                     const tx = result.transactionHash;
@@ -254,6 +257,7 @@
             },
             async onApprovalW12Event(error, result) {
                 if (!error) {
+                    await this.$store.dispatch('Cache/blockNumberUp');
                     await this.$nextTick();
 
                     const tx = result.transactionHash;
@@ -264,6 +268,7 @@
             },
             async onTokenPlacedEvent(error, result) {
                 if (!error) {
+                    await this.$store.dispatch('Cache/blockNumberUp');
                     await this.$nextTick();
 
                     const {originalTokenAddress} = result.args;
@@ -300,6 +305,7 @@
             },
             async onCrowdsaleTokenMintedEvent(error, result) {
                 if (!error) {
+                    await this.$store.dispatch('Cache/blockNumberUp');
                     await this.$nextTick();
 
                     const {tokenAddress} = result.args;

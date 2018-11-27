@@ -195,6 +195,7 @@
 
             async onApprovalW12Event(error, result) {
                 if (!error) {
+                    await this.$store.dispatch('Cache/blockNumberUp');
                     const tx = result.transactionHash;
                     await this.updateTokensApprovedToPlaceValue({Token: this.currentProject});
                     await this.updateAccountData();
@@ -203,6 +204,7 @@
             },
             async onExchangeEvent(error, result){
                 if (!error) {
+                    await this.$store.dispatch('Cache/blockNumberUp');
                     await this.updateFundInformation({Token: this.currentProject});
                     await this.updateAccountData();
                     const tx = result.transactionHash;
@@ -211,6 +213,7 @@
             },
             async onTrancheReleasedEvent(error, result) {
                 if (!error) {
+                    await this.$store.dispatch('Cache/blockNumberUp');
                     await this.updateFundInformation({Token: this.currentProject});
                     await this.updateAccountData();
                     const tx = result.transactionHash;
@@ -219,6 +222,7 @@
             },
             async onUnsoldTokenReturnedEvent(error, result) {
                 if (!error) {
+                    await this.$store.dispatch('Cache/blockNumberUp');
                     await this.updateReceivingInformation({Token: this.currentProject});
                     await this.updateAccountData();
                     const tx = result.transactionHash;

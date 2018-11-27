@@ -380,6 +380,7 @@
 
             async onExchangeEvent(error, result) {
                 if (!error) {
+                    await this.$store.dispatch('Cache/blockNumberUp');
                     await this.updateAccountData();
                     const tx = result.transactionHash;
                     this.$store.commit(`Transactions/${CONFIRM_TX}`, tx);
@@ -387,6 +388,7 @@
             },
             async onApprovalEvent(error, result) {
                 if (!error) {
+                    await this.$store.dispatch('Cache/blockNumberUp');
                     await this.updateAccountData();
                     const tx = result.transactionHash;
                     this.$store.commit(`Transactions/${CONFIRM_TX}`, tx);

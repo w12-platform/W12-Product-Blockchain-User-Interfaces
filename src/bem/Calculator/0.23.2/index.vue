@@ -453,6 +453,7 @@
             },
             async onTokenPurchaseEvent(error, result) {
                 if (!error) {
+                    await this.$store.dispatch('Cache/blockNumberUp');
                     const tx = result.transactionHash;
                     await this.updateAccountData();
                     await this.tokensListUpdate(this.currentToken);

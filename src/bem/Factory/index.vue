@@ -428,6 +428,7 @@
             },
             async onNewTokenEvent(error, result) {
                 if (!error) {
+                    await this.$store.dispatch('Cache/blockNumberUp');
                     const {tokenAddress} = result.args;
                     if (tokenAddress) {
                         this.$store.commit(`Factory/${FACTORY_ADD}`, tokenAddress);
