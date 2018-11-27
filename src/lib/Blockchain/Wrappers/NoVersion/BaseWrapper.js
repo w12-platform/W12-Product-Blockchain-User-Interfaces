@@ -1,6 +1,6 @@
-import { promisify, promisifyLogsResult } from 'lib/utils.js';
+import { promisify, promisifyLogsResult, wait } from 'lib/utils.js';
 import Web3 from 'web3';
-import { wait } from '../../../utils';
+import {cacheController, getCacheType} from 'src/lib/Blockchain/Cache.js';
 
 const web3 = new Web3();
 const BigNumber = web3.BigNumber;
@@ -42,7 +42,15 @@ export class BaseWrapper {
                 };
 
                 if (item.constant == true) {
-                    methods[item.name] = promisifyLogsResult(this.senderInstance[item.name], optionsLogGetDefault);
+                    methods[item.name] = cacheController({
+                        version: this.version,
+                        name: this.artifact.contractName,
+                        method: item.name,
+                        address: this.getterInstance.address,
+                        funct: this.getterInstance[item.name],
+                        typeCache: getCacheType(this.version, this.artifact.contractName, item.name),
+                        typesOutput: item.outputs.map(i => i.type)
+                    }, optionsLogGetDefault);
                 } else {
                     methods[item.name] = beforeSendHook(promisifyLogsResult(this.senderInstance[item.name], optionsLogGetDefault));
                 }
