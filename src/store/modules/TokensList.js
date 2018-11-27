@@ -101,7 +101,7 @@ export default {
                         let currentMilestoneIndex = (await W12Crowdsale.methods.getCurrentMilestoneIndex());
 
                         currentMilestoneIndex = currentMilestoneIndex[1]
-                            ? new BigNumber(currentMilestoneIndex[0]).toNumber()
+                            ? currentMilestoneIndex[0].toNumber()
                             : null;
 
                         let endDate = false;

@@ -1,6 +1,10 @@
 import stringHash from 'string-hash';
 import store from 'store';
 import {CACHE_MAP} from 'src/config';
+import Web3 from 'web3';
+
+const web3 = new Web3();
+const BigNumber = web3.BigNumber;
 
 export function cacheController(meta) {
     return function (...args) {
@@ -28,7 +32,19 @@ export function cacheController(meta) {
                 }
             };
 
-            const functCache = (data) => accept(data.result);
+            const functCache = (data) => {
+                if(Array.isArray(data.result)){
+                    accept(data.result.map((item, index) => data.meta.typesOutput[index].search(/int/) !== -1
+                        ? new BigNumber(item)
+                        : item))
+                } else {
+                    if(data.meta.typesOutput[0].search(/int/) !== -1){
+                        accept(new BigNumber(data.result));
+                    } else {
+                        accept(data.result);
+                    }
+                }
+            };
 
             const cacheData = store.getters["Cache/get"](hash);
 
