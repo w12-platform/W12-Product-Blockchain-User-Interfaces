@@ -12,7 +12,9 @@ export default {
         results: [],
     },
     modules: {},
-    getters: {},
+    getters: {
+        get(state) { return (hash) => state.results.find(i => i.hash === hash) }
+    },
     mutations: {
         [CACHE_LAST_BLOCK_UP](state, payload) {
             state.lastBlockNumber = payload;
@@ -37,9 +39,6 @@ export default {
             if(!findResult){
                 commit(CACHE_SET, data);
             }
-        },
-        get({state}, hash) {
-            return state.results.find((data) => data.hash === hash);
         },
         async getBlockNumber({state}) {
             return state.lastBlockNumber ? state.lastBlockNumber : await this.dispatch('Cache/blockNumberUp');
