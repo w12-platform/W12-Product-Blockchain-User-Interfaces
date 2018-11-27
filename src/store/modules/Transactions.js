@@ -19,7 +19,6 @@ export default {
             state.list.push(tx);
         },
         [CONFIRM_TX](state, tx) {
-            this.dispatch('Cache/blockNumberUp');
             state.list = state.list.filter((tr)=> tr.hash && tr.hash !== tx);
         },
         [CANCEL_TX](state, tx) {
