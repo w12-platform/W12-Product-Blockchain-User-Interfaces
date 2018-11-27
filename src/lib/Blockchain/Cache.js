@@ -12,6 +12,9 @@ export function cacheController(meta) {
             const blockNumber = await store.dispatch('Cache/getBlockNumber');
 
             let hash;
+            const argsLast = args.length && args[args.length - 1] ? args[args.length - 1] : null
+            const type = argsLast && argsLast.cache ? argsLast.cache : null;
+            meta.typeCache = type ? type : meta.typeCache;
 
             switch (meta.typeCache) {
                 case 'permanent':
