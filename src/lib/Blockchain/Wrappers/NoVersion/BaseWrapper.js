@@ -29,7 +29,8 @@ export class BaseWrapper {
                         address: this.getterInstance.address,
                         funct: this.getterInstance[item.name],
                         typeCache: getCacheType(this.version, this.artifact.contractName, item.name),
-                        typesOutput: item.outputs.map(i => i.type)
+                        inputTypes: item.inputs.map(i => i.type),
+                        outputTypes: item.outputs.map(i => i.type)
                     });
                 } else {
                     methods[item.name] = beforeSendHook(promisify(this.senderInstance[item.name]));

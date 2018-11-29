@@ -2,56 +2,76 @@ import stringHash from 'string-hash';
 import store from 'store';
 import {CACHE_MAP} from 'src/config';
 import Web3 from 'web3';
+import coder from 'web3/lib/solidity/coder';
 
 const web3 = new Web3();
 const BigNumber = web3.BigNumber;
+const CACHE_TYPE = ['permanent'];
+const processCacheType = (type) => CACHE_TYPE.includes(type) ? type : undefined;
+const getPayload = (args, inputTypes) => {
+    args = Array.from(args);
+    if (args.length > inputTypes.length) {
+        args = args.slice(0, inputTypes.length);
+    }
+    return args;
+}
+const getOptions = (args, inputTypes) => {
+    if (args.length > inputTypes.length) {
+        return typeof args[args.length - 1] === 'object' ? args[args.length - 1] : undefined;
+    }
+}
 
-export function cacheController(meta) {
+export function cacheController(meta, info) {
     return function (...args) {
         return new Promise(async (accept, reject) => {
             const blockNumber = await store.dispatch('Cache/getBlockNumber');
 
             let hash;
-            const argsLast = args.length && args[args.length - 1] ? args[args.length - 1] : null
-            const type = argsLast && argsLast.cache ? argsLast.cache : null;
+
+            const options = getOptions(args, meta.inputTypes);
+            const payload = getPayload(args, meta.inputTypes);
+            const encodedPayload = coder.encodeParams(meta.inputTypes, payload);
+            const encodedOptions = options ? JSON.stringify(options) : '';
+            const postfix = encodedPayload + encodedOptions;
+            const type = options ? processCacheType(options.cache) : undefined;
+
             meta.typeCache = type ? type : meta.typeCache;
 
             switch (meta.typeCache) {
                 case 'permanent':
-                    hash = stringHash(meta.address + meta.method + args.toString());
+                    hash = stringHash(meta.address + meta.method + postfix);
                     break;
 
                 default:
-                    hash = stringHash(meta.address + meta.method + args.toString() + blockNumber);
+                    hash = stringHash(meta.address + meta.method + postfix + blockNumber);
                     break;
             }
 
             const callback = function (error, result) {
                 if (error != null) {
                     reject(error);
-                } else {
-                    store.dispatch('Cache/set', {meta, hash, result, blockNumber, args: {...args}});
-                    accept(result);
+                    return;
                 }
-            };
 
-            const functCache = (data) => {
-                if(Array.isArray(data.result)){
-                    accept(data.result.map((item, index) => data.meta.typesOutput[index].search(/(.*)int([0-9]*)$/gm) !== -1
-                        ? new BigNumber(item)
-                        : item))
-                } else {
-                    if(data.meta.typesOutput[0].search(/(.*)int([0-9]*)$/gm) !== -1){
-                        accept(new BigNumber(data.result));
-                    } else {
-                        accept(data.result);
-                    }
-                }
+                const encodedResult = coder.encodeParams(
+                    meta.outputTypes,
+                    meta.outputTypes.length === 1 ? [result] : result
+                );
+
+                store.dispatch('Cache/set', {meta, hash, result: encodedResult, blockNumber, args: {...args}});
+                accept(result);
             };
 
             const cacheData = store.getters["Cache/get"](hash);
 
-            return cacheData ? functCache(cacheData) : meta.funct(...args, callback);
+            if (cacheData) {
+                let output = coder.decodeParams(meta.outputTypes, cacheData.result);
+                output = meta.outputTypes.length === 1 ? output[0] : output;
+                accept(output);
+                return;
+            }
+
+            meta.funct(...args, callback);
         });
     };
 }
