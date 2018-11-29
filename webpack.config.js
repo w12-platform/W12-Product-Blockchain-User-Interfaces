@@ -94,7 +94,10 @@ module.exports = [
             new webpack.DefinePlugin({
                 ROOT_PATH: JSON.stringify('/'),
                 PACKAGE_JSON_PATH: JSON.stringify('package.json'),
-                BLOCKCHAIN_NETWORK_ID: blockchainNetworkId
+                BLOCKCHAIN_NETWORK_ID: blockchainNetworkId,
+                DEV_DEBUG_WARNINGS: process.env.DEV_DEBUG_WARNINGS,
+                DEV_DEBUG_LOGS: process.env.DEV_DEBUG_LOGS,
+                DEV_DEBUG_ERRORS: process.env.DEV_DEBUG_ERRORS
             }),
         ],
         devServer: {
