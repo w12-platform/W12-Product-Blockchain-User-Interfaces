@@ -173,7 +173,7 @@
                             <div class="p-3" v-if="tokenCrowdSaleMilestones.length">
                                 <h2 class="col-12 pb-4" v-html="$t('Milestones')"></h2>
                                 <div v-for="(item, idx) in tokenCrowdSaleMilestones">
-                                    <span class="Milestones__stageTitle"><span v-html="$t('MilestoneTitle')"></span> #{{ idx+1 }}</span>
+                                    <span class="Milestones__stageTitle"><span v-html="$t('MilestoneTitle')"></span> #{{ idx }}</span>
                                     <MilestoneCard
                                             :value="tokenCrowdSaleMilestones[idx]"
                                             @input="onMilestoneUpdateAtIndex($event, idx)"
