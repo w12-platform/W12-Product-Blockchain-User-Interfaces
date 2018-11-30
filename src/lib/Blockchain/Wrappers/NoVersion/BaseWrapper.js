@@ -1,15 +1,16 @@
-import { promisify } from 'lib/utils.js';
+import {promisify, wait} from 'src/lib/utils.js';
 import Web3 from 'web3';
-import { wait } from '../../../utils';
+import {cacheController, getCacheType} from 'src/lib/Blockchain/Cache.js';
 
 const web3 = new Web3();
 const BigNumber = web3.BigNumber;
 
 export class BaseWrapper {
-    constructor(contractArtifacts, { getter, sender }) {
+    constructor(contractArtifacts, {getter, sender}, version) {
         this.artifact = contractArtifacts;
         this.getterInstance = getter;
         this.senderInstance = sender;
+        this.version = version;
 
         const abi = this.artifact.abi;
         const methods = this.methods = {};
@@ -21,7 +22,16 @@ export class BaseWrapper {
 
             if (item.type == "function") {
                 if (item.constant == true) {
-                    methods[item.name] = promisify(this.getterInstance[item.name]);
+                    methods[item.name] = cacheController({
+                        version: this.version,
+                        name: this.artifact.contractName,
+                        method: item.name,
+                        address: this.getterInstance.address,
+                        funct: this.getterInstance[item.name],
+                        typeCache: getCacheType(this.version, this.artifact.contractName, item.name),
+                        inputTypes: item.inputs.map(i => i.type),
+                        outputTypes: item.outputs.map(i => i.type)
+                    });
                 } else {
                     methods[item.name] = beforeSendHook(promisify(this.senderInstance[item.name]));
                 }

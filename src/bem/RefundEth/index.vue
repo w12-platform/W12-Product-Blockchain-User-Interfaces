@@ -357,6 +357,7 @@
             },
             async onFundsRefundedEvent(error, result) {
                 if (!error) {
+                    await this.$store.dispatch('Cache/blockNumberUp');
                     const tx = result.transactionHash;
                     await this.updateAccountData();
                     await this.tokensListUpdate({Index: this.currentToken.index});
@@ -365,6 +366,7 @@
             },
             async onApprovalW12Event(error, result) {
                 if (!error) {
+                    await this.$store.dispatch('Cache/blockNumberUp');
                     const tx = result.transactionHash;
                     await this.tokensListUpdate({Index: this.currentToken.index});
                     await this.updateAccountData();

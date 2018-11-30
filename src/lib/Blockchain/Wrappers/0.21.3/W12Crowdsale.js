@@ -18,7 +18,7 @@ export class W12CrowdsaleWrapper extends BaseWrapper {
                 const bonusVolumes = await this.getBonusVolumesAtStage(i);
 
                 const internalStageStructure = {
-                    startDate: stage[0].toNumber(),
+                    startDate:  stage[0].toNumber(),
                     endDate: stage[1].toNumber(),
                     discount: stage[2].toNumber() / 100,
                     vestingDate: stage[3].toNumber(),
@@ -45,7 +45,7 @@ export class W12CrowdsaleWrapper extends BaseWrapper {
                     && boundaries.length > 0
                         && boundaries.length === bonuses.length) {
             for (let index in boundaries) {
-                const boundary = new BigNumber(web3.fromWei(boundaries[index], 'ether').toString()).toNumber();
+                const boundary = new BigNumber(web3.fromWei(boundaries[index], 'ether')).toNumber();
                 const bonus = bonuses[index].toString();
 
                 result.push([boundary, bonus]);

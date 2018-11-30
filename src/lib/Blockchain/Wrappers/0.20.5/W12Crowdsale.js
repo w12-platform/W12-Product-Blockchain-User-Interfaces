@@ -137,7 +137,7 @@ export class W12CrowdsaleWrapper extends BaseWrapper {
                     description: decodeStringFromBytes(milestone[5]),
                     tranchePercent: milestone[1].toString() / 100,
                     endDate: milestone[0].toNumber(),
-                    voteEndDate: milestone[2].toNumber(),
+                    voteEndDate:  milestone[2].toNumber(),
                     withdrawalEndDate: milestone[3].toNumber(),
                     wasCreated: true
                 };
