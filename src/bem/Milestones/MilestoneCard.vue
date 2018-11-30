@@ -57,8 +57,8 @@
                 <!--confirm-->
                 <!--&gt;</date-picker>-->
                 <!--</b-field>-->
-                <label for="MilestoneCard__withdrawalEnd">{{ $t('MilestonesDateEndWithdrawal') }}</label>
-                <b-field id="MilestoneCard__withdrawalEnd">
+                <label v-if="stageIndex > 0" for="MilestoneCard__withdrawalEnd">{{ $t('MilestonesDateEndWithdrawal') }}</label>
+                <b-field  v-if="stageIndex > 0" id="MilestoneCard__withdrawalEnd">
                     <date-picker
                             :not-before="getNotBeforeWithdrawalEndDate(stageIndex)"
                             :not-after="getNotAfterWithdrawalEndDate(stageIndex)"
@@ -172,6 +172,9 @@
             },
             onInput(name, value) {
                 this.observableData[name] = value;
+                this.observableData['withdrawalEndDate'] = this.stageIndex === 0 && name === "endDate"
+                    ? new Date(moment(value).add(2, 'second').unix() * 1000)
+                    : this.observableData['withdrawalEndDate'];
             },
             getNotBeforeEndDate(stageIndex) {
                 if (this.tokenCrowdSaleMilestonesNS[stageIndex - 1]) {
@@ -189,7 +192,7 @@
                 return this.endDateCrowdSale ? moment(this.endDateCrowdSale).add(10, 'm').toDate() : moment().add(10, 'm').toDate();
             },
             getNotAfterEndDate(stageIndex) {
-                if (this.tokenCrowdSaleMilestonesNS[stageIndex].withdrawalEndDate) {
+                if (this.tokenCrowdSaleMilestonesNS[stageIndex].withdrawalEndDate && stageIndex !== 0) {
                     return moment(this.tokenCrowdSaleMilestonesNS[stageIndex].withdrawalEndDate * 1000).subtract(10, 'm').toDate();
                 } else {
                     for (let i = stageIndex + 1; i <= this.tokenCrowdSaleMilestonesNS.length; i++) {
@@ -197,7 +200,7 @@
                             if (this.tokenCrowdSaleMilestonesNS[i].endDate) {
                                 return moment(this.tokenCrowdSaleMilestonesNS[i].endDate * 1000).subtract(10, 'm').toDate();
                             }
-                            if (this.tokenCrowdSaleMilestonesNS[i].withdrawalEndDate) {
+                            if (this.tokenCrowdSaleMilestonesNS[i].withdrawalEndDate && stageIndex !== 0) {
                                 return moment(this.tokenCrowdSaleMilestonesNS[i].withdrawalEndDate  * 1000).subtract(10, 'm').toDate();
                             }
                         }
