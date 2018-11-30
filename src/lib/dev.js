@@ -1,7 +1,7 @@
 export const isDev = process.env.NODE_ENV === 'development';
-export const isDevWarnEnabled = !!process.env.DEV_DEBUG_WARNINGS;
-export const isDevLogEnabled = !!process.env.DEV_DEBUG_LOGS;
-export const isDevErrorsEnabled = !!process.env.DEV_DEBUG_ERRORS;
+export const isDevWarnEnabled = !!DEV_DEBUG_WARNINGS;
+export const isDevLogEnabled = !!DEV_DEBUG_LOGS;
+export const isDevErrorsEnabled = !!DEV_DEBUG_ERRORS;
 
 export function devWarn(...args) {
     if (isDev && isDevWarnEnabled) {

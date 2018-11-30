@@ -117,7 +117,7 @@ new Vue({
                         this.$i18n.add(language, arrayTranslations[language]);
                     }
                 }
-
+                await this.$store.dispatch('Cache/startWatchBlockNumberUpdate');
                 this.$store.commit(`Lang/${LANG_UPDATE_META}`, {loading: false});
                 window.dispatchEvent(new Event('resize'));
             }

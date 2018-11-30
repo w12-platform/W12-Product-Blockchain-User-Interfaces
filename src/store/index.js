@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import Config from "./modules/Config.js";
+import Cache from "./modules/Cache.js";
 import Ledger from "./modules/Ledger.js";
 import Account from "./modules/Account.js";
 import TokensList from "./modules/TokensList.js";
@@ -24,6 +25,7 @@ const store = {
     modules: {
         Ledger,
         Config,
+        Cache,
         W12Lister,
         Account,
         TokensList,
@@ -37,6 +39,7 @@ const store = {
     plugins: [
         PersistedStatePlugin({
             paths: [
+                "Cache",
                 "W12Lister",
                 "Transactions.list",
                 "Lang.current",

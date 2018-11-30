@@ -180,6 +180,7 @@
             },
             async onTrancheReleasedEvent(error, result) {
                 if (!error) {
+                    await this.$store.dispatch('Cache/blockNumberUp');
                     await this.updateFundInformation({Token: this.currentProject});
                     await this.updateAccountData();
                     const tx = result.transactionHash;
