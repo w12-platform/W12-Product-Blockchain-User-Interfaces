@@ -170,7 +170,7 @@
                             <div class="p-3" v-if="tokenCrowdSaleMilestones.length">
                                 <h2 class="col-12 pb-4">{{ $t('Milestones') }}</h2>
                                 <div v-for="(item, idx) in tokenCrowdSaleMilestones">
-                                    <span class="Milestones__stageTitle">{{ $t('MilestoneTitle') }} #{{ idx+1 }}</span>
+                                    <span class="Milestones__stageTitle">{{ $t('MilestoneTitle') }} #{{ idx }}</span>
                                     <MilestoneCard
                                             v-model="tokenCrowdSaleMilestones[idx]"
                                             :stageIndex="idx"
