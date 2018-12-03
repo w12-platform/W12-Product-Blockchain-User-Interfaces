@@ -11,11 +11,14 @@ const LangNS = createNamespacedHelpers("Lang");
 import Config from '@/config';
 import * as Sentry from '@sentry/browser';
 import Filters from '@/lib/views/plugins/filters';
+import pkg from '../package';
 import 'src/bem/buefy/default.scss';
 import store from "store";
 
 Sentry.init({
     dsn: 'https://9accf8a0540e45cebd4205d53297ca13@sentry.io/1309666',
+    release: pkg.version,
+    environment: process.env.NODE_ENV,
     beforeSend(event) {
         if(event.level){
             return Config.sentry.allowedLevel.match(event.level) ? event : null;

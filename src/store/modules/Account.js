@@ -6,7 +6,7 @@ import semver from 'semver';
 import {web3, BigNumber} from 'lib/utils';
 import {map} from 'p-iteration';
 import zipObject from 'lodash/zipObject'
-
+import * as Sentry from '@sentry/browser';
 
 export const ERROR_FETCH_ACCOUNT = 'LoadLedger: An unknown error';
 
@@ -64,13 +64,21 @@ export default {
             const watcher = async () => {
                 try {
                     const { web3: connectedWeb3, netId } = await Connector.connect();
+                    const getAccounts = promisify(connectedWeb3.eth.getAccounts.bind(connectedWeb3.eth.getAccounts));
+                    const currentAccount = (await getAccounts())[0];
 
                     commit('UPDATE_NETWORK_ID', netId);
 
-                    if (Connector.isProvider('metamask')) {
-                        const getAccounts = promisify(connectedWeb3.eth.getAccounts.bind(connectedWeb3.eth.getAccounts));
-                        const currentAccount = (await getAccounts())[0];
+                    Sentry.configureScope(scope => {
+                        scope.setUser({
+                            id: currentAccount || 'unknown',
+                            account: currentAccount || 'unknown',
+                        });
+                        scope.setTag('network_id', netId);
+                        scope.setTag('provider', Connector.isProvider('metamask') ? 'metamask' : 'unknown');
+                    });
 
+                    if (Connector.isProvider('metamask')) {
                         if(netId != config.blockchainNetworkId){
                             commit(UPDATE, {});
                             commit(UPDATE_DATA, {});

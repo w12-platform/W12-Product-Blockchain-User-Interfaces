@@ -46,27 +46,28 @@ export function promisifyLogsResult (funct, info) {
     return function (...args) {
         return new Promise((accept, reject) => {
             const callback = function (error, result) {
-                const title = [info.type,info.contract_name,info.name,info.version,info.address].join(' ');
-                Sentry.configureScope((scope) => {
-                    scope.setExtra("args", args);
-                    scope.setExtra("result", result);
-                    scope.setTag("Type", info.type);
-                    scope.setTag("ContractName", info.contract_name);
-                    scope.setTag("Name", info.name);
-                    scope.setTag("Version", info.version);
-                    scope.setTag("Address", info.address);
+                Sentry.withScope(scope => {
+                    scope.setTag("type", info.type);
+                    scope.setTag("contract", info.contract_name);
+                    scope.setTag("method", info.name);
+                    scope.setTag("version", info.version);
+                    scope.setTag("contract_address", info.address);
+                    scope.setLevel(error != null ? Sentry.Severity.Error : Sentry.Severity.Info);
+                    scope.setExtra("method_arguments", args);
+
+                    if (error != null) {
+                        Sentry.captureException(error);
+                    } else {
+                        scope.setExtra("result", result);
+                        Sentry.captureEvent({
+                            message: [info.type, info.contract_name, info.name, info.version, info.address].join(' ')
+                        });
+                    }
                 });
+
                 if (error != null) {
-                    Sentry.configureScope((scope) => {
-                        scope.setLevel("error");
-                    });
-                    Sentry.captureMessage(title);
                     reject(error);
                 } else {
-                    Sentry.configureScope((scope) => {
-                        scope.setLevel("info");
-                    });
-                    Sentry.captureMessage(title);
                     accept(result);
                 }
             };
