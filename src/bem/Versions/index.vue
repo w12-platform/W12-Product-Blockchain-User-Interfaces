@@ -4,6 +4,7 @@
 
 <script>
     import './default.scss';
+    import packageJson from '#/package.json';
 
     export default {
         name: 'Versions',
@@ -16,7 +17,7 @@
             };
         },
         async created(){
-            this.version = (await fetch(PACKAGE_JSON_PATH).then(data => data.json())).version;
+            this.version = packageJson.version;
         }
     };
 </script>
