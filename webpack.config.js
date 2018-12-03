@@ -55,6 +55,7 @@ module.exports = [
             extensions: ['.js', '.vue', '.json'],
             alias: {
                 'vue$': 'vue/dist/vue.esm.js',
+                '#': path.join(__dirname),
                 '@': path.join(__dirname, "src"),
                 'src': path.join(__dirname, "src"),
                 'bem': path.join(__dirname, "src/bem"),
@@ -93,7 +94,6 @@ module.exports = [
             new VueLoaderPlugin(),
             new webpack.DefinePlugin({
                 ROOT_PATH: JSON.stringify('/'),
-                PACKAGE_JSON_PATH: JSON.stringify('package.json'),
                 BLOCKCHAIN_NETWORK_ID: blockchainNetworkId
             }),
         ],

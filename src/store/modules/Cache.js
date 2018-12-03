@@ -1,3 +1,5 @@
+import packageJson from '#/package.json';
+
 export const CACHE_SET = "CACHE_SET";
 export const CACHE_CLEAR = "CACHE_CLEAR";
 export const CACHE_CLEAR_TEMP = "CACHE_CLEAR_TEMP";
@@ -44,7 +46,7 @@ export default {
             return state.lastBlockNumber ? state.lastBlockNumber : await this.dispatch('Cache/blockNumberUp');
         },
         async startWatchBlockNumberUpdate({state, commit}){
-            const currentUIVersion = (await fetch(PACKAGE_JSON_PATH).then(data => data.json())).version;
+            const currentUIVersion = packageJson.version;
             if(!state.UIVersion || state.UIVersion !== currentUIVersion){
                 commit(CACHE_UI_VERSION_UP, currentUIVersion);
                 commit(CACHE_CLEAR);
