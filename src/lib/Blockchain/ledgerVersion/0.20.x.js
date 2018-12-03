@@ -29,7 +29,6 @@ export async function loadContracts(v) {
     const VersionsLedgerArtifacts = await jsonLoader(v, "VersionsLedger");
     const ERC20Artifacts = await jsonLoader(v, "ERC20");
     const DetailedERC20Artifacts = await jsonLoader(v, "DetailedERC20");
-    const ERC20DetailedArtifacts = await jsonLoader(v, "ERC20Detailed");
     const W12CrowdsaleFactoryArtifacts = await jsonLoader(v, "W12CrowdsaleFactory");
     const W12TokenArtifacts = await jsonLoader(v, "WToken");
     const W12CrowdsaleArtifacts = await jsonLoader(v, "W12Crowdsale");
@@ -55,11 +54,6 @@ export async function loadContracts(v) {
         new DetailedERC20FactoryStrategy(DetailedERC20Artifacts, DetailedERC20Wrapper, Connector, v)
     );
     await DetailedERC20.init();
-
-    const ERC20Detailed = new ContractWrappersFactory(
-        new DetailedERC20FactoryStrategy(ERC20DetailedArtifacts, DetailedERC20Wrapper, Connector, v)
-    );
-    await ERC20Detailed.init();
 
     const W12Crowdsale = new ContractWrappersFactory(
         new W12CrowdsaleFactoryStrategy(W12CrowdsaleArtifacts, W12CrowdsaleWrapper, Connector, v)
@@ -122,7 +116,6 @@ export async function loadContracts(v) {
         W12TokenLedgerFactory: W12TokenLedger,
         ERC20Factory: ERC20,
         DetailedERC20Factory: DetailedERC20,
-        ERC20DetailedFactory: ERC20Detailed,
         W12FundFactory: W12Fund,
         W12AtomicSwapFactory: W12AtomicSwap,
         WTokenTestHelperFactory: WTokenTestHelper,

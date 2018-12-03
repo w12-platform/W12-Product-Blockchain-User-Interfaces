@@ -54,11 +54,6 @@ export async function loadContracts(v) {
     );
     await DetailedERC20.init();
 
-    const ERC20Detailed = new ContractWrappersFactory(
-        new DetailedERC20FactoryStrategy(DetailedERC20Artifacts, DetailedERC20Wrapper, Connector, v)
-    );
-    await ERC20Detailed.init();
-
     const W12Crowdsale = new ContractWrappersFactory(
         new W12CrowdsaleFactoryStrategy(W12CrowdsaleArtifacts, W12CrowdsaleWrapper, Connector, v)
     );
@@ -121,7 +116,6 @@ export async function loadContracts(v) {
         W12TokenFactory: W12Token,
         ERC20Factory: ERC20,
         DetailedERC20Factory: DetailedERC20,
-        ERC20DetailedFactory: ERC20Detailed,
         W12FundFactory: W12Fund,
         WTokenTestHelperFactory: WTokenTestHelper,
         VersionsLedgerFactory: VersionsLedger,
