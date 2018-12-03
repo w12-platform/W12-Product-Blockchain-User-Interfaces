@@ -16,34 +16,31 @@ const getPayload = (args, inputTypes) => {
         args = args.slice(0, inputTypes.length);
     }
     return args;
-}
+};
 const getOptions = (args, inputTypes) => {
     if (args.length > inputTypes.length) {
         return typeof args[args.length - 1] === 'object' ? args[args.length - 1] : undefined;
     }
-}
-const processResultForCenstry = (info, args, error, result) => {
-    const title = [info.type, info.contract_name, info.name, info.version, info.address].join(' ');
-    Sentry.configureScope((scope) => {
-        scope.setExtra("args", args);
-        scope.setExtra("result", result);
-        scope.setTag("Type", info.type);
-        scope.setTag("ContractName", info.contract_name);
-        scope.setTag("Name", info.name);
-        scope.setTag("Version", info.version);
-        scope.setTag("Address", info.address);
+};
+const processResultForSentry = (info, args, error, result) => {
+    Sentry.withScope(scope => {
+        scope.setTag("type", info.type);
+        scope.setTag("contract", info.contract_name);
+        scope.setTag("method", info.name);
+        scope.setTag("version", info.version);
+        scope.setTag("contract_address", info.address);
+        scope.setLevel(error != null ? Sentry.Severity.Error : Sentry.Severity.Info);
+        scope.setExtra("method_arguments", args);
+
+        if (error != null) {
+            Sentry.captureException(error);
+        } else {
+            scope.setExtra("result", result);
+            Sentry.captureEvent({
+                message: [info.type, info.contract_name, info.name, info.version, info.address].join(' ')
+            });
+        }
     });
-    if (error != null) {
-        Sentry.configureScope((scope) => {
-            scope.setLevel("error");
-        });
-        Sentry.captureMessage(title);
-    } else {
-        Sentry.configureScope((scope) => {
-            scope.setLevel("info");
-        });
-        Sentry.captureMessage(title);
-    }
 };
 
 export function cacheController(meta, info) {
@@ -77,7 +74,7 @@ export function cacheController(meta, info) {
             devLog(`cache_hash(${meta.method}): `, hash);
 
             const callback = function (error, result) {
-                processResultForCenstry(info, args, error, result);
+                processResultForSentry(info, args, error, result);
 
                 if (error != null) {
                     reject(error);
@@ -101,7 +98,8 @@ export function cacheController(meta, info) {
 
             if (cacheData) {
                 let output = coder.decodeParams(meta.outputTypes, cacheData.result);
-                output = meta.outputTypes.length === 1 ? output[0] : output
+                output = meta.outputTypes.length === 1 ? output[0] : output;
+                processResultForSentry(info, args, null, output);
                 devLog(`result(${meta.method}): `, output, meta.outputTypes);
                 accept(output);
                 return;
