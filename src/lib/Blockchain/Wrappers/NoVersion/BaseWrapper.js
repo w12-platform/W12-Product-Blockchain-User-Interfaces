@@ -1,4 +1,4 @@
-import {promisify, wait} from 'src/lib/utils.js';
+import { promisify, promisifyLogsResult, wait} from 'lib/utils.js';
 import Web3 from 'web3';
 import {cacheController, getCacheType} from 'src/lib/Blockchain/Cache.js';
 
@@ -6,7 +6,7 @@ const web3 = new Web3();
 const BigNumber = web3.BigNumber;
 
 export class BaseWrapper {
-    constructor(contractArtifacts, {getter, sender}, version) {
+    constructor(contractArtifacts, { getter, sender, version }) {
         this.artifact = contractArtifacts;
         this.getterInstance = getter;
         this.senderInstance = sender;
@@ -21,6 +21,26 @@ export class BaseWrapper {
             const item = abi[i];
 
             if (item.type == "function") {
+                const contract_name = this.artifact.contractName;
+                const name = item.name;
+                const address = this.getterInstance.address;
+                const version = this.version;
+
+                const optionsLogSetDefault = {
+                    type: "SET",
+                    name,
+                    contract_name,
+                    address,
+                    version
+                };
+                const optionsLogGetDefault = {
+                    type: "GET",
+                    name,
+                    contract_name,
+                    address,
+                    version
+                };
+
                 if (item.constant == true) {
                     methods[item.name] = cacheController({
                         version: this.version,
@@ -31,17 +51,17 @@ export class BaseWrapper {
                         typeCache: getCacheType(this.version, this.artifact.contractName, item.name),
                         inputTypes: item.inputs.map(i => i.type),
                         outputTypes: item.outputs.map(i => i.type)
-                    });
+                    }, optionsLogGetDefault);
                 } else {
-                    methods[item.name] = beforeSendHook(promisify(this.senderInstance[item.name]));
+                    methods[item.name] = beforeSendHook(promisifyLogsResult(this.senderInstance[item.name], optionsLogGetDefault));
                 }
 
-                methods[item.name].call = promisify(this.getterInstance[item.name].call);
-                methods[item.name].callWithSender = promisify(this.senderInstance[item.name].call);
-                methods[item.name].sendTransaction = beforeSendHook(promisify(this.senderInstance[item.name].sendTransaction));
+                methods[item.name].call = promisifyLogsResult(this.getterInstance[item.name].call, optionsLogGetDefault);
+                methods[item.name].callWithSender = promisifyLogsResult(this.senderInstance[item.name].call, optionsLogGetDefault);
+                methods[item.name].sendTransaction = beforeSendHook(promisifyLogsResult(this.senderInstance[item.name].sendTransaction, optionsLogSetDefault));
                 methods[item.name].request = this.senderInstance[item.name].request;
                 methods[item.name].getData = this.senderInstance[item.name].getData;
-                methods[item.name].estimateGas = promisify(this.senderInstance[item.name].estimateGas);
+                methods[item.name].estimateGas = promisifyLogsResult(this.senderInstance[item.name].estimateGas, optionsLogGetDefault);
             }
 
             if (item.type == "event") {

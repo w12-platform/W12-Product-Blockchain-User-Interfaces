@@ -3,6 +3,7 @@ import store from 'store';
 import {CACHE_MAP} from 'src/config';
 import Web3 from 'web3';
 import coder from 'web3/lib/solidity/coder';
+import * as Sentry from "@sentry/browser";
 
 const web3 = new Web3();
 const BigNumber = web3.BigNumber;
@@ -20,6 +21,27 @@ const getOptions = (args, inputTypes) => {
         return typeof args[args.length - 1] === 'object' ? args[args.length - 1] : undefined;
     }
 }
+
+const processResultForSentry = (info, args, error, result) => {
+    Sentry.withScope(scope => {
+        scope.setTag("type", info.type);
+        scope.setTag("contract", info.contract_name);
+        scope.setTag("method", info.name);
+        scope.setTag("version", info.version);
+        scope.setTag("contract_address", info.address);
+        scope.setLevel(error != null ? Sentry.Severity.Error : Sentry.Severity.Info);
+        scope.setExtra("method_arguments", args);
+
+        if (error != null) {
+            Sentry.captureException(error);
+        } else {
+            scope.setExtra("result", result);
+            Sentry.captureEvent({
+                message: [info.type, info.contract_name, info.name, info.version, info.address].join(' ')
+            });
+        }
+    });
+};
 
 export function cacheController(meta, info) {
     return function (...args) {
@@ -48,6 +70,8 @@ export function cacheController(meta, info) {
             }
 
             const callback = function (error, result) {
+                processResultForSentry(info, args, error, result);
+
                 if (error != null) {
                     reject(error);
                     return;

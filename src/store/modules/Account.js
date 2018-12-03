@@ -2,6 +2,7 @@ import Connector from 'lib/Blockchain/DefaultConnector.js';
 import {promisify, errorMessageSubstitution} from 'lib/utils.js';
 import config from '@/config.js';
 import Web3 from 'web3';
+import * as Sentry from '@sentry/browser';
 
 export const ERROR_FETCH_ACCOUNT = 'LoadLedger: An unknown error';
 
@@ -58,11 +59,19 @@ export default {
             const watcher = async () => {
                 try {
                     const { web3: connectedWeb3, netId } = await Connector.connect();
+                    const getAccounts = promisify(connectedWeb3.eth.getAccounts.bind(connectedWeb3.eth.getAccounts));
+                    const currentAccount = (await getAccounts())[0];
+
+                    Sentry.configureScope(scope => {
+                        scope.setUser({
+                            id: currentAccount || 'unknown',
+                            account: currentAccount || 'unknown',
+                        });
+                        scope.setTag('network_id', netId);
+                        scope.setTag('provider', Connector.isProvider('metamask') ? 'metamask' : 'unknown');
+                    });
 
                     if (Connector.isProvider('metamask')) {
-                        const getAccounts = promisify(connectedWeb3.eth.getAccounts.bind(connectedWeb3.eth.getAccounts));
-                        const currentAccount = (await getAccounts())[0];
-
                         if(netId != config.blockchainNetworkId){
                             commit(UPDATE, {});
                             commit(UPDATE_DATA, {});
