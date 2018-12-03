@@ -5,10 +5,10 @@ export class W12FundFactoryStrategy extends BaseFactoryStrategy {
         contractArtifacts,
         ContractWrapper,
         connector,
-        W12CrowdsaleFactory,
-        version
+        v,
+        W12CrowdsaleFactory
     ) {
-        super(contractArtifacts, ContractWrapper, connector, version);
+        super(contractArtifacts, ContractWrapper, connector, v);
 
         this.W12CrowdsaleFactory = W12CrowdsaleFactory;
     }

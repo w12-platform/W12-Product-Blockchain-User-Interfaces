@@ -80,7 +80,7 @@ export async function loadContracts(v) {
     await W12CrowdsaleFactoryInst.init();
 
     const W12Fund = new ContractWrappersFactory(
-        new W12FundFactoryStrategy(W12FundArtifacts, W12FundWrapper, Connector, W12Crowdsale, v)
+        new W12FundFactoryStrategy(W12FundArtifacts, W12FundWrapper, Connector, v, W12Crowdsale)
     );
     await W12Fund.init();
 
@@ -118,11 +118,11 @@ export async function loadContracts(v) {
                 W12ListerArtifacts,
                 W12ListerWrapper,
                 Connector,
+                v,
                 W12Crowdsale,
                 DetailedERC20,
                 ERC20,
-                TokenExchanger,
-                v
+                TokenExchanger
             )
         );
         await W12Lister.init();
@@ -151,11 +151,11 @@ export async function loadContracts(v) {
                 W12ListerArtifacts,
                 W12ListerWrapper,
                 Connector,
+                v,
                 W12Crowdsale,
                 DetailedERC20,
                 ERC20,
-                W12TokenLedger,
-                v
+                W12TokenLedger
             )
         );
         await W12Lister.init();
