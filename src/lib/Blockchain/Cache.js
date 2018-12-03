@@ -98,7 +98,8 @@ export function cacheController(meta, info) {
 
             if (cacheData) {
                 let output = coder.decodeParams(meta.outputTypes, cacheData.result);
-                output = meta.outputTypes.length === 1 ? output[0] : output
+                output = meta.outputTypes.length === 1 ? output[0] : output;
+                processResultForSentry(info, args, null, output);
                 devLog(`result(${meta.method}): `, output, meta.outputTypes);
                 accept(output);
                 return;
