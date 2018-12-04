@@ -58,7 +58,7 @@ export class W12ListerWrapper extends BaseWrapper {
         const ledgerAddress = await this.methods.getExchanger();
         const TokenExchanger = TokenExchangerFactory.at(ledgerAddress);
         let list = [];
-        const length = (await this.methods.approvedTokensLength());
+        const length = (await this.methods.approvedTokensLength()).toNumber();
         for(let i = 1; i <= length; i++){
             const listedToken = (await this.methods.approvedTokens(i));
             const wTokenAddress = await TokenExchanger.methods.getWTokenByToken(listedToken[10].toString());
