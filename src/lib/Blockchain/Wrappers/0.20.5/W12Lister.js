@@ -58,15 +58,12 @@ export class W12ListerWrapper extends BaseWrapper {
         const ledgerAddress = await this.methods.ledger();
         const W12TokenLedger = W12TokenLedgerFactory.at(ledgerAddress);
         let list = [];
-        let uniqTokenAddress = [];
-        const length = (await this.methods.approvedTokensLength());
+        const length = (await this.methods.approvedTokensLength()).toNumber();
         for(let i = 1; i <= length; i++){
             const listedToken = (await this.methods.approvedTokens(i));
             const wTokenAddress = await W12TokenLedger.methods.getWTokenByToken(listedToken[10].toString());
             const tokenAddress = listedToken[10].toString();
-            if(uniqTokenAddress.indexOf(tokenAddress) === -1){
-                uniqTokenAddress.push(tokenAddress);
-                list.push({
+            list.push({
                     version: decode(parseInt(await new BigNumber(await this.methods.version()).toString()), 4),
                     listerAddress: this.instance.address,
                     index: i,
@@ -85,24 +82,12 @@ export class W12ListerWrapper extends BaseWrapper {
                     wTokensIssuedAmount: listedToken[9].toString(),
                     tokenOwners: (await this.methods.getTokenOwners(listedToken[10])),
                 });
-            }
         }
         return list;
     }
 
     async fetchAllTokensComposedInformation() {
-        const list = await this.fetchAllTokensInWhiteList();
-        const result = [];
-        const RecentAddresses = [];
-
-        for (let item of list) {
-            if(RecentAddresses.indexOf(item.tokenAddress) === -1){
-                RecentAddresses.push(item.tokenAddress);
-                result.push(item);
-            }
-        }
-
-        return result;
+        return await this.fetchAllTokensInWhiteList();
     }
 
     async swap(){

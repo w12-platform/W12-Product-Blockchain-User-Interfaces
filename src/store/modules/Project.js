@@ -1,3 +1,4 @@
+import { devLog } from '@/lib/dev';
 import { updateTokenInfo as updateTokenInfo_v0_20_x } from '@/store/modules/Project/0.20.x/actions';
 import { updateTokenInfo as updateTokenInfo_v0_28_x } from '@/store/modules/Project/0.28.x/actions';
 import { updateReceivingInformation as updateReceivingInformation_v0_20_x } from '@/store/modules/Project/0.20.x/actions';
@@ -29,6 +30,50 @@ import {
     UPDATE,
     RESET
 } from './Project/mutations';
+
+const filterTokensListForCurrentAccount = (list, listerVersion, currentAccount) => {
+    if (semver.satisfies(listerVersion, '0.20.x - 0.27.x')) {
+        list = list.filter((token) => token.tokenOwners.includes(currentAccount));
+        list.sort((a, b) => (a.index - b.index));
+
+        const counter = {}; // {[tokenAddress: string]: number}
+        const actualList = [];
+
+        if (list.length) {
+            devLog('current account: ', currentAccount);
+            devLog('lister version: ', listerVersion);
+            devLog('tokens list for current account', list);
+
+            for (const token of list) {
+                if (counter[token.tokenAddress] == null) {
+                    counter[token.tokenAddress] = 0;
+                }
+
+                const indexOfOwnerInList = token.tokenOwners.indexOf(currentAccount);
+
+                if (indexOfOwnerInList === counter[token.tokenAddress]) {
+                    // Here we get record of listed token that has been added with owner parameter
+                    // equal to current account.
+                    // For example:
+                    //
+                    // Records: [record1(tokenA), record2(tokenA)]
+                    // Owners for tokenA: [owner1, owner2]. All record for tokenA has the same owners list.
+                    // record1(tokenA) has been added with owner1
+                    // record2(tokenA) has been added with owner2
+                    // If current account equal to owner2, then we take record2(tokenA)
+                    // If current account equal to owner1, then we take record1(tokenA)
+                    actualList.push(token);
+                }
+
+                counter[token.tokenAddress]++;
+            }
+        }
+
+        return actualList;
+    }
+
+    return list.filter(token => token.tokenOwners.includes(currentAccount));
+};
 
 BigNumber.config({
     DECIMAL_PLACES: 36,
@@ -230,13 +275,16 @@ export default {
             await this.dispatch('Project/fetchCrowdSaleAddressAndInfo', {Token});
             commit(UPDATE_META, {loadingProject: false});
         },
-        async fetchList({commit}) {
+        async fetchList({commit, rootState}) {
             commit(UPDATE_META, {loading: true});
             try {
+                const account = rootState.Account.currentAccount;
                 const listPromise = this.state.Config.W12ListerList.map(async (Lister)=>{
                     const {W12ListerFactory} = await this.dispatch('Ledger/fetch', Lister.version);
                     const W12Lister = W12ListerFactory.at(Lister.address);
-                    return await W12Lister.fetchAllTokensInWhiteList();
+                    const list = await W12Lister.fetchAllTokensInWhiteList();
+
+                    return filterTokensListForCurrentAccount(list, Lister.version, account);
                 });
                 Promise.all(listPromise).then((completed) => {
                     let list = [];
