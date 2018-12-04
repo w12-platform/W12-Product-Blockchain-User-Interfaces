@@ -1,9 +1,23 @@
 {
+  "unused": {
+    "1": {
+      "W12Lister": [
+        {
+          "address": "0xec376f955663824736444501e06c1fce20045d91",
+          "version": "0.23.4"
+        }
+      ]
+    }
+  },
   "1": {
     "FactoryTokens": {
       "address": "0x146f81931a3e0a53f1847f33175f25b488f9fef8"
     },
     "W12Lister": [
+      {
+        "address": "0x4a3d202120d2d75445c73f256507f1b4186e25d4",
+        "version": "0.21.3"
+      },
       {
         "address": "0xc4319ddf166091639efca0275060686f808cee0e",
         "version": "0.23.2"
