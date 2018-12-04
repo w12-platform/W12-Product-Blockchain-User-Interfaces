@@ -65,7 +65,8 @@ export async function fetchTokenFull({dispatch}, token) {
 
     let totalFunded, totalRefunded, foundBalanceInWei;
 
-    foundBalanceInWei = (await getBalance(W12FundAddress)).toString();
+    const balance = await getBalance(W12FundAddress);
+    foundBalanceInWei = balance ? balance.toString() : '';
     totalFunded = (await W12Fund.methods.totalFunded()).toString();
     totalRefunded = (await W12Fund.methods.totalRefunded()).toString();
 
