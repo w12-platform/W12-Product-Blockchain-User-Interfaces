@@ -1,7 +1,7 @@
 <template>
     <b-field class="ProjectSwitch">
         <b-select @input="FetchProject" :placeholder="$t('ProjectDashboardSelectToken')" expanded>
-            <option v-for="(project, idx) in projectsForCurrentAccount" :key="idx" :value="project">
+            <option v-for="(project, idx) in ProjectList" :key="idx" :value="project">
                 {{ project.symbol }} - {{ project.tokenAddress }} - v{{ project.version }}
             </option>
         </b-select>
@@ -33,11 +33,7 @@
                 currentAccount: "currentAccount",
                 accountMeta: "meta",
                 currentAccountData: "currentAccountData",
-            }),
-
-            projectsForCurrentAccount(){
-                return this.ProjectList.filter((project)=>project.tokenOwners.indexOf(this.currentAccount) !== -1);
-            }
+            })
         },
         methods: {
             ...ProjectNS.mapActions({
