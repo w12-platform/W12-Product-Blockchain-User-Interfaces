@@ -6,11 +6,12 @@ const web3 = new Web3();
 const BigNumber = web3.BigNumber;
 
 export class BaseWrapper {
-    constructor(contractArtifacts, { getter, sender, version }) {
+    constructor(contractArtifacts, { getter, sender, version, libVersion }) {
         this.artifact = contractArtifacts;
         this.getterInstance = getter;
         this.senderInstance = sender;
         this.version = version;
+        this.libVersion = libVersion;
 
         const abi = this.artifact.abi;
         const methods = this.methods = {};

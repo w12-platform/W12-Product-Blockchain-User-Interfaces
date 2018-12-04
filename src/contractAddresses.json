@@ -5,7 +5,7 @@
     },
     "W12Lister": [
       {
-        "address": "0x4dda30a4ab8e05223a772e1bbf09e3bfb6c9aff3",
+        "address": "0x4a3d202120d2d75445c73f256507f1b4186e25d4",
         "version": "0.21.3"
       },
       {
@@ -15,6 +15,10 @@
       {
         "address": "0x96bbf0f1b8ffb1428d60311fe280005133089872",
         "version": "0.23.3"
+      },
+      {
+        "address": "0xec376f955663824736444501e06c1fce20045d91",
+        "version": "0.23.4"
       }
     ]
   },

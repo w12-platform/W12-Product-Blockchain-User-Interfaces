@@ -1,12 +1,13 @@
 export class BaseFactoryStrategy {
-    constructor (contractArtifacts, ContractWrapper, connector, v) {
+    constructor (contractArtifacts, ContractWrapper, connector, libVersion, realVersion) {
         this.artifact = contractArtifacts;
         this.connector = connector;
         this.ContractWrapper = ContractWrapper;
         this.inited = false;
         this._instanceGetter = null;
         this._instanceSender = null;
-        this.version = v ? v : null;
+        this.version = realVersion;
+        this.libVersion = libVersion;
     }
 
     async init () {
@@ -29,7 +30,8 @@ export class BaseFactoryStrategy {
             {
                 sender: this.instanceSender.at(address),
                 getter: this.instanceGetter.at(address),
-                version: this.version
+                version: this.version,
+                libVersion: this.version
             }
         );
     }
