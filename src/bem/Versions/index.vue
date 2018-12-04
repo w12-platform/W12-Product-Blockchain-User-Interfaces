@@ -4,7 +4,7 @@
 
 <script>
     import './default.scss';
-    import packageJson from '#/package.json';
+    import packageJson from '../../../package';
 
     export default {
         name: 'Versions',
@@ -13,11 +13,8 @@
         },
         data() {
             return {
-                version: ""
+                version: packageJson.version
             };
-        },
-        async created(){
-            this.version = packageJson.version;
         }
     };
 </script>

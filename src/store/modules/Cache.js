@@ -1,4 +1,4 @@
-import packageJson from '#/package.json';
+import packageJson from '../../../package';
 
 export const CACHE_SET = "CACHE_SET";
 export const CACHE_CLEAR = "CACHE_CLEAR";
