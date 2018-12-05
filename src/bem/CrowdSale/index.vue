@@ -171,10 +171,7 @@
 
                         if (currentDate >= stageEndDate) {
                             if (currentDate <= EndDate) {
-                                const Index = this.currentToken.index;
-                                setTimeout(() => {
-                                    this.tokensListUpdate({Index});
-                                }, 1000);
+                                this.tokensListUpdate(this.currentToken);
                             }
                             this.unwatchCountdown();
                             this.countdown = false;
