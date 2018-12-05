@@ -1,4 +1,11 @@
-import {promisify, isZeroAddress, fromWeiDecimalsString, fromWeiDecimals, errorMessageSubstitution} from "src/lib/utils";
+import {
+    promisify,
+    isZeroAddress,
+    fromWeiDecimalsString,
+    fromWeiDecimals,
+    errorMessageSubstitution,
+    warrantor
+} from "src/lib/utils";
 import {map} from 'p-iteration';
 
 import {ReceivingModel} from 'src/bem/Receiving/model.js';
@@ -500,11 +507,11 @@ export default {
                 const fundAddress = await W12Crowdsale.methods.fund();
                 const W12Fund = W12FundFactory.at(fundAddress);
                 const {web3} = await Connector.connect();
-                const getBalance = promisify(web3.eth.getBalance.bind(web3.eth));
-                const balance =  await getBalance(fundAddress);
+                const getBalance = warrantor(web3.eth.getBalance.bind(web3.eth));
+
                 const fundData = {
                     address: fundAddress,
-                    balanceWei: balance ? balance.toString() : '',
+                    balanceWei: (await getBalance(fundAddress)).toString(),
                 };
                 if(state.currentProject && state.currentProject.crowdSaleInformation && state.currentProject.crowdSaleInformation.isStartCrowdSale) {
                     fundData.trancheAmount = (await W12Fund.methods.getTrancheAmount()).toString();
