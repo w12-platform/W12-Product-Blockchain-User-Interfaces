@@ -42,12 +42,20 @@
       {
         "address": "0x45cef5dca9b7c5e25abd9879409a71cedb1a81f9",
         "version": "0.27.1"
+      },
+      {
+        "address": "0x6074a1bfe00625f55d6bc2d3a4989a709372e7bd",
+        "version": "0.28.0"
       }
     ],
     "Rates": [
       {
         "address": "0x8c7aee0da71e31241e537c8d68a878a65d27e386",
         "version": "0.27.1"
+      },
+      {
+        "address": "0x3955ea944203d6259098c255F7fb779C79Ba4094",
+        "version": "0.28.0"
       }
     ]
   },
