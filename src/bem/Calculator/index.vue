@@ -457,7 +457,7 @@
                     await this.$store.dispatch('Cache/blockNumberUp');
                     const tx = result.transactionHash;
                     await this.updateAccountData();
-                    await this.tokensListUpdate(this.currentToken.index);
+                    await this.tokensListUpdate(this.currentToken);
                     this.$store.commit(`Transactions/${CONFIRM_TX}`, tx);
                 }
             },

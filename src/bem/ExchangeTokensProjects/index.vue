@@ -1,5 +1,5 @@
 <template>
-    <div class="ExchangeTokens buefy" v-if="balance !== '0'">
+    <div class="ExchangeTokensProjects buefy" v-if="balance !== '0'">
         <h2>{{ $t('ExchangeTokensProjects', {Balance: balance, WToken: currentProject.symbol, Token:
             currentProject.tokenInformation.symbol})}}</h2>
         <div class="pm-2" v-if="isPendingTx">
@@ -16,9 +16,9 @@
         <b-notification class="" v-if="error" @close="error = false" type="is-danger" has-icon>
             {{ error }}
         </b-notification>
-        <div class="ExchangeTokens__content" v-if="!isPendingTx && !isErrorTx">
-            <div class="ExchangeTokens__form">
-                <div class="ExchangeTokens__exchange py-2">
+        <div class="ExchangeTokensProjects__content" v-if="!isPendingTx && !isErrorTx">
+            <div class="ExchangeTokensProjects__form">
+                <div class="ExchangeTokensProjects__exchange py-2">
                     <button class="btn btn-primary py-2"
                             v-if="this.currentAccountData.allowanceForSwap === '0'" @click="approveSwapToSpend">{{
                         $t('ExchangeTokensProjectsApprove') }}

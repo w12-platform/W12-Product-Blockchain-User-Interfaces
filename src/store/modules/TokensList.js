@@ -104,7 +104,6 @@ export default {
                 commit(TOKEN_SELECTED, {currentToken: await dispatch('fetchTokenFull', token)});
             } catch (e) {
                 commit(UPDATE_META, {
-                    loading: false,
                     updated: false,
                     loadingError: errorMessageSubstitution(e) || ERROR_FETCH_TOKENS_LIST
                 });
