@@ -1,3 +1,4 @@
+import Connector from "lib/Blockchain/DefaultConnector";
 export const CACHE_SET = "CACHE_SET";
 export const CACHE_CLEAR = "CACHE_CLEAR";
 export const CACHE_CLEAR_TEMP = "CACHE_CLEAR_TEMP";
@@ -56,6 +57,8 @@ export default {
             });
         },
         async blockNumberUp({commit}) {
+            const {web3} = await Connector.connect();
+
             const blockNumber = await new Promise((accept, reject) => {
                 web3.eth.getBlockNumber(async (error, result) => {
                     if (error != null) {
