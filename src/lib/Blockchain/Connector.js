@@ -1,7 +1,10 @@
 import config from '../../config.js';
 import { promisify } from '../utils.js';
 import Web3 from 'web3';
+import HttpProvider from 'web3-providers-http';
 
+
+HttpProvider.prototype.sendAsync = HttpProvider.prototype.send;
 
 const web3 = new Web3();
 const onLoad = new Promise((resolve, reject) => {
@@ -88,7 +91,7 @@ export class Connector {
         }
 
         if (!theSame) {
-            this.web3get = new Web3(new web3.providers.HttpProvider(config.providers[senderNetId]));
+            this.web3get = new Web3(new HttpProvider(config.providers[senderNetId]));
         }
     }
 
