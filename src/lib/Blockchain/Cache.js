@@ -4,6 +4,7 @@ import {CACHE_MAP} from 'src/config';
 import Web3 from 'web3';
 import coder from 'web3/lib/solidity/coder';
 import * as Sentry from "@sentry/browser";
+import config from '@/config.js';
 
 const web3 = new Web3();
 const BigNumber = web3.BigNumber;
@@ -61,11 +62,11 @@ export function cacheController(meta, info) {
 
             switch (meta.typeCache) {
                 case 'permanent':
-                    hash = stringHash(meta.address + meta.method + postfix);
+                    hash = stringHash(config.blockchainNetworkId + meta.address + meta.method + postfix);
                     break;
 
                 default:
-                    hash = stringHash(meta.address + meta.method + postfix + blockNumber);
+                    hash = stringHash(config.blockchainNetworkId + meta.address + meta.method + postfix + blockNumber);
                     break;
             }
 

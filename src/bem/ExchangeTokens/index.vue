@@ -100,7 +100,7 @@
                 </div>
             </div>
         </div>
-        <b-loading :is-full-page="false" :active.sync="loading" :can-cancel="true"></b-loading>
+        <b-loading :is-full-page="false" :active="tokensListMeta.updated" :can-cancel="true"></b-loading>
     </div>
 </template>
 
@@ -177,6 +177,7 @@
                 currentAccountData: "currentAccountData",
             }),
             ...TokensListNS.mapState({
+                tokensListMeta: 'meta',
                 currentToken: "currentToken"
             }),
             ...TransactionsNS.mapState({

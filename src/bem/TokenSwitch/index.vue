@@ -34,14 +34,14 @@
             }),
 
             async onSelect(token){
-                this.$store.commit(`TokensList/${TOKEN_SELECTED}`, { currentToken: token });
-                const Index = token.index;
-                this.tokensListUpdate({Index});
+                this.tokensListUpdate(token);
             },
             tagClass(token){
                 return {
                     'TokenSwitch__tag': true,
-                    'TokenSwitch__selected': token.hasOwnProperty('index') ? this.currentToken.index === token.index : false,
+                    'TokenSwitch__selected': token.hasOwnProperty('index') && token.hasOwnProperty('version')
+                        ? this.currentToken.index === token.index && this.currentToken.version === token.version
+                        : false,
                 }
             },
         }

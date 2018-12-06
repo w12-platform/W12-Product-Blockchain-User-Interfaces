@@ -6,6 +6,10 @@ import * as Sentry from '@sentry/browser';
 const web3 = new Web3();
 const BigNumber = web3.BigNumber;
 
+
+BigNumber.TEN = new BigNumber(10);
+BigNumber.TWO = new BigNumber(2);
+BigNumber.UINT_MAX = BigNumber.TWO.pow(256).minus(1);
 BigNumber.config({
     DECIMAL_PLACES: 36,
     FORMAT: {
@@ -17,6 +21,10 @@ BigNumber.config({
         fractionGroupSize: 0
     }
 });
+
+export { web3 };
+export { BigNumber };
+export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 
 export function promisify (funct) {
     return function (...args) {
@@ -102,6 +110,37 @@ export function waitTransactionReceipt(tx, web3, timeout = 240000) {
     });
 }
 
+export function waitContractEventOnce(contract, name, filters, timeout = Infinity) {
+    return new Promise(function (accept, reject) {
+        if (typeof contract.events[name] !== 'function') reject(new Error(`no event with name "${name}"`));
+
+        const timerCb = () => {
+            if (watcher) watcher.stopWatching();
+
+            watcher = null;
+
+            reject(new Error('timout has been expired'));
+        };
+
+        let watcher;
+        let timer = isFinite(timeout) && timeout >= 0
+            ? setTimeout(timerCb, timeout)
+            : null;
+
+        watcher = contract.events[name](filters, null, (error, result) => {
+            if (!watcher) return;
+
+            watcher.stopWatching();
+
+            if (timer !== null) clearTimeout(timer);
+
+            if (error) return reject(error);
+
+            return accept(result);
+        });
+    });
+}
+
 export function wait(ms) { return new Promise(rs => setTimeout(rs, ms)); }
 
 export function decodeStringFromBytes(bytesString) {
@@ -163,7 +202,7 @@ export function getRefundWindow(milestones, currentMilestoneIndex) {
 
         const milestone = milestones[currentMilestoneIndex];
 
-        return [milestone.endDate, milestone.withdrawalWindow];
+        return [milestone.endDate, milestone.withdrawalEndDate];
     }
 }
 
@@ -179,10 +218,55 @@ export function isRefundActive(milestones, currentMilestoneIndex) {
     return window[0] <= nowUnix && nowUnix < window[1];
 }
 
+export function encodeUSD(value) {
+    value = new BigNumber(value);
+
+    return value.mul(BigNumber.TEN.pow(8));
+}
+
+export function decodeUSD(value) {
+    value = new BigNumber(value);
+
+    return value.div(BigNumber.TEN.pow(8));
+}
+
 export async function jsonLoader(version, name) {
     return import("abi/" + version + "/" + name + ".json");
 }
 
+export function round(value) {
+    value = new BigNumber(value);
+
+    return new BigNumber(value.toFixed(0, 1));
+}
+
+export function instanceOf(instance, Ctor) {
+    if (!(instance instanceof Ctor)) {
+        throw new Error(`Instance [${instance.constructor.name}] is not a instance of [${Ctor.name}]`);
+    }
+}
+
 export function errorMessageSubstitution(e) {
     return e.name === 'BigNumber Error' ? 'UnexpectedError' : e.message;
+}
+
+export function warrantor(funct){
+    return function (...args) {
+        return new Promise((accept, reject) => {
+            const callback = async (error, result) => {
+                if (error != null) {
+                    reject(error);
+                } else {
+                    if(result === null){
+                        await wait(1000);
+                        funct(...args, callback);
+                    } else {
+                        accept(result);
+                    }
+                }
+            };
+
+            return funct(...args, callback);
+        });
+    };
 }

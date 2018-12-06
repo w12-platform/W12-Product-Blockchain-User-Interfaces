@@ -360,7 +360,7 @@
                     await this.$store.dispatch('Cache/blockNumberUp');
                     const tx = result.transactionHash;
                     await this.updateAccountData();
-                    await this.tokensListUpdate({Index: this.currentToken.index});
+                    await this.tokensListUpdate(this.currentToken);
                     this.$store.commit(`Transactions/${CONFIRM_TX}`, tx);
                 }
             },
@@ -368,7 +368,7 @@
                 if (!error) {
                     await this.$store.dispatch('Cache/blockNumberUp');
                     const tx = result.transactionHash;
-                    await this.tokensListUpdate({Index: this.currentToken.index});
+                    await this.tokensListUpdate(this.currentToken);
                     await this.updateAccountData();
                     this.$store.commit(`Transactions/${CONFIRM_TX}`, tx);
                 }
