@@ -4,8 +4,6 @@ export const CACHE_CLEAR = "CACHE_CLEAR";
 export const CACHE_CLEAR_TEMP = "CACHE_CLEAR_TEMP";
 export const CACHE_LAST_BLOCK_UP = "CACHE_LAST_BLOCK_UP";
 export const CACHE_UI_VERSION_UP = "CACHE_UI_VERSION_UP";
-import Web3 from 'web3';
-const web3 = new Web3();
 
 export default {
     namespaced: true,
