@@ -47,6 +47,8 @@ export default {
             return state.lastBlockNumber ? state.lastBlockNumber : await this.dispatch('Cache/blockNumberUp');
         },
         async startWatchBlockNumberUpdate({state, commit}){
+            const {web3} = await Connector.connect();
+
             const currentUIVersion = (await fetch(PACKAGE_JSON_PATH).then(data => data.json())).version;
             if(!state.UIVersion || state.UIVersion !== currentUIVersion){
                 commit(CACHE_UI_VERSION_UP, currentUIVersion);
