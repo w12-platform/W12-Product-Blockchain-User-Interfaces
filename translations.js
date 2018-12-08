@@ -8,6 +8,10 @@
 //         "en": "Create",
 //         "ru": "Создать"
 //     },
+//     "TokensFactoryMint": {
+//         "en": "Mint",
+//         "ru": "Mint"
+//     },
 //     "TokensFactoryCreateFormName": {
 //         "en": "Name",
 //         "ru": "Название"
@@ -622,6 +626,46 @@
 //     "AdminDashboardTableToken": {
 //         "en": "Token",
 //         "ru": "Токен"
+//     },
+//     "AdminDashboardTableMint": {
+//         "en": "Mint",
+//         "ru": "Выпуск токенов"
+//     },
+//     "AdminDashboardTableTransferOwnerShip": {
+//         "en": "Transfer ownership",
+//         "ru": "Передача права собственности"
+//     },
+//     "AdminDashboardTableAddAdmin": {
+//         "en": "Add admin",
+//         "ru": "Добавить админа"
+//     },
+//     "AdminDashboardTableRemoveAdmin": {
+//         "en": "Remove admin",
+//         "ru": "Удалить админа"
+//     },
+//     "TokensOwnerShipAddress": {
+//         "en": "Address",
+//         "ru": "Адрес"
+//     },
+//     "TokensOwnerShipAddressPlaceholder": {
+//         "en": "Enter address",
+//         "ru": "Введите адрес"
+//     },
+//     "TokensMintAddress": {
+//         "en": "Address",
+//         "ru": "Адрес"
+//     },
+//     "TokensMintAddressPlaceholder": {
+//         "en": "Enter address",
+//         "ru": "Введите адрес"
+//     },
+//     "TokensNotIsAdmin": {
+//         "en": "You are not a token administrator",
+//         "ru": "Вы не являетесь администратором токена",
+//     },
+//     "TokensMintAmount": {
+//         "en": "Token amount",
+//         "ru": "Количество токенов"
 //     },
 //     "AdminDashboardTableOwner": {
 //         "en": "Project’s wallet",
@@ -1415,6 +1459,8 @@
 //         "en": "An unexpected error has occurred. Reload page",
 //         "ru": "Произошла непредвиденная ошибка. Перезагрузите страницу",
 //     },
+//     "InvalidAddress": {
+//         "en": "This address is invalid",
+//         "ru": "Этот адрес не корректен",
+//     }
 // };
-
-

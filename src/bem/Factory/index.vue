@@ -49,6 +49,14 @@
                                     <span class="tag is-success">{{ props.row.address }}</span>
                                 </div>
                             </div>
+                            <b-tabs>
+                                <b-tab-item :label="$t('AdminDashboardTableMint')">
+                                    <MintForm :tokenAddress="props.row.address"></MintForm>
+                                </b-tab-item>
+                                <b-tab-item :label="$t('AdminDashboardTableTransferOwnerShip')">
+                                    <TransferOwnerShipForm :tokenAddress="props.row.address"></TransferOwnerShipForm>
+                                </b-tab-item>
+                            </b-tabs>
                         </div>
                     </template>
 
@@ -133,6 +141,8 @@
     import tokenValidationMixinGenerator from '@/lib/views/mixins/validation/token-validation';
     import Web3 from 'web3';
     import Steps from "bem/Steps";
+    import MintForm from "bem/MintForm";
+    import TransferOwnerShipForm from "bem/TransferOwnerShipForm";
 
     import {createNamespacedHelpers} from "vuex";
 
@@ -214,7 +224,9 @@
             },
         },
         components: {
-            Steps
+            Steps,
+            MintForm,
+            TransferOwnerShipForm,
         },
         computed: {
             ...LedgerNS.mapState({
