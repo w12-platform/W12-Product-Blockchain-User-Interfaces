@@ -1415,6 +1415,10 @@
 //         "en": "An unexpected error has occurred. Reload page",
 //         "ru": "Произошла непредвиденная ошибка. Перезагрузите страницу",
 //     },
+//     "AdminDashboardPurchaseFeeEnableCustom": {
+//         "en": "Установить индивидуальную",
+//         "ru": "Установить индивидуальную",
+//     },
 // };
 
 

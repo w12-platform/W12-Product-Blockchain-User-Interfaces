@@ -17,6 +17,7 @@ export class WhiteistedToken {
         this.trancheFeePercent = model.trancheFeePercent;
         this.crowdsales = model.crowdsales.map(c => new WhitelistedCrowdsale(c));
         this.owners = model.owners || [];
+        this.individualPurchaseFee = model.individualPurchaseFee || {};
     }
 
     hasNotInitializedCrowdsale() {

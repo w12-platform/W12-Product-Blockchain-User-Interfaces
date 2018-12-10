@@ -13,6 +13,7 @@ export class WhitelistedCrowdsale {
         this.tokensForSaleAmount = model.tokensForSaleAmount;
         this.wTokensIssuedAmount = model.wTokensIssuedAmount;
         this.owners = model.owners || [];
+        this.individualPurchaseFee = model.individualPurchaseFee || {};
     }
 
     isNotInitialized() {
