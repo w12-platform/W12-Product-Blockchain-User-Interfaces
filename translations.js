@@ -631,6 +631,10 @@
 //         "en": "Mint",
 //         "ru": "Выпуск токенов"
 //     },
+//     "AdminDashboardTableTransfer": {
+//         "en": "Transfer",
+//         "ru": "Передача"
+//     },
 //     "AdminDashboardTableTransferOwnerShip": {
 //         "en": "Transfer ownership",
 //         "ru": "Передача права собственности"
@@ -662,6 +666,10 @@
 //     "TokensNotIsAdmin": {
 //         "en": "You are not a token administrator",
 //         "ru": "Вы не являетесь администратором токена",
+//     },
+//     "TokensNotIsPrimary": {
+//         "en": "You do not own a Token",
+//         "ru": "Вы не являетесь владельцем токена",
 //     },
 //     "TokensMintAmount": {
 //         "en": "Token amount",

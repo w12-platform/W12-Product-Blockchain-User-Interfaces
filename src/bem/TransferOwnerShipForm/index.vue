@@ -1,5 +1,5 @@
 <template>
-    <div class="TransferOwnerShipForm" v-if="isAdmin">
+    <div class="TransferOwnerShipForm" v-if="isPrimary">
         <div class="pm-2" v-if="isPendingTx">
             <p class="py-2"><span v-html="$t('WaitingConfirm')"></span>:</p>
             <b-tag class="py-2">{{isPendingTx.hash}}</b-tag>
@@ -25,19 +25,13 @@
                         v-model="form.address"/>
             </b-field>
 
-            <div class="TransferOwnerShipForm__buttons">
-                <button class="btn btn-primary py-2 my-2" :disabled="disableAddAdmin" @click="addAdmin()" v-html="$t('AdminDashboardTableAddAdmin')"></button>
-                <button class="btn btn-primary py-2 my-2" :disabled="disableRemoveAdmin" @click="removeAdmin()" v-html="$t('AdminDashboardTableRemoveAdmin')"></button>
+            <button class="btn btn-primary py-2 my-2" :disabled="disable" @click="transferPrimary()" v-html="$t('AdminDashboardTableTransfer')"></button>
 
-                <b-loading :is-full-page="false" :active.sync="meta.loadingCheckAdmin"></b-loading>
-            </div>
-
-
-            <b-loading :is-full-page="false" :active.sync="meta.loading"></b-loading>
+            <b-loading :is-full-page="false" :active="meta.loading"></b-loading>
         </div>
     </div>
     <div v-else>
-        {{ $t('TokensNotIsAdmin') }}
+        {{ $t('TokensNotIsPrimary') }}
     </div>
 </template>
 
@@ -80,19 +74,18 @@
         data() {
             return {
                 meta: {
-                    loading: false,
-                    loadingCheckAdmin: false,
+                    loading: true,
                 },
                 form: {
                     address: null,
                 },
-                isAdmin: true,
-                isAdminFormAddress: false,
+                isPrimary: false,
             };
         },
         watch: {
-            'form.address': {
-                handler: 'handleFormAddressChange',
+            'currentAccount': {
+                handler: 'handleCurrentAccountChange',
+                immediate: true
             },
         },
         computed: {
@@ -133,15 +126,11 @@
                     })
                     : false;
             },
-
             isValidAddress() {
                 return web3.isAddress(this.form.address) || this.meta.loading;
             },
-            disableAddAdmin(){
-                return !(this.isValidAddress && !this.isAdminFormAddress);
-            },
-            disableRemoveAdmin(){
-                return !(this.isValidAddress && this.isAdminFormAddress);
+            disable(){
+                return !this.isValidAddress;
             },
             typeAddress () {
                 return this.isValidAddress ? "" : "is-danger";
@@ -159,55 +148,21 @@
                 TransactionsRetry: "retry"
             }),
 
-            async handleFormAddressChange(address) {
-                if(this.isValidAddress){
-                    this.meta.loadingCheckAdmin = true;
-
-                    const {W12TokenFactory} = await this.ledgerFetch(this.Default.version);
-                    const W12Token = W12TokenFactory.at(this.tokenAddress);
-                    this.isAdminFormAddress = await W12Token.methods.isAdmin(address);
-
-                    this.meta.loadingCheckAdmin = false;
-                }
+            async handleCurrentAccountChange(currentAccount) {
+                this.update();
             },
 
-            async addAdmin() {
+            async transferPrimary() {
                 this.meta.loading = true;
                 try {
                     const {W12TokenFactory} = await this.ledgerFetch(this.Default.version);
                     const W12Token = W12TokenFactory.at(this.tokenAddress);
                     const connectedWeb3 = (await Connector.connect()).web3;
 
-                    const tx = await W12Token.methods.addAdmin(this.form.address);
+                    const tx = await W12Token.methods.transferPrimary(this.form.address);
 
                     this.$store.commit(`Transactions/${UPDATE_TX}`, {
-                        name: "admin",
-                        hash: tx,
-                        status: "pending"
-                    });
-
-                    await waitTransactionReceipt(tx, connectedWeb3);
-
-                    this.$store.commit(`Transactions/${CONFIRM_TX}`, tx);
-                    this.update();
-                } catch (e) {
-                    console.error(e);
-                    this.error = errorMessageSubstitution(e);
-                }
-                this.meta.loading = false;
-            },
-
-            async removeAdmin() {
-                this.meta.loading = true;
-                try {
-                    const {W12TokenFactory} = await this.ledgerFetch(this.Default.version);
-                    const W12Token = W12TokenFactory.at(this.tokenAddress);
-                    const connectedWeb3 = (await Connector.connect()).web3;
-
-                    const tx = await W12Token.methods.removeAdmin(this.form.address);
-
-                    this.$store.commit(`Transactions/${UPDATE_TX}`, {
-                        name: "admin",
+                        name: "transferPrimary",
                         hash: tx,
                         status: "pending"
                     });
@@ -224,19 +179,15 @@
             },
 
             async update(){
+                this.meta.loading = true;
                 const {W12TokenFactory} = await this.ledgerFetch(this.Default.version);
                 const W12Token = W12TokenFactory.at(this.tokenAddress);
-                this.isAdmin = await W12Token.methods.isAdmin(this.currentAccount);
+                this.isPrimary = (await W12Token.methods.primary()) === this.currentAccount;
+                this.meta.loading = false;
             }
         },
         async created() {
-            this.meta.loading = true;
-
-            const {W12TokenFactory} = await this.ledgerFetch(this.Default.version);
-            const W12Token = W12TokenFactory.at(this.tokenAddress);
-            this.isAdmin = await W12Token.methods.isAdmin(this.currentAccount);
-
-            this.meta.loading = false;
+            this.update();
         }
     };
 </script>
