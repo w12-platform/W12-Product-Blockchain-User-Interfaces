@@ -1470,5 +1470,17 @@
 //     "InvalidAddress": {
 //         "en": "This address is invalid",
 //         "ru": "Этот адрес не корректен",
-//     }
+//     },
+//     "Network4": {
+//         "en": "Rinkeby Test Network",
+//         "ru": "Тестовая сеть Rinkeby",
+//     },
+//     "Network1": {
+//         "en": "Ethereum Main Network",
+//         "ru": "Основная сеть Ethereum",
+//     },
+//     "NotMetaMask": {
+//         "en": "Please install Metamask",
+//         "ru": "Установите Метамаск"
+//     },
 // };
