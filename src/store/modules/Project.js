@@ -479,7 +479,7 @@ export default {
                 const fundAddress = await W12Crowdsale.methods.fund();
                 const W12Fund = W12FundFactory.at(fundAddress);
                 const {web3} = await Connector.connect();
-                const getBalance = promisify(web3.eth.getBalance.bind(web3.eth));
+                const getBalance = warrantor(web3.eth.getBalance.bind(web3.eth));
                 const fundData = {
                     address: fundAddress,
                     balanceWei: (await getBalance(fundAddress)).toString(),

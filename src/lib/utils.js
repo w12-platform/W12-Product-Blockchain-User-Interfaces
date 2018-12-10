@@ -249,3 +249,25 @@ export function instanceOf(instance, Ctor) {
 export function errorMessageSubstitution(e) {
     return e.name === 'BigNumber Error' ? 'UnexpectedError' : e.message;
 }
+
+export function warrantor(funct){
+    return function (...args) {
+        return new Promise((accept, reject) => {
+            const callback = async (error, result) => {
+                console.log(result);
+                if (error != null) {
+                    reject(error);
+                } else {
+                    if(result === null){
+                        await wait(1000);
+                        funct(...args, callback);
+                    } else {
+                        accept(result);
+                    }
+                }
+            };
+
+            return funct(...args, callback);
+        });
+    };
+}
