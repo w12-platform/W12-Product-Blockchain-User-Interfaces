@@ -254,7 +254,6 @@ export function warrantor(funct){
     return function (...args) {
         return new Promise((accept, reject) => {
             const callback = async (error, result) => {
-                console.log(result);
                 if (error != null) {
                     reject(error);
                 } else {

@@ -5,7 +5,7 @@ import { updateReceivingInformation as updateReceivingInformation_v0_20_x } from
 import { updateReceivingInformation as updateReceivingInformation_v0_28_x } from '@/store/modules/Project/0.28.x/actions';
 import { fetchCrowdSaleAddressAndInfo as fetchCrowdSaleAddressAndInfo_v0_20_x } from '@/store/modules/Project/0.20.x/actions';
 import { fetchCrowdSaleAddressAndInfo as fetchCrowdSaleAddressAndInfo_v0_28_x } from '@/store/modules/Project/0.28.x/actions';
-import {promisify, isZeroAddress, fromWeiDecimalsString, errorMessageSubstitution} from "src/lib/utils";
+import {promisify, isZeroAddress, fromWeiDecimalsString, errorMessageSubstitution, warrantor} from "src/lib/utils";
 import {map} from 'p-iteration';
 import Connector from "src/lib/Blockchain/DefaultConnector";
 import isEqual from 'lodash/isEqual'
