@@ -50,6 +50,7 @@ import ProjectDashboard from 'bem/ProjectDashboard';
 import ProjectDashboardReceiving from 'bem/ProjectDashboardReceiving';
 import ProjectDashboardTranche from 'bem/ProjectDashboardTranche';
 import Versions from 'bem/Versions';
+import MetaMask from 'bem/MetaMask';
 
 new Vue({
     store,
@@ -57,6 +58,7 @@ new Vue({
     components: {
         LangSwitch,
         HeaderBuyW12Tokens,
+        MetaMask,
         AdminDashboard,
         SidebarMenu,
         AppFooter,
