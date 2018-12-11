@@ -1470,5 +1470,9 @@
 //     "InvalidAddress": {
 //         "en": "This address is invalid",
 //         "ru": "Этот адрес не корректен",
-//     }
+//     },
+// .   "AdminDashboardPurchaseFeeEnableCustom": {
+//         "en": "Установить индивидуальную",
+//         "ru": "Установить индивидуальную",
+//     },
 // };

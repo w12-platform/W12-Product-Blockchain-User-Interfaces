@@ -12,6 +12,13 @@ export function resolveComponentVersion(v, componentName) {
         if (componentName === 'ProjectStages') return '0.28.x';
         return '0.27.1';
     }
+    if (semver.satisfies(v, '>=0.29.x')) {
+        if (componentName === 'TokenInfo') return '0.29.x';
+        if (componentName === 'Calculator') return '0.28.0';
+        if (componentName === 'WhiteListTable') return '0.29.x';
+        if (componentName === 'ProjectStages') return '0.28.x';
+        return '0.27.1';
+    }
 
     return v;
 }
