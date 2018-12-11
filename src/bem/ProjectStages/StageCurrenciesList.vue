@@ -11,7 +11,7 @@
             </div>
             <div class="col-sm text-right">
             </div>
-            <b-loading :is-full-page="false" :active.sync="loading" :can-cancel="true"></b-loading>
+            <b-loading :is-full-page="false" :active.sync="loading"></b-loading>
         </div>
 
         <!--<multiselect v-model="value" :options="ratesFetch" :multiple="true" :close-on-select="false" :clear-on-select="false" :hide-selected="true" :preserve-search="true" placeholder="Pick some" :preselect-first="true">-->

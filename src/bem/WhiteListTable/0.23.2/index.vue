@@ -2,7 +2,7 @@
     <div class="WhiteListTable WhiteListTable_v2 buefy">
 
         <b-notification v-if="isLoading" :closable="false" class="WhiteListTable__loader">
-            <b-loading :is-full-page="false" :active="isLoading" :can-cancel="true"></b-loading>
+            <b-loading :is-full-page="false" :active="isLoading"></b-loading>
         </b-notification>
 
         <b-table

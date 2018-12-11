@@ -199,7 +199,7 @@
                 </div>
             </div>
         </div>
-        <b-loading :is-full-page="false" :active.sync="setStagesLoading" :can-cancel="true"></b-loading>
+        <b-loading :is-full-page="false" :active.sync="setStagesLoading"></b-loading>
     </div>
 </template>
 
