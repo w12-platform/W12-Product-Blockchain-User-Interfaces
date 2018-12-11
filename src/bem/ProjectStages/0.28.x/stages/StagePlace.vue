@@ -60,7 +60,7 @@
             </div>
         </div>
 
-        <b-loading :is-full-page="false" :active.sync="placeTokensLoading" :can-cancel="true"></b-loading>
+        <b-loading :is-full-page="false" :active.sync="placeTokensLoading"></b-loading>
     </div>
 </template>
 

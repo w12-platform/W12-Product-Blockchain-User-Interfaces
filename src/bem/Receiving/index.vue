@@ -46,7 +46,7 @@
                 :disabled="!currentProject.receiving.amountUnSold" v-html="$t('ReceivingGetUnsold',{WToken:currentProject.receiving.symbolW})">
         </button>
         <ExchangeTokensProjects v-if="!isPendingTx && !isErrorTx"></ExchangeTokensProjects>
-        <b-loading :is-full-page="false" :active.sync="loadingClaim" :can-cancel="true"></b-loading>
+        <b-loading :is-full-page="false" :active.sync="loadingClaim"></b-loading>
     </div>
 </template>
 <script>

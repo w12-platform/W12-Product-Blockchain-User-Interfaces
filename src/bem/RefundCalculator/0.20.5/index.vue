@@ -21,7 +21,7 @@
                 {{ refundAmount | ETH }} ETH
             </div>
         </div>
-        <b-loading :is-full-page="false" :active.sync="calculation" :can-cancel="true"></b-loading>
+        <b-loading :is-full-page="false" :active.sync="calculation"></b-loading>
     </div>
 </template>
 <script>
