@@ -104,7 +104,7 @@
             </div>
         </div>
 
-        <b-loading :is-full-page="false" :active.sync="initCrawdsaleLoading" :can-cancel="true"></b-loading>
+        <b-loading :is-full-page="false" :active.sync="initCrawdsaleLoading"></b-loading>
     </div>
 </template>
 

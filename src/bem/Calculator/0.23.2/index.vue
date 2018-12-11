@@ -88,7 +88,7 @@
                 <button class="btn btn-primary" :disabled="disable" @click="buy" v-html="$t('InvestorDashboardCalculatorBuy')"></button>
             </div>
         </div>
-        <b-loading :is-full-page="false" :active.sync="loading" :can-cancel="true"></b-loading>
+        <b-loading :is-full-page="false" :active.sync="loading"></b-loading>
     </div>
 </template>
 

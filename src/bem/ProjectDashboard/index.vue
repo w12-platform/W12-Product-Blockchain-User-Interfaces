@@ -10,7 +10,7 @@
             </b-notification>
 
             <b-notification v-if="!isError && isLoading" :closable="false"><span v-html="$t('ProjectDashboardLoadExpect')"></span>
-                <b-loading :is-full-page="false" :active="isLoading" :can-cancel="true"></b-loading>
+                <b-loading :is-full-page="false" :active="isLoading"></b-loading>
             </b-notification>
 
             <div v-if="!isLoading">
@@ -24,7 +24,7 @@
                     <TokenInfo v-if="!ProjectMeta.loadingProjectError && currentProject && currentProject.version" :is="TokenInfoVersion"></TokenInfo>
                     <ProjectStages v-if="!ProjectMeta.loadingProjectError && currentProject && currentProject.version" :is="ProjectStagesVersion"></ProjectStages>
 
-                    <b-loading :is-full-page="false" :active="ProjectMeta.loadingProject" :can-cancel="true"></b-loading>
+                    <b-loading :is-full-page="false" :active="ProjectMeta.loadingProject"></b-loading>
                 </div>
             </div>
         </section>

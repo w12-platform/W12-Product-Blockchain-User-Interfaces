@@ -114,7 +114,7 @@
                 <button v-if="isNeedApprove" :disabled="fetchingInvoice" class="btn btn-primary" @click="approve" v-html="$t('InvestorDashboardCalculatorDoApprove')"></button>
             </div>
         </div>
-        <b-loading :is-full-page="false" :active.sync="loading" :can-cancel="true"></b-loading>
+        <b-loading :is-full-page="false" :active.sync="loading"></b-loading>
     </div>
 </template>
 

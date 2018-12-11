@@ -91,7 +91,7 @@
                 <td>{{ currentToken.crowdSaleInformation.vestingDate | dateFormat }}</td>
             </tr>
             </tbody>
-            <b-loading :is-full-page="false" :active="tokensListMeta.updated" :can-cancel="true"></b-loading>
+            <b-loading :is-full-page="false" :active="tokensListMeta.updated"></b-loading>
         </table>
     </div>
 </template>
