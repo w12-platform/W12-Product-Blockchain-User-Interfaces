@@ -4,7 +4,7 @@ import {
     getSoldPercent
 } from '@/lib/selectors/crowdsale';
 import { getCurrentStage, getEndDate, getStartDate } from '@/lib/selectors/crowdsaleStages';
-import { errorMessageSubstitution, isZeroAddress } from '@/lib/utils';
+import { errorMessageSubstitution, isZeroAddress, warrantor } from '@/lib/utils';
 import Connector from "lib/Blockchain/DefaultConnector";
 import semver from 'semver';
 import { promisify, fromWeiDecimalsString, decodeUSD } from "src/lib/utils";
@@ -40,7 +40,7 @@ export async function fetchTokenFull({dispatch}, token) {
     const W12Token = W12TokenFactory.at(WTokenAddress);
     const W12Fund = W12FundFactory.at(W12FundAddress);
 
-    const getBalance = promisify(web3.eth.getBalance.bind(web3.eth));
+    const getBalance = warrantor(web3.eth.getBalance.bind(web3.eth));
 
     const WTokenDecimals = await W12Token.methods.decimals();
     const WTokenTotal = fromWeiDecimalsString(token.wTokensIssuedAmount, token.decimals);

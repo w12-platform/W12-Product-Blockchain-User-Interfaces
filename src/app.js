@@ -53,6 +53,7 @@ import ProjectDashboardReceiving from 'bem/ProjectDashboardReceiving';
 import ProjectDashboardTranche from 'bem/ProjectDashboardTranche';
 import Versions from 'bem/Versions';
 import CrossPagesNotification from 'bem/CrossPagesNotification';
+import MetaMask from 'bem/MetaMask';
 
 new Vue({
     store,
@@ -61,6 +62,7 @@ new Vue({
         LangSwitch,
         CrossPagesNotification,
         HeaderBuyW12Tokens,
+        MetaMask,
         AdminDashboard,
         SidebarMenu,
         AppFooter,
