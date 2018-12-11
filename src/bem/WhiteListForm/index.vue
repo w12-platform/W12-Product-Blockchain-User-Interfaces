@@ -123,6 +123,28 @@
                             class="form-control"
                     ></cleave>
                 </b-field>
+                <div
+                    v-for="(item, index) in whiteListForm.individualPurchaseFee"
+                    :key="item.symbol"
+                    class="columns is-vcentered is-marginless"
+                >
+                    <div class="column is-1">{{ item.symbol }}</div>
+                    <div class="column">
+                        <cleave
+                            class="form-control"
+                            :value="getIndividualPurchaseFee(item)"
+                            @input="whiteListForm.individualPurchaseFee[index].fee = $event"
+                            :disabled="!whiteListForm.individualPurchaseFee[index].enabled"
+                            :placeholder="$t('AdminDashboardFieldFeeEthPlaceholder')"
+                            :options="optionsNumber"
+                        ></cleave>
+                    </div>
+                    <div class="column is-7">
+                        <b-switch
+                            v-model="whiteListForm.individualPurchaseFee[index].enabled"
+                        >{{ $t('AdminDashboardPurchaseFeeEnableCustom') }}</b-switch>
+                    </div>
+                </div>
             </div>
 
 
@@ -152,7 +174,7 @@
 <script>
     import './default.scss';
     import 'bem/labelTooltip/default.scss';
-    import { encodePercent } from '@/lib/selectors/units';
+    import { decodePercent, encodePercent } from '@/lib/selectors/units';
     import { waitContractEventOnce } from '@/lib/utils';
     import { CANCEL_TX, CONFIRM_TX } from '@/store/modules/Transactions';
     import Connector from 'lib/Blockchain/DefaultConnector.js';
@@ -167,9 +189,25 @@
     const WhitelistNS = createNamespacedHelpers("Whitelist");
     const ConfigNS = createNamespacedHelpers('Config');
     const TransactionsNS = createNamespacedHelpers("Transactions");
+    const RatesNS = createNamespacedHelpers("Rates");
 
     const EndOfSymbol = "W";
     const uintMaxValue = new BigNumber(2).pow(256).minus(1);
+    const filterByEnabled = (i) => i.enabled;
+    const individualPurchaseFeeToObjectReducer = (obj, i) => {
+        if (i.enabled) obj[i.symbol] = i.fee;
+        return obj;
+    };
+    const individualPurchaseFeeObjectToArray = (obj, processor = val => val) => {
+        return Object.keys(obj).map(i => new IndividualPurchaseFee({ symbol: i, fee: processor(obj[i]), enabled: true }));
+    };
+    class IndividualPurchaseFee {
+        constructor(model) {
+            this.symbol = model.symbol;
+            this.fee = model.fee || null;
+            this.enabled = model.enabled || false;
+        }
+    }
 
     export default {
         name: 'WhiteListForm',
@@ -205,6 +243,7 @@
                     feeETHPercent: null,
                     WTokenSaleFeePercent: null,
                     trancheFeePercent: null,
+                    individualPurchaseFee: []
                 },
                 whitelistingToken: false,
                 checkingToken: false,
@@ -228,6 +267,13 @@
                 isTransactionFail: "isFail",
                 getTransaction: "get"
             }),
+            ...RatesNS.mapGetters({
+                filteredRates: 'filter'
+            }),
+
+            ratesList() {
+                return this.filteredRates({ version: this.W12Lister.version });
+            },
 
             optionsNumber() {
                 return {
@@ -298,6 +344,11 @@
             },
             tokensList: {
                 handler: 'onTokenListChange'
+            },
+            ratesList: {
+                handler: 'onChangeRatesList',
+                immediate: true,
+                deep: true
             }
         },
         methods: {
@@ -306,6 +357,9 @@
             }),
             ...WhitelistNS.mapActions({
                 fetchWhitelist: "fetch",
+            }),
+            ...RatesNS.mapActions({
+                fetchRates: 'fetch'
             }),
             async tryWhiteListToken() {
                 this.clearErrorMessage();
@@ -324,18 +378,23 @@
                 try {
                     const W12Lister = W12ListerFactory.at(this.W12Lister.address);
                     const connectedWeb3 = (await Connector.connect()).web3;
+                    const individualPurchaseFee = data.individualPurchaseFee
+                        .reduce(individualPurchaseFeeToObjectReducer, {});
                     const event = waitContractEventOnce(W12Lister, 'TokenWhitelisted', { token: data.tokenAddress });
 
-                    const tx = await W12Lister.methods.whitelistToken(
+                    const tx = await W12Lister.whitelistToken(
                         data.tokenAddress,
                         data.name,
                         data.symbol,
                         data.decimals,
                         data.owners,
-                        encodePercent(data.feePercent),
-                        encodePercent(data.feeETHPercent),
-                        encodePercent(data.WTokenSaleFeePercent),
-                        encodePercent(data.trancheFeePercent)
+                        [
+                            data.feePercent,
+                            data.feeETHPercent,
+                            data.WTokenSaleFeePercent,
+                            data.trancheFeePercent
+                        ],
+                        individualPurchaseFee
                     );
 
                     this.$store.commit(`Transactions/${UPDATE_TX}`, {
@@ -383,12 +442,19 @@
                             'name',
                             'symbol',
                             'decimals',
-                            'owners',
-                            'feePercent',
-                            'feeETHPercent',
-                            'WTokenSaleFeePercent',
-                            'trancheFeePercent'
+                            'owners'
                         ]));
+                        this.whiteListForm.feePercent = decodePercent(tokenRecord.feePercent).toString();
+                        this.whiteListForm.feeETHPercent = decodePercent(tokenRecord.feeETHPercent).toString();
+                        this.whiteListForm.WTokenSaleFeePercent = decodePercent(tokenRecord.WTokenSaleFeePercent).toString();
+                        this.whiteListForm.trancheFeePercent = decodePercent(tokenRecord.trancheFeePercent).toString();
+                        this.whiteListForm.individualPurchaseFee = this.mergeIndividualPurchaseFeeModels(
+                            individualPurchaseFeeObjectToArray(
+                                tokenRecord.individualPurchaseFee,
+                                val => decodePercent(val).toString()
+                            ),
+                            this.getIndividualPurchaseFeeFromRatesList()
+                        );
                     } else {
                         const {web3} = await Connector.connect();
                         const getAccounts = promisify(web3.eth.getAccounts.bind(web3.eth));
@@ -428,12 +494,41 @@
                     ownerAddress: '',
                     name: '',
                     symbol: '',
-                    decimals: '18'
+                    decimals: '18',
+                    individualPurchaseFee: this.getIndividualPurchaseFeeFromRatesList()
                 });
+            },
+            getIndividualPurchaseFeeFromRatesList(list = this.ratesList) {
+                return list.map(i => (new IndividualPurchaseFee({ symbol: i.symbol, fee: null, enabled: false })));
+            },
+            mergeIndividualPurchaseFeeModels(from, to) {
+                return to.map(i => {
+                    const found = from.find(ii => ii.symbol === i.symbol);
+                    if (found) {
+                        return Object.assign({}, found);
+                    }
+                    return Object.assign({}, i);
+                });
+            },
+            getIndividualPurchaseFee(model) {
+                if (model.enabled) {
+                    return model.fee;
+                }
+                return this.whiteListForm.feeETHPercent;
+            },
+            onChangeRatesList(value, prevValue) {
+                const newList = this.getIndividualPurchaseFeeFromRatesList(value);
+                this.whiteListForm.individualPurchaseFee = this.mergeIndividualPurchaseFeeModels(
+                    this.whiteListForm.individualPurchaseFee,
+                    newList
+                );
             }
         },
         errorCaptured(error, vm, info) {
             this.errorMessage = info || errorMessageSubstitution(error);
+        },
+        async created() {
+            await this.fetchRates({ version: this.W12Lister.version });
         }
     };
 </script>
