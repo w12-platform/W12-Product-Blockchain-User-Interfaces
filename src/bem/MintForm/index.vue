@@ -2,11 +2,11 @@
     <div class="MintForm" v-if="isAdmin">
         <div class="pm-2" v-if="isPendingTx">
             <p class="py-2"><span v-html="$t('WaitingConfirm')"></span>:</p>
-            <b-tag class="py-2">{{isPendingTx.hash}}</b-tag>
+            <b-tag class="py-2">{{transaction.hash}}</b-tag>
         </div>
         <div class="pm-2" v-if="isErrorTx">
             <p class="py-2"><span v-html="$t('TransactionFailed')"></span>:</p>
-            <b-tag class="py-2">{{isErrorTx.hash}}</b-tag>
+            <b-tag class="py-2">{{transaction.hash}}</b-tag>
             <div class="pt-2 text-left">
                 <button class="btn btn-primary btn-sm" @click="TransactionsRetry(isErrorTx)" v-html="$t('ToRetry')"></button>
             </div>
@@ -53,13 +53,10 @@
 <script>
     import './default.scss';
     import {createNamespacedHelpers} from "vuex";
-    import Web3 from 'web3';
-    import {UPDATE_TX, CONFIRM_TX} from "store/modules/Transactions.js";
-    import {waitTransactionReceipt, errorMessageSubstitution} from 'lib/utils.js';
+    import {UPDATE_TX} from "store/modules/Transactions.js";
+    import {waitTransactionReceipt, errorMessageSubstitution, web3, BigNumber} from 'lib/utils.js';
     import Connector from 'lib/Blockchain/DefaultConnector.js';
 
-    const web3 = new Web3();
-    const BigNumber = web3.BigNumber;
     BigNumber.config({
         DECIMAL_PLACES: 36,
         FORMAT: {
@@ -76,8 +73,6 @@
     const AccountNS = createNamespacedHelpers("Account");
     const ConfigNS = createNamespacedHelpers('Config');
     const TransactionsNS = createNamespacedHelpers("Transactions");
-
-    const uintMaxValue = new BigNumber(2).pow(256).minus(1);
 
     export default {
         name: 'MintForm',
@@ -111,34 +106,20 @@
                 FactoryTokens: "FactoryTokens",
                 Default: "Default"
             }),
-            ...TransactionsNS.mapState({
-                TransactionsList: "list"
+            ...TransactionsNS.mapGetters({
+                isTransactionPending: "isPending",
+                isTransactionFail: "isFail",
+                getTransaction: "get"
             }),
+
             isErrorTx() {
-                return this.TransactionsList && this.TransactionsList.length
-                    ? this.TransactionsList.find((tr) => {
-                        return tr.name
-                        && tr.hash
-                        && tr.status
-                        && tr.name === "mintToken"
-                        && tr.status === "error"
-                            ? tr
-                            : false
-                    })
-                    : false;
+                return this.isTransactionFail({ name: 'mintToken' });
             },
             isPendingTx() {
-                return this.TransactionsList && this.TransactionsList.length
-                    ? this.TransactionsList.find((tr) => {
-                        return tr.name
-                        && tr.hash
-                        && tr.status
-                        && tr.name === "mintToken"
-                        && tr.status === "pending"
-                            ? tr
-                            : false
-                    })
-                    : false;
+                return this.isTransactionPending({ name: 'mintToken' });
+            },
+            transaction(){
+                return this.getTransaction({ name: 'mintToken' });
             },
 
             isValidAddress() {
@@ -161,7 +142,7 @@
             },
             maxAmount() {
                 const decimals = this.tokenInfo && this.tokenInfo.decimals ? this.tokenInfo.decimals : 0;
-                return uintMaxValue.div(new BigNumber(10).pow(decimals)).toFormat(0);
+                return BigNumber.UINT_MAX.div(new BigNumber(10).pow(decimals)).toFormat(0);
             },
             maxAmountPrecision(){
                 return this.maxAmount ? (new BigNumber(this.maxAmount)).toPrecision (2, 1) : false;
@@ -207,8 +188,6 @@
                     });
 
                     await waitTransactionReceipt(tx, connectedWeb3);
-
-                    this.$store.commit(`Transactions/${CONFIRM_TX}`, tx);
                 } catch (e) {
                     console.error(e);
                     this.error = errorMessageSubstitution(e);
