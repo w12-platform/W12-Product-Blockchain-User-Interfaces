@@ -261,7 +261,7 @@
             },
             tokenCrowdSaleMilestones: {
                 handler() {
-                    this.resetMilestonesValidFlags();
+                    this.syncMilestonesValidFlags();
                 },
                 deep: true,
                 immediate: true
@@ -404,21 +404,34 @@
 
                 this.saveLoading = false;
             },
-            onDelete(value) {
-                const index = this.tokenCrowdSaleMilestones.indexOf(value);
+            async onDelete(value) {
+                let index = this.tokenCrowdSaleMilestones.indexOf(value);
                 if (index !== -1) {
                     this.tokenCrowdSaleMilestones.splice(index, 1);
+                    await this.$nextTick();
+                    if (index > 0) {
+                        index--;
+                        const isValid = this.getMilestonesTotalTranchePercent() === 100;
+                        if (!isValid) {
+                            this.validateAndSetErrorsMilestone(this.tokenCrowdSaleMilestones[index], index);
+                        }
+                    }
                 }
             },
-            addMilestone() {
+            async addMilestone() {
                 const sum = this.getMilestonesTotalTranchePercent();
                 const number = this.tokenCrowdSaleMilestones.length + 1;
-                this.tokenCrowdSaleMilestones.push(new MilestoneModel({
+                const idx = this.tokenCrowdSaleMilestones.push(new MilestoneModel({
                     name: `Milestone ${number}`,
                     description: `Milestone ${number} description`,
                     tranchePercent: sum > 100 ? 0 : 100 - sum,
                     wasCreated: false
-                }))
+                }));
+                await this.$nextTick();
+                const isValid = this.getMilestonesTotalTranchePercent() === 100;
+                if (!isValid) {
+                    this.validateAndSetErrorsMilestone(this.tokenCrowdSaleMilestones[idx], idx);
+                }
             },
             addStage() {
                 this.tokenCrowdSaleStages.push({
@@ -509,8 +522,13 @@
                 this.tokenCrowdSaleMilestones.splice(idx, 1, data);
                 this.validateAndSetErrorsMilestone(data, idx);
             },
-            resetMilestonesValidFlags() {
-                this.$set(this, 'milestonesValidFlags', this.tokenCrowdSaleMilestones.map(() => ({tranchePercent: true})));
+            syncMilestonesValidFlags() {
+                const isValid = this.getMilestonesTotalTranchePercent() === 100;
+                this.$set(this, 'milestonesValidFlags', this.tokenCrowdSaleMilestones.map((_, index) => ({
+                    tranchePercent: this.milestonesValidFlags[index] != null && !isValid
+                        ? this.milestonesValidFlags[index].tranchePercent
+                        : true
+                })));
             },
             getMilestonesTotalTranchePercent() {
                 return this.tokenCrowdSaleMilestones
@@ -526,8 +544,11 @@
                         (sum, item) => sum + parseInt(item.tranchePercent),
                         parseInt(data.tranchePercent)
                     );
-                this.resetMilestonesValidFlags();
-                this.milestonesValidFlags[idx].tranchePercent = sum === 100;
+                this.$set(
+                    this.milestonesValidFlags,
+                    idx,
+                    Object.assign({}, this.milestonesValidFlags[idx], {tranchePercent: sum === 100})
+                );
             },
             validateMilestone(milestone) {
                 return milestone.name
