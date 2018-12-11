@@ -1,6 +1,6 @@
 import { conversionByDecimals, reverseConversionByDecimals } from '@/lib/selectors/units';
 import Connector from 'lib/Blockchain/DefaultConnector.js';
-import {promisify, errorMessageSubstitution} from 'lib/utils.js';
+import {promisify, errorMessageSubstitution, warrantor, fromWeiDecimalsString} from 'lib/utils.js';
 import config from '@/config.js';
 import semver from 'semver';
 import {web3, BigNumber} from 'lib/utils';
@@ -23,11 +23,13 @@ export default {
         meta: {
             loading: true,
             loadingError: false,
+            loadingErrorLabel: false, // notInstall || isBlocked
             updated: false,
         },
         timerId: false,
         currentAccount: false,
         currentAccountData: false,
+        ethBalance: false,
         networkId: null
     },
     modules: {},
@@ -43,6 +45,9 @@ export default {
         },
         UPDATE_NETWORK_ID(state, payload) {
             Object.assign(state, {networkId: payload});
+        },
+        UPDATE_ETH_BALANCE(state, payload) {
+            Object.assign(state, {ethBalance: payload});
         },
         [UPDATE](state, payload) {
             const currentAccount = payload.currentAccount || false;
@@ -66,6 +71,12 @@ export default {
                     const { web3: connectedWeb3, netId } = await Connector.connect();
                     const getAccounts = promisify(connectedWeb3.eth.getAccounts.bind(connectedWeb3.eth.getAccounts));
                     const currentAccount = (await getAccounts())[0];
+                    if(currentAccount){
+                        const getBalance = warrantor(connectedWeb3.eth.getBalance.bind(connectedWeb3.eth));
+                        const ethBalance = fromWeiDecimalsString((await getBalance(currentAccount)), 18);
+
+                        commit('UPDATE_ETH_BALANCE', ethBalance);
+                    }
 
                     commit('UPDATE_NETWORK_ID', netId);
 
@@ -92,20 +103,22 @@ export default {
                                 commit(UPDATE_DATA, {});
                                 commit(UPDATE_META, {
                                     loading: false,
-                                    loadingError: this._vm.$t('ErrorMetamaskIsBlocked')
+                                    loadingError: this._vm.$t('ErrorMetamaskIsBlocked'),
+                                    loadingErrorLabel: 'isBlocked',
                                 });
                             } else {
                                 if (this.state.Account.currentAccount !== currentAccount) {
                                     commit(UPDATE, {currentAccount});
                                     await this.dispatch('Account/updateAccountData');
-                                    commit(UPDATE_META, {loading: false, loadingError: false});
+                                    commit(UPDATE_META, {loading: false, loadingError: false, loadingErrorLabel: false});
                                 }
                             }
                         }
                     } else {
                         commit(UPDATE_META, {
                             loading: false,
-                            loadingError: this._vm.$t('ErrorMetamaskNotInstalled')
+                            loadingError: this._vm.$t('ErrorMetamaskNotInstalled'),
+                            loadingErrorLabel: 'notInstall',
                         });
                     }
                 } catch (e) {
