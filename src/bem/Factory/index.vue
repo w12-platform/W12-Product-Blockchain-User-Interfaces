@@ -12,7 +12,7 @@
             <b-notification v-if="isLoading && !isError" :closable="false" class="AdminDashboard__loader">
                 <span v-if="ledgerMeta.loading">{{ $t('AdminDashboardLoadLedger') }}<br></span>
 
-                <b-loading :is-full-page="false" :active="isLoading" :can-cancel="true"></b-loading>
+                <b-loading :is-full-page="false" :active="isLoading"></b-loading>
             </b-notification>
 
             <div v-if="!isLoading && this.currentAccount">
@@ -53,7 +53,7 @@
                         </div>
                     </template>
 
-                    <b-loading :is-full-page="false" :active.sync="meta.loading" :can-cancel="true"></b-loading>
+                    <b-loading :is-full-page="false" :active.sync="meta.loading"></b-loading>
                 </b-table>
                 <div class="pm-2" v-if="isPendingTx">
                     <p class="py-2">{{ $t('WaitingConfirm') }}:</p>
@@ -118,7 +118,7 @@
                         $t('TokensFactoryCreate') }}
                     </button>
 
-                    <b-loading :is-full-page="false" :active.sync="meta.creating" :can-cancel="true"></b-loading>
+                    <b-loading :is-full-page="false" :active.sync="meta.creating"></b-loading>
                 </div>
             </div>
         </section>

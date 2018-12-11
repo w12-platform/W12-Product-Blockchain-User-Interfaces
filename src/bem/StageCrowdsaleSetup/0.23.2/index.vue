@@ -198,7 +198,7 @@
                 </div>
             </div>
         </div>
-        <b-loading :is-full-page="false" :active.sync="saveLoading" :can-cancel="true"></b-loading>
+        <b-loading :is-full-page="false" :active.sync="saveLoading"></b-loading>
     </div>
 </template>
 
