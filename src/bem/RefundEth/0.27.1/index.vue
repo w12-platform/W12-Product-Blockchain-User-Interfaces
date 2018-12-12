@@ -77,14 +77,14 @@
         getTotalTokenRefundedPercent
     } from '@/lib/selectors/fund';
     import { conversionByDecimals, reverseConversionByDecimals } from '@/lib/selectors/units';
-    import { CANCEL_TX } from '@/store/modules/Transactions';
+    import { CANCEL_TX, CONFIRM_TX } from '@/store/modules/Transactions';
     import Connector from "lib/Blockchain/DefaultConnector";
     import { waitTransactionReceipt, errorMessageSubstitution } from 'lib/utils.js';
     import {createNamespacedHelpers} from "vuex";
     import RefundInformation from 'bem/RefundInformation/0.27.1';
     import RefundCalculator from 'bem/RefundCalculator/0.27.1';
     import {RefundInformationModel} from 'bem/RefundInformation/0.27.1/shared.js';
-    import {UPDATE_TX, CONFIRM_TX} from "store/modules/Transactions.js";
+    import {UPDATE_TX} from "store/modules/Transactions.js";
     import { getRefundWindow, isRefundActive, web3, BigNumber, waitContractEventOnce } from '@/lib/utils';
 
     const TokensListNS = createNamespacedHelpers("TokensList");
@@ -381,11 +381,9 @@
 
                     await waitTransactionReceipt(tx, web3);
                     await event;
-
-                    this.$store.commit(`Transactions/${CONFIRM_TX}`, tx);
-
                     await this.tokensListUpdate(this.currentToken);
                     await this.updateAccountData();
+                    this.$store.commit(`Transactions/${CONFIRM_TX}`, tx);
                 } catch (e) {
                     console.error(e);
                     this.error = errorMessageSubstitution(e);
@@ -427,10 +425,9 @@
                     await waitTransactionReceipt(tx, web3);
                     await event;
 
-                    this.$store.commit(`Transactions/${CONFIRM_TX}`, tx);
-
                     await this.tokensListUpdate(this.currentToken);
                     await this.updateAccountData();
+                    this.$store.commit(`Transactions/${CONFIRM_TX}`, tx);
                 } catch (e) {
                     console.error(e);
                     this.error = errorMessageSubstitution(e);
@@ -471,10 +468,9 @@
                         await waitTransactionReceipt(tx, web3);
                         await event;
 
-                        this.$store.commit(`Transactions/${CONFIRM_TX}`, tx);
-
                         await this.updateAccountData();
                         await this.tokensListUpdate(this.currentToken);
+                        this.$store.commit(`Transactions/${CONFIRM_TX}`, tx);
                     }
                 } catch (e) {
                     console.error(e);
