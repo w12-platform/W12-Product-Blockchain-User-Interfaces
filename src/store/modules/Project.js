@@ -273,6 +273,17 @@ export default {
             await this.dispatch('Project/updatePlacedTokenStatus', {Token});
             await this.dispatch('Project/updateTokensApprovedToPlaceValue', {Token});
             await this.dispatch('Project/fetchCrowdSaleAddressAndInfo', {Token});
+            if (getters.isCrowdsaleInited) {
+                await this.dispatch('Project/fetchCrowdSaleStagesList', {Token: state.currentProject});
+                await this.dispatch('Project/upCrowdSaleStart', {Token: state.currentProject});
+                if (semver.satisfies(Token.version, '>=0.26.0')) {
+                    await this.dispatch('Project/fetchPaymentMethodsList', {Token: state.currentProject});
+                }
+
+                if (state.currentProject.crowdSaleInformation.tokenCrowdSaleStages.length) {
+                    await this.dispatch('Project/fetchCrowdSaleMilestonesList', {Token: state.currentProject});
+                }
+            }
             commit(UPDATE_META, {loadingProject: false});
         },
         async fetchList({commit, rootState}) {
