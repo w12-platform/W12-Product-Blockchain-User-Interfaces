@@ -1487,4 +1487,12 @@
 //         "en": "Please install Metamask",
 //         "ru": "Установите Метамаск"
 //     },
+//     "InvestorDashboardCalculatorTryAnotherNumberError": {
+//         "en": "Это число не допустимо, попробуйте другое",
+//         "ru": "Это число не допустимо, попробуйте другое"
+//     },
+//     "InvestorDashboardCalculatorBalanceIsNotEnoughError": {
+//         "en": "Недостаточно средств на балансе",
+//         "ru": "Недостаточно средств на балансе"
+//     },
 // };

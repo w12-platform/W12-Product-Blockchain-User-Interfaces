@@ -26,7 +26,7 @@
 
 <script>
     import './default.scss';
-    import { waitContractEventOnce, waitTransactionReceipt, errorMessageSubstitution } from '@/lib/utils';
+    import { waitContractEventOnce, waitTransactionReceipt, errorMessageSubstitution, warrantor } from '@/lib/utils';
     import { CANCEL_TX } from '@/store/modules/Transactions';
     import cloneDeep from 'lodash/cloneDeep';
     import Connector from 'lib/Blockchain/DefaultConnector.js';
@@ -178,6 +178,10 @@
                     const {ERC20Factory, W12ListerFactory, W12CrowdsaleFactory, W12TokenFactory, W12FundFactory} = await this.LedgerFetch(this.currentProject.version);
                     const ERC20 = ERC20Factory.at(this.currentProject.tokenAddress);
                     const W12Lister = W12ListerFactory.at(this.currentProject.listerAddress);
+                    const {web3} = await Connector.connect();
+                    const getBlockNumber = warrantor(web3.eth.getBlockNumber);
+                    // subscribe to event from next block to prevent triggering immediatly after subscribed
+                    const fromBlock = (await getBlockNumber()) + 1;
                     let ApprovalW12Event = null;
                     // let CrowdsaleSetUpEvent = null;
                     let UnsoldTokenReturned = null;
@@ -189,19 +193,19 @@
                         const W12Fund = W12FundFactory.at(fundAddress);
                         // TODO: write something to watch event more clearly and faster
                         // CrowdsaleSetUpEvent = W12Crowdsale.events.CrowdsaleSetUpDone(null, null, this.onCrowdsaleSetUpEvent);
-                        UnsoldTokenReturned = W12Crowdsale.events.UnsoldTokenReturned(null, null, this.onUnsoldTokenReturnedEvent);
-                        TrancheReleased = W12Fund.events.TrancheReleased(null, null, this.onTrancheReleasedEvent);
+                        UnsoldTokenReturned = W12Crowdsale.events.UnsoldTokenReturned(null, {fromBlock}, this.onUnsoldTokenReturnedEvent);
+                        TrancheReleased = W12Fund.events.TrancheReleased(null, {fromBlock}, this.onTrancheReleasedEvent);
                     }
 
                     if (!isZeroAddress(this.currentProject.wTokenAddress)) {
                         const W12Token = W12TokenFactory.at(this.currentProject.wTokenAddress);
-                        ApprovalW12Event = W12Token.events.Approval(null, null, this.onApprovalW12Event);
+                        ApprovalW12Event = W12Token.events.Approval(null, {fromBlock}, this.onApprovalW12Event);
                     }
 
-                    const ApprovalEvent = ERC20.events.Approval(null, null, this.onApprovalEvent);
-                    const TokenPlaced = W12Lister.events.TokenPlaced(null, null, this.onTokenPlacedEvent);
+                    const ApprovalEvent = ERC20.events.Approval(null, {fromBlock}, this.onApprovalEvent);
+                    const TokenPlaced = W12Lister.events.TokenPlaced(null, {fromBlock}, this.onTokenPlacedEvent);
                     // const CrowdsaleInitialized = W12Lister.events.CrowdsaleInitialized(null, null, this.onCrowdsaleInitializedEvent);
-                    const CrowdsaleTokenMinted = W12Lister.events.CrowdsaleTokenMinted(null, null, this.onCrowdsaleTokenMintedEvent);
+                    const CrowdsaleTokenMinted = W12Lister.events.CrowdsaleTokenMinted(null, {fromBlock}, this.onCrowdsaleTokenMintedEvent);
 
                     this.subscribedEvents = {
                         ApprovalEvent,

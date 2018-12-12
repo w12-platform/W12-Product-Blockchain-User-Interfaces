@@ -2,7 +2,7 @@
     <div class="ProjectStages__stage">
         <div class="row align-items-center justify-content-left">
             <div class="col-auto">
-                <span class="ProjectDashboard__step-badge step-badge badge badge-pill badge-light">5</span>
+                <span class="ProjectDashboard__step-badge step-badge badge badge-pill badge-light">4</span>
             </div>
             <div class="col-sm-4"><span v-html="$t('ProjectDashboardStageConfigureCrowdsale')"></span>
             </div>
