@@ -62,16 +62,18 @@ export default {
                 if (tr.hash) {
                     const connectedWeb3 = (await Connector.connect()).web3;
                     connectedWeb3.eth.getTransactionReceipt(tr.hash, function (err, receipt) {
-                        if(receipt && receipt.blockNumber){
-                            if (receipt.status === '0x1' || receipt.status === 1) {
-                                commit(CONFIRM_TX, tr.hash);
+                        if(err || receipt){
+                            if(receipt && receipt.blockNumber){
+                                if (receipt.status === '0x1' || receipt.status === 1) {
+                                    commit(CONFIRM_TX, tr.hash);
+                                } else {
+                                    commit(CANCEL_TX, tr.hash);
+                                    tr.status = "error";
+                                    commit(UPDATE_TX, tr);
+                                }
                             } else {
                                 commit(CANCEL_TX, tr.hash);
-                                tr.status = "error";
-                                commit(UPDATE_TX, tr);
                             }
-                        } else {
-                            commit(CANCEL_TX, tr.hash);
                         }
                     });
                 }
