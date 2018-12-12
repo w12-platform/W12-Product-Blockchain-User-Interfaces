@@ -415,12 +415,12 @@
                     await waitTransactionReceipt(tx, connectedWeb3);
                     await event;
 
-                    this.$store.commit(`Transactions/${CONFIRM_TX}`, tx);
                     await this.$nextTick();
 
                     await this.updateAllowanceAmount();
                     await this.updateAccountData();
                     await this.tokensListUpdate(this.currentToken);
+                    this.$store.commit(`Transactions/${CONFIRM_TX}`, tx);
                 } catch (e) {
                     console.error(e);
                     this.error = errorMessageSubstitution(e);

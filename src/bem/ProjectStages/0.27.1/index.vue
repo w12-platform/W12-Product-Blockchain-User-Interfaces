@@ -354,13 +354,12 @@
                     await waitTransactionReceipt(tx, connectedWeb3);
                     await event;
 
-                    this.$store.commit(`Transactions/${CONFIRM_TX}`, tx);
                     await this.$nextTick();
 
                     await this.fetchCrowdSaleStagesList({Token: this.currentProject});
                     await this.fetchCrowdSaleMilestonesList({Token: this.currentProject});
                     await this.fetchPaymentMethodsList({Token: this.currentProject});
-
+                    this.$store.commit(`Transactions/${CONFIRM_TX}`, tx);
                 } catch (e) {
                     console.error(e);
                     this.error = errorMessageSubstitution(e);

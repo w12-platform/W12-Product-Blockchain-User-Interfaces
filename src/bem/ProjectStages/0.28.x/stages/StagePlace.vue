@@ -69,7 +69,7 @@
     import { errorMessageSubstitution, waitContractEventOnce } from '@/lib/utils';
     import Connector from 'lib/Blockchain/DefaultConnector.js';
     import { waitTransactionReceipt, formatNumber, toWeiDecimals, fromWeiDecimals} from 'lib/utils.js';
-    import {UPDATE_TX} from "store/modules/Transactions.js";
+    import {UPDATE_TX, CONFIRM_TX} from "store/modules/Transactions.js";
     import Web3 from 'web3';
     import {createNamespacedHelpers} from "vuex";
 
@@ -243,6 +243,7 @@
                     await event;
                     await this.$nextTick();
                     await this.upTokenAfterEvent({Token: this.currentProject});
+                    this.$store.commit(`Transactions/${CONFIRM_TX}`, tx);
                 } catch (e) {
                     console.error(e);
                     this.error = errorMessageSubstitution(e.message);

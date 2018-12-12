@@ -9,7 +9,6 @@ import Whitelist from "./modules/Whitelist.js";
 import W12Lister from "./modules/W12Lister.js";
 import Project from "./modules/Project.js";
 import Transactions from "./modules/Transactions.js";
-import TransactionsPlugin from "./modules/Transactions/plugin";
 import Lang from "./modules/Lang.js";
 import Factory from "./modules/Factory.js";
 import Rates from "./modules/Rates.js";
@@ -47,7 +46,6 @@ const store = {
                 "Factory.list"
             ]
         }),
-        TransactionsPlugin
     ]
 };
 

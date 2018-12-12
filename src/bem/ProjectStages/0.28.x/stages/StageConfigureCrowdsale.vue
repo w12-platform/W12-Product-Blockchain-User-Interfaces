@@ -317,6 +317,7 @@
                     await event;
                     await this.$nextTick();
                     await this.upTokenAfterEvent({Token: this.currentProject});
+                    this.$store.commit(`Transactions/${CONFIRM_TX}`, tx);
                 } catch (e) {
                     console.error(e);
                     this.error = errorMessageSubstitution(e.message);
@@ -360,6 +361,7 @@
                     await event;
                     await this.$nextTick();
                     await this.upTokenAfterEvent({Token: this.currentProject});
+                    this.$store.commit(`Transactions/${CONFIRM_TX}`, tx);
                 } catch (e) {
                     console.error(e);
                     this.error = errorMessageSubstitution(e.message);
