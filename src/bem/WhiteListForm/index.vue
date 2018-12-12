@@ -408,6 +408,7 @@
                     await event;
                     await this.fetchWhitelist();
                     this.resetWhitelistForm();
+                    this.$store.commit(`Transactions/${CONFIRM_TX}`, tx);
                 } catch (e) {
                     console.error(e);
                     this.setErrorMessage(errorMessageSubstitution(e));
@@ -491,7 +492,7 @@
             resetWhitelistForm() {
                 Object.assign(this.whiteListForm, {
                     tokenAddress: '',
-                    ownerAddress: '',
+                    owners: [],
                     name: '',
                     symbol: '',
                     decimals: '18',
