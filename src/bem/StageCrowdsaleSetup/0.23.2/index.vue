@@ -2,7 +2,7 @@
     <div class="ProjectStages__stage">
         <div class="row align-items-center justify-content-left">
             <div class="col-auto">
-                <span class="ProjectDashboard__step-badge step-badge badge badge-pill badge-light">6</span>
+                <span class="ProjectDashboard__step-badge step-badge badge badge-pill badge-light">5</span>
             </div>
             <div class="col-sm-5"><span v-html="$t('ProjectDashboardStageBonuses')"></span>
             </div>

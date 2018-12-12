@@ -10,7 +10,7 @@
                 <p><span v-html="$t('InvestorDashboardCalculatorTokenName')"></span> {{ currentToken.name }}</p>
                 <p><span v-html="$t('InvestorDashboardCalculatorTokenSymbol')"></span> {{ currentToken.symbol }}</p>
                 <p v-if="maxSum"><span v-html="$t('InvestorDashboardCalculatorAmount')"></span>
-                    {{ tokensOnSaleFixed }} {{ currentToken.symbol }} - ({{ maxSum }})</p>
+                    {{ tokensOnSaleFixed }} {{ currentToken.symbol }} - ({{ maxSum }} {{ paymentMethod }})</p>
             </div>
 
             <div class="Calculator__inputs">
@@ -66,6 +66,9 @@
                 <b-notification v-if="!isMaxTokenOnSaleAmount" type="is-danger" has-icon :closable="false"
                                 v-html="$t('ErrorOnSaleMaxAmount', { max: currentToken.crowdSaleInformation.tokensOnSale })">
                 </b-notification>
+                <b-notification v-else-if="!isBalanceEnough" type="is-danger" has-icon
+                                v-html="$t('InvestorDashboardCalculatorBalanceIsNotEnoughError')">
+                </b-notification>
 
                 <p v-if="currentToken.crowdSaleInformation.stageDiscount !== '0'"><span v-html="$t('InvestorDashboardCalculatorDiscount')"></span>
                     <b-tag type="is-success">{{ currentToken.crowdSaleInformation.stageDiscount }}%</b-tag>
@@ -110,8 +113,8 @@
             </div>
 
             <div class="Calculator__buy" v-if="!isPendingTx && !isErrorTx">
-                <button class="btn btn-primary" :disabled="disableBuy || fetchingInvoice" @click="buy" v-html="$t('InvestorDashboardCalculatorBuy')"></button>
-                <button v-if="isNeedApprove" :disabled="fetchingInvoice" class="btn btn-primary" @click="approve" v-html="$t('InvestorDashboardCalculatorDoApprove')"></button>
+                <button class="btn btn-primary" :disabled="disableBuy" @click="buy" v-html="$t('InvestorDashboardCalculatorBuy')"></button>
+                <button v-if="isNeedApprove" :disabled="disableNeedApprove" class="btn btn-primary" @click="approve" v-html="$t('InvestorDashboardCalculatorDoApprove')"></button>
             </div>
         </div>
         <b-loading :is-full-page="false" :active.sync="loading" :can-cancel="true"></b-loading>
@@ -121,13 +124,14 @@
 <script>
     import './default.scss';
     import { conversionByDecimals, reverseConversionByDecimals } from '@/lib/selectors/units';
-    import { round, waitContractEventOnce } from '@/lib/utils';
+    import { round, waitContractEventOnce, warrantor } from '@/lib/utils';
     import { CANCEL_TX } from '@/store/modules/Transactions';
     import {createNamespacedHelpers} from "vuex";
     import {waitTransactionReceipt, errorMessageSubstitution} from 'lib/utils.js';
     import {UPDATE_TX, CONFIRM_TX} from "store/modules/Transactions.js";
     import {web3, BigNumber} from 'lib/utils';
     import countdown from 'countdown';
+    import debounce from 'lodash/debounce';
     import moment from 'moment';
 
     const LedgerNS = createNamespacedHelpers("Ledger");
@@ -154,6 +158,7 @@
                 countdownTmId: false,
                 countdown: false,
                 allowance: '0',
+                balance: '0',
                 maxSum: null
             };
         },
@@ -199,6 +204,13 @@
                     ? new BigNumber(this.tokens).lte(this.currentToken.crowdSaleInformation.tokensOnSale)
                     : !this.tokens;
             },
+            isBalanceEnough() {
+                if (!this.paymentAmount) {
+                    return true;
+                }
+
+                return new BigNumber(this.balance).greaterThanOrEqualTo(this.paymentAmount);
+            },
             tokenPrice() {
                 return this.currentToken.crowdSaleInformation.tokenPrice;
             },
@@ -215,8 +227,9 @@
                     const tokenPrice = this.currentToken.crowdSaleInformation.tokenPrice;
                     const paymentMethodPrice = this.paymentMethodExtendInfo.rate;
                     const paymentWithoutFees = tokens.mul(tokenPrice).div(paymentMethodPrice);
-
-                    return paymentWithoutFees.minus(cost).toString();
+                    if (paymentWithoutFees.isFinite()) {
+                        return paymentWithoutFees.minus(cost).toString();
+                    }
                 }
 
                 return '0';
@@ -228,8 +241,9 @@
                     const tokenPrice = this.currentToken.crowdSaleInformation.tokenPrice;
                     const paymentMethodPrice = this.paymentMethodExtendInfo.rate;
                     const tokenWithoutFees = cost.mul(paymentMethodPrice).div(tokenPrice);
-
-                    return tokens.minus(tokenWithoutFees).toString();
+                    if (tokenWithoutFees.isFinite()) {
+                        return tokens.minus(tokenWithoutFees).toString();
+                    }
                 }
 
                 return '0';
@@ -272,6 +286,15 @@
                     this.isNeedApprove
                     || !this.invoice
                     || !new BigNumber(this.invoice.cost).greaterThan(0)
+                    || !this.isMaxTokenOnSaleAmount
+                    || this.fetchingInvoice
+                    || !this.isBalanceEnough
+                );
+            },
+            disableNeedApprove() {
+                return (
+                    this.fetchingInvoice
+                    || !this.isBalanceEnough
                     || !this.isMaxTokenOnSaleAmount
                 );
             },
@@ -337,14 +360,23 @@
             dateFormat (value) {
                 return moment(value * 1000).utc().format("DD.MM.YYYY HH:mm");
             },
-            async handleTokensChange(value, prevValue) {
+            handleTokensChange() {
+                if (this.fetchingInvoice) return;
+                this.debounceFetchInvoiceByTokenAmount();
+            },
+            handlePaymentAmountChange() {
+                if (this.fetchingInvoice) return;
+                this.debounceFetchInvoiceByPaymentAmount();
+            },
+            debounceFetchInvoiceByTokenAmount: debounce(async function() {
                 await this.fetchInvoiceByTokenAmount();
-            },
-            async handlePaymentAmountChange() {
+            }, 2000),
+            debounceFetchInvoiceByPaymentAmount: debounce(async function () {
                 await this.fetchInvoiceByPaymentAmount();
-            },
+            }, 2000),
             async handlePaymentMethodChange() {
                 await this.fetchMaxSumInvoiceByTokensOnSale();
+                await this.fetchBalance();
                 await this.fetchInvoiceByPaymentAmount();
             },
             async buy() {
@@ -504,7 +536,7 @@
                     };
                 } catch (e) {
                     console.error(e);
-                    this.error = errorMessageSubstitution(e);
+                    this.error = this.$t('InvestorDashboardCalculatorTryAnotherNumberError');
                 }
 
                 await this.updateAllowanceAmount();
@@ -539,7 +571,7 @@
                     };
                 } catch (e) {
                     console.error(e);
-                    this.error = errorMessageSubstitution(e);
+                    this.error = this.$t('InvestorDashboardCalculatorTryAnotherNumberError');
                 }
 
                 await this.updateAllowanceAmount();
@@ -561,7 +593,29 @@
                             conversionByDecimals(this.currentToken.crowdSaleInformation.tokensOnSale, this.currentToken.decimals)
                         );
                     }
-                    this.maxSum = reverseConversionByDecimals(invoice[1], this.paymentMethodExtendInfo.decimals).toFixed(2) + " " + this.paymentMethod;
+                    this.maxSum = reverseConversionByDecimals(invoice[1], this.paymentMethodExtendInfo.decimals).toFixed(2);
+                } catch (e) {
+                    console.error(e);
+                    this.error = errorMessageSubstitution(e);
+                }
+            },
+            async fetchBalance() {
+                if (!this.paymentMethod) return;
+
+                try {
+                    let balance = '0';
+
+                    if (!this.paymentMethodExtendInfo.isToken) {
+                        const {web3} = await Connector.connect();
+                        const getBalance = warrantor(web3.eth.getBalance.bind(web3.eth));
+                        balance = await getBalance(this.currentAccount);
+                    } else {
+                        const {ERC20Factory} = await this.fetchLedger(this.currentToken.version);
+                        const ERC20 = ERC20Factory.at(this.paymentMethodExtendInfo.address);
+                        balance = await ERC20.methods.balanceOf(this.currentAccount);
+                    }
+
+                    this.balance = balance;
                 } catch (e) {
                     console.error(e);
                     this.error = errorMessageSubstitution(e);
