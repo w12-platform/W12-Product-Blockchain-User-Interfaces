@@ -46,6 +46,10 @@
       {
         "address": "0x6074a1bfe00625f55d6bc2d3a4989a709372e7bd",
         "version": "0.28.0"
+      },
+      {
+        "address": "0x9c37e805561dafc1c841379112cdf47187528945",
+        "version": "0.29.0"
       }
     ],
     "Rates": [
@@ -56,6 +60,10 @@
       {
         "address": "0x3955ea944203d6259098c255F7fb779C79Ba4094",
         "version": "0.28.0"
+      },
+      {
+        "address": "0x3955ea944203d6259098c255f7fb779c79ba4094",
+        "version": "0.29.0"
       }
     ]
   },
