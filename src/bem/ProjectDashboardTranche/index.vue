@@ -133,7 +133,7 @@
                     if(this.isCurrentToken){
                         window.CurrentToken.__customerPointer = true;
                         if(semver.satisfies(window.CurrentToken.version, '>=0.28.0')) {
-                            await this.ProjectFetchListCurrentToken(CurrentToken);
+                            await this.ProjectFetchListCurrentToken(window.CurrentToken);
                         } else {
                             await this.FetchProjectByCurrentToken(window.CurrentToken);
                         }
