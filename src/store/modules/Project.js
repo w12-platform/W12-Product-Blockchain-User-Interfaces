@@ -310,6 +310,23 @@ export default {
                 commit(UPDATE_META, {loading: false, loadingError: errorMessageSubstitution(e)});
             }
         },
+        async fetchListCurrentToken({commit, rootState}, CurrentToken) {
+            commit(UPDATE_META, {loading: true});
+            try {
+                const account = rootState.Account.currentAccount;
+                const {W12ListerFactory} = await this.dispatch('Ledger/fetch', CurrentToken.version);
+                const W12Lister = W12ListerFactory.at(CurrentToken.listerAddress);
+                let list = await W12Lister.fetchTokensInWhiteList([CurrentToken.tokenAddress]);
+
+                list = filterTokensListForCurrentAccount(list, CurrentToken.version, account);
+
+                commit(UPDATE, {list});
+                commit(UPDATE_META, {loading: false});
+            } catch (e) {
+                console.error(e);
+                commit(UPDATE_META, {loading: false, loadingError: errorMessageSubstitution(e)});
+            }
+        },
         async fetchProject({commit}, Token) {
             commit(UPDATE_META, {loadingProject: true});
             await this.dispatch('Project/updateProject', Token);
