@@ -16,7 +16,7 @@
             </b-notification>
 
             <div v-if="!isLoading && currentToken">
-                <TokenSwitch v-if="!isCurrentToken"></TokenSwitch>
+                <TokenSwitch v-if="isViewSwitch"></TokenSwitch>
                 <component :is="CalculatorComponent"></component>
                 <component :is="SaleTableComponent"></component>
                 <RoadMap></RoadMap>
@@ -37,6 +37,7 @@
     import TokenSwitch from 'bem/TokenSwitch';
     import Steps from "bem/Steps";
     import RoadMap from "bem/RoadMap";
+    import semver from 'semver';
 
     const LedgerNS = createNamespacedHelpers("Ledger");
     const AccountNS = createNamespacedHelpers("Account");
@@ -100,6 +101,9 @@
             isCurrentToken(){
                 return typeof window.CurrentToken !== 'undefined';
             },
+            isViewSwitch(){
+                return this.isCurrentToken ? !!semver.satisfies(window.CurrentToken.version, '>=0.28.0') : true;
+            },
             CalculatorComponent() {
                 if (!this.currentToken) return () => {};
                 const version = resolveComponentVersion(this.currentToken.version, 'Calculator');
@@ -119,6 +123,7 @@
         methods: {
             ...TokensListNS.mapActions({
                 tokensListFetch: "fetch",
+                tokensListFetchCurrentToken: "fetchListCurrentToken",
                 tokensListWatch: "watch",
                 FetchTokenByCurrentToken: "fetchTokenByCurrentToken"
             }),
@@ -135,7 +140,11 @@
                     await this.transactionsUpStatusTx();
                     if(this.isCurrentToken){
                         window.CurrentToken.__customerPointer = true;
-                        await this.FetchTokenByCurrentToken(CurrentToken);
+                        if(semver.satisfies(window.CurrentToken.version, '>=0.28.0')) {
+                            await this.tokensListFetchCurrentToken(window.CurrentToken);
+                        } else {
+                            await this.FetchTokenByCurrentToken(window.CurrentToken);
+                        }
                     } else {
                         await this.tokensListFetch();
                     }

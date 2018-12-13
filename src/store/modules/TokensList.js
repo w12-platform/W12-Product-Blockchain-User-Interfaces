@@ -6,6 +6,7 @@ import { fetchTokenMinimal as fetchTokenMinimal_v0_20_x } from '@/store/modules/
 import { fetchTokenMinimal as fetchTokenMinimal_v0_28_x } from '@/store/modules/TokensList/0.28.x/actions';
 import { fetch as fetch_v0_20_x } from '@/store/modules/TokensList/0.20.x/actions';
 import { fetch as fetch_v0_28_x } from '@/store/modules/TokensList/0.28.x/actions';
+import { fetchListCurrentToken as fetchListCurrentToken_v0_28_x } from '@/store/modules/TokensList/0.28.x/actions';
 import { fetchTokenByCurrentToken as fetchTokenByCurrentToken_v0_20_x } from '@/store/modules/TokensList/0.20.x/actions';
 import { fetchTokenByCurrentToken as fetchTokenByCurrentToken_v0_28_x } from '@/store/modules/TokensList/0.28.x/actions';
 import semver from 'semver';
@@ -104,6 +105,16 @@ export default {
 
             throw new Error(`token version ${payload.version} does not supported`);
         },
+        async fetchListCurrentToken(context, payload) {
+            const version = payload.version;
+
+            if (semver.satisfies(version, '>=0.28.x')) {
+                return await fetchListCurrentToken_v0_28_x.call(this, context, payload);
+            }
+
+            throw new Error(`token version ${payload.version} does not supported`);
+        },
+
         async fetchTokenByCurrentToken(context, payload) {
             if (semver.satisfies(payload.version, '0.20.x - 0.27.x')) {
                 return await fetchTokenByCurrentToken_v0_20_x.call(this, context, payload);

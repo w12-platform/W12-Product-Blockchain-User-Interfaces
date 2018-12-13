@@ -257,6 +257,10 @@ export class W12ListerWrapper extends BaseWrapper {
         return await this.fetchAllTokensInWhiteList();
     }
 
+    async fetchTokensComposedInformation(tokensAddresses) {
+        return await this.fetchTokensInWhiteList(tokensAddresses);
+    }
+
     async swap() {
         return await this.methods.getExchanger();
     }

@@ -16,7 +16,7 @@
             </b-notification>
 
             <div v-if="!isLoading">
-                <TokenSwitch v-if="!hasCurrentToken"></TokenSwitch>
+                <TokenSwitch v-if="isViewSwitch"></TokenSwitch>
                 <component :is="RefundEthComponent"></component>
             </div>
         </section>
@@ -50,7 +50,6 @@
                 meta: {
                     loading: false,
                 },
-                hasCurrentToken: !!window.CurrentToken
             };
         },
         computed: {
@@ -87,6 +86,12 @@
                 } else if (semver.satisfies(version, '>=0.26.0')) {
                     return () => import('@/bem/RefundEth/0.27.1/index.vue');
                 }
+            },
+            isCurrentToken(){
+                return typeof CurrentToken !== 'undefined';
+            },
+            isViewSwitch(){
+                return this.isCurrentToken ? !!semver.satisfies(window.CurrentToken.version, '>=0.28.0') : true;
             }
         },
         methods: {
@@ -95,6 +100,7 @@
             }),
             ...TokensListNS.mapActions({
                 tokensListFetch: "fetch",
+                tokensListFetchCurrentToken: "fetchListCurrentToken",
                 tokensListWatch: "watch",
                 FetchTokenByCurrentToken: "fetchTokenByCurrentToken"
             }),
@@ -109,9 +115,13 @@
             async handleCurrentAccountChange(currentAccount) {
                 if(currentAccount){
                     await this.transactionsUpStatusTx();
-                    if(this.hasCurrentToken){
+                    if(this.isCurrentToken){
                         window.CurrentToken.__customerPointer = true;
-                        await this.FetchTokenByCurrentToken(window.CurrentToken);
+                        if(semver.satisfies(window.CurrentToken.version, '>=0.28.0')) {
+                            await this.tokensListFetchCurrentToken(window.CurrentToken);
+                        } else {
+                            await this.FetchTokenByCurrentToken(window.CurrentToken);
+                        }
                     } else {
                         await this.tokensListFetch();
                     }

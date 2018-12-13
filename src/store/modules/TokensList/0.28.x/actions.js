@@ -153,6 +153,26 @@ export async function fetch({commit, state, dispatch, rootState}) {
     commit(UPDATE_META, {loading: false});
 }
 
+export async function fetchListCurrentToken({commit, state, dispatch, rootState}, CurrentToken) {
+    commit(UPDATE_META, {loading: true});
+    try {
+        const {W12ListerFactory} = await dispatch('Ledger/fetch', CurrentToken.version, {root: true});
+        const W12Lister = W12ListerFactory.at(CurrentToken.listerAddress);
+        let tokens = (await W12Lister.fetchTokensComposedInformation([CurrentToken.tokenAddress])).filter(t => !isZeroAddress(t.crowdsaleAddress));
+        const list = await map(tokens, async token => await dispatch('fetchTokenMinimal', token));
+
+        if (!state.currentToken && list.length) {
+            commit(TOKEN_SELECTED, {currentToken: await dispatch('fetchTokenFull', list[0])});
+        }
+
+        commit(UPDATE, {list});
+    } catch (e) {
+        console.error(e);
+        commit(UPDATE_META, {loading: false, loadingError: errorMessageSubstitution(e.message) || ERROR_FETCH_TOKENS_LIST});
+    }
+    commit(UPDATE_META, {loading: false});
+}
+
 // TODO: replace the old with it when refactoring
 // export async function fetch({commit, state, dispatch}) {
 //     commit(UPDATE_META, {loading: true});

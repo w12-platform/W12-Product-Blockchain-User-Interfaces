@@ -16,7 +16,7 @@
             </b-notification>
 
             <div v-if="!isLoading">
-                <TokenSwitch v-if="!isCurrentToken"></TokenSwitch>
+                <TokenSwitch v-if="isViewSwitch"></TokenSwitch>
                 <ExchangeTokens></ExchangeTokens>
             </div>
         </section>
@@ -38,6 +38,7 @@
     const TokensListNS = createNamespacedHelpers("TokensList");
     const LangNS = createNamespacedHelpers("Lang");
     const TransactionsNS = createNamespacedHelpers("Transactions");
+    import semver from 'semver';
 
     const web3 = new Web3();
     const BigNumber = web3.BigNumber;
@@ -82,6 +83,9 @@
             },
             isCurrentToken(){
                 return typeof CurrentToken !== 'undefined';
+            },
+            isViewSwitch(){
+                return this.isCurrentToken ? !!semver.satisfies(window.CurrentToken.version, '>=0.28.0') : true;
             }
         },
         methods: {
@@ -90,6 +94,7 @@
             }),
             ...TokensListNS.mapActions({
                 tokensListFetch: "fetch",
+                tokensListFetchCurrentToken: "fetchListCurrentToken",
                 tokensListWatch: "watch",
                 FetchTokenByCurrentToken: "fetchTokenByCurrentToken"
             }),
@@ -106,7 +111,11 @@
                     await this.transactionsUpStatusTx();
                     if(this.isCurrentToken){
                         window.CurrentToken.__customerPointer = true;
-                        await this.FetchTokenByCurrentToken(CurrentToken);
+                        if(semver.satisfies(window.CurrentToken.version, '>=0.28.0')) {
+                            await this.tokensListFetchCurrentToken(window.CurrentToken);
+                        } else {
+                            await this.FetchTokenByCurrentToken(window.CurrentToken);
+                        }
                     } else {
                         await this.tokensListFetch();
                     }
