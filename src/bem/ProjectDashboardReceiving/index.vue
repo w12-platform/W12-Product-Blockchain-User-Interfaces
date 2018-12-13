@@ -15,7 +15,7 @@
             </b-notification>
 
             <div v-if="!isLoading">
-                <ProjectSwitch v-if="!isCurrentToken"></ProjectSwitch>
+                <ProjectSwitch v-if="isViewSwitch"></ProjectSwitch>
 
                 <b-notification v-if="ProjectMeta.loadingProjectError" :closable="false">
                     {{ ProjectMeta.loadingProjectError }}
@@ -38,6 +38,7 @@
     import Receiving from 'bem/Receiving';
     import {CONFIRM_TX} from "store/modules/Transactions.js";
     import Steps from "bem/Steps";
+    import semver from 'semver';
 
     import {createNamespacedHelpers} from 'vuex';
     import {isZeroAddress, errorMessageSubstitution} from 'lib/utils';
@@ -86,6 +87,9 @@
             },
             isCurrentToken(){
                 return typeof CurrentToken !== 'undefined';
+            },
+            isViewSwitch(){
+                return this.isCurrentToken ? !!semver.satisfies(window.CurrentToken.version, '>=0.28.0') : true;
             }
         },
         watch: {
@@ -111,6 +115,7 @@
                 updatePlacedTokenStatus: 'updatePlacedTokenStatus',
                 fetchProject: "fetchProject",
                 ProjectFetchList: "fetchList",
+                ProjectFetchListCurrentToken: "fetchListCurrentToken",
                 fetchCrowdSaleAddressAndInfo: "fetchCrowdSaleAddressAndInfo",
                 updateTokenInfo: "updateTokenInfo",
                 updateOwnerBalance: "updateOwnerBalance",
@@ -125,7 +130,11 @@
                 if(currentAccount){
                     if(this.isCurrentToken){
                         window.CurrentToken.__customerPointer = true;
-                        await this.FetchProjectByCurrentToken(CurrentToken);
+                        if(semver.satisfies(window.CurrentToken.version, '>=0.28.0')) {
+                            await this.ProjectFetchListCurrentToken(window.CurrentToken);
+                        } else {
+                            await this.FetchProjectByCurrentToken(window.CurrentToken);
+                        }
                     } else {
                         await this.ProjectFetchList();
                     }

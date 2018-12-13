@@ -14,7 +14,7 @@
             </b-notification>
 
             <div v-if="!isLoading">
-                <ProjectSwitch v-if="!isCurrentToken"></ProjectSwitch>
+                <ProjectSwitch v-if="isViewSwitch"></ProjectSwitch>
 
                 <b-notification v-if="ProjectMeta.loadingProjectError" :closable="false">
                     {{ ProjectMeta.loadingProjectError }}
@@ -37,6 +37,7 @@
     import { resolveComponentVersion } from '@/bem/utils';
     import ProjectSwitch from 'bem/ProjectSwitch';
     import Steps from "bem/Steps";
+    import semver from 'semver';
 
     import {createNamespacedHelpers} from 'vuex';
 
@@ -86,6 +87,9 @@
             },
             isCurrentToken(){
                 return typeof window.CurrentToken !== 'undefined';
+            },
+            isViewSwitch(){
+                return this.isCurrentToken ? !!semver.satisfies(window.CurrentToken.version, '>=0.28.0') : true;
             }
         },
         watch: {
@@ -105,6 +109,7 @@
             }),
             ...ProjectNS.mapActions({
                 ProjectFetchList: "fetchList",
+                ProjectFetchListCurrentToken: "fetchListCurrentToken",
                 FetchProjectByCurrentToken: "fetchProjectByCurrentToken"
             }),
 
@@ -112,7 +117,11 @@
                 if(currentAccount){
                     if(this.isCurrentToken){
                         window.CurrentToken.__customerPointer = true;
-                        await this.FetchProjectByCurrentToken(window.CurrentToken);
+                        if(semver.satisfies(window.CurrentToken.version, '>=0.28.0')) {
+                            await this.ProjectFetchListCurrentToken(window.CurrentToken);
+                        } else {
+                            await this.FetchProjectByCurrentToken(window.CurrentToken);
+                        }
                     } else {
                         await this.ProjectFetchList();
                     }

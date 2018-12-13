@@ -14,7 +14,7 @@
             </b-notification>
 
             <div v-if="!isLoading">
-                <ProjectSwitch v-if="!isCurrentToken"></ProjectSwitch>
+                <ProjectSwitch v-if="isViewSwitch"></ProjectSwitch>
 
                 <b-notification v-if="ProjectMeta.loadingProjectError" :closable="false">
                     {{ ProjectMeta.loadingProjectError }}
@@ -38,6 +38,7 @@
     import ProjectSwitch from 'bem/ProjectSwitch';
     import Receiving from 'bem/Receiving';
     import Steps from "bem/Steps";
+    import semver from 'semver';
 
     import {CONFIRM_TX} from "store/modules/Transactions.js";
     import {createNamespacedHelpers} from 'vuex';
@@ -93,6 +94,9 @@
             isCurrentToken(){
                 return typeof CurrentToken !== 'undefined';
             },
+            isViewSwitch(){
+                return this.isCurrentToken ? !!semver.satisfies(window.CurrentToken.version, '>=0.28.0') : true;
+            },
             TrancheInformationComponent() {
                 if (!this.currentProject) return () => {};
                 const version = resolveComponentVersion(this.currentProject.version, 'TrancheInformation');
@@ -116,6 +120,7 @@
             }),
             ...ProjectNS.mapActions({
                 ProjectFetchList: "fetchList",
+                ProjectFetchListCurrentToken: "fetchListCurrentToken",
                 updateFundInformation: "updateFundInformation",
                 FetchProjectByCurrentToken: "fetchProjectByCurrentToken"
             }),
@@ -127,7 +132,11 @@
                 if(currentAccount){
                     if(this.isCurrentToken){
                         window.CurrentToken.__customerPointer = true;
-                        await this.FetchProjectByCurrentToken(CurrentToken);
+                        if(semver.satisfies(window.CurrentToken.version, '>=0.28.0')) {
+                            await this.ProjectFetchListCurrentToken(window.CurrentToken);
+                        } else {
+                            await this.FetchProjectByCurrentToken(window.CurrentToken);
+                        }
                     } else {
                         await this.ProjectFetchList();
                     }
