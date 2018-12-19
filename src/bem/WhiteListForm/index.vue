@@ -182,7 +182,7 @@
     import {UPDATE_TX} from "store/modules/Transactions.js";
     import tokenValidationMixinGenerator from '@/lib/views/mixins/validation/token-validation';
     import {createNamespacedHelpers} from "vuex";
-    import {web3, BigNumber} from '@/lib/utils';
+    import {web3, BigNumber, warrantor} from '@/lib/utils';
     import pick from 'lodash/pick';
 
     const LedgerNS = createNamespacedHelpers("Ledger");
@@ -458,7 +458,7 @@
                         );
                     } else {
                         const {web3} = await Connector.connect();
-                        const getAccounts = promisify(web3.eth.getAccounts.bind(web3.eth));
+                        const getAccounts = warrantor(web3.eth.getAccounts.bind(web3.eth));
                         const currentAccount = (await getAccounts())[0];
                         const ERC20Detailed = ERC20DetailedFactory.at(tokenAddress);
                         const tokenInformation = await ERC20Detailed.getDescription();

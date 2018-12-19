@@ -69,7 +69,7 @@ export default {
             const watcher = async () => {
                 try {
                     const { web3: connectedWeb3, netId } = await Connector.connect();
-                    const getAccounts = promisify(connectedWeb3.eth.getAccounts.bind(connectedWeb3.eth.getAccounts));
+                    const getAccounts = warrantor(connectedWeb3.eth.getAccounts.bind(connectedWeb3.eth.getAccounts));
                     const currentAccount = (await getAccounts())[0];
                     if(currentAccount){
                         const getBalance = warrantor(connectedWeb3.eth.getBalance.bind(connectedWeb3.eth));

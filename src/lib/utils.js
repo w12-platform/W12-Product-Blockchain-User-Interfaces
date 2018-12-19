@@ -77,6 +77,46 @@ export function promisifyLogsResult (funct, info) {
     };
 }
 
+export function promisifyLogsResultWarrantor(funct, info) {
+    return function (...args) {
+        return new Promise((accept, reject) => {
+            const callback = async (error, result) => {
+                Sentry.withScope(scope => {
+                    scope.setTag("type", info.type);
+                    scope.setTag("contract", info.contract_name);
+                    scope.setTag("method", info.name);
+                    scope.setTag("version", info.version);
+                    scope.setTag("contract_address", info.address);
+                    scope.setLevel(error != null ? Sentry.Severity.Error : Sentry.Severity.Info);
+                    scope.setExtra("method_arguments", args);
+
+                    if (error != null) {
+                        Sentry.captureException(error);
+                    } else {
+                        scope.setExtra("result", result);
+                        Sentry.captureEvent({
+                            message: [info.type, info.contract_name, info.name, info.version, info.address].join(' ')
+                        });
+                    }
+                });
+
+                if (error != null) {
+                    reject(error);
+                } else {
+                    if(result === "0x"){
+                        await wait(1000);
+                        funct(...args, callback);
+                    } else {
+                        accept(result);
+                    }
+                }
+            };
+
+            return funct(...args, callback);
+        });
+    };
+}
+
 export function waitTransactionReceipt(tx, web3, timeout = 240000) {
     return new Promise(function (accept, reject) {
         const start = new Date().getTime();

@@ -73,23 +73,27 @@ export function cacheController(meta, info) {
 
             devLog(`cache_hash(${meta.method}): `, hash);
 
-            const callback = function (error, result) {
+            const callback = async (error, result) => {
                 processResultForSentry(info, args, error, result);
 
                 if (error != null) {
                     reject(error);
-                    return;
+                } else {
+                    if(result === "0x"){
+                        await wait(1000);
+                        meta.funct(...args, callback);
+                    } else {
+                        devLog(`result(${meta.method}): `, result, meta.outputTypes);
+
+                        const encodedResult = coder.encodeParams(
+                            meta.outputTypes,
+                            meta.outputTypes.length === 1 ? [result] : result
+                        );
+
+                        store.dispatch('Cache/set', {meta, hash, result: encodedResult, blockNumber, args: {...args}});
+                        accept(result);
+                    }
                 }
-
-                devLog(`result(${meta.method}): `, result, meta.outputTypes);
-
-                const encodedResult = coder.encodeParams(
-                    meta.outputTypes,
-                    meta.outputTypes.length === 1 ? [result] : result
-                );
-
-                store.dispatch('Cache/set', {meta, hash, result: encodedResult, blockNumber, args: {...args}});
-                accept(result);
             };
 
             const cacheData = store.getters["Cache/get"](hash);
