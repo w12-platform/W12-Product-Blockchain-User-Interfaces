@@ -1,4 +1,4 @@
-import { promisify, promisifyLogsResult, wait} from 'lib/utils.js';
+import { promisify, promisifyLogsResult, wait, promisifyLogsResultWarrantor, warrantor} from 'lib/utils.js';
 import Web3 from 'web3';
 import {cacheController, getCacheType} from 'src/lib/Blockchain/Cache.js';
 
@@ -57,7 +57,7 @@ export class BaseWrapper {
                     methods[item.name] = beforeSendHook(promisifyLogsResult(this.senderInstance[item.name], optionsLogGetDefault));
                 }
 
-                methods[item.name].call = promisifyLogsResult(this.getterInstance[item.name].call, optionsLogGetDefault);
+                methods[item.name].call = promisifyLogsResultWarrantor(this.getterInstance[item.name].call, optionsLogGetDefault);
                 methods[item.name].callWithSender = promisifyLogsResult(this.senderInstance[item.name].call, optionsLogGetDefault);
                 methods[item.name].sendTransaction = beforeSendHook(promisifyLogsResult(this.senderInstance[item.name].sendTransaction, optionsLogSetDefault));
                 methods[item.name].request = this.senderInstance[item.name].request;
@@ -98,7 +98,7 @@ export class BaseWrapper {
                     } catch (e) {
                         console.error(e);
 
-                        txParams.gasPrice = new BigNumber(await promisify(this.senderInstance._eth.getGasPrice)()).mul(4);
+                        txParams.gasPrice = new BigNumber(await warrantor(this.senderInstance._eth.getGasPrice)()).mul(4);
                     }
                 }
             }

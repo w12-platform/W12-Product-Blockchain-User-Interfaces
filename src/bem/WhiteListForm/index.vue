@@ -156,7 +156,7 @@
     import './default.scss';
     import 'bem/labelTooltip/default.scss';
     import Connector from 'lib/Blockchain/DefaultConnector.js';
-    import {promisify, waitTransactionReceipt, errorMessageSubstitution} from 'lib/utils.js';
+    import {promisify, waitTransactionReceipt, errorMessageSubstitution, warrantor} from 'lib/utils.js';
     import {UPDATE_TX} from "store/modules/Transactions.js";
     import tokenValidationMixinGenerator from '@/lib/views/mixins/validation/token-validation';
     import {createNamespacedHelpers} from "vuex";
@@ -404,7 +404,7 @@
             async predefineTokenInformation() {
                 const address = this.whiteListForm.tokenAddress;
                 const {web3} = await Connector.connect();
-                const getAccounts = promisify(web3.eth.getAccounts.bind(web3.eth));
+                const getAccounts = warrantor(web3.eth.getAccounts.bind(web3.eth));
                 const currentAccount = (await getAccounts())[0];
 
                 if (this.isTokenExists) {

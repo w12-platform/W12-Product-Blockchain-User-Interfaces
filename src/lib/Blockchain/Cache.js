@@ -5,6 +5,7 @@ import Web3 from 'web3';
 import coder from 'web3/lib/solidity/coder';
 import * as Sentry from "@sentry/browser";
 import config from '@/config.js';
+import {wait} from "lib/utils";
 
 const web3 = new Web3();
 const BigNumber = web3.BigNumber;
@@ -70,21 +71,27 @@ export function cacheController(meta, info) {
                     break;
             }
 
-            const callback = function (error, result) {
+            const callback = async (error, result) => {
                 processResultForSentry(info, args, error, result);
 
                 if (error != null) {
                     reject(error);
-                    return;
+                } else {
+                    if(result === "0x"){
+                        await wait(1000);
+                        meta.funct(...args, callback);
+                    } else {
+                        const encodedResult = coder.encodeParams(
+                            meta.outputTypes,
+                            meta.outputTypes.length === 1 ? [result] : result
+                        );
+
+                        store.dispatch('Cache/set', {meta, hash, result: encodedResult, blockNumber, args: {...args}});
+                        accept(result);
+                    }
                 }
 
-                const encodedResult = coder.encodeParams(
-                    meta.outputTypes,
-                    meta.outputTypes.length === 1 ? [result] : result
-                );
 
-                store.dispatch('Cache/set', {meta, hash, result: encodedResult, blockNumber, args: {...args}});
-                accept(result);
             };
 
             const cacheData = store.getters["Cache/get"](hash);

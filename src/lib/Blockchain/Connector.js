@@ -1,5 +1,5 @@
 import config from '../../config.js';
-import { promisify } from '../utils.js';
+import { promisify, warrantor } from '../utils.js';
 import Web3 from 'web3';
 import HttpProvider from 'web3-providers-http';
 
@@ -45,7 +45,7 @@ export class Connector {
         if (this.isWatchingAccount) clearInterval(this.defaultAccountWatcherId);
 
         this.defaultAccountWatcherId = setInterval(async () => {
-            const address = (await promisify(this.web3send.eth.getAccounts)())[0];
+            const address = (await warrantor(this.web3send.eth.getAccounts)())[0];
 
             this.web3send.eth.defaultAccount = address;
             this.web3get.eth.defaultAccount = address;
@@ -78,14 +78,14 @@ export class Connector {
     async syncProviders() {
         let theSame = false;
 
-        const senderNetId = await promisify(this.web3send.version.getNetwork.bind(this.web3send.version))();
+        const senderNetId = await warrantor(this.web3send.version.getNetwork.bind(this.web3send.version))();
 
         if (!this.web3get && !config.providers[senderNetId]) {
             throw new Error(`no matching network with id "${senderNetId}" in the configuration`);
         }
 
         if (this.web3get) {
-            const getterNetId = await promisify(this.web3get.version.getNetwork.bind(this.web3get.version))();
+            const getterNetId = await warrantor(this.web3get.version.getNetwork.bind(this.web3get.version))();
 
             theSame = getterNetId != senderNetId;
         }
@@ -100,7 +100,7 @@ export class Connector {
 
         await this.syncProviders();
 
-        const netId = await promisify(this.web3send.version.getNetwork.bind(this.web3send.version))();
+        const netId = await warrantor(this.web3send.version.getNetwork.bind(this.web3send.version))();
 
         this.networkId = netId;
 
