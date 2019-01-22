@@ -95,9 +95,13 @@ module.exports = [
                 ROOT_PATH: JSON.stringify('/'),
                 PACKAGE_JSON_PATH: JSON.stringify('package.json'),
                 BLOCKCHAIN_NETWORK_ID: blockchainNetworkId,
-                DEV_DEBUG_WARNINGS: process.env.DEV_DEBUG_WARNINGS,
-                DEV_DEBUG_LOGS: process.env.DEV_DEBUG_LOGS,
-                DEV_DEBUG_ERRORS: process.env.DEV_DEBUG_ERRORS
+                DEV_DEBUG_WARNINGS: JSON.stringify(process.env.DEV_DEBUG_WARNINGS),
+                DEV_DEBUG_LOGS: JSON.stringify(process.env.DEV_DEBUG_LOGS),
+                DEV_DEBUG_ERRORS: JSON.stringify(process.env.DEV_DEBUG_ERRORS),
+                BLOCKCHAIN_NETWORK_1_PROVIDER: JSON.stringify(process.env.BLOCKCHAIN_NETWORK_1_PROVIDER),
+                BLOCKCHAIN_NETWORK_4_PROVIDER: JSON.stringify(process.env.BLOCKCHAIN_NETWORK_4_PROVIDER),
+                BLOCKCHAIN_NETWORK_5777_PROVIDER: JSON.stringify(process.env.BLOCKCHAIN_NETWORK_5777_PROVIDER),
+                TRANSLATIONS_JSON_URL: JSON.stringify(process.env.TRANSLATIONS_JSON_URL)
             }),
         ],
         devServer: {
