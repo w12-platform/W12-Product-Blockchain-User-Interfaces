@@ -93,7 +93,10 @@ module.exports = [
             new VueLoaderPlugin(),
             new webpack.DefinePlugin({
                 ROOT_PATH: JSON.stringify('/'),
-                BLOCKCHAIN_NETWORK_ID: blockchainNetworkId
+                BLOCKCHAIN_NETWORK_ID: blockchainNetworkId,
+                BLOCKCHAIN_NETWORK_1_PROVIDER: process.env.BLOCKCHAIN_NETWORK_1_PROVIDER,
+                BLOCKCHAIN_NETWORK_4_PROVIDER: process.env.BLOCKCHAIN_NETWORK_4_PROVIDER,
+                BLOCKCHAIN_NETWORK_5777_PROVIDER: process.env.BLOCKCHAIN_NETWORK_5777_PROVIDER
             }),
         ],
         devServer: {
