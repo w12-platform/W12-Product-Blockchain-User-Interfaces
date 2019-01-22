@@ -7,7 +7,7 @@ WORKDIR /code
 
 RUN npm install npm@latest -g && npm -v
 COPY . .
-RUN npm ci && npm run build
+RUN npm ci --unsafe-perm && npm run build
 
 ARG PORT=$PORT
 
