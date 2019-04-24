@@ -1,5 +1,5 @@
 <template>
-    <div class="x">
+    <div class="CrowdSaleSwitch">
         <div v-for="(token, idx) in list" :key="idx" @click="onSelect(token)" :class="{ 'CrowdSaleSwitch__tag': true, 'selected': checkSelection(token),}">
             {{ token.name }}
         </div>
@@ -8,7 +8,7 @@
 
 <script>
     import './default.scss';
-    import { CROWDSALE_LIST_SELECTED } from "../../store/modules/crowdSaleList";
+    import { CROWDSALE_LIST_SELECTED } from "store/modules/crowdSaleList";
     import { createNamespacedHelpers } from "vuex";
     const crowdSaleListStore = createNamespacedHelpers("crowdSaleList");
 
@@ -38,7 +38,7 @@
                 this.$store.commit(`crowdSaleList/${CROWDSALE_LIST_SELECTED}`, { selected: token });
             },
             checkSelection(token){
-                if(!this.selected && this.list[0] || !this.flag) {
+                if(!this.selected && this.list[0] && !this.flag) {
                     this.onSelect(this.list[0]);
                 } else {
                     if(this.selected.name === token.name){

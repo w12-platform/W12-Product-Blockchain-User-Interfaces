@@ -33,7 +33,7 @@
                 <td>Дата и время начала продажи токенов</td>
                 <td>
                 <span class="tag is-success">
-                        {{ dateFormat(selected.startDate) }}
+                        {{ dateFormat(selected.startDate) }} UTC
                     </span>
                 </td>
             </tr>
@@ -41,7 +41,7 @@
                 <td>Дата и время окончания продажи токенов</td>
                 <td>
                     <span class="tag is-danger" v-if="selected.endDate">
-                        {{ dateFormat(selected.endDate) }}
+                        {{ dateFormat(selected.endDate) }} UTC
                     </span>
                 </td>
             </tr>
@@ -65,7 +65,7 @@
                 <td>Стоимость одного токена {{ selected.symbolW }}</td>
                 <td>{{ selected.tokenPrice }} <span class="CrowdSale__eth">ETH</span></td>
             </tr>
-            <tr>
+            <tr v-if="selected.stageDiscount!=='0'">
                 <td>Скидка на {{ selected.symbolW }} в %</td>
                 <td>
                     <span v-if="selected.status" class="tag is-danger">-{{ selected.stageDiscount }}%</span>
@@ -73,7 +73,7 @@
                 </td>
 
             </tr>
-            <tr>
+            <tr v-if="selected.stageDiscount!=='0'">
                 <td>Стоимость одного токена {{ selected.symbolW }} с учетом текущей скидки</td>
                 <td>
                     <span v-if="selected.status">{{ price }}
@@ -108,23 +108,21 @@
         template: '#CrowdsaleTemplate',
         components: {},
         data() {
-            return {};
+            return {
+                countdown: null,
+            }
         },
         watch: {},
         computed: {
             ...crowdSaleListStore.mapState({
-                selected: "selected"
+                selected: state => state.selected
             }),
-
-            countdown() {
-                return countdown(new Date(this.selected.stageEndDate*1000)).toString();
-            },
             price() {
                 if (!this.selected) return '0';
 
                 const price = new BigNumber(this.selected.tokenPrice);
 
-                return price.mul(100 - +selected.stageDiscount).div(100).toString();
+                return price.mul(100 - this.selected.stageDiscount).div(100).toString();
             },
             saleAmount() {
                 return new BigNumber(this.selected.WTokenTotal)
@@ -141,7 +139,7 @@
         },
         methods: {
             dateFormat(date) {
-                return moment(date * 1000).format("DD.MM.YYYY hh:mm")
+                return moment(date * 1000).utc().format("DD.MM.YYYY HH:mm");
             },
             decimals(value) {
                 // const d = this.selected.decimals;
@@ -152,8 +150,37 @@
                 // return value.div(base.pow(d)).toString();
                 return value.toString();
             },
+            countdownUp(){
+                if(moment().utc().unix() >= this.selected.stageEndDate){
+                    setTimeout(()=>{
+                        this.$emit('updateCrowdSale');
+                    }, 1000);
+                    this.unwatchCountdown();
+                    this.countdown = null;
+                } else {
+                    this.countdown = countdown(new Date(this.selected.stageEndDate*1000)).toString();
+                }
+            },
+
+            watchCountdown () {
+                this.unwatchCountdown();
+                const watcher = async () => {
+                    this.countdownUp();
+                };
+                if(moment().utc().unix() <= this.selected.stageEndDate){
+                    watcher();
+                    this.countdownTmId = setInterval(watcher, 1000);
+                }
+            },
+            unwatchCountdown () {
+                clearInterval(this.countdownTmId);
+            },
         },
         created() {
+            this.watchCountdown();
+        },
+        beforeDestroy(){
+            this.unwatchCountdown();
         }
     };
 

@@ -1,5 +1,5 @@
 <template>
-    <div class="InvestorDashboard">
+    <div class="InvestorDashboard buefy">
         <section class="container">
             <h2>Investor Dashboard</h2>
             <div v-if="isLoading" class="alert alert-info" role="alert">
@@ -11,13 +11,13 @@
             </div>
             <div v-if="!isLoading">
                 <crowd-sale-switch :list="filteredTokensList"></crowd-sale-switch>
-                <crowd-sale v-if="selected"></crowd-sale>
+                <crowd-sale @updateCrowdSale="updateCrowdSale" v-if="selected"></crowd-sale>
 
                 <h2 v-if="selected">Скидки</h2>
                 <sale-table v-if="selected"></sale-table>
 
-                <h2 v-if="selected">Купить токены {{ selected.symbolW }}</h2>
-                <calculator v-if="selected"></calculator>
+                <h2 v-if="selected && selected.status">Купить токены {{ selected.symbolW }}</h2>
+                <calculator v-if="selected && selected.status"></calculator>
 
                 <h2 v-if="selected" class="m-3">REFUND. Вернуть: {{ selected.symbolW }}, получить: ETH</h2>
                 <div v-if="refundInformation">
@@ -40,6 +40,7 @@
 
 <script>
     import './default.scss';
+    import 'bem/buefy/default.scss';
     import { createNamespacedHelpers } from "vuex";
     import Ledger from '../../lib/Blockchain/ContractsLedger.js';
     import {
@@ -54,7 +55,6 @@
     import { RefundInformationModel } from '../RefundInformation/shared.js';
     import Connector from '../../lib/Blockchain/DefaultConnector.js';
 
-
     const configStore = createNamespacedHelpers("config");
     const crowdSaleListStore = createNamespacedHelpers("crowdSaleList");
 
@@ -64,7 +64,6 @@
 
     import SaleTable from '../SaleTable'
     import Calculator from '../Calculator'
-
 
     export default {
         name: 'InvestorDashboard',
@@ -106,7 +105,7 @@
                 W12Lister: "W12Lister"
             }),
             ...crowdSaleListStore.mapState({
-                selected: "selected"
+                selected: state => state.selected
             }),
 
             isLoading () {
@@ -267,6 +266,10 @@
             }
         },
         methods: {
+            async updateCrowdSale(){
+                this.currentDateUnix = moment.utc().unix();
+                await this.fetchCrowdSaleInformationForEachToken();
+            },
             watchCurrentAccountAddress () {
                 this.unwatchCurrentAccountAddress();
                 const watcher = async () => {

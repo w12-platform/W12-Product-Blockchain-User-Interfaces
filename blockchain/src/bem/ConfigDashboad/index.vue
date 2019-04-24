@@ -27,6 +27,7 @@
     import { CONFIG_UPDATE } from "store/modules/config";
 
     const ConfigNS = createNamespacedHelpers('config');
+    import { CROWDSALE_LIST_RESET } from "store/modules/crowdSaleList";
 
     export default {
         name: 'ConfigDashboard',
@@ -44,13 +45,13 @@
             ...ConfigNS.mapState({
                 W12Lister: "W12Lister"
             }),
+
         },
         methods: {
             saveConfig () {
                 this.$store.commit(`config/${CONFIG_UPDATE}`, { W12Lister: { address: this.form.W12Lister.address }});
+                this.$store.commit(`crowdSaleList/${CROWDSALE_LIST_RESET}`);
                 this.form.W12Lister.address = null;
-                //удалить данные о выбранном токене
-
             },
         },
     };
