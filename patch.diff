@@ -1,0 +1,36 @@
+---
+ protocol                   |  2 +-
+ src/contractAddresses.json | 10 ++++++++++
+ 2 files changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/protocol b/protocol
+index 2c6634e..6deb6bd 160000
+--- a/protocol
++++ b/protocol
+@@ -1 +1 @@
+-Subproject commit 2c6634e242a8842b767274fbdd2c63a3f2b055a1
++Subproject commit 6deb6bd4118c1afd72ea78a9496a5027280c162d
+diff --git a/src/contractAddresses.json b/src/contractAddresses.json
+index 2790aa4..6a56fe1 100644
+--- a/src/contractAddresses.json
++++ b/src/contractAddresses.json
+@@ -19,6 +19,16 @@
+       {
+         "address": "0xec376f955663824736444501e06c1fce20045d91",
+         "version": "0.23.4"
++      },
++      {
++        "address": "0x5c394ed801a0189e32d714454ca902772c3fa809",
++        "version": "0.29.1"
++      }
++    ],
++    "Rates": [
++      {
++        "address": "0xb07fb445a7fa2047a073743d8221747d3ddb0d01",
++        "version": "0.29.1"
+       }
+     ]
+   },
+-- 
+2.20.1
+
