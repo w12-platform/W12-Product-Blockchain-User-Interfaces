@@ -135,16 +135,16 @@ workflows:
     jobs:
       - build-develop:
           <<: *develop_filters
-      - deploy-develop:
-          <<: *develop_filters
-          requires:
-            - build-develop
+      # - deploy-develop:
+      #     <<: *develop_filters
+      #     requires:
+      #       - build-develop
       - build-stage:
           <<: *stage_filters
-      - deploy-stage:
-          <<: *stage_filters
-          requires:
-            - build-stage
+      # - deploy-stage:
+      #     <<: *stage_filters
+      #     requires:
+      #       - build-stage
       - generate-alpha-release:
           filters:
             tags:
