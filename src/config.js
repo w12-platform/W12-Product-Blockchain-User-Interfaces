@@ -53,13 +53,31 @@ export const CACHE_MAP = {
                 'swap', 'crowdsale', 'trancheFeePercent'
             ],
             TokenExchanger: ['version']
+        },
+        "0.23.5": {
+            DetailedERC20: ['name', 'symbol', 'decimals'],
+            WToken: ['name', 'symbol', 'decimals'],
+            W12Lister: ['version', 'exchanger', 'serviceWallet', 'factory', 'getExchanger'],
+            W12TokenLedger: ['version'],
+            W12FundFactory: ['version'],
+            W12CrowdsaleFactory: ['version'],
+            W12AtomicSwap: ['version', 'ledger'],
+            W12Crowdsale: [
+                'originToken', 'WTokenSaleFeePercent', 'version', 'serviceWallet',
+                'swap', 'serviceFee', 'fund', 'token', 'getWToken', 'getFund'
+            ],
+            W12Fund: [
+                'wToken', 'totalTranchePercentReleased', 'tokenDecimals', 'version', 'serviceWallet',
+                'swap', 'crowdsale', 'trancheFeePercent'
+            ],
+            TokenExchanger: ['version']
         }
     }
 };
 
 const providers = {
-    1: BLOCKCHAIN_NETWORK_1_PROVIDER || 'https://mainnet.infura.io/v3/8df9df41a48b4dd290a1abbba80b9953',
-    4: BLOCKCHAIN_NETWORK_4_PROVIDER || 'https://rinkeby.infura.io/v3/8df9df41a48b4dd290a1abbba80b9953',
+    1: BLOCKCHAIN_NETWORK_1_PROVIDER || 'https://mainnet.infura.io/v3/f7ed920c5c0146b1acda385077e62917',
+    4: BLOCKCHAIN_NETWORK_4_PROVIDER || 'https://rinkeby.infura.io/v3/f7ed920c5c0146b1acda385077e62917',
     5777: BLOCKCHAIN_NETWORK_5777_PROVIDER || 'http://127.0.0.1:7545'
 };
 

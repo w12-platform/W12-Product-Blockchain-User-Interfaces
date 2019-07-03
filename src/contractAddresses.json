@@ -5,6 +5,10 @@
         {
           "address": "0xec376f955663824736444501e06c1fce20045d91",
           "version": "0.23.4"
+        },
+        {
+          "address": "0xc2d34b16d2579ea2c8f1b1e8b6b88d51bdc8dc50",
+          "version": "0.23.5"
         }
       ]
     }
@@ -25,6 +29,10 @@
       {
         "address": "0x96bbf0f1b8ffb1428d60311fe280005133089872",
         "version": "0.23.3"
+      },
+      {
+        "address": "0xc2d34b16d2579ea2c8f1b1e8b6b88d51bdc8dc50",
+        "version": "0.23.5"
       }
     ]
   },
