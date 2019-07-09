@@ -147,7 +147,7 @@ export async function fetchTokenByCurrentToken({commit, dispatch}, CurrentToken)
         const {W12ListerFactory} = await dispatch('Ledger/fetch', CurrentToken.version, {root: true});
         const W12Lister = W12ListerFactory.at(CurrentToken.listerAddress);
         const token = await W12Lister.fetchComposedTokenInformationByTokenAddress(CurrentToken);
-        commit(TOKEN_SELECTED, {currentToken: await dispatch('TokensList/fetchTokenFull', token)}, {root: true});
+        commit(TOKEN_SELECTED, {currentToken: await dispatch('TokensList/fetchTokenFull', token, {root: true})});
         commit(UPDATE, {list: [token]});
     } catch (e) {
         console.error(e);
