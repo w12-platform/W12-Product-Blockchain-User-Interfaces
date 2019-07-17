@@ -19,8 +19,28 @@
     },
     "W12Lister": [
       {
+        "address": "0x4a3d202120d2d75445c73f256507f1b4186e25d4",
+        "version": "0.21.3"
+      },
+      {
+        "address": "0xc4319ddf166091639efca0275060686f808cee0e",
+        "version": "0.23.2"
+      },
+      {
+        "address": "0x96bbf0f1b8ffb1428d60311fe280005133089872",
+        "version": "0.23.3"
+      },
+      {
+        "address": "0xec376f955663824736444501e06c1fce20045d91",
+        "version": "0.23.4"
+      },
+      {
         "address": "0xc2d34b16d2579ea2c8f1b1e8b6b88d51bdc8dc50",
         "version": "0.23.5"
+      },
+      {
+        "address": "0x781c8b732fd743c0911758f0a91681608c1d543a",
+        "version": "0.31.1"
       }
     ]
   },
@@ -40,6 +60,10 @@
       {
         "address": "0xdb1278fbc18d0188ba237cf5e44bc2d930223d45",
         "version": "0.23.2"
+      },
+      {
+        "address": "0x781c8b732fd743c0911758f0a91681608c1d543a",
+        "version": "0.31.1"
       }
     ]
   },
