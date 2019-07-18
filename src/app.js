@@ -10,6 +10,7 @@ import { LANG_UPDATE_META } from "@/store/modules/Lang.js";
 const LangNS = createNamespacedHelpers("Lang");
 import Config from '@/config';
 import * as Sentry from '@sentry/browser';
+import Filters from '@/lib/views/plugins/filters';
 import pkg from '../package';
 import 'src/bem/buefy/default.scss';
 import store from "store";
@@ -27,6 +28,7 @@ Sentry.init({
 });
 
 Vue.use(Buefy);
+Vue.use(Filters);
 Vue.use(Cleave);
 Vue.use(Tooltip);
 Vue.component('multiselect', MultiSelect);
@@ -50,6 +52,7 @@ import ProjectDashboard from 'bem/ProjectDashboard';
 import ProjectDashboardReceiving from 'bem/ProjectDashboardReceiving';
 import ProjectDashboardTranche from 'bem/ProjectDashboardTranche';
 import Versions from 'bem/Versions';
+import CrossPagesNotification from 'bem/CrossPagesNotification';
 import MetaMask from 'bem/MetaMask';
 
 new Vue({
@@ -57,6 +60,7 @@ new Vue({
     el: '#app',
     components: {
         LangSwitch,
+        CrossPagesNotification,
         HeaderBuyW12Tokens,
         MetaMask,
         AdminDashboard,
@@ -118,11 +122,10 @@ new Vue({
                         this.$i18n.add(language, arrayTranslations[language]);
                     }
                 }
-
+                await this.$store.dispatch('Cache/startWatchBlockNumberUpdate');
                 this.$store.commit(`Lang/${LANG_UPDATE_META}`, {loading: false});
                 window.dispatchEvent(new Event('resize'));
             }
-            await this.$store.dispatch('Cache/startWatchBlockNumberUpdate');
         }
     }
 });

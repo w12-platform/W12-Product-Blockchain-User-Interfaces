@@ -4,10 +4,10 @@ import {
     getSoldPercent
 } from '@/lib/selectors/crowdsale';
 import { getCurrentStage, getEndDate, getStartDate } from '@/lib/selectors/crowdsaleStages';
-import { errorMessageSubstitution, isZeroAddress } from '@/lib/utils';
+import { errorMessageSubstitution, isZeroAddress, warrantor } from '@/lib/utils';
 import Connector from "lib/Blockchain/DefaultConnector";
 import semver from 'semver';
-import { promisify, fromWeiDecimalsString, decodeUSD, warrantor } from "src/lib/utils";
+import { promisify, fromWeiDecimalsString, decodeUSD } from "src/lib/utils";
 import moment from 'moment';
 import { map, reduce } from 'p-iteration';
 import {
@@ -40,6 +40,8 @@ export async function fetchTokenFull({dispatch}, token) {
     const W12Token = W12TokenFactory.at(WTokenAddress);
     const W12Fund = W12FundFactory.at(W12FundAddress);
 
+    const getBalance = warrantor(web3.eth.getBalance.bind(web3.eth));
+
     const WTokenDecimals = await W12Token.methods.decimals();
     const WTokenTotal = fromWeiDecimalsString(token.wTokensIssuedAmount, token.decimals);
     const tokensOnSale = fromWeiDecimalsString((await W12Token.methods.balanceOf(token.crowdsaleAddress)).toString(), token.decimals);
@@ -63,7 +65,6 @@ export async function fetchTokenFull({dispatch}, token) {
 
     let totalFunded, totalRefunded, foundBalanceInWei;
 
-    const getBalance = warrantor(web3.eth.getBalance.bind(web3.eth));
     foundBalanceInWei = (await getBalance(W12FundAddress)).toString();
     totalFunded = (await W12Fund.methods.totalFunded()).toString();
     totalRefunded = (await W12Fund.methods.totalRefunded()).toString();
@@ -147,7 +148,7 @@ export async function fetchTokenByCurrentToken({commit, dispatch}, CurrentToken)
         const {W12ListerFactory} = await dispatch('Ledger/fetch', CurrentToken.version, {root: true});
         const W12Lister = W12ListerFactory.at(CurrentToken.listerAddress);
         const token = await W12Lister.fetchComposedTokenInformationByTokenAddress(CurrentToken);
-        commit(TOKEN_SELECTED, {currentToken: await dispatch('TokensList/fetchTokenFull', token, {root: true})});
+        commit(TOKEN_SELECTED, {currentToken: await dispatch('TokensList/fetchTokenFull', token)}, {root: true});
         commit(UPDATE, {list: [token]});
     } catch (e) {
         console.error(e);

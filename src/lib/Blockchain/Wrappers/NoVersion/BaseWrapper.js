@@ -1,4 +1,4 @@
-import { promisify, promisifyLogsResult, wait, promisifyLogsResultWarrantor, warrantor} from 'lib/utils.js';
+import { promisify, promisifyLogsResult, wait, warrantor, promisifyLogsResultWarrantor } from 'lib/utils.js';
 import Web3 from 'web3';
 import {cacheController, getCacheType} from 'src/lib/Blockchain/Cache.js';
 

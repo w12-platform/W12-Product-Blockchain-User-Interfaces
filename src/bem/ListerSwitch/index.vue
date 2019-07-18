@@ -1,7 +1,7 @@
 <template>
     <b-field class="ListerSwitch">
         <b-select @input="selectLister" :value="W12Lister" :placeholder="$t('AdminDashboardSelectLister')" expanded :disabled="disabled">
-            <option v-for="(lister, idx) in W12ListerList" :key="idx" :value="lister">
+            <option v-for="(lister, idx) in W12ListerList" :key="lister.address" :value="lister">
                 {{ lister.address }}   v{{ lister.version }}
             </option>
         </b-select>
@@ -32,7 +32,6 @@
                 W12ListerList: "W12ListerList",
                 W12Lister: "W12Lister"
             }),
-
         },
         methods: {
             selectLister(lister){

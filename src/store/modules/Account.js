@@ -1,7 +1,11 @@
+import { conversionByDecimals, reverseConversionByDecimals } from '@/lib/selectors/units';
 import Connector from 'lib/Blockchain/DefaultConnector.js';
 import {promisify, errorMessageSubstitution, warrantor, fromWeiDecimalsString} from 'lib/utils.js';
 import config from '@/config.js';
-import Web3 from 'web3';
+import semver from 'semver';
+import {web3, BigNumber} from 'lib/utils';
+import {map} from 'p-iteration';
+import zipObject from 'lodash/zipObject'
 import * as Sentry from '@sentry/browser';
 
 export const ERROR_FETCH_ACCOUNT = 'LoadLedger: An unknown error';
@@ -13,14 +17,12 @@ export const UPDATE_TIMER_ID = 'UPDATE_TIMER_ID';
 export const RESET = 'RESET';
 export const INTERVAL_UP = 5000;
 
-const web3 = new Web3();
-const BigNumber = web3.BigNumber;
-
 export default {
     namespaced: true,
     state: {
         meta: {
             loading: true,
+            loadingError: false,
             loadingErrorLabel: false, // notInstall || isBlocked
             updated: false,
         },
@@ -28,7 +30,7 @@ export default {
         currentAccount: false,
         currentAccountData: false,
         ethBalance: false,
-        networkId: null,
+        networkId: null
     },
     modules: {},
     getters: {},
@@ -75,6 +77,7 @@ export default {
 
                         commit('UPDATE_ETH_BALANCE', ethBalance);
                     }
+
                     commit('UPDATE_NETWORK_ID', netId);
 
                     Sentry.configureScope(scope => {
@@ -119,6 +122,7 @@ export default {
                         });
                     }
                 } catch (e) {
+                    console.error(e);
                     commit(UPDATE_META, {loading: false, loadingError: errorMessageSubstitution(e) || ERROR_FETCH_ACCOUNT});
                 }
             };
@@ -136,7 +140,7 @@ export default {
         async unWatch({commit}) {
             commit(UPDATE_TIMER_ID);
         },
-        async updateAccountData({commit}) {
+        async updateAccountData({commit, dispatch}) {
             const selectedToken = this.state.TokensList.currentToken;
             const currentProject = this.state.Project.currentProject;
             
@@ -160,13 +164,58 @@ export default {
                 const allowanceForTheFund = (await W12Token.methods.allowance(this.state.Account.currentAccount, fundAddress)).toString();
                 const swapAddress = (await W12Lister.swap());
                 const allowanceForSwap = (await W12Token.methods.allowance(this.state.Account.currentAccount, swapAddress)).toString();
-                const allowanceForTheFundInRefundAmount = (await W12Fund.methods.getRefundAmount(allowanceForTheFund)).toString();
                 const unVestingBalance = (await W12Token.methods.accountBalance(this.state.Account.currentAccount)).toString();
                 const vestingBalance = new BigNumber(balance).minus(unVestingBalance).toString();
-                const refundForOneToken = (await W12Fund.methods.getRefundAmount(oneToken)).toString();
-                const totalRefundAmount = (await W12Fund.methods.getRefundAmount(balance)).toString();
-                const investorInformation = await W12Fund.methods.getInvestmentsInfo(this.state.Account.currentAccount);
-                const fundTokensBalance = (await W12Token.methods.balanceOf(fundAddress)).toString();
+
+                let fundTokensBalance;
+
+                if (semver.satisfies(version, '<0.26.0')) {
+                    fundTokensBalance = (await W12Token.methods.balanceOf(fundAddress)).toString();
+                } else if (semver.satisfies(version, '>=0.26.0')) {
+                    // nothing
+                }
+
+                let investorInformation;
+
+                if (semver.satisfies(version, '<0.26.0')) {
+                    investorInformation = await W12Fund.methods.getInvestmentsInfo(this.state.Account.currentAccount);
+                    investorInformation = {
+                        totalBought: investorInformation[0].toString(),
+                        averageTokenPrice: investorInformation[1].toString()
+                    };
+                } else if (semver.satisfies(version, '>=0.26.0')) {
+                    const symbols = await W12Fund.getInvestorFundedAssetsSymbols(this.state.Account.currentAccount);
+                    const funded = await map(
+                        symbols,
+                        async (s) => {
+
+                            const amount = await W12Fund
+                                .getInvestorFundedAmount(this.state.Account.currentAccount, s);
+                          
+                            const decimals = await dispatch('Rates/resolveDecimals', {symbol: s, version}, {root: true});
+
+                            return reverseConversionByDecimals(amount, decimals).toString();
+                        }
+                    );
+                    let totalBought = await W12Fund.methods.getInvestorTokenBoughtAmount(this.state.Account.currentAccount);
+                    totalBought = reverseConversionByDecimals(totalBought, await W12Token.methods.decimals()).toString();
+
+                    investorInformation = {
+                        totalBought,
+                        fundedAssetsSymbols: symbols,
+                        fundedAmountPerAsset: zipObject(symbols, funded)
+                    };
+                }
+
+                // refund
+                let allowanceForTheFundInRefundAmount,
+                    refundForOneToken,
+                    totalRefundAmount;
+                if (semver.satisfies(version, '<0.26.0')) {
+                    allowanceForTheFundInRefundAmount = (await W12Fund.methods.getRefundAmount(allowanceForTheFund)).toString();
+                    refundForOneToken = (await W12Fund.methods.getRefundAmount(oneToken)).toString();
+                    totalRefundAmount = (await W12Fund.methods.getRefundAmount(balance)).toString();
+                }
 
                 const currentAccountData = {
                     balance,
@@ -178,13 +227,11 @@ export default {
                     allowanceForSwap,
                     allowanceForTheFund,
                     allowanceForTheFundInRefundAmount,
-                    investorInformation: {
-                        totalBought: investorInformation[0].toString(),
-                        averageTokenPrice: investorInformation[1].toString()
-                    }
+                    investorInformation,
                 };
                 commit(UPDATE_DATA, {currentAccountData});
             } catch (e) {
+                console.error(e);
                 commit(UPDATE_META, {loading: false, updated: false, loadingError: errorMessageSubstitution(e) || ERROR_FETCH_ACCOUNT});
             }
 

@@ -1,12 +1,12 @@
 <template>
     <div class="InvestorDashboardExchange buefy" v-if="!langMeta.loading">
         <section class="container">
-            <h2>{{ $t('InvestorDashboard') }}</h2>
+            <h2 v-html="$t('InvestorDashboard')"></h2>
 
             <b-notification class="InvestorDashboardExchange__error" v-if="isError" type="is-danger" has-icon>
                 <span v-if="ledgerMeta.loadingError">{{ $t(ledgerMeta.loadingError) }}</span>
                 <span v-if="tokensListMeta.loadingError">{{ $t(tokensListMeta.loadingError) }}</span>
-                <span v-if="accountMeta.loadingError">{{ $t(accountMeta.loadingError)  }}</span>
+                <span v-if="accountMeta.loadingError">{{ $t(accountMeta.loadingError) }}</span>
             </b-notification>
 
             <b-notification v-if="isLoading && !isError" :closable="false" class="InvestorDashboardExchange__loader">
@@ -16,7 +16,7 @@
             </b-notification>
 
             <div v-if="!isLoading">
-                <TokenSwitch v-if="!isCurrentToken"></TokenSwitch>
+                <TokenSwitch v-if="isViewSwitch"></TokenSwitch>
                 <ExchangeTokens></ExchangeTokens>
             </div>
         </section>
@@ -38,6 +38,7 @@
     const TokensListNS = createNamespacedHelpers("TokensList");
     const LangNS = createNamespacedHelpers("Lang");
     const TransactionsNS = createNamespacedHelpers("Transactions");
+    import semver from 'semver';
 
     const web3 = new Web3();
     const BigNumber = web3.BigNumber;
@@ -82,6 +83,9 @@
             },
             isCurrentToken(){
                 return typeof CurrentToken !== 'undefined';
+            },
+            isViewSwitch(){
+                return this.isCurrentToken ? !!semver.satisfies(window.CurrentToken.version, '>=0.28.0') : true;
             }
         },
         methods: {
@@ -90,6 +94,7 @@
             }),
             ...TokensListNS.mapActions({
                 tokensListFetch: "fetch",
+                tokensListFetchCurrentToken: "fetchListCurrentToken",
                 tokensListWatch: "watch",
                 FetchTokenByCurrentToken: "fetchTokenByCurrentToken"
             }),
@@ -105,7 +110,12 @@
                 if(currentAccount){
                     await this.transactionsUpStatusTx();
                     if(this.isCurrentToken){
-                        await this.FetchTokenByCurrentToken(CurrentToken);
+                        window.CurrentToken.__customerPointer = true;
+                        if(semver.satisfies(window.CurrentToken.version, '>=0.28.0')) {
+                            await this.tokensListFetchCurrentToken(window.CurrentToken);
+                        } else {
+                            await this.FetchTokenByCurrentToken(window.CurrentToken);
+                        }
                     } else {
                         await this.tokensListFetch();
                     }

@@ -1,43 +1,42 @@
 <template>
     <div class="ExchangeTokens buefy" v-if="currentToken">
-        <h2 class="ExchangeTokens__title">{{ $t('InvestorDashboardExchangeTokens', { WToken: currentToken.symbol, Token:
-            currentToken.tokenInformation.symbol}) }}</h2>
+        <h2 class="ExchangeTokens__title" v-html="$t('InvestorDashboardExchangeTokens', { WToken: currentToken.symbol, Token:
+            currentToken.tokenInformation.symbol})"></h2>
         <div class="ExchangeTokens__content">
             <table v-if="currentToken && currentAccountData"
                    class="table table-striped table-bordered table-hover table-responsive-sm">
                 <tbody>
                 <tr>
-                    <td>{{ $t('InvestorDashboardExchangeTokensCourse', { WToken: currentToken.symbol }) }}</td>
+                    <td v-html="$t('InvestorDashboardExchangeTokensCourse', { WToken: currentToken.symbol })"></td>
                     <td>{{ rate }} {{ currentToken.tokenInformation.symbol }}</td>
                 </tr>
                 <tr>
-                    <td>{{ $t('InvestorDashboardExchangeTokensBalance', {WToken: currentToken.symbol}) }}</td>
+                    <td v-html="$t('InvestorDashboardExchangeTokensBalance', {WToken: currentToken.symbol})"></td>
                     <td>{{ balance }}
                     </td>
                 </tr>
                 <tr>
-                    <td>{{ $t('InvestorDashboardExchangeTokensUnVestingBalance', {WToken: currentToken.symbol}) }}</td>
+                    <td v-html="$t('InvestorDashboardExchangeTokensUnVestingBalance', {WToken: currentToken.symbol})"></td>
                     <td>{{ unVestingBalance }}</td>
                 </tr>
                 </tbody>
             </table>
             <b-notification class="" v-if="error" @close="error = false" type="is-danger" has-icon>
-                {{ error }}
+                {{ $t(error) }}
             </b-notification>
             <div class="pm-2" v-if="isPendingTx">
-                <p class="py-2">{{ $t('WaitingConfirm') }}:</p>
+                <p class="py-2"><span v-html="$t('WaitingConfirm')"></span>:</p>
                 <b-tag class="py-2">{{isPendingTx.hash}}</b-tag>
             </div>
             <div class="pm-2" v-if="isErrorTx">
-                <p class="py-2">{{ $t('TransactionFailed') }}:</p>
+                <p class="py-2"><span v-html="$t('TransactionFailed')"></span>:</p>
                 <b-tag class="py-2">{{isErrorTx.hash}}</b-tag>
                 <div class="pt-2 text-left">
-                    <button class="btn btn-primary btn-sm" @click="TransactionsRetry(isErrorTx)">{{ $t('ToRetry') }}</button>
+                    <button class="btn btn-primary btn-sm" @click="TransactionsRetry(isErrorTx)" v-html="$t('ToRetry')"></button>
                 </div>
             </div>
             <div class="ExchangeTokens__form" v-if="!isPendingTx && !isErrorTx">
-                <label v-if="this.currentAccountData.allowanceForSwap === '0'" for="Amount">{{
-                    $t('InvestorDashboardExchangeTokensAmount', {WToken: currentToken.symbol}) }}</label>
+                <label v-if="this.currentAccountData.allowanceForSwap === '0'" for="Amount" v-html="$t('InvestorDashboardExchangeTokensAmount', {WToken: currentToken.symbol})"></label>
                 <b-field v-if="this.currentAccountData.allowanceForSwap === '0'" id="Amount">
                     <b-icon icon="shopping"></b-icon>
                     <cleave
@@ -51,35 +50,32 @@
                     ></cleave>
                 </b-field>
 
-                <div v-if="this.currentAccountData.allowanceForSwap === '0'">{{
-                    $t('InvestorDashboardExchangeTokensMessagesBeforeApprove') }} {{ amount * rate }} {{
+                <div v-if="this.currentAccountData.allowanceForSwap === '0'"><span v-html="$t('InvestorDashboardExchangeTokensMessagesBeforeApprove')"></span> {{ amount * rate }} {{
                     currentToken.tokenInformation.symbol }}
                 </div>
 
                 <div class="ExchangeTokens__exchange py-2">
                     <button class="btn btn-primary py-2" :disabled="disable"
-                            v-if="this.currentAccountData.allowanceForSwap === '0'" @click="approveSwapToSpend">{{
-                        $t('InvestorDashboardExchangeTokensApprove') }}
+                            v-if="this.currentAccountData.allowanceForSwap === '0'" @click="approveSwapToSpend" v-html="$t('InvestorDashboardExchangeTokensApprove')">
                     </button>
 
-                    <div v-if="this.currentAccountData.allowanceForSwap !== '0'" class="py-2">
-                        {{ $t('InvestorDashboardExchangeTokensMessagesBeforeSwap', {
+                    <div v-if="this.currentAccountData.allowanceForSwap !== '0'" class="py-2" v-html="$t('InvestorDashboardExchangeTokensMessagesBeforeSwap', {
                         allowance: toEthDecimals(currentAccountData.allowanceForSwap),
                         WToken: currentToken.symbol,
                         Token: currentToken.tokenInformation.symbol
-                        })}}
+                        })">
                     </div>
                     <div v-if="this.currentAccountData.allowanceForSwap !== '0'" class="row pl-3 pr-3">
 
                         <button
                                 class="btn btn-primary py-2"
                                 :disabled="this.currentAccountData.allowanceForSwap === '0'"
-                                @click="decreaseSwapApprovalToSpend">{{ $t('InvestorDashboardExchangeTokensDecrease') }}
+                                @click="decreaseSwapApprovalToSpend" v-html="$t('InvestorDashboardExchangeTokensDecrease')">
                         </button>
                         <button
                                 class="btn btn-primary py-2 ml-3"
                                 :disabled="this.currentAccountData.allowanceForSwap === '0'"
-                                @click="exchange">{{ $t('InvestorDashboardExchangeTokensExchange') }}
+                                @click="exchange" v-html="$t('InvestorDashboardExchangeTokensExchange')">
                         </button>
                     </div>
                     <table
@@ -88,11 +84,11 @@
                     >
                         <tbody>
                             <tr>
-                                <td>{{ $t('InvestorDashboardExchangeTokensVestingBalance', {WToken: currentToken.symbol}) }}</td>
+                                <td v-html="$t('InvestorDashboardExchangeTokensVestingBalance', {WToken: currentToken.symbol})"></td>
                                 <td>{{ vestingBalance }}</td>
                             </tr>
                             <tr v-if="currentToken.crowdSaleInformation.vestingDate">
-                                <td>{{ $t('InvestorDashboardExchangeTokensVestingDate') }}</td>
+                                <td v-html="$t('InvestorDashboardExchangeTokensVestingDate')"></td>
                                 <td>{{ currentToken.crowdSaleInformation.vestingDate | dateFormat }}</td>
                             </tr>
                         </tbody>
@@ -100,7 +96,7 @@
                 </div>
             </div>
         </div>
-        <b-loading :is-full-page="false" :active="tokensListMeta.updated"></b-loading>
+        <b-loading :is-full-page="false" :active.sync="loading"></b-loading>
     </div>
 </template>
 
@@ -177,7 +173,6 @@
                 currentAccountData: "currentAccountData",
             }),
             ...TokensListNS.mapState({
-                tokensListMeta: 'meta',
                 currentToken: "currentToken"
             }),
             ...TransactionsNS.mapState({
@@ -277,6 +272,7 @@
                     await waitTransactionReceipt(tx, web3);
                     await this.updateAccountData();
                 } catch (e) {
+                    console.error(e);
                     this.error = errorMessageSubstitution(e);
                 }
                 this.loading = false;
@@ -305,6 +301,7 @@
                     await waitTransactionReceipt(tx, web3);
                     await this.updateAccountData();
                 } catch (e) {
+                    console.error(e);
                     this.error = errorMessageSubstitution(e);
                 }
                 this.loading = false;
@@ -331,6 +328,7 @@
                     await waitTransactionReceipt(tx, web3);
                     await this.updateAccountData();
                 } catch (e) {
+                    console.error(e);
                     this.error = errorMessageSubstitution(e);
                 }
                 this.loading = false;
@@ -373,6 +371,7 @@
                         ExchangeEvent
                     };
                 } catch (e) {
+                    console.error(e);
                     this.error = errorMessageSubstitution(e);
                 }
 

@@ -1,5 +1,5 @@
 <template>
-    <div class="WhiteListTable WhiteListTable_v1 buefy">
+    <div class="WhiteListTable WhiteListTable_v2 buefy">
 
         <b-notification v-if="isLoading" :closable="false" class="WhiteListTable__loader">
             <b-loading :is-full-page="false" :active="isLoading"></b-loading>
@@ -39,50 +39,42 @@
 
             <template slot="detail" slot-scope="props">
                 <div class="WhiteListTable__detail">
-                    <div class="WhiteListTable__detailField">
-                        {{ $t('AdminDashboardTableIndex') }} :
+                    <div class="WhiteListTable__detailField"><span v-html="$t('AdminDashboardTableIndex')"></span> :
                         <div class="WhiteListTable__detailDecimals">
                             <span>{{ props.row.index }}</span>
                         </div>
                     </div>
-                    <div class="WhiteListTable__detailField">
-                        {{ $t('AdminDashboardTableToken') }} :
+                    <div class="WhiteListTable__detailField"><span v-html="$t('AdminDashboardTableToken')"></span> :
                         <div class="WhiteListTable__detailToken">
                             <span class="tag is-success">{{ props.row.tokenAddress }}</span>
                         </div>
                     </div>
-                    <div class="WhiteListTable__detailField">
-                        {{ $t('AdminDashboardTableOwner') }} :
+                    <div class="WhiteListTable__detailField"><span v-html="$t('AdminDashboardTableOwner')"></span> :
                         <div class="WhiteListTable__detailOwner" v-for="owner in props.row.tokenOwners">
                             <span class="tag is-primary">{{ owner }}</span>
                         </div>
                     </div>
-                    <div class="WhiteListTable__detailField">
-                        {{ $t('AdminDashboardTableDecimals') }} :
+                    <div class="WhiteListTable__detailField"><span v-html="$t('AdminDashboardTableDecimals')"></span> :
                         <div class="WhiteListTable__detailDecimals">
                             <span>{{ props.row.decimals }}</span>
                         </div>
                     </div>
-                    <div class="WhiteListTable__detailField">
-                        {{ $t('AdminDashboardTableWTokenSaleFeePercent') }} :
+                    <div class="WhiteListTable__detailField"><span v-html="$t('AdminDashboardTableWTokenSaleFeePercent')"></span> :
                         <div class="WhiteListTable__detailDecimals">
                             <span>{{ props.row.WTokenSaleFeePercent | percentFractional }}%</span>
                         </div>
                     </div>
-                    <div class="WhiteListTable__detailField">
-                        {{ $t('AdminDashboardTableTrancheFeePercent') }} :
+                    <div class="WhiteListTable__detailField"><span v-html="$t('AdminDashboardTableTrancheFeePercent')"></span> :
                         <div class="WhiteListTable__detailDecimals">
                             <span>{{ props.row.trancheFeePercent | percentFractional }}%</span>
                         </div>
                     </div>
-                    <div class="WhiteListTable__detailField">
-                        {{ $t('AdminDashboardTableFeeTokens') }} :
+                    <div class="WhiteListTable__detailField"><span v-html="$t('AdminDashboardTableFeeTokens')"></span> :
                         <div class="WhiteListTable__detailDecimals">
                             <span>{{ props.row.feePercent | percentFractional }}%</span>
                         </div>
                     </div>
-                    <div class="WhiteListTable__detailField">
-                        {{ $t('AdminDashboardTableFeeEth') }} :
+                    <div class="WhiteListTable__detailField"><span v-html="$t('AdminDashboardTableFeeEth')"></span> :
                         <div class="WhiteListTable__detailDecimals">
                             <span>{{ props.row.feeETHPercent | percentFractional }}%</span>
                         </div>

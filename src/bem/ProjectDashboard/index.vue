@@ -1,7 +1,7 @@
 <template>
     <div class="ProjectDashboard buefy" v-if="!langMeta.loading">
         <section class="container">
-            <h2>{{ $t('ProjectDashboard') }}</h2>
+            <h2 v-html="$t('ProjectDashboard')"></h2>
 
             <b-notification v-if="isError" type="is-danger" :closable="false" has-icon>
                 <span v-if="ledgerMeta.loadingError">{{ $t(ledgerMeta.loadingError) }}</span>
@@ -9,13 +9,12 @@
                 <span v-if="accountMeta.loadingError">{{ $t(accountMeta.loadingError) }}</span>
             </b-notification>
 
-            <b-notification v-if="!isError && isLoading" :closable="false">
-                {{ $t('ProjectDashboardLoadExpect') }}
+            <b-notification v-if="!isError && isLoading" :closable="false"><span v-html="$t('ProjectDashboardLoadExpect')"></span>
                 <b-loading :is-full-page="false" :active="isLoading"></b-loading>
             </b-notification>
 
             <div v-if="!isLoading">
-                <ProjectSwitch v-if="!isCurrentToken"></ProjectSwitch>
+                <ProjectSwitch v-if="isViewSwitch"></ProjectSwitch>
 
                 <b-notification v-if="ProjectMeta.loadingProjectError" :closable="false">
                     {{ ProjectMeta.loadingProjectError }}
@@ -35,9 +34,10 @@
 
 <script>
     import './default.scss';
-    import { resolveAbiVersion } from '@/lib/Blockchain/ContractsLedger';
+    import { resolveComponentVersion } from '@/bem/utils';
     import ProjectSwitch from 'bem/ProjectSwitch';
     import Steps from "bem/Steps";
+    import semver from 'semver';
 
     import {createNamespacedHelpers} from 'vuex';
 
@@ -78,15 +78,18 @@
                 );
             },
             TokenInfoVersion(){
-                const v = resolveAbiVersion(this.currentProject.version);
+                const v = resolveComponentVersion(this.currentProject.version, 'TokenInfo');
                 return () => import("bem/TokenInfo/" + v);
             },
             ProjectStagesVersion(){
-                const v = resolveAbiVersion(this.currentProject.version);
+                const v = resolveComponentVersion(this.currentProject.version, 'ProjectStages');
                 return () => import("bem/ProjectStages/" + v);
             },
             isCurrentToken(){
-                return typeof CurrentToken !== 'undefined';
+                return typeof window.CurrentToken !== 'undefined';
+            },
+            isViewSwitch(){
+                return this.isCurrentToken ? !!semver.satisfies(window.CurrentToken.version, '>=0.28.0') : true;
             }
         },
         watch: {
@@ -106,13 +109,19 @@
             }),
             ...ProjectNS.mapActions({
                 ProjectFetchList: "fetchList",
+                ProjectFetchListCurrentToken: "fetchListCurrentToken",
                 FetchProjectByCurrentToken: "fetchProjectByCurrentToken"
             }),
 
             async handleCurrentAccountChange(currentAccount) {
                 if(currentAccount){
                     if(this.isCurrentToken){
-                        await this.FetchProjectByCurrentToken(CurrentToken);
+                        window.CurrentToken.__customerPointer = true;
+                        if(semver.satisfies(window.CurrentToken.version, '>=0.28.0')) {
+                            await this.ProjectFetchListCurrentToken(window.CurrentToken);
+                        } else {
+                            await this.FetchProjectByCurrentToken(window.CurrentToken);
+                        }
                     } else {
                         await this.ProjectFetchList();
                     }

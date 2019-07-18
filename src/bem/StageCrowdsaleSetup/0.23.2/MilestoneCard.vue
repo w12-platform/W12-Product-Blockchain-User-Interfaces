@@ -2,35 +2,47 @@
     <div class="MilestoneCard py-4 buefy">
         <div class="row justify-content-between">
             <div class="col-sm py-2">
-                <label for="MilestoneCard__name">{{ $t('MilestonesName') }}</label>
-                <b-field id="MilestoneCard__name">
+                <label for="MilestoneCard__name" v-html="$t('MilestonesName')"></label>
+                <b-field
+                    label-for="MilestoneCard__name"
+                    :message="nameFieldParameters.message"
+                    :type="nameFieldParameters.type"
+                >
                     <b-input
                             :disabled="isStartCrowdSale"
                             type="text"
                             :value="viewData.name"
                             @input="onInput('name', $event)"></b-input>
                 </b-field>
-                <label for="MilestoneCard__description">{{ $t('MilestonesDescription') }}</label>
-                <b-field id="MilestoneCard__description">
+                <label for="MilestoneCard__description" v-html="$t('MilestonesDescription')"></label>
+                <b-field
+                    label-for="MilestoneCard__description"
+                    :message="descriptionFieldParameters.message"
+                    :type="descriptionFieldParameters.type"
+                >
                     <b-input
                             :disabled="isStartCrowdSale"
                             type="textarea"
                             :value="viewData.description"
                             @input="onInput('description', $event)"></b-input>
                 </b-field>
-                <label for="MilestoneCard__tranche">{{ $t('MilestonesTranche') }}</label>
-                <b-field id="MilestoneCard__tranche">
+                <label for="MilestoneCard__tranche" v-html="$t('MilestonesTranche')"></label>
+                <b-field
+                        label-for="MilestoneCard__tranche"
+                        :message="tranchePercentFieldParameters.message"
+                        :type="tranchePercentFieldParameters.type"
+                >
                     <b-input
                             :disabled="isStartCrowdSale"
                             :value="viewData.tranchePercent"
                             @input="onInput('tranchePercent', $event)"
                             type="number"></b-input>
                 </b-field>
-                <p>{{ $t('MilestonesRelativeTotal') }}</p>
+                <p v-html="$t('MilestonesRelativeTotal')"></p>
 
             </div>
             <div class="col-sm py-2">
-                <label for="MilestoneCard__end">{{ $t('MilestonesDate') }}</label>
+                <label for="MilestoneCard__end" v-html="$t('MilestonesDate')"></label>
                 <b-field id="MilestoneCard__end">
                     <date-picker
                             :not-before="getNotBeforeEndDate(stageIndex)"
@@ -45,7 +57,7 @@
                             :time-picker-options="{ start: '00:00', step: '00:10', end: '23:50'}"
                     ></date-picker>
                 </b-field>
-                <label v-if="stageIndex > 0" for="MilestoneCard__withdrawalEnd">{{ $t('MilestonesDateEndWithdrawal') }}</label>
+                <label v-if="stageIndex > 0" for="MilestoneCard__withdrawalEnd" v-html="$t('MilestonesDateEndWithdrawal')"></label>
                 <b-field v-if="stageIndex > 0" id="MilestoneCard__withdrawalEnd">
                     <date-picker
                             :not-before="getNotBeforeWithdrawalEndDate(stageIndex)"
@@ -61,8 +73,7 @@
                     ></date-picker>
                 </b-field>
 
-                <button :disabled="isStartCrowdSale" class="btn btn-sm btn-primary mt-4" @click="onDelete">{{
-                    $t('MilestonesDelete') }}
+                <button :disabled="isStartCrowdSale" class="btn btn-sm btn-primary mt-4" @click="onDelete" v-html="$t('MilestonesDelete')">
                 </button>
             </div>
         </div>
@@ -90,6 +101,10 @@
             },
             stageIndex: {
                 required: true
+            },
+            tranchePercentValidFlag: {
+                type: Boolean,
+                default: true
             }
         },
         data() {
@@ -109,8 +124,32 @@
             ]),
             ...LangNS.mapState({
                 translationsDef: 'current'
-            })
+            }),
 
+            tranchePercentFieldParameters() {
+                return {
+                    message: !this.tranchePercentValidFlag ? this.$t('MilestoneTitleErrorNotOneHundredPercent') : '',
+                    type: !this.tranchePercentValidFlag ? 'is-danger' : ''
+                };
+            },
+            isNameValid() {
+                return !!this.value.name;
+            },
+            nameFieldParameters() {
+                return {
+                    message: !this.isNameValid ? this.$t('MilestonesNameIsNotValidError') : '',
+                    type: !this.isNameValid ? 'is-danger' : ''
+                }
+            },
+            isDescriptionValid() {
+                return !!this.value.description;
+            },
+            descriptionFieldParameters() {
+                return {
+                    message: !this.isDescriptionValid ? this.$t('MilestonesDescriptionIsNotValidError') : '',
+                    type: !this.isDescriptionValid ? 'is-danger' : ''
+                }
+            }
         },
         watch: {
             value: {

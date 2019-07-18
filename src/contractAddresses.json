@@ -1,18 +1,4 @@
 {
-  "unused": {
-    "1": {
-      "W12Lister": [
-        {
-          "address": "0xec376f955663824736444501e06c1fce20045d91",
-          "version": "0.23.4"
-        },
-        {
-          "address": "0xc2d34b16d2579ea2c8f1b1e8b6b88d51bdc8dc50",
-          "version": "0.23.5"
-        }
-      ]
-    }
-  },
   "1": {
     "FactoryTokens": {
       "address": "0x146f81931a3e0a53f1847f33175f25b488f9fef8"
@@ -35,18 +21,20 @@
         "version": "0.23.4"
       },
       {
-        "address": "0xc2d34b16d2579ea2c8f1b1e8b6b88d51bdc8dc50",
-        "version": "0.23.5"
-      },
+        "address": "0x5c394ed801a0189e32d714454ca902772c3fa809",
+        "version": "0.29.1"
+      }
+    ],
+    "Rates": [
       {
-        "address": "0x781c8b732fd743c0911758f0a91681608c1d543a",
-        "version": "0.31.1"
+        "address": "0xb07fb445a7fa2047a073743d8221747d3ddb0d01",
+        "version": "0.29.1"
       }
     ]
   },
   "4": {
     "FactoryTokens": {
-      "address": "0x15bfbebcace798a18c42c2ff1f23388449355ea4"
+      "address": "0x49f4c8d0e75dcfd383f1d834fe5a4bb41b81da9d"
     },
     "W12Lister": [
       {
@@ -62,19 +50,63 @@
         "version": "0.23.2"
       },
       {
+        "address": "0x45cef5dca9b7c5e25abd9879409a71cedb1a81f9",
+        "version": "0.27.1"
+      },
+      {
+        "address": "0x6074a1bfe00625f55d6bc2d3a4989a709372e7bd",
+        "version": "0.28.0"
+      },
+      {
+        "address": "0x9c37e805561dafc1c841379112cdf47187528945",
+        "version": "0.29.0"
+      },
+      {
         "address": "0x781c8b732fd743c0911758f0a91681608c1d543a",
         "version": "0.31.1"
+      }
+    ],
+    "Rates": [
+      {
+        "address": "0x8c7aee0da71e31241e537c8d68a878a65d27e386",
+        "version": "0.27.1"
+      },
+      {
+        "address": "0x3955ea944203d6259098c255F7fb779C79Ba4094",
+        "version": "0.28.0"
+      },
+      {
+        "address": "0x3955ea944203d6259098c255f7fb779c79ba4094",
+        "version": "0.29.0"
       }
     ]
   },
   "5777": {
     "FactoryTokens": {
-      "address": "0x15bfbebcace798a18c42c2ff1f23388449355ea4"
+      "address": "0xda9a4395a4a4b03c2e7e0c46ac36e3e4020ee386"
     },
     "W12Lister": [
       {
-        "address": "0x992b7a57abcb64ee37593d782166a81ab0f99353",
+        "address": "0x0dd474c41e74e307d85fc8375610e7bcfaa8d419",
         "version": "0.23.2"
+      },
+      {
+        "address": "0x41823004d458fd99aa23081c60e8bf93848dd701",
+        "version": "0.27.1"
+      },
+      {
+        "address": "0xebb879c887ab90859a6193a2a3914a61c9058e23",
+        "version": "0.28.0"
+      }
+    ],
+    "Rates": [
+      {
+        "address": "0x9e01b7391c991419de6a5decf157fd6428a6140b",
+        "version": "0.27.1"
+      },
+      {
+        "address": "0x2424c411e759f8fc50911380f3ae3dd954fb5861",
+        "version": "0.28.0"
       }
     ]
   }

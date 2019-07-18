@@ -1,7 +1,8 @@
 import config from '../../config.js';
-import { promisify, warrantor } from '../utils.js';
+import { promisify } from '../utils.js';
 import Web3 from 'web3';
 import HttpProvider from 'web3-providers-http';
+import {warrantor} from "lib/utils";
 
 
 HttpProvider.prototype.sendAsync = HttpProvider.prototype.send;
@@ -63,7 +64,7 @@ export class Connector {
                 // Request account access if needed
                 await ethereum.enable();
                 return window.web3.currentProvider;
-            } catch (e) {
+            } catch (error) {
                 throw new Error('User denied account access...');
             }
         } else if (typeof window.web3 !== 'undefined') {

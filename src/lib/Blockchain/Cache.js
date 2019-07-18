@@ -1,11 +1,10 @@
+import { devLog } from '@/lib/dev';
 import stringHash from 'string-hash';
 import store from 'store';
 import {CACHE_MAP} from 'src/config';
 import Web3 from 'web3';
 import coder from 'web3/lib/solidity/coder';
 import * as Sentry from "@sentry/browser";
-import config from '@/config.js';
-import {wait} from "lib/utils";
 
 const web3 = new Web3();
 const BigNumber = web3.BigNumber;
@@ -17,13 +16,12 @@ const getPayload = (args, inputTypes) => {
         args = args.slice(0, inputTypes.length);
     }
     return args;
-}
+};
 const getOptions = (args, inputTypes) => {
     if (args.length > inputTypes.length) {
         return typeof args[args.length - 1] === 'object' ? args[args.length - 1] : undefined;
     }
-}
-
+};
 const processResultForSentry = (info, args, error, result) => {
     Sentry.withScope(scope => {
         scope.setTag("type", info.type);
@@ -59,17 +57,21 @@ export function cacheController(meta, info) {
             const postfix = encodedPayload + encodedOptions;
             const type = options ? processCacheType(options.cache) : undefined;
 
+            devLog(`request(${meta.method}): `, payload, meta.outputTypes);
+
             meta.typeCache = type ? type : meta.typeCache;
 
             switch (meta.typeCache) {
                 case 'permanent':
-                    hash = stringHash(config.blockchainNetworkId + meta.address + meta.method + postfix);
+                    hash = stringHash(meta.address + meta.method + postfix);
                     break;
 
                 default:
-                    hash = stringHash(config.blockchainNetworkId + meta.address + meta.method + postfix + blockNumber);
+                    hash = stringHash(meta.address + meta.method + postfix + blockNumber);
                     break;
             }
+
+            devLog(`cache_hash(${meta.method}): `, hash);
 
             const callback = async (error, result) => {
                 processResultForSentry(info, args, error, result);
@@ -81,6 +83,8 @@ export function cacheController(meta, info) {
                         await wait(1000);
                         meta.funct(...args, callback);
                     } else {
+                        devLog(`result(${meta.method}): `, result, meta.outputTypes);
+
                         const encodedResult = coder.encodeParams(
                             meta.outputTypes,
                             meta.outputTypes.length === 1 ? [result] : result
@@ -90,15 +94,17 @@ export function cacheController(meta, info) {
                         accept(result);
                     }
                 }
-
-
             };
 
             const cacheData = store.getters["Cache/get"](hash);
 
+            devLog(`cache_record(${meta.method}): `, cacheData);
+
             if (cacheData) {
                 let output = coder.decodeParams(meta.outputTypes, cacheData.result);
                 output = meta.outputTypes.length === 1 ? output[0] : output;
+                processResultForSentry(info, args, null, output);
+                devLog(`result(${meta.method}): `, output, meta.outputTypes);
                 accept(output);
                 return;
             }

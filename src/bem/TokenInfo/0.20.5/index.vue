@@ -1,15 +1,15 @@
 <template>
-    <div class="TokenInfo_v1" v-if="currentProject">
+    <div class="TokenInfo_v2" v-if="currentProject">
         <table class="table table-striped table-bordered table-hover table-responsive-sm">
             <tbody>
             <tr>
-                <td>{{ $t('TokenInfoAddress') }}</td>
+                <td v-html="$t('TokenInfoAddress')"></td>
                 <td>
                     <b-tag type="is-info">{{ currentProject.tokenAddress }}</b-tag>
                 </td>
             </tr>
             <tr>
-                <td>{{ $t('TokenInfoOwner') }}</td>
+                <td v-html="$t('TokenInfoOwner')"></td>
                 <td>
                     <div class="TokenInfo__detailOwner" v-for="owner in currentProject.tokenOwners">
                         <span class="tag is-primary">{{ owner }}</span>
@@ -17,31 +17,31 @@
                 </td>
             </tr>
             <tr>
-                <td>{{ $t('TokenInfoName') }}</td>
+                <td v-html="$t('TokenInfoName')"></td>
                 <td>{{ currentProject.name }}</td>
             </tr>
             <tr>
-                <td>{{ $t('TokenInfoSymbol') }}</td>
+                <td v-html="$t('TokenInfoSymbol')"></td>
                 <td>{{ currentProject.symbol }}</td>
             </tr>
             <tr>
-                <td>{{ $t('TokenInfoDecimals') }}</td>
+                <td v-html="$t('TokenInfoDecimals')"></td>
                 <td>{{ currentProject.decimals }}</td>
             </tr>
             <tr>
-                <td>{{ $t('AdminDashboardTableWTokenSaleFeePercent')  }}</td>
+                <td v-html="$t('AdminDashboardTableWTokenSaleFeePercent')"></td>
                 <td>{{ currentProject.WTokenSaleFeePercent | percentFractional }}%</td>
             </tr>
             <tr>
-                <td>{{ $t('AdminDashboardTableTrancheFeePercent') }}</td>
+                <td v-html="$t('AdminDashboardTableTrancheFeePercent')"></td>
                 <td>{{ currentProject.trancheFeePercent | percentFractional }}%</td>
             </tr>
             <tr>
-                <td>{{ $t('AdminDashboardTableFeeTokens') }}</td>
+                <td v-html="$t('AdminDashboardTableFeeTokens')"></td>
                 <td>{{ currentProject.feePercent/100 }}%</td>
             </tr>
             <tr>
-                <td>{{ $t('AdminDashboardTableFeeEth') }}</td>
+                <td v-html="$t('AdminDashboardTableFeeEth')"></td>
                 <td>{{ currentProject.feeETHPercent/100 }}%</td>
             </tr>
             </tbody>

@@ -1,7 +1,7 @@
 <template>
     <div class="ProjectDashboardReceiving buefy" v-if="!langMeta.loading">
         <section class="container">
-            <h2>{{ $t('ProjectDashboard') }}</h2>
+            <h2 v-html="$t('ProjectDashboard')"></h2>
 
             <b-notification v-if="isError" type="is-danger" :closable="false" has-icon>
                 <span v-if="ledgerMeta.loadingError">{{ $t(ledgerMeta.loadingError) }}</span>
@@ -10,12 +10,12 @@
             </b-notification>
 
             <b-notification v-if="!isError && isLoading" :closable="false">
-                {{ $t('ProjectDashboardLoadExpect') }}
+                <span v-html="$t('ProjectDashboardLoadExpect')"></span>
                 <b-loading :is-full-page="false" :active="isLoading"></b-loading>
             </b-notification>
 
             <div v-if="!isLoading">
-                <ProjectSwitch v-if="!isCurrentToken"></ProjectSwitch>
+                <ProjectSwitch v-if="isViewSwitch"></ProjectSwitch>
 
                 <b-notification v-if="ProjectMeta.loadingProjectError" :closable="false">
                     {{ ProjectMeta.loadingProjectError }}
@@ -38,6 +38,7 @@
     import Receiving from 'bem/Receiving';
     import {CONFIRM_TX} from "store/modules/Transactions.js";
     import Steps from "bem/Steps";
+    import semver from 'semver';
 
     import {createNamespacedHelpers} from 'vuex';
     import {isZeroAddress, errorMessageSubstitution} from 'lib/utils';
@@ -86,6 +87,9 @@
             },
             isCurrentToken(){
                 return typeof CurrentToken !== 'undefined';
+            },
+            isViewSwitch(){
+                return this.isCurrentToken ? !!semver.satisfies(window.CurrentToken.version, '>=0.28.0') : true;
             }
         },
         watch: {
@@ -111,6 +115,7 @@
                 updatePlacedTokenStatus: 'updatePlacedTokenStatus',
                 fetchProject: "fetchProject",
                 ProjectFetchList: "fetchList",
+                ProjectFetchListCurrentToken: "fetchListCurrentToken",
                 fetchCrowdSaleAddressAndInfo: "fetchCrowdSaleAddressAndInfo",
                 updateTokenInfo: "updateTokenInfo",
                 updateOwnerBalance: "updateOwnerBalance",
@@ -124,7 +129,12 @@
             async handleCurrentAccountChange(currentAccount) {
                 if(currentAccount){
                     if(this.isCurrentToken){
-                        await this.FetchProjectByCurrentToken(CurrentToken);
+                        window.CurrentToken.__customerPointer = true;
+                        if(semver.satisfies(window.CurrentToken.version, '>=0.28.0')) {
+                            await this.ProjectFetchListCurrentToken(window.CurrentToken);
+                        } else {
+                            await this.FetchProjectByCurrentToken(window.CurrentToken);
+                        }
                     } else {
                         await this.ProjectFetchList();
                     }
@@ -185,6 +195,7 @@
                         UnsoldTokenReturned,
                     };
                 } catch (e) {
+                    console.error(e);
                     this.error = errorMessageSubstitution(e);
                 }
 

@@ -3,7 +3,6 @@
         <StageWhiteList></StageWhiteList>
         <StageApprove></StageApprove>
         <StagePlace></StagePlace>
-        <!--<StageCurrenciesList></StageCurrenciesList>-->
         <StageConfigureCrowdsale></StageConfigureCrowdsale>
         <StageCrowdsaleSetup></StageCrowdsaleSetup>
     </div>
@@ -11,17 +10,18 @@
 
 <script>
     import './default.scss';
+    import { warrantor } from '@/lib/utils';
 
     import StageWhiteList from 'bem/ProjectStages/StageWhiteList';
     import StageApprove from 'bem/ProjectStages/StageApprove';
     import StagePlace from 'bem/ProjectStages/StagePlace';
-    import StageCurrenciesList from 'bem/ProjectStages/StageCurrenciesList';
-    import StageConfigureCrowdsale from 'bem/ProjectStages/StageConfigureCrowdsale';
+    import StageConfigureCrowdsale from './stages/StageConfigureCrowdsale';
     import StageCrowdsaleSetup from 'bem/StageCrowdsaleSetup/0.23.2';
 
     import {createNamespacedHelpers} from "vuex";
     import {CONFIRM_TX} from "store/modules/Transactions.js";
     import {isZeroAddress, errorMessageSubstitution} from 'lib/utils';
+    import Connector from '@/lib/Blockchain/DefaultConnector';
 
     const ConfigNS = createNamespacedHelpers('Config');
     const ProjectNS = createNamespacedHelpers("Project");
@@ -35,7 +35,6 @@
             StageWhiteList,
             StageApprove,
             StagePlace,
-            StageCurrenciesList,
             StageConfigureCrowdsale,
             StageCrowdsaleSetup
         },
@@ -135,6 +134,10 @@
                     const {ERC20Factory, W12ListerFactory, W12CrowdsaleFactory, W12TokenFactory, W12FundFactory} = await this.LedgerFetch(this.currentProject.version);
                     const ERC20 = ERC20Factory.at(this.currentProject.tokenAddress);
                     const W12Lister = W12ListerFactory.at(this.currentProject.listerAddress);
+                    const {web3} = await Connector.connect();
+                    const getBlockNumber = warrantor(web3.eth.getBlockNumber);
+                    // subscribe to event from next block to prevent triggering immediatly after subscribed
+                    const fromBlock = (await getBlockNumber()) + 1;
                     let ApprovalW12Event = null;
                     let StageUpdated = null;
                     let StagesUpdated = null;
@@ -146,22 +149,22 @@
                         const W12Crowdsale = W12CrowdsaleFactory.at(this.currentProject.tokenCrowdsaleAddress);
                         const fundAddress = await W12Crowdsale.methods.fund();
                         const W12Fund = W12FundFactory.at(fundAddress);
-                        StagesUpdated = W12Crowdsale.events.StagesUpdated(null, null, this.onStagesUpdatedEvent);
-                        StageUpdated = W12Crowdsale.events.StageUpdated(null, null, this.onStageUpdatedEvent);
-                        MilestonesUpdated = W12Crowdsale.events.MilestonesUpdated(null, null, this.onMilestonesUpdatedEvent);
-                        UnsoldTokenReturned = W12Crowdsale.events.UnsoldTokenReturned(null, null, this.onUnsoldTokenReturnedEvent);
-                        TrancheReleased = W12Fund.events.TrancheReleased(null, null, this.onTrancheReleasedEvent);
+                        StagesUpdated = W12Crowdsale.events.StagesUpdated(null, {fromBlock}, this.onStagesUpdatedEvent);
+                        StageUpdated = W12Crowdsale.events.StageUpdated(null, {fromBlock}, this.onStageUpdatedEvent);
+                        MilestonesUpdated = W12Crowdsale.events.MilestonesUpdated(null, {fromBlock}, this.onMilestonesUpdatedEvent);
+                        UnsoldTokenReturned = W12Crowdsale.events.UnsoldTokenReturned(null, {fromBlock}, this.onUnsoldTokenReturnedEvent);
+                        TrancheReleased = W12Fund.events.TrancheReleased(null, {fromBlock}, this.onTrancheReleasedEvent);
                     }
 
                     if (!isZeroAddress(this.currentProject.wTokenAddress)) {
                         const W12Token = W12TokenFactory.at(this.currentProject.wTokenAddress);
-                        ApprovalW12Event = W12Token.events.Approval(null, null, this.onApprovalW12Event);
+                        ApprovalW12Event = W12Token.events.Approval(null, {fromBlock}, this.onApprovalW12Event);
                     }
 
-                    const ApprovalEvent = ERC20.events.Approval(null, null, this.onApprovalEvent);
-                    const TokenPlaced = W12Lister.events.TokenPlaced(null, null, this.onTokenPlacedEvent);
-                    const CrowdsaleInitialized = W12Lister.events.CrowdsaleInitialized(null, null, this.onCrowdsaleInitializedEvent);
-                    const CrowdsaleTokenMinted = W12Lister.events.CrowdsaleTokenMinted(null, null, this.onCrowdsaleTokenMintedEvent);
+                    const ApprovalEvent = ERC20.events.Approval(null, {fromBlock}, this.onApprovalEvent);
+                    const TokenPlaced = W12Lister.events.TokenPlaced(null, {fromBlock}, this.onTokenPlacedEvent);
+                    const CrowdsaleInitialized = W12Lister.events.CrowdsaleInitialized(null, {fromBlock}, this.onCrowdsaleInitializedEvent);
+                    const CrowdsaleTokenMinted = W12Lister.events.CrowdsaleTokenMinted(null, {fromBlock}, this.onCrowdsaleTokenMintedEvent);
 
                     this.subscribedEvents = {
                         ApprovalEvent,
@@ -176,6 +179,7 @@
                         TrancheReleased
                     };
                 } catch (e) {
+                    console.error(e);
                     this.error = errorMessageSubstitution(e);
                 }
 

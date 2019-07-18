@@ -8,6 +8,10 @@
 //         "en": "Create",
 //         "ru": "Создать"
 //     },
+//     "TokensFactoryMint": {
+//         "en": "Mint",
+//         "ru": "Mint"
+//     },
 //     "TokensFactoryCreateFormName": {
 //         "en": "Name",
 //         "ru": "Название"
@@ -28,7 +32,6 @@
 //         "en": "BUY W12 TOKENS",
 //         "ru": "КУПИТЬ W12 TOKENS"
 //     },
-//
 //     "TokenInfoAddress": {
 //         "en": "Token Address",
 //         "ru": "Адрес токена"
@@ -623,6 +626,54 @@
 //     "AdminDashboardTableToken": {
 //         "en": "Token",
 //         "ru": "Токен"
+//     },
+//     "AdminDashboardTableMint": {
+//         "en": "Mint",
+//         "ru": "Выпуск токенов"
+//     },
+//     "AdminDashboardTableTransfer": {
+//         "en": "Transfer",
+//         "ru": "Передача"
+//     },
+//     "AdminDashboardTableTransferOwnerShip": {
+//         "en": "Transfer ownership",
+//         "ru": "Передача права собственности"
+//     },
+//     "AdminDashboardTableAddAdmin": {
+//         "en": "Add admin",
+//         "ru": "Добавить админа"
+//     },
+//     "AdminDashboardTableRemoveAdmin": {
+//         "en": "Remove admin",
+//         "ru": "Удалить админа"
+//     },
+//     "TokensOwnerShipAddress": {
+//         "en": "Address",
+//         "ru": "Адрес"
+//     },
+//     "TokensOwnerShipAddressPlaceholder": {
+//         "en": "Enter address",
+//         "ru": "Введите адрес"
+//     },
+//     "TokensMintAddress": {
+//         "en": "Address",
+//         "ru": "Адрес"
+//     },
+//     "TokensMintAddressPlaceholder": {
+//         "en": "Enter address",
+//         "ru": "Введите адрес"
+//     },
+//     "TokensNotIsAdmin": {
+//         "en": "You are not a token administrator",
+//         "ru": "Вы не являетесь администратором токена",
+//     },
+//     "TokensNotIsPrimary": {
+//         "en": "You do not own a Token",
+//         "ru": "Вы не являетесь владельцем токена",
+//     },
+//     "TokensMintAmount": {
+//         "en": "Token amount",
+//         "ru": "Количество токенов"
 //     },
 //     "AdminDashboardTableOwner": {
 //         "en": "Project’s wallet",
@@ -1304,6 +1355,46 @@
 //         "en": "Дату начала первой стадии рекомендуется устанавливать больше текущей даты на час и выше",
 //         "ru": "Дату начала первой стадии рекомендуется устанавливать больше текущей даты на час и выше"
 //     },
+//     "ProjectDashboardStageCurrenciesListPickCurrencies": {
+//         "en": "Выберите валюту",
+//         "ru": "Выберите валюту"
+//     },
+//     "ProjectDashboardStageBonusesFieldsTitle": {
+//         "en": "от {currency}",
+//         "ru": "от {currency}"
+//     },
+//     "InvestorDashboardCalculatorChange": {
+//         "en": "Сдача: {change}",
+//         "ru": "Сдача: {change}"
+//     },
+//     "InvestorDashboardCalculatorPaymentMethods": {
+//         "en": "Оплатить",
+//         "ru": "Оплатить"
+//     },
+//     "InvestorDashboardCalculatorPaymentMethodsSelect": {
+//         "en": "Выберите валюту",
+//         "ru": "Выберите валюту"
+//     },
+//     "InvestorDashboardCalculatorNeedToApprove": {
+//         "en": "Разрешить снятие средств на сумму: {approve}",
+//         "ru": "Разрешить снятие средств на сумму: {approve}"
+//     },
+//     "InvestorDashboardCalculatorDoApprove": {
+//         "en": "Разрешить снятие средств для оплаты",
+//         "ru": "Разрешить снятие средств для оплаты"
+//     },
+//     "InvestorDashboardDiscountsAmountTitle": {
+//         "en": "В {currency}",
+//         "ru": "В {currency}"
+//     },
+//     "InvestorDashboardRefundExchangeForAssetsTitle": {
+//         "en": "Обменять {amount} {symbol} на: ",
+//         "ru": "Обменять {amount} {symbol} на: "
+//     },
+//     "CrossPagesNotificationYouUseTestNetwork": {
+//         "en": "Вы используете тестовую сеть. Любое взаимодействие с тестовой сетью не требует криптавалюты, которая имеет ценность в денежном эквиваленте.",
+//         "ru": "Вы используете тестовую сеть. Любое взаимодействие с тестовой сетью не требует криптавалюты, которая имеет ценность в денежном эквиваленте."
+//     },
 //     "InvestorDashboardDiscountsStagesDefrosting": {
 //         "en": "Date of defrosting",
 //         "ru": "Дата разморозки",
@@ -1356,9 +1447,33 @@
 //         "en": "from {from}",
 //         "ru": "c {from}",
 //     },
+//     "MilestonesNameIsNotValidError": {
+//         "en": "Название должно содержать минимум 1 символ",
+//         "ru": "Название должно содержать минимум 1 символ",
+//     },
+//     "MilestonesDescriptionIsNotValidError": {
+//         "en": "Описание должно содержать минимум 1 символ",
+//         "ru": "Описание должно содержать минимум 1 символ",
+//     },
+//     "NotInitializedCrowdsale": {
+//         "en": "Не инициализированный",
+//         "ru": "Не инициализированный",
+//     },
+//     "WhiteListTableCrowdsales": {
+//         "en": "Crowdsales",
+//         "ru": "Crowdsales",
+//     },
 //     "UnexpectedError": {
 //         "en": "An unexpected error has occurred. Reload page",
 //         "ru": "Произошла непредвиденная ошибка. Перезагрузите страницу",
+//     },
+//     "InvalidAddress": {
+//         "en": "This address is invalid",
+//         "ru": "Этот адрес не корректен",
+//     },
+// .   "AdminDashboardPurchaseFeeEnableCustom": {
+//         "en": "Установить индивидуальную",
+//         "ru": "Установить индивидуальную",
 //     },
 //     "Network4": {
 //         "en": "Rinkeby Test Network",
@@ -1371,5 +1486,13 @@
 //     "NotMetaMask": {
 //         "en": "Please install Metamask",
 //         "ru": "Установите Метамаск"
+//     },
+//     "InvestorDashboardCalculatorTryAnotherNumberError": {
+//         "en": "Это число не допустимо, попробуйте другое",
+//         "ru": "Это число не допустимо, попробуйте другое"
+//     },
+//     "InvestorDashboardCalculatorBalanceIsNotEnoughError": {
+//         "en": "Недостаточно средств на балансе",
+//         "ru": "Недостаточно средств на балансе"
 //     },
 // };

@@ -13,6 +13,7 @@ import Lang from "./modules/Lang.js";
 import Factory from "./modules/Factory.js";
 import Rates from "./modules/Rates.js";
 import PersistedStatePlugin from "vuex-persistedstate";
+
 Vue.use(Vuex);
 
 const store = {
@@ -42,9 +43,8 @@ const store = {
                 "Transactions.list",
                 "Lang.current",
                 "Lang.vocabulary",
-                "Factory.list",
-                "Rates"
-            ],
+                "Factory.list"
+            ]
         }),
     ]
 };

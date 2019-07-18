@@ -1,25 +1,38 @@
-import {
-    promisify,
-    isZeroAddress,
-    fromWeiDecimalsString,
-    fromWeiDecimals,
-    errorMessageSubstitution,
-    warrantor
-} from "src/lib/utils";
+import { devLog } from '@/lib/dev';
+import { updateTokenInfo as updateTokenInfo_v0_20_x } from '@/store/modules/Project/0.20.x/actions';
+import { updateTokenInfo as updateTokenInfo_v0_28_x } from '@/store/modules/Project/0.28.x/actions';
+import { updateReceivingInformation as updateReceivingInformation_v0_20_x } from '@/store/modules/Project/0.20.x/actions';
+import { updateReceivingInformation as updateReceivingInformation_v0_28_x } from '@/store/modules/Project/0.28.x/actions';
+import { fetchCrowdSaleAddressAndInfo as fetchCrowdSaleAddressAndInfo_v0_20_x } from '@/store/modules/Project/0.20.x/actions';
+import { fetchCrowdSaleAddressAndInfo as fetchCrowdSaleAddressAndInfo_v0_28_x } from '@/store/modules/Project/0.28.x/actions';
+import {promisify, isZeroAddress, fromWeiDecimalsString, errorMessageSubstitution, warrantor} from "src/lib/utils";
 import {map} from 'p-iteration';
-
-import {ReceivingModel} from 'src/bem/Receiving/model.js';
-import {TrancheInformationModel} from 'src/bem/TrancheInformation/shared.js';
-import {MilestoneModel} from 'src/bem/Milestones/shared.js';
 import Connector from "src/lib/Blockchain/DefaultConnector";
-import Web3 from 'web3';
+import isEqual from 'lodash/isEqual'
+import { BigNumber } from 'src/lib/utils';
 import semver from 'semver';
+import { reverseConversionByDecimals } from '@/lib/selectors/units';
+import {
+    UPDATE_PROJECT,
+    UPDATE_TOKENS_APPROVED,
+    UPDATE_PLACED_TOKEN_ADDRESS,
+    UPDATE_OWNER_BALANCE,
+    UPDATE_CROWD_SALE_ADDRESS,
+    UPDATE_CROWD_SALE_INFO,
+    UPDATE_CROWD_SALE_STAGES_LIST,
+    UPDATE_CROWD_SALE_IS_START,
+    UPDATE_CROWD_SALE_MILESTONES_LIST,
+    REMEMBER_APPROVE_TOKENS_TX,
+    UPDATE_RECEVING_INFO,
+    UPDATE_FUND_DATA,
+    UPDATE_PAYMENT_METHODS_LIST,
+    UPDATE_META,
+    UPDATE,
+    RESET
+} from './Project/mutations';
 
-const moment = window.moment;
-const web3 = new Web3();
-const BigNumber = web3.BigNumber;
 const filterTokensListForCurrentAccount = (list, listerVersion, currentAccount) => {
-    if (semver.satisfies(listerVersion, '>=0.20.x')) {
+    if (semver.satisfies(listerVersion, '0.20.x - 0.27.x')) {
         list = list.filter((token) => token.tokenOwners.includes(currentAccount));
         list.sort((a, b) => (a.index - b.index));
 
@@ -27,11 +40,9 @@ const filterTokensListForCurrentAccount = (list, listerVersion, currentAccount) 
         const actualList = [];
 
         if (list.length) {
-            if (process.env.NODE_ENV === 'development') {
-                console.log('current account: ', currentAccount);
-                console.log('lister version: ', listerVersion);
-                console.log('tokens list for current account', list);
-            }
+            devLog('current account: ', currentAccount);
+            devLog('lister version: ', listerVersion);
+            devLog('tokens list for current account', list);
 
             for (const token of list) {
                 if (counter[token.tokenAddress] == null) {
@@ -66,6 +77,7 @@ const filterTokensListForCurrentAccount = (list, listerVersion, currentAccount) 
 
 BigNumber.config({
     DECIMAL_PLACES: 36,
+    EXPONENTIAL_AT: 18,
     FORMAT: {
         decimalSeparator: '.',
         groupSeparator: '',
@@ -75,22 +87,6 @@ BigNumber.config({
         fractionGroupSize: 0
     }
 });
-
-export const UPDATE_PROJECT = "UPDATE_PROJECT";
-export const UPDATE_TOKENS_APPROVED = "UPDATE_TOKENS_APPROVED";
-export const UPDATE_PLACED_TOKEN_ADDRESS = "UPDATE_PLACED_TOKEN_ADDRESS";
-export const UPDATE_OWNER_BALANCE = "UPDATE_OWNER_BALANCE";
-export const UPDATE_CROWD_SALE_ADDRESS = "UPDATE_CROWD_SALE_ADDRESS";
-export const UPDATE_CROWD_SALE_INFO = "UPDATE_CROWD_SALE_INFO";
-export const UPDATE_CROWD_SALE_STAGES_LIST = "UPDATE_CROWD_SALE_STAGES_LIST";
-export const UPDATE_CROWD_SALE_IS_START = "UPDATE_CROWD_SALE_IS_START";
-export const UPDATE_CROWD_SALE_MILESTONES_LIST = "UPDATE_CROWD_SALE_MILESTONES_LIST";
-export const REMEMBER_APPROVE_TOKENS_TX = "REMEMBER_APPROVE_TOKENS_TX";
-export const UPDATE_RECEVING_INFO = "UPDATE_RECEVING_INFO";
-export const UPDATE_FUND_DATA = "UPDATE_FUND_DATA";
-export const UPDATE_META = "UPDATE_META";
-export const UPDATE = "UPDATE";
-export const RESET = "RESET";
 
 export default {
     namespaced: true,
@@ -261,6 +257,12 @@ export default {
                 ...state.currentProject,
                 fundData: fundData
             }
+        },
+        [UPDATE_PAYMENT_METHODS_LIST](state, list) {
+            state.currentProject = {
+                ...state.currentProject,
+                paymentMethodsList: list
+            };
         }
     },
     actions: {
@@ -271,9 +273,19 @@ export default {
             await this.dispatch('Project/updatePlacedTokenStatus', {Token});
             await this.dispatch('Project/updateTokensApprovedToPlaceValue', {Token});
             await this.dispatch('Project/fetchCrowdSaleAddressAndInfo', {Token});
+            if (getters.isCrowdsaleInited) {
+                await this.dispatch('Project/fetchCrowdSaleStagesList', {Token: state.currentProject});
+                await this.dispatch('Project/upCrowdSaleStart', {Token: state.currentProject});
+                if (semver.satisfies(Token.version, '>=0.26.0')) {
+                    await this.dispatch('Project/fetchPaymentMethodsList', {Token: state.currentProject});
+                }
+
+                if (state.currentProject.crowdSaleInformation.tokenCrowdSaleStages.length) {
+                    await this.dispatch('Project/fetchCrowdSaleMilestonesList', {Token: state.currentProject});
+                }
+            }
             commit(UPDATE_META, {loadingProject: false});
         },
-
         async fetchList({commit, rootState}) {
             commit(UPDATE_META, {loading: true});
             try {
@@ -294,6 +306,24 @@ export default {
                     commit(UPDATE_META, {loading: false});
                 });
             } catch (e) {
+                console.error(e);
+                commit(UPDATE_META, {loading: false, loadingError: errorMessageSubstitution(e)});
+            }
+        },
+        async fetchListCurrentToken({commit, rootState}, CurrentToken) {
+            commit(UPDATE_META, {loading: true});
+            try {
+                const account = rootState.Account.currentAccount;
+                const {W12ListerFactory} = await this.dispatch('Ledger/fetch', CurrentToken.version);
+                const W12Lister = W12ListerFactory.at(CurrentToken.listerAddress);
+                let list = await W12Lister.fetchTokensInWhiteList([CurrentToken.tokenAddress]);
+
+                list = filterTokensListForCurrentAccount(list, CurrentToken.version, account);
+
+                commit(UPDATE, {list});
+                commit(UPDATE_META, {loading: false});
+            } catch (e) {
+                console.error(e);
                 commit(UPDATE_META, {loading: false, loadingError: errorMessageSubstitution(e)});
             }
         },
@@ -323,6 +353,9 @@ export default {
                     if (getters.isCrowdsaleInited) {
                         await this.dispatch('Project/fetchCrowdSaleStagesList', {Token: state.currentProject});
                         await this.dispatch('Project/upCrowdSaleStart', {Token: state.currentProject});
+                        if (semver.satisfies(Token.version, '>=0.26.0')) {
+                            await this.dispatch('Project/fetchPaymentMethodsList', {Token: state.currentProject});
+                        }
 
                         if (state.currentProject.crowdSaleInformation.tokenCrowdSaleStages.length) {
                             await this.dispatch('Project/fetchCrowdSaleMilestonesList', {Token: state.currentProject});
@@ -335,25 +368,18 @@ export default {
                     commit(UPDATE_META, {loadingProject: false, loadingProjectError: "ERROR_FETCH_PROJECT"});
                 }
             } catch (e) {
+                console.error(e);
                 commit(UPDATE_META, {loadingProject: false, loadingProjectError: errorMessageSubstitution(e)});
             }
         },
-        async updateTokenInfo({commit}, {Token}) {
-            try {
-                if (Token.tokenAddress) {
-                    const {W12ListerFactory, DetailedERC20Factory} = await this.dispatch('Ledger/fetch', Token.version);
-                    const W12Lister = W12ListerFactory.at(Token.listerAddress);
-                    let token = await W12Lister.fetchComposedTokenInformationByTokenAddress(Token);
-                    const DetailedERC20 = DetailedERC20Factory.at(token.tokenAddress);
-                    token.tokenInformation = (await DetailedERC20.getDescription());
-
-                    commit(UPDATE_PROJECT, {currentProject: token});
-                } else {
-                    commit(UPDATE_META, {loadingProject: false, loadingProjectError: "ERROR_FETCH_PROJECT"});
-                }
-            } catch (e) {
-                commit(UPDATE_META, {loadingProject: false, loadingProjectError: errorMessageSubstitution(e)});
+        async updateTokenInfo(context, payload) {
+            if (semver.satisfies(payload.Token.version, '0.20.x - 0.27.x')) {
+                return await updateTokenInfo_v0_20_x.call(this, context, payload);
+            } else if (semver.satisfies(payload.Token.version, '>=0.28.x')) {
+                return await updateTokenInfo_v0_28_x.call(this, context, payload);
             }
+
+            throw new Error(`token version ${payload.Token.version} does not supported`);
         },
         async updateTokensApprovedToPlaceValue({commit}, {Token}) {
             try {
@@ -367,6 +393,7 @@ export default {
 
                 commit(UPDATE_TOKENS_APPROVED, {allowance});
             } catch (e) {
+                console.error(e);
                 commit(UPDATE_META, {loadingProjectError: errorMessageSubstitution(e)});
             }
         },
@@ -383,6 +410,7 @@ export default {
                     commit(UPDATE_PLACED_TOKEN_ADDRESS);
                 }
             } catch (e) {
+                console.error(e);
                 commit(UPDATE_PLACED_TOKEN_ADDRESS);
                 commit(UPDATE_META, {loadingProjectError: errorMessageSubstitution(e)});
             }
@@ -397,38 +425,18 @@ export default {
 
                 commit(UPDATE_OWNER_BALANCE, balance);
             } catch (e) {
+                console.error(e);
                 commit(UPDATE_META, {loadingProjectError: errorMessageSubstitution(e)});
             }
         },
-        async fetchCrowdSaleAddressAndInfo({commit}, {Token}) {
-            try {
-                const {W12ListerFactory, W12CrowdsaleFactory} = await this.dispatch('Ledger/fetch', Token.version);
-                const W12Lister = W12ListerFactory.at(Token.listerAddress);
-
-                try {
-                    const address = await W12Lister.methods.getTokenCrowdsale(
-                        Token.tokenAddress,
-                        this.state.Account.currentAccount
-                    );
-                    if (address && !isZeroAddress(address)) {
-                        const W12Crowdsale = W12CrowdsaleFactory.at(address);
-                        const tokensForSaleAmount = Token.wTokensIssuedAmount;
-                        const tokenPrice = web3.fromWei(await W12Crowdsale.methods.price(), 'ether').toString();
-
-                        commit(UPDATE_CROWD_SALE_ADDRESS, address);
-                        commit(UPDATE_CROWD_SALE_INFO, {
-                            tokensForSaleAmount,
-                            tokenPrice
-                        });
-                    } else {
-                        commit(UPDATE_CROWD_SALE_ADDRESS);
-                    }
-                } catch (e) {
-                    commit(UPDATE_CROWD_SALE_ADDRESS);
-                }
-            } catch (e) {
-                commit(UPDATE_META, {loadingProjectError: errorMessageSubstitution(e)});
+        async fetchCrowdSaleAddressAndInfo(context, payload) {
+            if (semver.satisfies(payload.Token.version, '0.20.x - 0.27.x')) {
+                return await fetchCrowdSaleAddressAndInfo_v0_20_x.call(this, context, payload);
+            } else if (semver.satisfies(payload.Token.version, '>=0.28.x')) {
+                return await fetchCrowdSaleAddressAndInfo_v0_28_x.call(this, context, payload);
             }
+
+            throw new Error(`token version ${payload.Token.version} does not supported`);
         },
         async fetchCrowdSaleStagesList({commit}, {Token}) {
             try {
@@ -445,6 +453,7 @@ export default {
 
                 commit(UPDATE_CROWD_SALE_STAGES_LIST, list);
             } catch (e) {
+                console.error(e);
                 commit(UPDATE_CROWD_SALE_STAGES_LIST, []);
                 commit(UPDATE_META, {loadingProjectError: errorMessageSubstitution(e)});
             }
@@ -462,6 +471,7 @@ export default {
                     commit(UPDATE_CROWD_SALE_IS_START, false);
                 }
             } catch (e) {
+                console.error(e);
                 commit(UPDATE_META, {loadingProjectError: errorMessageSubstitution(e)});
             }
         },
@@ -471,34 +481,24 @@ export default {
                 const W12Crowdsale = W12CrowdsaleFactory.at(Token.tokenCrowdsaleAddress);
                 if(Token.tokenCrowdsaleAddress) {
                     const milestones = await W12Crowdsale.getMilestones();
-                    commit(UPDATE_CROWD_SALE_MILESTONES_LIST, milestones.map((obj) => new MilestoneModel(obj)));
+                    commit(UPDATE_CROWD_SALE_MILESTONES_LIST, milestones);
                 } else {
                     commit(UPDATE_CROWD_SALE_MILESTONES_LIST, []);
                 }
             } catch (e) {
+                console.error(e);
                 commit(UPDATE_CROWD_SALE_MILESTONES_LIST, []);
                 commit(UPDATE_META, {loadingProjectError: errorMessageSubstitution(e)});
             }
         },
-        async updateReceivingInformation({commit, state}, {Token}) {
-            try {
-                const {W12TokenFactory, DetailedERC20Factory} = await this.dispatch('Ledger/fetch', Token.version);
-                const W12Token = W12TokenFactory.at(Token.wTokenAddress);
-                const DetailedERC20 = DetailedERC20Factory.at(Token.tokenAddress);
-                const token = await DetailedERC20.getDescription();
-
-                const receiving = new ReceivingModel({
-                    symbol: token.symbol,
-                    symbolW: Token.symbol,
-                    amountUnSold: fromWeiDecimalsString(await W12Token.methods.balanceOf(Token.tokenCrowdsaleAddress), state.currentProject.decimals),
-                    amountRemainingInTokenChanger: 0,
-                    amountRemainingAfterTheExchange: 0,
-                    amountTotalAvailable: 0,
-                });
-                commit(UPDATE_RECEVING_INFO, receiving);
-            } catch (e) {
-                commit(UPDATE_META, {loadingProjectError: errorMessageSubstitution(e)});
+        async updateReceivingInformation(context, payload) {
+            if (semver.satisfies(payload.Token.version, '0.20.x - 0.27.x')) {
+                return await updateReceivingInformation_v0_20_x.call(this, context, payload);
+            } else if (semver.satisfies(payload.Token.version, '>=0.28.x')) {
+                return await updateReceivingInformation_v0_28_x.call(this, context, payload);
             }
+
+            throw new Error(`token version ${payload.Token.version} does not supported`);
         },
         async updateFundInformation({commit, state}, {Token}) {
             try {
@@ -508,18 +508,69 @@ export default {
                 const W12Fund = W12FundFactory.at(fundAddress);
                 const {web3} = await Connector.connect();
                 const getBalance = warrantor(web3.eth.getBalance.bind(web3.eth));
-
                 const fundData = {
                     address: fundAddress,
                     balanceWei: (await getBalance(fundAddress)).toString(),
                 };
-                if(state.currentProject && state.currentProject.crowdSaleInformation && state.currentProject.crowdSaleInformation.isStartCrowdSale) {
-                    fundData.trancheAmount = (await W12Fund.methods.getTrancheAmount()).toString();
+
+                if (semver.satisfies(Token.version, '<0.26.2')) {
+                    if (state.currentProject && state.currentProject.crowdSaleInformation && state.currentProject.crowdSaleInformation.isStartCrowdSale) {
+                        fundData.trancheAmount = (await W12Fund.methods.getTrancheAmount()).toString();
+                    } else {
+                        fundData.trancheAmount = 0;
+                    }
                 } else {
-                    fundData.trancheAmount = 0;
+                    const invoice = await W12Fund.methods.getTrancheInvoice();
+                    const totalTokenBought = await W12Fund.methods.totalTokenBought();
+                    const totalTokenRefunded = await W12Fund.methods.totalTokenRefunded();
+                    const percent = invoice[0].div(100);
+
+                    fundData.trancheInfo = await map((await W12Fund.getTotalFundedAssetsSymbols()),
+                        async (symbol) => {
+                            const decimals = await this.dispatch('Rates/resolveDecimals', {symbol, version: Token.version});
+                            const totalAmount = await W12Fund.getTotalFundedAmount(symbol);
+                            const totalReleased = await W12Fund.getTotalFundedReleased(symbol);
+
+                            const balance = reverseConversionByDecimals(totalAmount.minus(totalReleased), decimals);
+
+                            let trancheAmount = reverseConversionByDecimals(totalAmount, decimals).mul(percent.div(100));
+                            trancheAmount = trancheAmount.minus(trancheAmount.mul(totalTokenRefunded.div(totalTokenBought)));
+
+                            return {
+                                "Symbol": symbol,
+                                "Balance": balance.toString(),
+                                "TrancheAmount": trancheAmount.toString(),
+                            };
+                        }
+                    );
+                    fundData.trancheTransferAllowed =  await W12Fund.methods.trancheTransferAllowed();
                 }
+
                 commit(UPDATE_FUND_DATA, fundData);
             } catch (e) {
+                console.error(e);
+                commit(UPDATE_META, {loadingProjectError: errorMessageSubstitution(e)});
+            }
+        },
+        async fetchPaymentMethodsList({commit, state}, {Token}) {
+            try {
+                let list = [];
+
+                if (!isZeroAddress(Token.tokenCrowdsaleAddress)) {
+                    const {W12CrowdsaleFactory} = await this.dispatch('Ledger/fetch', Token.version);
+                    const W12Crowdsale = W12CrowdsaleFactory.at(Token.tokenCrowdsaleAddress);
+
+                    list = await W12Crowdsale.getPaymentMethodsList();
+                }
+
+                if (
+                    state.currentProject
+                    && !isEqual(state.currentProject.paymentMethodsList, list)
+                ) {
+                    commit(UPDATE_PAYMENT_METHODS_LIST, list);
+                }
+            } catch (e) {
+                console.error(e);
                 commit(UPDATE_META, {loadingProjectError: errorMessageSubstitution(e)});
             }
         },

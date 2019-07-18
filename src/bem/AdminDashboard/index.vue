@@ -1,14 +1,14 @@
 <template>
     <div class="AdminDashboard buefy" v-if="!langMeta.loading">
         <section class="container">
-            <h2>{{ $t('AdminDashboard') }}</h2>
 
+            <h2 v-html="$t('AdminDashboard')"></h2>
             <ListerSwitch></ListerSwitch>
 
             <b-notification class="AdminDashboard__error" v-if="isError && !isLoading" type="is-danger" :closable="false" has-icon>
                 <span v-if="ledgerMeta.loadingError">{{ $t(ledgerMeta.loadingError) }}</span>
                 <span v-if="tokensListMeta.loadingError">{{ $t(tokensListMeta.loadingError) }}</span>
-                <span v-if="accountMeta.loadingError">{{ $t(accountMeta.loadingError)  }}</span>
+                <span v-if="accountMeta.loadingError">{{ $t(accountMeta.loadingError) }}</span>
             </b-notification>
 
             <b-notification v-if="isLoading && !isError" :closable="false" class="AdminDashboard__loader">
@@ -17,8 +17,8 @@
                 <b-loading :is-full-page="false" :active="isLoading"></b-loading>
             </b-notification>
 
-            <div v-if="!isLoading && this.currentAccount">
-                <WhiteListTable :is="WhiteListTableVersion"></WhiteListTable>
+            <div v-if="!isLoading && currentAccount">
+                <component :is="WhiteListTableComponent"></component>
                 <WhiteListForm></WhiteListForm>
             </div>
         </section>
@@ -28,7 +28,7 @@
 
 <script>
     import './default.scss';
-    import { resolveAbiVersion } from '@/lib/Blockchain/ContractsLedger';
+    import { resolveComponentVersion } from '@/bem/utils';
 
     import ListerSwitch from 'bem/ListerSwitch';
     import Steps from "bem/Steps";
@@ -87,8 +87,8 @@
             isError() {
                 return this.ledgerMeta.loadingError || this.tokensListMeta.loadingError || this.accountMeta.loadingError;
             },
-            WhiteListTableVersion(){
-                const v = resolveAbiVersion(this.W12Lister.version);
+            WhiteListTableComponent(){
+                const v = resolveComponentVersion(this.W12Lister.version, 'WhiteListTable');
                 return () => import("bem/WhiteListTable/" + v);
             },
             nextStepBlocked(){
@@ -97,7 +97,7 @@
         },
         methods: {
             ...WhitelistNS.mapActions({
-                whitelistFetch: "fetch",
+                fetchWhitelist: "fetch",
             }),
             ...AccountNS.mapActions({
                 watchCurrentAccount: 'watch',
@@ -107,7 +107,7 @@
             }),
 
             async handleW12ListerChange(){
-                await this.whitelistFetch();
+                await this.fetchWhitelist();
             },
         },
         watch: {
@@ -127,7 +127,7 @@
             ) {
                 this.updateLister({ W12Lister: this.W12ListerLastVersion });
             } else {
-                await this.whitelistFetch();
+                await this.fetchWhitelist();
             }
 
             this.meta.loading = false;

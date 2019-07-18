@@ -1,16 +1,16 @@
 <template>
     <div class="Factory buefy" v-if="!langMeta.loading">
         <section class="container">
-            <h2>{{ $t('TokensFactoryTitle') }}</h2>
+            <h2 v-html="$t('TokensFactoryTitle')"></h2>
 
             <b-notification class="AdminDashboard__error" v-if="isError && !isLoading" type="is-danger"
                             :closable="false" has-icon>
                 <span v-if="ledgerMeta.loadingError">{{ $t(ledgerMeta.loadingError) }}</span>
-                <span v-if="accountMeta.loadingError">{{ $t(accountMeta.loadingError)  }}</span>
+                <span v-if="accountMeta.loadingError">{{ $t(accountMeta.loadingError) }}</span>
             </b-notification>
 
             <b-notification v-if="isLoading && !isError" :closable="false" class="AdminDashboard__loader">
-                <span v-if="ledgerMeta.loading">{{ $t('AdminDashboardLoadLedger') }}<br></span>
+                <span v-if="ledgerMeta.loading"><span v-html="$t('AdminDashboardLoadLedger')"></span><br></span>
 
                 <b-loading :is-full-page="false" :active="isLoading"></b-loading>
             </b-notification>
@@ -44,31 +44,38 @@
 
                     <template slot="detail" slot-scope="props">
                         <div class="WhiteListTable__detail">
-                            <div class="WhiteListTable__detailField">
-                                {{ $t('AdminDashboardTableToken') }} :
+                            <div class="WhiteListTable__detailField"><span v-html="$t('AdminDashboardTableToken')"></span> :
                                 <div class="WhiteListTable__detailToken">
                                     <span class="tag is-success">{{ props.row.address }}</span>
                                 </div>
                             </div>
+                            <b-tabs>
+                                <b-tab-item :label="$t('AdminDashboardTableMint')">
+                                    <MintForm :tokenAddress="props.row.address"></MintForm>
+                                </b-tab-item>
+                                <b-tab-item :label="$t('AdminDashboardTableTransferOwnerShip')">
+                                    <TransferOwnerShipForm :tokenAddress="props.row.address"></TransferOwnerShipForm>
+                                </b-tab-item>
+                            </b-tabs>
                         </div>
                     </template>
 
                     <b-loading :is-full-page="false" :active.sync="meta.loading"></b-loading>
                 </b-table>
                 <div class="pm-2" v-if="isPendingTx">
-                    <p class="py-2">{{ $t('WaitingConfirm') }}:</p>
+                    <p class="py-2"><span v-html="$t('WaitingConfirm')"></span>:</p>
                     <b-tag class="py-2">{{isPendingTx.hash}}</b-tag>
                 </div>
                 <div class="pm-2" v-if="isErrorTx">
-                    <p class="py-2">{{ $t('TransactionFailed') }}:</p>
+                    <p class="py-2"><span v-html="$t('TransactionFailed')"></span>:</p>
                     <b-tag class="py-2">{{isErrorTx.hash}}</b-tag>
                     <div class="pt-2 text-left">
-                        <button class="btn btn-primary btn-sm" @click="TransactionsRetry(isErrorTx)">{{ $t('ToRetry') }}</button>
+                        <button class="btn btn-primary btn-sm" @click="TransactionsRetry(isErrorTx)" v-html="$t('ToRetry')"></button>
                     </div>
                 </div>
                 <div v-if="!isPendingTx && !isErrorTx">
                     <div class="form-group">
-                        <label for="FactoryName">{{ $t('TokensFactoryCreateFormName') }}</label>
+                        <label for="FactoryName" v-html="$t('TokensFactoryCreateFormName')"></label>
                         <b-field
                             id="FactoryName"
                             :type="typeName"
@@ -80,7 +87,7 @@
                         </b-field>
                     </div>
                     <div class="form-group">
-                        <label for="FactorySymbol">{{ $t('TokensFactoryCreateFormSymbol') }}</label>
+                        <label for="FactorySymbol" v-html="$t('TokensFactoryCreateFormSymbol')"></label>
                         <b-field
                             id="FactorySymbol"
                             :type="typeSymbol"
@@ -93,7 +100,7 @@
                         </b-field>
                     </div>
                     <div class="form-group">
-                        <label for="FactoryDecimals">{{ $t('TokensFactoryCreateFormDecimals') }}</label>
+                        <label for="FactoryDecimals" v-html="$t('TokensFactoryCreateFormDecimals')"></label>
                         <b-field id="FactoryDecimals" :type="typeDecimals" :message="messageDecimals">
                             <cleave v-model="createForm.decimals"
                                     class="form-control"
@@ -102,7 +109,7 @@
                         </b-field>
                     </div>
                     <div class="form-group">
-                        <label for="FactoryAmount">{{ $t('TokensFactoryCreateFormAmount') }}</label>
+                        <label for="FactoryAmount" v-html="$t('TokensFactoryCreateFormAmount')"></label>
                         <b-field id="FactoryAmount" :type="typeAmount" :message="messageAmount">
                             <cleave v-model="createForm.amount"
                                     class="form-control"
@@ -112,10 +119,9 @@
                         </b-field>
                     </div>
                     <b-notification class="ProjectStages__errorStage" v-if="error" @close="error = false"
-                                    type="is-danger" has-icon>{{ error }}
+                                    type="is-danger" has-icon>{{ $t(error) }}
                     </b-notification>
-                    <button class="btn btn-primary py-2 my-2" @click="create" :disabled="disable">{{
-                        $t('TokensFactoryCreate') }}
+                    <button class="btn btn-primary py-2 my-2" @click="create" :disabled="disable" v-html="$t('TokensFactoryCreate')">
                     </button>
 
                     <b-loading :is-full-page="false" :active.sync="meta.creating"></b-loading>
@@ -135,6 +141,8 @@
     import tokenValidationMixinGenerator from '@/lib/views/mixins/validation/token-validation';
     import Web3 from 'web3';
     import Steps from "bem/Steps";
+    import MintForm from "bem/MintForm";
+    import TransferOwnerShipForm from "bem/TransferOwnerShipForm";
 
     import {createNamespacedHelpers} from "vuex";
 
@@ -216,7 +224,9 @@
             },
         },
         components: {
-            Steps
+            Steps,
+            MintForm,
+            TransferOwnerShipForm,
         },
         computed: {
             ...LedgerNS.mapState({
@@ -382,22 +392,24 @@
 
                     await waitTransactionReceipt(tx, connectedWeb3);
                 } catch (e) {
+                    console.error(e);
                     this.error = errorMessageSubstitution(e);
                 }
                 this.meta.creating = false;
             },
             async fetchList() {
                 try {
-                    const {DetailedERC20Factory} = await this.ledgerFetch(this.Default.version);
+                    const {ERC20DetailedFactory} = await this.ledgerFetch(this.Default.version);
                     let listInfo = [];
                     await this.FactoryList.forEach(async (address) => {
-                        const DetailedERC20 = DetailedERC20Factory.at(address);
-                        const tokenInformation = await DetailedERC20.getDescription();
+                        const ERC20Detailed = ERC20DetailedFactory.at(address);
+                        const tokenInformation = await ERC20Detailed.getDescription();
                         const {name, symbol, decimals} = tokenInformation;
                         listInfo.push({address, name, symbol, decimals});
                     });
                     this.list = listInfo;
                 } catch (e) {
+                    console.error(e);
                     this.error = errorMessageSubstitution(e);
                 }
             },
@@ -420,6 +432,7 @@
                         NewToken,
                     };
                 } catch (e) {
+                    console.error(e);
                     this.error = errorMessageSubstitution(e);
                 }
 

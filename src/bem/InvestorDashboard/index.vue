@@ -1,12 +1,12 @@
 <template>
     <div class="InvestorDashboard buefy" v-if="!langMeta.loading">
         <section class="container">
-            <h2>{{ $t('InvestorDashboard') }}</h2>
+            <h2 v-html="$t('InvestorDashboard')"></h2>
 
             <b-notification class="InvestorDashboard__error" v-if="isError" type="is-danger" has-icon>
                 <span v-if="ledgerMeta.loadingError">{{ $t(ledgerMeta.loadingError) }}</span>
                 <span v-if="tokensListMeta.loadingError">{{ $t(tokensListMeta.loadingError) }}</span>
-                <span v-if="accountMeta.loadingError">{{ $t(accountMeta.loadingError)  }}</span>
+                <span v-if="accountMeta.loadingError">{{ $t(accountMeta.loadingError) }}</span>
             </b-notification>
 
             <b-notification v-if="isLoading && !isError" :closable="false" class="InvestorDashboard__loader">
@@ -16,11 +16,11 @@
             </b-notification>
 
             <div v-if="!isLoading && currentToken">
-                <TokenSwitch v-if="!isCurrentToken"></TokenSwitch>
-                <Calculator></Calculator>
-                <SaleTable></SaleTable>
+                <TokenSwitch v-if="isViewSwitch"></TokenSwitch>
+                <component :is="CalculatorComponent"></component>
+                <component :is="SaleTableComponent"></component>
                 <RoadMap></RoadMap>
-                <CrowdSale></CrowdSale>
+                <component :is="CrowdSaleComponent"></component>
             </div>
         </section>
         <Steps :number="6"></Steps>
@@ -29,16 +29,15 @@
 
 <script>
     import './default.scss';
+    import { resolveComponentVersion } from '@/bem/utils';
 
     import {createNamespacedHelpers} from "vuex";
     import Web3 from 'web3';
 
     import TokenSwitch from 'bem/TokenSwitch';
-    import CrowdSale from 'bem/CrowdSale';
-    import SaleTable from 'bem/SaleTable';
-    import Calculator from 'bem/Calculator';
     import Steps from "bem/Steps";
     import RoadMap from "bem/RoadMap";
+    import semver from 'semver';
 
     const LedgerNS = createNamespacedHelpers("Ledger");
     const AccountNS = createNamespacedHelpers("Account");
@@ -65,9 +64,6 @@
         },
         components: {
             TokenSwitch,
-            CrowdSale,
-            SaleTable,
-            Calculator,
             Steps,
             RoadMap
         },
@@ -103,12 +99,31 @@
                 return this.ledgerMeta.loadingError || this.tokensListMeta.loadingError || this.accountMeta.loadingError;
             },
             isCurrentToken(){
-                return typeof CurrentToken !== 'undefined';
-            }
+                return typeof window.CurrentToken !== 'undefined';
+            },
+            isViewSwitch(){
+                return this.isCurrentToken ? !!semver.satisfies(window.CurrentToken.version, '>=0.28.0') : true;
+            },
+            CalculatorComponent() {
+                if (!this.currentToken) return () => {};
+                const version = resolveComponentVersion(this.currentToken.version, 'Calculator');
+                return () => import(`@/bem/Calculator/${version}/index.vue`);
+            },
+            SaleTableComponent() {
+                if (!this.currentToken) return () => {};
+                const version = resolveComponentVersion(this.currentToken.version, 'SaleTable');
+                return () => import(`@/bem/SaleTable/${version}/index.vue`);
+            },
+            CrowdSaleComponent() {
+                if (!this.currentToken) return () => {};
+                const version = resolveComponentVersion(this.currentToken.version, 'CrowdSale');
+                return () => import(`@/bem/CrowdSale/${version}/index.vue`);
+            },
         },
         methods: {
             ...TokensListNS.mapActions({
                 tokensListFetch: "fetch",
+                tokensListFetchCurrentToken: "fetchListCurrentToken",
                 tokensListWatch: "watch",
                 FetchTokenByCurrentToken: "fetchTokenByCurrentToken"
             }),
@@ -124,7 +139,12 @@
                 if(currentAccount){
                     await this.transactionsUpStatusTx();
                     if(this.isCurrentToken){
-                        await this.FetchTokenByCurrentToken(CurrentToken);
+                        window.CurrentToken.__customerPointer = true;
+                        if(semver.satisfies(window.CurrentToken.version, '>=0.28.0')) {
+                            await this.tokensListFetchCurrentToken(window.CurrentToken);
+                        } else {
+                            await this.FetchTokenByCurrentToken(window.CurrentToken);
+                        }
                     } else {
                         await this.tokensListFetch();
                     }

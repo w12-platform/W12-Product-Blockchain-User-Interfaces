@@ -31,7 +31,7 @@ export class BaseFactoryStrategy {
                 sender: this.instanceSender.at(address),
                 getter: this.instanceGetter.at(address),
                 version: this.version,
-                libVersion: this.libVersion
+                libVersion: this.version
             }
         );
     }

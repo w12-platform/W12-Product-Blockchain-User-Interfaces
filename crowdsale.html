@@ -11,16 +11,23 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="#000"><style>body { opacity: 0; overflow-x: hidden; } html { background-color: #fff; }</style>
     <!--[if lt IE 9]>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.2/html5shiv.min.js"></script><![endif]-->
-    <link href="/node_modules/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 
     <script src="./translations.js?<%= VERSION %>"></script>
-<!--     <script>
-        const CurrentToken = {
-            listerAddress: "0xdb1278fbc18d0188ba237cf5e44bc2d930223d45",
-            version: "0.23.2",
-            index: "5",
-        };
-    </script> -->
+    <!--<script>-->
+        <!--window.CurrentToken = {-->
+            <!--listerAddress: "0xdb1278fbc18d0188ba237cf5e44bc2d930223d45",-->
+            <!--version: "0.23.2",-->
+            <!--index: "5",-->
+        <!--};-->
+    <!--</script>-->
+    <!--<script>-->
+        <!--window.CurrentToken = {-->
+            <!--listerAddress: "0x6074a1bfe00625f55d6bc2d3a4989a709372e7bd",-->
+            <!--version: "0.28.0",-->
+            <!--tokenAddress: "0x3da49a7ab4f04b63a0cb6aa1d5151fea584beaad",-->
+        <!--};-->
+    <!--</script>-->
     <link rel="stylesheet" href="//cdn.materialdesignicons.com/2.4.85/css/materialdesignicons.min.css">
 </head>
 <body>
@@ -44,6 +51,7 @@
         <div class="container">
             <div class="main__track">
                 <div class="content">
+                    <cross-pages-notification></cross-pages-notification>
                     <investor-dashboard></investor-dashboard>
                 </div>
                 <div class="sidebar" id="sidebar"><span class="toggle-mobile-btn"><i class="fa fa-arrow-up"></i></span>
@@ -61,7 +69,6 @@
 <link rel="stylesheet" href="stand/html/css/main.css?<%= VERSION %>">
 <script src="stand/html/libs/jquery/jquery-3.2.1.min.js"></script>
 <script src="stand/html/libs/sticky/sticky-sidebar.min.js"></script>
-<script src="node_modules/moment/moment.js"></script>
 <script src="/build/App.js?<%= VERSION %>"></script>
 <script src="stand/html/js/common.js?<%= VERSION %>"></script>
 </body>

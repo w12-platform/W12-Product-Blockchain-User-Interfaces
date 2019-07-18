@@ -19,23 +19,6 @@ export const CACHE_MAP = {
                 'swap', 'crowdsale', 'trancheFeePercent'
             ],
         },
-        "0.21.3": {
-            DetailedERC20: ['name', 'symbol', 'decimals'],
-            WToken: ['name', 'symbol', 'decimals'],
-            W12Lister: ['version', 'exchanger', 'serviceWallet', 'factory', 'getExchanger'],
-            W12TokenLedger: ['version'],
-            W12FundFactory: ['version'],
-            W12CrowdsaleFactory: ['version'],
-            W12AtomicSwap: ['version', 'ledger'],
-            W12Crowdsale: [
-                'originToken', 'WTokenSaleFeePercent', 'version', 'serviceWallet',
-                'swap', 'serviceFee', 'fund', 'token', 'getWToken', 'getFund'
-            ],
-            W12Fund: [
-                'wToken', 'totalTranchePercentReleased', 'tokenDecimals', 'version', 'serviceWallet',
-                'swap', 'crowdsale', 'trancheFeePercent'
-            ],
-        },
         "0.23.2": {
             DetailedERC20: ['name', 'symbol', 'decimals'],
             WToken: ['name', 'symbol', 'decimals'],
@@ -54,10 +37,13 @@ export const CACHE_MAP = {
             ],
             TokenExchanger: ['version']
         },
-        "0.23.5": {
+        "0.27.1": {
             DetailedERC20: ['name', 'symbol', 'decimals'],
             WToken: ['name', 'symbol', 'decimals'],
-            W12Lister: ['version', 'exchanger', 'serviceWallet', 'factory', 'getExchanger'],
+            W12Lister: [
+                'version', 'exchanger', 'serviceWallet', 'factory',
+                'getExchanger'
+            ],
             W12TokenLedger: ['version'],
             W12FundFactory: ['version'],
             W12CrowdsaleFactory: ['version'],
@@ -71,7 +57,28 @@ export const CACHE_MAP = {
                 'swap', 'crowdsale', 'trancheFeePercent'
             ],
             TokenExchanger: ['version']
-        }
+        },
+        "0.28.0": {
+            DetailedERC20: ['name', 'symbol', 'decimals'],
+            WToken: ['name', 'symbol', 'decimals'],
+            W12Lister: [
+                'version', 'exchanger', 'serviceWallet', 'factory',
+                'getExchanger'
+            ],
+            W12TokenLedger: ['version'],
+            W12FundFactory: ['version'],
+            W12CrowdsaleFactory: ['version'],
+            W12AtomicSwap: ['version', 'ledger'],
+            W12Crowdsale: [
+                'originToken', 'WTokenSaleFeePercent', 'version', 'serviceWallet',
+                'swap', 'serviceFee', 'fund', 'token', 'getWToken', 'getFund'
+            ],
+            W12Fund: [
+                'wToken', 'totalTranchePercentReleased', 'tokenDecimals', 'version', 'serviceWallet',
+                'swap', 'crowdsale', 'trancheFeePercent'
+            ],
+            TokenExchanger: ['version']
+        },
     }
 };
 

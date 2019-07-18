@@ -7,7 +7,7 @@ export class W12FundFactoryStrategy extends BaseFactoryStrategy {
         connector,
         libVersion,
         realVersion,
-        W12CrowdsaleFactory
+        W12CrowdsaleFactory,
     ) {
         super(contractArtifacts, ContractWrapper, connector, libVersion, realVersion);
 

@@ -5,14 +5,16 @@
              :class="tagClass(token)"
              @click="onSelect(token)"
              v-if="token"
-        >{{ token.name }}</div>
+        >
+            <span>{{ token.name }}: {{ token.tokenAddress }}</span><br>
+            <span>Crowdsale(v{{ token.version }}): {{ token.crowdsaleAddress }}</span>
+        </div>
     </div>
 </template>
 
 <script>
     import './default.scss';
 
-    import { TOKEN_SELECTED } from "store/modules/TokensList";
     import { createNamespacedHelpers } from "vuex";
 
     const TokensListNS = createNamespacedHelpers("TokensList");
@@ -39,7 +41,7 @@
             tagClass(token){
                 return {
                     'TokenSwitch__tag': true,
-                    'TokenSwitch__selected': token.hasOwnProperty('index') && token.hasOwnProperty('version')
+                    'TokenSwitch__selected': token.hasOwnProperty('index') && token.hasOwnProperty('version') 
                         ? this.currentToken.index === token.index && this.currentToken.version === token.version
                         : false,
                 }
