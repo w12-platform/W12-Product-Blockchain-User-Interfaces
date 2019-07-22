@@ -22,9 +22,6 @@ const ERROR_FETCH_TOKENS_LIST = 'An unknown error while trying get tokens';
 export async function fetchTokenFull({dispatch}, token) {
     // TODO: refactoring
     // instanceOf(token, StoredToken);
-
-    console.log('fetchTokenFull');
-
     const {
         ERC20DetailedFactory,
         W12CrowdsaleFactory,

@@ -71,6 +71,10 @@ module.exports = [
                     loader: "vue-loader"
                 },
                 {
+                    test: /\.(coffee)$/,
+                    use: [{loader: 'coffee-loader'}]
+                },
+                {
                     test: /\.(scss|css)$/,
                     use: [
                         "style-loader",

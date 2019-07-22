@@ -1,10 +1,13 @@
 import { devLog } from '@/lib/dev';
 import { updateTokenInfo as updateTokenInfo_v0_20_x } from '@/store/modules/Project/0.20.x/actions';
 import { updateTokenInfo as updateTokenInfo_v0_28_x } from '@/store/modules/Project/0.28.x/actions';
+import { updateTokenInfo as updateTokenInfo_v0_31_x } from '@/store/modules/Project/0.31.x/actions';
 import { updateReceivingInformation as updateReceivingInformation_v0_20_x } from '@/store/modules/Project/0.20.x/actions';
 import { updateReceivingInformation as updateReceivingInformation_v0_28_x } from '@/store/modules/Project/0.28.x/actions';
+import { updateReceivingInformation as updateReceivingInformation_v0_31_x } from '@/store/modules/Project/0.31.x/actions';
 import { fetchCrowdSaleAddressAndInfo as fetchCrowdSaleAddressAndInfo_v0_20_x } from '@/store/modules/Project/0.20.x/actions';
 import { fetchCrowdSaleAddressAndInfo as fetchCrowdSaleAddressAndInfo_v0_28_x } from '@/store/modules/Project/0.28.x/actions';
+import { fetchCrowdSaleAddressAndInfo as fetchCrowdSaleAddressAndInfo_v0_31_x } from '@/store/modules/Project/0.31.x/actions';
 import {promisify, isZeroAddress, fromWeiDecimalsString, errorMessageSubstitution, warrantor} from "src/lib/utils";
 import {map} from 'p-iteration';
 import Connector from "src/lib/Blockchain/DefaultConnector";
@@ -333,6 +336,7 @@ export default {
             commit(UPDATE_META, {loadingProject: false});
         },
         async fetchProjectByCurrentToken({commit}, CurrentToken) {
+            console.log('fetch');
             commit(UPDATE_META, {loadingProject: true, loading: true});
             const {W12ListerFactory} = await this.dispatch('Ledger/fetch', CurrentToken.version);
             const W12Lister = W12ListerFactory.at(CurrentToken.listerAddress);
@@ -375,8 +379,12 @@ export default {
         async updateTokenInfo(context, payload) {
             if (semver.satisfies(payload.Token.version, '0.20.x - 0.27.x')) {
                 return await updateTokenInfo_v0_20_x.call(this, context, payload);
-            } else if (semver.satisfies(payload.Token.version, '>=0.28.x')) {
+            }
+            else if (semver.satisfies(payload.Token.version, '0.28.x - 0.29.x')) {
                 return await updateTokenInfo_v0_28_x.call(this, context, payload);
+            }
+            else if (semver.satisfies(payload.Token.version, '>=0.31.x')) {
+                return await updateTokenInfo_v0_31_x.call(this, context, payload);
             }
 
             throw new Error(`token version ${payload.Token.version} does not supported`);
@@ -432,8 +440,12 @@ export default {
         async fetchCrowdSaleAddressAndInfo(context, payload) {
             if (semver.satisfies(payload.Token.version, '0.20.x - 0.27.x')) {
                 return await fetchCrowdSaleAddressAndInfo_v0_20_x.call(this, context, payload);
-            } else if (semver.satisfies(payload.Token.version, '>=0.28.x')) {
+            }
+            else if (semver.satisfies(payload.Token.version, '0.28.x - 0.29.x')) {
                 return await fetchCrowdSaleAddressAndInfo_v0_28_x.call(this, context, payload);
+            }
+            else if (semver.satisfies(payload.Token.version, '>=0.31.x')) {
+                return await fetchCrowdSaleAddressAndInfo_v0_31_x.call(this, context, payload);
             }
 
             throw new Error(`token version ${payload.Token.version} does not supported`);
@@ -494,14 +506,19 @@ export default {
         async updateReceivingInformation(context, payload) {
             if (semver.satisfies(payload.Token.version, '0.20.x - 0.27.x')) {
                 return await updateReceivingInformation_v0_20_x.call(this, context, payload);
-            } else if (semver.satisfies(payload.Token.version, '>=0.28.x')) {
+            }
+            else if (semver.satisfies(payload.Token.version, '0.28.x - 0.29.x')) {
                 return await updateReceivingInformation_v0_28_x.call(this, context, payload);
+            }
+            else if (semver.satisfies(payload.Token.version, '>=0.31.x')) {
+                return await updateReceivingInformation_v0_31_x.call(this, context, payload);
             }
 
             throw new Error(`token version ${payload.Token.version} does not supported`);
         },
         async updateFundInformation({commit, state}, {Token}) {
             try {
+                console.log('update');
                 const {W12CrowdsaleFactory, W12FundFactory} = await this.dispatch('Ledger/fetch', Token.version);
                 const W12Crowdsale = W12CrowdsaleFactory.at(Token.tokenCrowdsaleAddress);
                 const fundAddress = await W12Crowdsale.methods.fund();

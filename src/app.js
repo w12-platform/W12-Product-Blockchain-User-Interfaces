@@ -54,6 +54,10 @@ import ProjectDashboardTranche from 'bem/ProjectDashboardTranche';
 import Versions from 'bem/Versions';
 import CrossPagesNotification from 'bem/CrossPagesNotification';
 import MetaMask from 'bem/MetaMask';
+import OracleEdit from 'bem/OracleEdit';
+import OracleSelect from 'bem/OracleSelect';
+import OracleVote from 'bem/OracleVote';
+
 
 new Vue({
     store,
@@ -80,6 +84,10 @@ new Vue({
         ProjectDashboardReceiving,
         ProjectDashboardTranche,
         Versions,
+        OracleEdit,
+        OracleSelect,
+        OracleVote,
+
     },
     computed: {
         ...LangNS.mapState({
