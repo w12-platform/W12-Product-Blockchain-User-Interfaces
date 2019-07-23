@@ -75,6 +75,21 @@
                         <div class="test-steps__cell"><a href="/receiving.html" v-html="$t('HomeStepsNum10')"></a></div>
                         <div class="test-steps__cell"><span class="icon icon-blue" v-html="$t('HomeStepsProject')"></span></div>
                     </div>
+                    <div class="test-steps__row">
+                        <div class="test-steps__cell"><span class="num">11</span></div>
+                        <div class="test-steps__cell"><a href="/oracle-edit.html" v-html="$t('HomeStepsNum11')"></a></div>
+                        <div class="test-steps__cell"><span class="icon icon-red">{{ $t('HomeStepsAdmin') }}</span></div>
+                    </div>
+                    <div class="test-steps__row">
+                        <div class="test-steps__cell"><span class="num">12</span></div>
+                        <div class="test-steps__cell"><a href="/oracle-select.html" v-html="$t('HomeStepsNum12')"></a></div>
+                        <div class="test-steps__cell"><span class="icon icon-red">{{ $t('HomeStepsAdmin') }}</span></div>
+                    </div>
+                    <div class="test-steps__row">
+                        <div class="test-steps__cell"><span class="num">13</span></div>
+                        <div class="test-steps__cell"><a href="/oracle-vote.html" v-html="$t('HomeStepsNum13')"></a></div>
+                        <div class="test-steps__cell"><span class="icon icon-red">{{ $t('HomeStepsOracle') }}</span></div>
+                    </div>
                 </div>
             </div>
         </div>

@@ -52,7 +52,6 @@ export async function updateReceivingInformation({commit, state, dispatch}, {Tok
 export async function fetchCrowdSaleAddressAndInfo({commit, dispatch}, {Token}) {
     try {
 
-        console.log('fetchCrowdSaleAddressAndInfo31');
         const {W12ListerFactory, W12CrowdsaleFactory} = await dispatch('Ledger/fetch', Token.version, {root: true});
         const W12Lister = W12ListerFactory.at(Token.listerAddress);
 
@@ -61,13 +60,17 @@ export async function fetchCrowdSaleAddressAndInfo({commit, dispatch}, {Token}) 
             const {crowdsaleAddress: address} = token;
             if (address && !isZeroAddress(address)) {
 
-                console.log('fetchCrowdSaleAddressAndInfo31 55');
                 const W12Crowdsale = W12CrowdsaleFactory.at(address);
+                console.log(W12Crowdsale.methods);
                 const tokensForSaleAmount = token.wTokensIssuedAmount;
                 const tokenPrice = (await W12Crowdsale.methods.price()).toString();
 
-                var project_type = (await W12Crowdsale.methods.project_type()).toString();
-                console.log(project_type);
+                const project_type = (await W12Crowdsale.methods.getProjectType()).toString();
+
+                console.log(currentProject);
+
+
+
 
                 commit(UPDATE_CROWD_SALE_ADDRESS, address);
                 commit(UPDATE_CROWD_SALE_INFO, {
