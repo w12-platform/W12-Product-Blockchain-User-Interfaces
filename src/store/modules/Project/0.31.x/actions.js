@@ -8,6 +8,8 @@ import {
     UPDATE_RECEVING_INFO
 } from '../mutations';
 
+window.PROJECT_DATA = {};
+
 export async function updateTokenInfo({commit, dispatch}, {Token}) {
     try {
         if (Token.tokenAddress) {
@@ -61,17 +63,9 @@ export async function fetchCrowdSaleAddressAndInfo({commit, dispatch}, {Token}) 
             if (address && !isZeroAddress(address)) {
 
                 const W12Crowdsale = W12CrowdsaleFactory.at(address);
-                console.log(W12Crowdsale.methods);
                 const tokensForSaleAmount = token.wTokensIssuedAmount;
                 const tokenPrice = (await W12Crowdsale.methods.price()).toString();
-
-                const project_type = (await W12Crowdsale.methods.getProjectType()).toString();
-
-                console.log(currentProject);
-
-
-
-
+                window.PROJECT = W12Crowdsale;
                 commit(UPDATE_CROWD_SALE_ADDRESS, address);
                 commit(UPDATE_CROWD_SALE_INFO, {
                     tokensForSaleAmount,

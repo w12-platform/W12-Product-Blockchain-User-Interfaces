@@ -112,8 +112,7 @@
                 },
 
                 immediate: true
-            },
-
+            }
         },
         data() {
             return {
@@ -123,7 +122,8 @@
                 },
                 error: false,
                 value: '',
-                project_types: [this.$t('ProjectTypeUsual'), this.$t('ProjectTypeTender')]
+                project_types: [this.$t('ProjectTypeUsual'), this.$t('ProjectTypeTender')],
+                crowdsale_project: window.PROJECT
 
             };
         },
@@ -279,5 +279,14 @@
                this.value = e;
             }
         },
+        mounted: function(e)
+        {
+            setTimeout(function()
+                {
+                    console.log(window.PROJECT);
+
+                }, 500);
+        }
+
     };
 </script>

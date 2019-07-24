@@ -193,60 +193,45 @@
             ...TransactionsNS.mapActions({
                 TransactionsRetry: "retry"
             }),
-            async setAddress() {
-                if(this.disable) return;
 
-                const value = toWeiDecimals(this.placeTokensForm.value, this.currentProject.decimals);
-                // const limit = new BigNumber(this.currentProject.tokensAmountThatApprovedToPlaceByTokenOwner);
-                const limit = 50;
+            async setAddress()
+            {
+                console.log('setAddress');
+                console.log(this.currentProject);
 
-                if (!value.greaterThan(0) || !value.lessThanOrEqualTo(limit)) {
-                    return;
-                }
-
-                this.placeTokensLoading = true;
-
+                this.loading = true;
                 try {
-                    const {W12ListerFactory} = await this.fetchLedger(this.currentProject.version);
-                    const W12Lister = W12ListerFactory.at(this.currentProject.listerAddress);
-                    const connectedWeb3 = (await Connector.connect()).web3;
-                    const event = waitContractEventOnce(W12Lister, 'TokenPlaced', {
-                        originalToken: this.currentProject.tokenAddress,
-                        crowdsale: this.currentProject.tokenCrowdsaleAddress
-                    });
-                    // const tx = await W12Lister.methods.placeToken(
-                    //     this.currentProject.tokenAddress,
-                    //     this.currentProject.tokenCrowdsaleAddress,
-                    //     value
-                    // );
+                    const fundAddress = this.currentProject.fundData.address;
+                    console.log(fundAddress);
+                    const {W12FundFactory} = await this.ledgerFetch(this.currentProject.version);
+                    console.log(W12FundFactory);
+                    const {web3} = await Connector.connect();
+                    const W12Fund = W12FundFactory.at(fundAddress);
+                    console.log(W12Fund);
+                    const tx = await W12Fund.methods.setServiceWallet('0xb8eb05da6d20775492621ec11dcca00883ac572d',{from: this.currentAccount});
+                    console.log(tx);
                     this.$store.commit(`Transactions/${UPDATE_TX}`, {
-                        token: this.currentProject.tokenAddress,
-                        name: "SetAddress",
+                        fund: this.currentProject.fundData.address,
+                        name: "set address",
                         hash: tx,
                         status: "pending"
                     });
-                    await this.$nextTick();
-                    await waitTransactionReceipt(tx, connectedWeb3);
-                    await event;
-                    await this.$nextTick();
-                    await this.upTokenAfterEvent({Token: this.currentProject});
-                    this.$store.commit(`Transactions/${CONFIRM_TX}`, tx);
+                    await waitTransactionReceipt(tx, web3);
                 } catch (e) {
-                    console.error(e);
-                    this.error = errorMessageSubstitution(e.message);
-                }
 
-                this.placeTokensLoading = false;
+                    console.log(e);
+                    this.error = errorMessageSubstitution(e);
+
+                }
+                this.loading = false;
             },
             disable(){
-                if(this.placeTokensForm.value && this.currentProject.tokensAmountThatApprovedToPlaceByTokenOwner)
+                if(this.currentProject.fundData)
                 {
                     if(value.length == 0 || value.length > 20)
                     {
                         return false
                     }
-
-
                 }
                 return true;
             },
