@@ -336,7 +336,6 @@ export default {
             commit(UPDATE_META, {loadingProject: false});
         },
         async fetchProjectByCurrentToken({commit}, CurrentToken) {
-            console.log('fetch');
             commit(UPDATE_META, {loadingProject: true, loading: true});
             const {W12ListerFactory} = await this.dispatch('Ledger/fetch', CurrentToken.version);
             const W12Lister = W12ListerFactory.at(CurrentToken.listerAddress);
@@ -518,7 +517,6 @@ export default {
         },
         async updateFundInformation({commit, state}, {Token}) {
             try {
-                console.log('update');
                 const {W12CrowdsaleFactory, W12FundFactory} = await this.dispatch('Ledger/fetch', Token.version);
                 const W12Crowdsale = W12CrowdsaleFactory.at(Token.tokenCrowdsaleAddress);
                 const fundAddress = await W12Crowdsale.methods.fund();

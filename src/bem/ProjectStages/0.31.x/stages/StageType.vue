@@ -281,11 +281,11 @@
         },
         mounted: function(e)
         {
-            setTimeout(function()
-                {
-                    console.log(window.PROJECT);
-
-                }, 500);
+            // setTimeout(function()
+            //     {
+            //         // console.log(window.PROJECT);
+            //
+            //     }, 1000);
         }
 
     };

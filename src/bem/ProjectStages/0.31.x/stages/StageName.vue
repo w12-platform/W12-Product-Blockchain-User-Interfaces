@@ -141,16 +141,6 @@
             maxAmountFormat(){
                 return formatNumber(this.maxAmount)
             },
-            disable(){
-                // if(this.placeTokensForm.value && this.currentProject.tokensAmountThatApprovedToPlaceByTokenOwner){
-                //     const value = toWeiDecimals(this.placeTokensForm.value, this.currentProject.decimals);
-                //     const limit = new BigNumber(this.currentProject.tokensAmountThatApprovedToPlaceByTokenOwner);
-                //
-                //     return !value.greaterThan(0) || !value.lessThanOrEqualTo(limit)
-                // }
-                // return true;
-                return false;
-            },
             isErrorTx() {
                 return this.TransactionsList && this.TransactionsList.length
                     ? this.TransactionsList.find((tr) => {
@@ -180,7 +170,19 @@
                             : false
                     })
                     : false;
-            }
+            },
+            disable(){
+                if(this.placeTokensForm.value && this.currentProject.tokensAmountThatApprovedToPlaceByTokenOwner)
+                {
+                    if(value.length == 0 || value.length > 20)
+                    {
+                        return false
+                    }
+
+
+                }
+                return true;
+            },
         },
         methods: {
             ...ProjectNS.mapActions({
@@ -238,18 +240,7 @@
 
                 this.placeTokensLoading = false;
             },
-            disable(){
-                if(this.placeTokensForm.value && this.currentProject.tokensAmountThatApprovedToPlaceByTokenOwner)
-                {
-                    if(value.length == 0 || value.length > 20)
-                    {
-                        return false
-                    }
 
-
-                }
-                return true;
-            },
         },
     };
 </script>

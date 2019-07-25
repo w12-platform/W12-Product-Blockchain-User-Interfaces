@@ -43,6 +43,10 @@ const processResultForSentry = (info, args, error, result) => {
     });
 };
 
+const wait = function(milliseconds, func) {
+    return setTimeout(func, milliseconds);
+  };
+
 export function cacheController(meta, info) {
     return function (...args) {
         return new Promise(async (accept, reject) => {
