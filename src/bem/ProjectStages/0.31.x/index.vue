@@ -21,9 +21,15 @@
             :disabled="!isAllReadyForSetupCrowdsale"
             @click="setupCrowdsale" v-html="$t('SetupCrowdsale')"
         ></button>
+
+
         <StageName></StageName>
+
         <StageType></StageType>
+
         <StageAddress></StageAddress>
+
+
 
     </div>
 </template>

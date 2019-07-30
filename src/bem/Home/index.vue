@@ -90,6 +90,11 @@
                         <div class="test-steps__cell"><a href="/oracle-vote.html" v-html="$t('HomeStepsNum13')"></a></div>
                         <div class="test-steps__cell"><span class="icon icon-red">{{ $t('HomeStepsOracle') }}</span></div>
                     </div>
+<!--                    <div class="test-steps__row">-->
+<!--                        <div class="test-steps__cell"><span class="num">14</span></div>-->
+<!--                        <div class="test-steps__cell"><a href="/project-settings.html" v-html="$t('HomeStepsNum14')"></a></div>-->
+<!--                        <div class="test-steps__cell"><span class="icon icon-red">{{ $t('HomeStepsAdmin') }}</span></div>-->
+<!--                    </div>-->
                 </div>
             </div>
         </div>

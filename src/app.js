@@ -57,6 +57,7 @@ import MetaMask from 'bem/MetaMask';
 import OracleEdit from 'bem/OracleEdit';
 import OracleSelect from 'bem/OracleSelect';
 import OracleVote from 'bem/OracleVote';
+import ProjectSettings from 'bem/ProjectSettings';
 
 
 new Vue({
@@ -87,6 +88,7 @@ new Vue({
         OracleEdit,
         OracleSelect,
         OracleVote,
+        ProjectSettings,
 
     },
     computed: {

@@ -248,7 +248,6 @@ const log = function(...val) {
                     {
                         const fundAddress = this.currentProject.fundData.address;
                         const {W12FundFactory} = await this.fetchLedger(this.currentProject.version);
-                        const {web3} = await Connector.connect();
                         const W12Fund = W12FundFactory.at(fundAddress);
 
                         this.currentProject.W12Fund = W12Fund;
@@ -256,35 +255,29 @@ const log = function(...val) {
                         this.address = await this.currentProject.W12Fund.methods.getServiceWallet({from: this.currentAccount});
                         this.addr_flag = true;
 
-
                     } catch (e)
                     {
                         this.error = errorMessageSubstitution(e);
                     }
                     this.loading = false;
-
                 }
             },
         },
         mounted: function()
         {
-
             this.update_flag = true;
-
-            setTimeout(async ()=>
+            setInterval(async ()=>
+            {
+                if(this.currentProject && this.update_flag && !this.currentProject.fundData)
                 {
-                    if(this.currentProject && this.update_flag && !this.currentProject.fundData)
-                    {
-                        await this.updateFundInformation({Token: this.currentProject});
-                    }
+                    await this.updateFundInformation({Token: this.currentProject});
+                }
 
-                    if(this.update_flag && this.currentProject.fundData)
-                    {
-                        this.update_flag = false;
-                        this.getAddress();
-                    }
-
-                }, 1000);
+                if(this.update_flag)
+                {
+                    this.getAddress();
+                }
+            }, 3000);
         }
     };
 </script>

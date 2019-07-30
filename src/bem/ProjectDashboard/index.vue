@@ -22,7 +22,9 @@
 
                 <div class="ProjectDashboard__project">
                     <TokenInfo v-if="!ProjectMeta.loadingProjectError && currentProject && currentProject.version" :is="TokenInfoVersion"></TokenInfo>
+                    <keep-alive>
                     <ProjectStages v-if="!ProjectMeta.loadingProjectError && currentProject && currentProject.version" :is="ProjectStagesVersion"></ProjectStages>
+                    </keep-alive>
 
                     <b-loading :is-full-page="false" :active="ProjectMeta.loadingProject"></b-loading>
                 </div>
@@ -134,5 +136,9 @@
         async created() {
             await this.watchCurrentAccount();
         },
+        mounted: function()
+        {
+            console.log('dashboard');
+        }
     }
 </script>

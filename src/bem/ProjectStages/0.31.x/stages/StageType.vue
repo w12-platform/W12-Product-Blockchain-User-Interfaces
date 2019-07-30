@@ -26,9 +26,9 @@
                         <button class="btn btn-primary btn-sm" @click="TransactionsRetry(isErrorTx)" v-html="$t('ToRetry')"></button>
                     </div>
                 </div>
-<!--                <b-tag class="ProjectDashboard__placedWTokenAddress" v-if="hasPlacedWTokenAddress"-->
-<!--                       type="is-info">{{ currentProject.placedTokenAddress }}-->
-<!--                </b-tag>-->
+                <b-tag class="ProjectDashboard__placedWTokenAddress" v-if="current_type"
+                       type="is-info">{{ current_type }}
+                </b-tag>
             </div>
             <div class="ProjectDashboard__placeForm col-12 text-right" v-if="!isPendingTx && !isErrorTx">
                 <div class="text-left">
@@ -51,9 +51,7 @@
                     <b-notification class="ProjectStages__errorStage" v-if="error" @close="error = false" type="is-danger" has-icon>
                         {{ error }}
                     </b-notification>
-                    <b-notification class="ProjectStages__errorStage" v-if="amountError" :closable="false" type="is-danger" has-icon><span v-html="$t('ProjectDashboardStagePlaceErrorAmount')"></span>
-                    </b-notification>
-                    <div class="text-right">
+                   <div class="text-right">
                         <button
                                 class="btn btn-primary btn-sm"
                                 @click="setType"
@@ -123,7 +121,9 @@
                 error: false,
                 value: '',
                 project_types: [this.$t('ProjectTypeUsual'), this.$t('ProjectTypeTender')],
+                current_type: null,
                 crowdsale_project: window.PROJECT
+
 
             };
         },
@@ -147,37 +147,6 @@
             ...TransactionsNS.mapState({
                 TransactionsList: "list"
             }),
-            optionsNumber() {
-                return {
-                    prefix: '',
-                    numeral: true,
-                    numeralPositiveOnly: true,
-                    noImmediatePrefix: true,
-                    rawValueTrimPrefix: true,
-                    numeralIntegerScale: this.lengthMaxAmount,
-                    numeralDecimalScale: this.currentProject.decimals,
-                };
-            },
-            lengthMaxAmount() {
-                return this.maxAmount.length;
-            },
-            maxAmount() {
-                return this.currentProject.tokensAmountThatApprovedToPlaceByTokenOwner
-                    ? fromWeiDecimals(this.currentProject.tokensAmountThatApprovedToPlaceByTokenOwner, this.currentProject.decimals).toFormat(0)
-                    : "";
-            },
-            maxAmountFormat(){
-                return formatNumber(this.maxAmount)
-            },
-            amountError(){
-                if(this.placeTokensForm.value && this.currentProject.tokensAmountThatApprovedToPlaceByTokenOwner){
-                    const value = toWeiDecimals(this.placeTokensForm.value, this.currentProject.decimals);
-                    const limit = new BigNumber(this.currentProject.tokensAmountThatApprovedToPlaceByTokenOwner);
-
-                    return !value.lessThanOrEqualTo(limit)
-                }
-                return false;
-            },
             disable(){
                 if(this.placeTokensForm.value && this.currentProject.tokensAmountThatApprovedToPlaceByTokenOwner){
                     const value = toWeiDecimals(this.placeTokensForm.value, this.currentProject.decimals);
@@ -229,64 +198,74 @@
             ...TransactionsNS.mapActions({
                 TransactionsRetry: "retry"
             }),
-            async setType() {
-                if(this.disable) return;
-
-                const value = toWeiDecimals(this.placeTokensForm.value, this.currentProject.decimals);
-                const limit = new BigNumber(this.currentProject.tokensAmountThatApprovedToPlaceByTokenOwner);
-
-                if (!value.greaterThan(0) || !value.lessThanOrEqualTo(limit)) {
-                    return;
-                }
-
-                this.placeTokensLoading = true;
-
-                try {
-                    const {W12ListerFactory} = await this.fetchLedger(this.currentProject.version);
-                    const W12Lister = W12ListerFactory.at(this.currentProject.listerAddress);
-                    const connectedWeb3 = (await Connector.connect()).web3;
-                    const event = waitContractEventOnce(W12Lister, 'TokenPlaced', {
-                        originalToken: this.currentProject.tokenAddress,
-                        crowdsale: this.currentProject.tokenCrowdsaleAddress
-                    });
-                    const tx = await W12Lister.methods.placeToken(
-                        this.currentProject.tokenAddress,
-                        this.currentProject.tokenCrowdsaleAddress,
-                        value
-                    );
-                    this.$store.commit(`Transactions/${UPDATE_TX}`, {
-                        token: this.currentProject.tokenAddress,
-                        name: "PlaceTokens",
-                        hash: tx,
-                        status: "pending"
-                    });
-                    await this.$nextTick();
-                    await waitTransactionReceipt(tx, connectedWeb3);
-                    await event;
-                    await this.$nextTick();
-                    await this.upTokenAfterEvent({Token: this.currentProject});
-                    this.$store.commit(`Transactions/${CONFIRM_TX}`, tx);
-                } catch (e) {
-                    console.error(e);
-                    this.error = errorMessageSubstitution(e.message);
-                }
-
-                this.placeTokensLoading = false;
-            },
 
             select_type: function(e)
             {
                this.value = e;
-            }
+            },
+            async setType()
+            {
+                if(this.currentProject.crowdsaleAddress)
+                {
+                    try
+                    {
+                        const {W12CrowdsaleFactory} = await this.fetchLedger(this.currentProject.version);
+                        const {web3} = await Connector.connect();
+                        const W12Crowdsale = W12CrowdsaleFactory.at(this.currentProject.crowdsaleAddress);
+
+                        var tmp = 0;
+
+                        if(this.value == this.project_types[0])
+                        {
+                            tmp = 0;
+                        }
+                        if(this.value == this.project_types[1])
+                        {
+                            tmp = 1;
+                        }
+
+                        const tx = await W12Crowdsale.methods.setProjectType(tmp, {from: this.currentAccount});
+                            this.$store.commit(`Transactions/${UPDATE_TX}`, {
+                                crowdsale: this.currentProject.crowdsaleAddress,
+                                name: "set type",
+                                hash: tx,
+                                status: "pending"
+                            });
+                            await waitTransactionReceipt(tx, web3);
+                     }
+                         catch(e)
+                     {
+                         this.error = errorMessageSubstitution(e);
+                     }
+                 }
+            },
+            async getType()
+            {
+                 if(this.currentProject.crowdsaleAddress)
+                 {
+                     try
+                     {
+                         const {W12CrowdsaleFactory} = await this.fetchLedger(this.currentProject.version);
+                         const W12Crowdsale = W12CrowdsaleFactory.at(this.currentProject.crowdsaleAddress);
+                         const tmp = await W12Crowdsale.methods.getProjectType({from: this.currentAccount});
+
+                         this.current_type = this.project_types[parseInt(tmp.toString())];
+                     }
+                     catch(e)
+                     {
+                         this.error = errorMessageSubstitution(e);
+                     }
+                 }
+            },
+
+
         },
         mounted: function(e)
         {
-            // setTimeout(function()
-            //     {
-            //         // console.log(window.PROJECT);
-            //
-            //     }, 1000);
-        }
+            setInterval(async () =>
+            {
+                this.getType();
+            }, 3000);        }
 
     };
 </script>

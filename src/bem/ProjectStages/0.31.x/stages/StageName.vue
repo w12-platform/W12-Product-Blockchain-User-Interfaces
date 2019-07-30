@@ -26,8 +26,8 @@
                         <button class="btn btn-primary btn-sm" @click="TransactionsRetry(isErrorTx)" v-html="$t('ToRetry')"></button>
                     </div>
                 </div>
-                <b-tag class="ProjectDashboard__placedWTokenAddress"
-                       type="is-info">{{currentProject.name}}
+                <b-tag v-if="project_name" class="ProjectDashboard__placedWTokenAddress"
+                       type="is-info">{{project_name}}
                 </b-tag>
             </div>
             <div class="ProjectDashboard__placeForm col-12 text-right" v-if="!isPendingTx && !isErrorTx">
@@ -40,7 +40,6 @@
                                 v-model="value"
                                 class="form-control"
                                 name="SetName"
-                                @keyup.enter.native="setName"
                         ></cleave>
                     </div>
                     <b-notification class="ProjectStages__errorStage" v-if="error" @close="error = false" type="is-danger" has-icon>
@@ -50,7 +49,7 @@
                         <button
                                 class="btn btn-primary btn-sm"
                                 @click="setName"
-                                :disabled="!hasPlacedWTokenAddress" v-html="$t('ProjectDashboardStageSetButton')">
+                                :disabled="disable5" v-html="$t('ProjectDashboardStageSetButton')">
                         </button>
                     </div>
                 </div>
@@ -97,7 +96,9 @@
             return {
                 placeTokensLoading: false,
                 error: false,
-                value: ''
+                value: '',
+                project_name: ''
+
             };
         },
         computed: {
@@ -119,28 +120,6 @@
             ...TransactionsNS.mapState({
                 TransactionsList: "list"
             }),
-            optionsNumber() {
-                return {
-                    prefix: '',
-                    numeral: true,
-                    numeralPositiveOnly: true,
-                    noImmediatePrefix: true,
-                    rawValueTrimPrefix: true,
-                    numeralIntegerScale: this.lengthMaxAmount,
-                    numeralDecimalScale: this.currentProject.decimals,
-                };
-            },
-            lengthMaxAmount() {
-                return this.maxAmount.length;
-            },
-            maxAmount() {
-                return this.currentProject.tokensAmountThatApprovedToPlaceByTokenOwner
-                    ? fromWeiDecimals(this.currentProject.tokensAmountThatApprovedToPlaceByTokenOwner, this.currentProject.decimals).toFormat(0)
-                    : "";
-            },
-            maxAmountFormat(){
-                return formatNumber(this.maxAmount)
-            },
             isErrorTx() {
                 return this.TransactionsList && this.TransactionsList.length
                     ? this.TransactionsList.find((tr) => {
@@ -171,15 +150,17 @@
                     })
                     : false;
             },
-            disable(){
-                if(this.placeTokensForm.value && this.currentProject.tokensAmountThatApprovedToPlaceByTokenOwner)
+            disable5()
+            {
+                console.log(this.currentProject.crowdsaleAddress);
+                console.log(this.value.length);
+
+                if(this.currentProject.crowdsaleAddress)
                 {
-                    if(value.length == 0 || value.length > 20)
+                    if(this.value.length > 0 && this.value.length <= 32)
                     {
                         return false
                     }
-
-
                 }
                 return true;
             },
@@ -195,52 +176,59 @@
             ...TransactionsNS.mapActions({
                 TransactionsRetry: "retry"
             }),
-            async setName() {
-                if(this.disable) return;
-
-                const value = toWeiDecimals(this.placeTokensForm.value, this.currentProject.decimals);
-                // const limit = new BigNumber(this.currentProject.tokensAmountThatApprovedToPlaceByTokenOwner);
-                const limit = 50;
-
-                if (!value.greaterThan(0) || !value.lessThanOrEqualTo(limit)) {
-                    return;
-                }
-
-                this.placeTokensLoading = true;
-
-                try {
-                    const {W12ListerFactory} = await this.fetchLedger(this.currentProject.version);
-                    const W12Lister = W12ListerFactory.at(this.currentProject.listerAddress);
-                    const connectedWeb3 = (await Connector.connect()).web3;
-                    const event = waitContractEventOnce(W12Lister, 'TokenPlaced', {
-                        originalToken: this.currentProject.tokenAddress,
-                        crowdsale: this.currentProject.tokenCrowdsaleAddress
-                    });
-                    // const tx = await W12Lister.methods.placeToken(
-                    //     this.currentProject.tokenAddress,
-                    //     this.currentProject.tokenCrowdsaleAddress,
-                    //     value
-                    // );
-                    this.$store.commit(`Transactions/${UPDATE_TX}`, {
-                        token: this.currentProject.tokenAddress,
-                        name: "PlaceTokens",
-                        hash: tx,
-                        status: "pending"
-                    });
-                    await this.$nextTick();
-                    await waitTransactionReceipt(tx, connectedWeb3);
-                    await event;
-                    await this.$nextTick();
-                    await this.upTokenAfterEvent({Token: this.currentProject});
-                    this.$store.commit(`Transactions/${CONFIRM_TX}`, tx);
-                } catch (e) {
-                    console.error(e);
-                    this.error = errorMessageSubstitution(e.message);
-                }
-
-                this.placeTokensLoading = false;
+            async setName()
+            {
+                if(this.currentProject.crowdsaleAddress)
+                {
+                    try
+                    {
+                        const {W12CrowdsaleFactory} = await this.fetchLedger(this.currentProject.version);
+                        const {web3} = await Connector.connect();
+                        const W12Crowdsale = W12CrowdsaleFactory.at(this.currentProject.crowdsaleAddress);
+                        const tx = await W12Crowdsale.methods.setProjectName(this.value, {from: this.currentAccount});
+                            this.$store.commit(`Transactions/${UPDATE_TX}`, {
+                                crowdsale: this.currentProject.crowdsaleAddress,
+                                name: "set name",
+                                hash: tx,
+                                status: "pending"
+                            });
+                            await waitTransactionReceipt(tx, web3);
+                     }
+                         catch(e)
+                     {
+                         this.error = errorMessageSubstitution(e);
+                     }
+                 }
             },
+            async getName()
+            {
+                 if(this.currentProject.crowdsaleAddress)
+                 {
+                     try
+                     {
+                         const {W12CrowdsaleFactory} = await this.fetchLedger(this.currentProject.version);
+                         const W12Crowdsale = W12CrowdsaleFactory.at(this.currentProject.crowdsaleAddress);
+                         const name = await W12Crowdsale.methods.getProjectName({from: this.currentAccount});
 
+                         this.project_name = name;
+
+                         this.addr_flag = true;
+                     }
+                     catch(e)
+                     {
+                         this.error = errorMessageSubstitution(e);
+                     }
+                 }
+            },
         },
+        mounted: function()
+        {
+            this.update_flag = true;
+            setInterval(async () =>
+            {
+                this.getName();
+            }, 3000);
+        }
+
     };
 </script>
