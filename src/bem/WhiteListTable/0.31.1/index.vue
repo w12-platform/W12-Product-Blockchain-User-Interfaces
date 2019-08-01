@@ -2,7 +2,7 @@
     <div class="WhiteListTable WhiteListTable_v2 buefy">
 
         <b-notification v-if="isLoading" :closable="false" class="WhiteListTable__loader">
-            <b-loading :is-full-page="false" :active="isLoading"></b-loading>
+            <b-loading :is-full-page="false" :active="isLoading" :can-cancel="true"></b-loading>
         </b-notification>
 
         <b-table
@@ -12,6 +12,7 @@
                 :mobile-cards="true"
                 paginated
                 per-page="10"
+                :selected.sync="selected"
                 pagination-simple>
             <template slot-scope="props">
 
@@ -20,11 +21,11 @@
                 </b-table-column>
 
                 <b-table-column field="date" :label="$t('AdminDashboardTableOwner')">
-                    <span v-if="props.row.tokenOwners.length > 1" class="tag is-primary">
-                        x{{ props.row.tokenOwners.length }}
+                    <span v-if="props.row.owners.length > 1" class="tag is-primary">
+                        x{{ props.row.owners.length }}
                     </span>
                     <span v-else class="tag is-primary">
-                        {{ props.row.tokenOwners[0] | shortAddress}}
+                        {{ props.row.owners[0] | shortAddress }}
                     </span>
                 </b-table-column>
 
@@ -39,52 +40,47 @@
 
             <template slot="detail" slot-scope="props">
                 <div class="WhiteListTable__detail">
-                    <div class="WhiteListTable__detailField">
-                        {{ $t('AdminDashboardTableIndex') }} :
-                        <div class="WhiteListTable__detailDecimals">
-                            <span>{{ props.row.index }}</span>
-                        </div>
-                    </div>
-                    <div class="WhiteListTable__detailField">
-                        {{ $t('AdminDashboardTableToken') }} :
+                    <div class="WhiteListTable__detailField"><span v-html="$t('AdminDashboardTableToken')"></span> :
                         <div class="WhiteListTable__detailToken">
                             <span class="tag is-success">{{ props.row.tokenAddress }}</span>
                         </div>
                     </div>
-                    <div class="WhiteListTable__detailField">
-                        {{ $t('AdminDashboardTableOwner') }} :
-                        <div class="WhiteListTable__detailOwner" v-for="owner in props.row.tokenOwners">
+                    <div class="WhiteListTable__detailField"><span v-html="$t('AdminDashboardTableOwner')"></span> :
+                        <div class="WhiteListTable__detailOwner" v-for="owner in props.row.owners" :key="owner">
                             <span class="tag is-primary">{{ owner }}</span>
                         </div>
                     </div>
-                    <div class="WhiteListTable__detailField">
-                        {{ $t('AdminDashboardTableDecimals') }} :
+                    <div class="WhiteListTable__detailField"><span v-html="$t('AdminDashboardTableDecimals')"></span> :
                         <div class="WhiteListTable__detailDecimals">
                             <span>{{ props.row.decimals }}</span>
                         </div>
                     </div>
-                    <div class="WhiteListTable__detailField">
-                        {{ $t('AdminDashboardTableWTokenSaleFeePercent') }} :
+                    <div class="WhiteListTable__detailField"><span v-html="$t('AdminDashboardTableWTokenSaleFeePercent')"></span> :
                         <div class="WhiteListTable__detailDecimals">
                             <span>{{ props.row.WTokenSaleFeePercent | percentFractional }}%</span>
                         </div>
                     </div>
-                    <div class="WhiteListTable__detailField">
-                        {{ $t('AdminDashboardTableTrancheFeePercent') }} :
+                    <div class="WhiteListTable__detailField"><span v-html="$t('AdminDashboardTableTrancheFeePercent')"></span> :
                         <div class="WhiteListTable__detailDecimals">
                             <span>{{ props.row.trancheFeePercent | percentFractional }}%</span>
                         </div>
                     </div>
-                    <div class="WhiteListTable__detailField">
-                        {{ $t('AdminDashboardTableFeeTokens') }} :
+                    <div class="WhiteListTable__detailField"><span v-html="$t('AdminDashboardTableFeeTokens')"></span> :
                         <div class="WhiteListTable__detailDecimals">
                             <span>{{ props.row.feePercent | percentFractional }}%</span>
                         </div>
                     </div>
-                    <div class="WhiteListTable__detailField">
-                        {{ $t('AdminDashboardTableFeeEth') }} :
+                    <div class="WhiteListTable__detailField"><span v-html="$t('AdminDashboardTableFeeEth')"></span> :
                         <div class="WhiteListTable__detailDecimals">
                             <span>{{ props.row.feeETHPercent | percentFractional }}%</span>
+                        </div>
+                        <div v-for="(value, key) in props.row.individualPurchaseFee" class="WhiteListTable__detailDecimals">
+                            <span>- {{ key }}: {{ value | percentFractional }}%</span>
+                        </div>
+                    </div>
+                    <div class="WhiteListTable__detailField"><span v-html="$t('WhiteListTableCrowdsales')"></span> :
+                        <div class="WhiteListTable__detailCrowdsale" v-for="crowdsale in props.row.crowdsales" :key="crowdsale.crowdsaleAddress">
+                            <span class="tag is-primary">{{  crowdsaleFormat(crowdsale) }}</span>
                         </div>
                     </div>
                 </div>
@@ -103,6 +99,15 @@
     export default {
         name: 'WhiteListTable',
         template: '#WhiteListTableTemplate',
+        data() {
+            if(this.selectable)
+                return {selected: null};
+            else
+                return {};
+        },
+        props:{
+            selectable: Boolean,
+        },
         filters: {
             shortAddress(value) {
                 const length = value.length;
@@ -110,7 +115,7 @@
             },
             percentFractional(value) {
                 return value/100;
-            },
+            }
         },
         computed: {
             ...WhitelistNS.mapState({
@@ -120,7 +125,22 @@
 
             isLoading() {
                 return this.whiteMeta.loading;
-            },
+            }
         },
+        methods: {
+            crowdsaleFormat(crowdsaleModel) {
+                return crowdsaleModel.isNotInitialized() ? this.$t('NotInitializedCrowdsale') : crowdsaleModel.crowdsaleAddress;
+            }
+        },
+        watch:{
+            'selected': function(to, from)
+            {
+                this.$emit('selected', to);
+            }
+        },
+        async created(){
+
+            this.selected = null;
+        }
     };
 </script>
