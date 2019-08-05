@@ -126,8 +126,8 @@
 
 			WhiteListTableVersion()
 			{
-				const v = resolveAbiVersion(this.W12Lister.version);
-				return () => import("bem/WhiteListTable/" + v);
+				// const v = resolveAbiVersion(this.W12Lister.version);
+				return () => import("bem/WhiteListTable/" + '0.31.1');
 			},
 
 			nextStepBlocked()

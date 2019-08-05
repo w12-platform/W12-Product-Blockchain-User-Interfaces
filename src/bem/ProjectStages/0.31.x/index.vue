@@ -29,6 +29,8 @@
 
         <StageAddress></StageAddress>
 
+        <StageRefundDate></StageRefundDate>
+
 
 
     </div>
@@ -47,6 +49,7 @@
     import StageName from './stages/StageName';
     import StageType from './stages/StageType';
     import StageAddress from './stages/StageAddress';
+    import StageRefundDate from './stages/StageRefundDate';
     import StageCurrenciesList from './stages/StageCurrenciesList';
     import StageConfigureCrowdsale from './stages/StageConfigureCrowdsale';
     import StageCrowdsaleSetup from 'bem/StageCrowdsaleSetup/0.31.1';
@@ -77,6 +80,7 @@
             StageName,
             StageType,
             StageAddress,
+            StageRefundDate,
             StageCurrenciesList,
             StageConfigureCrowdsale,
             StageCrowdsaleSetup
