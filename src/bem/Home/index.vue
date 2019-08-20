@@ -88,7 +88,7 @@
                     <div class="test-steps__row">
                         <div class="test-steps__cell"><span class="num">13</span></div>
                         <div class="test-steps__cell"><a href="/oracle-vote.html" v-html="$t('HomeStepsNum13')"></a></div>
-                        <div class="test-steps__cell"><span class="icon icon-red">{{ $t('HomeStepsOracle') }}</span></div>
+                        <div class="test-steps__cell"><span class="icon oracle">{{ $t('HomeStepsOracle') }}</span></div>
                     </div>
 <!--                    <div class="test-steps__row">-->
 <!--                        <div class="test-steps__cell"><span class="num">14</span></div>-->
@@ -102,114 +102,14 @@
             <div class="mobile-btn">
               <a class="btn actions__buytokens" href="https://w12.io/buy-w12/?utm_source=test-net&amp;utm_medium=demo_page" target="_blank" v-html="$t('HeaderByuW12Tokens')"></a>
             </div>
-            <h3 class="tech-adv__heading" v-html="$t('HomeBenefits')"></h3>
-            <h4 class="tech-adv__subheading" v-html="$t('HomeBenefitsMaxFlexibility')"></h4>
-            <p class="tech-adv__text" v-html="$t('HomeBenefits1')"></p>
-            <p class="tech-adv__text" v-html="$t('HomeBenefits2')"></p>
-            <p class="tech-adv__text" v-html="$t('HomeBenefits3')"></p>
-            <p class="tech-adv__text" v-html="$t('HomeBenefits4')"></p>
-            <h4 class="tech-adv__subheading" v-html="$t('HomeBenefits5')"></h4>
-            <p class="tech-adv__text no-points" v-html="$t('HomeBenefits6')"></p>
-            <h4 class="tech-adv__subheading" v-html="$t('HomeBenefits7')"></h4>
-            <p class="tech-adv__text no-points" v-html="$t('HomeBenefits8')"></p>
-            <h4 class="tech-adv__subheading" v-html="$t('HomeBenefits9')"></h4>
-            <p class="tech-adv__text no-points" v-html="$t('HomeBenefits10')"></p>
+
+
         </div>
         <div class="versions">
             <div class="mobile-btn">
               <a class="btn actions__buytokens" href="https://w12.io/buy-w12/?utm_source=test-net&amp;utm_medium=demo_page" target="_blank" v-html="$t('HeaderByuW12Tokens')"></a>
             </div>
-            <h3 class="versions__heading" v-html="$t('HomeVersions')"></h3>
-            <div class="table-wrap">
-                <div class="versions__table">
-                    <div class="versions__row">
-                        <span class="versions__head" v-html="$t('HomeVersionsVersionProduct')"></span>
-                        <span class="versions__head" v-html="$t('HomeVersionsMainFunction')"></span></div>
-                    <div class="versions__row">
-                        <div class="versions__cell"><span class="version">v.1</span></div>
-                        <div class="versions__cell">
-                            <p v-html="$t('HomeVersions1Func1')"></p>
-                            <p v-html="$t('HomeVersions1Func2')"></p>
-                            <p v-html="$t('HomeVersions1Func3')"></p>
-                            <p v-html="$t('HomeVersions1Func4')"></p>
-                            <p v-html="$t('HomeVersions1Func5')"></p>
-                            <p v-html="$t('HomeVersions1Func6')"></p>
-                        </div>
-                    </div>
-                    <div class="versions__row">
-                        <div class="versions__cell"><span class="version">v.2</span></div>
-                        <div class="versions__cell">
-                            <h4 v-html="$t('HomeVersionsAdditionalFunctions')"></h4>
-                            <p v-html="$t('HomeVersions1Func7')"></p>
-                            <p v-html="$t('HomeVersions1Func8')"></p>
-                            <p v-html="$t('HomeVersions1Func9')"></p>
-                        </div>
-                    </div>
-                    <div class="versions__row">
-                        <div class="versions__cell"><span class="version">v.3</span></div>
-                        <div class="versions__cell">
-                            <h4 v-html="$t('HomeVersionsAdditionalFunctions')"></h4>
-                            <p v-html="$t('HomeVersions1Func10')"></p>
-                        </div>
-                    </div>
-                    <div class="versions__row">
-                        <div class="versions__cell"><span class="version">v.4</span></div>
-                        <div class="versions__cell">
-                            <h4 v-html="$t('HomeVersionsAdditionalFunctions')"></h4>
-                            <p v-html="$t('HomeVersions1Func11')"></p>
-                        </div>
-                    </div>
-                    <div class="versions__row">
-                        <div class="versions__cell"><span class="version">v.5</span></div>
-                        <div class="versions__cell">
-                            <h4 v-html="$t('HomeVersionsAdditionalFunctions')"></h4>
-                            <p v-html="$t('HomeVersions1Func12')"></p>
-                        </div>
-                    </div>
-                    <div class="versions__row">
-                        <div class="versions__cell"><span class="version">v.6</span></div>
-                        <div class="versions__cell">
-                            <h4 v-html="$t('HomeVersionsAdditionalFunctions')"></h4>
-                            <p v-html="$t('HomeVersions1Func13')"></p>
-                        </div>
-                    </div>
-                    <div class="versions__row">
-                        <div class="versions__cell"><span class="version">v.7</span></div>
-                        <div class="versions__cell">
-                            <h4 v-html="$t('HomeVersionsAdditionalFunctions')"></h4>
-                            <p v-html="$t('HomeVersions1Func14')"></p>
-                        </div>
-                    </div>
-                    <div class="versions__row">
-                        <div class="versions__cell"><span class="version">v.8</span></div>
-                        <div class="versions__cell">
-                            <h4 v-html="$t('HomeVersionsAdditionalFunctions')"></h4>
-                            <p v-html="$t('HomeVersions1Func15')"></p>
-                        </div>
-                    </div>
-                    <div class="versions__row">
-                        <div class="versions__cell"><span class="version">v.9</span></div>
-                        <div class="versions__cell">
-                            <h4 v-html="$t('HomeVersionsAdditionalFunctions')"></h4>
-                            <p v-html="$t('HomeVersions1Func16')"></p>
-                        </div>
-                    </div>
-                    <div class="versions__row">
-                        <div class="versions__cell"><span class="version">v.10</span></div>
-                        <div class="versions__cell">
-                            <h4 v-html="$t('HomeVersionsAdditionalFunctions')"></h4>
-                            <p v-html="$t('HomeVersions1Func17')"></p>
-                        </div>
-                    </div>
-                    <div class="versions__row">
-                        <div class="versions__cell"><span class="version">v.11</span></div>
-                        <div class="versions__cell">
-                            <h4 v-html="$t('HomeVersionsAdditionalFunctions')"></h4>
-                            <p v-html="$t('HomeVersions1Func18')"></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+
             <div class="mobile-btn">
               <a class="btn actions__buytokens" href="https://w12.io/buy-w12/?utm_source=test-net&amp;utm_medium=demo_page" target="_blank" v-html="$t('HeaderByuW12Tokens')"></a>
             </div>

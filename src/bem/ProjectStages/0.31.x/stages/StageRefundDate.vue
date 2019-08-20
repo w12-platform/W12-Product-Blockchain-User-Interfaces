@@ -1,19 +1,41 @@
 <template>
-	<div class="ProjectStages__stage">
-		<div class="row align-items-center justify-content-left">
-			<div class="col-auto">
-				<span class="ProjectDashboard__step-badge step-badge badge badge-pill badge-light">10</span>
-			</div>
-			<div class="col-sm-4"><span v-html="$t('ProjectDashboardStageRefundDate')"></span>
-			</div>
+    <div class="ProjectStages__stage">
+        <div class="row align-items-center justify-content-left">
 
-				<div class="text-left">
-					<div class="form-group">
-					<label v-html="$t('ProjectDashboardStageRefundDateLabel')"></label>
+            <div class="col-auto">
+                <span class="ProjectDashboard__step-badge step-badge badge badge-pill badge-light">10</span>
+            </div>
+            <div class="col-sm-4"><span v-html="$t('ProjectDashboardStageRefundDate')"></span>
+            </div>
 
-					<b-tag v-if="project_refund_date" class="ProjectDashboard__placedWTokenAddress"
-						type="is-info">{{project_refund_date}}
-					</b-tag>
+            <div class="col-sm-2 text-center">
+<!--                <b-tag v-if="!hasPlacedWTokenAddress && !hasAllowance"-->
+<!--                       type="is-success" v-html="$t('ProjectDashboardStageNameStatusPending')">-->
+<!--                </b-tag>-->
+<!--                <b-tag v-else type="is-success" v-html="$t('ProjectDashboardStagePlaceStatusPlaced')"></b-tag>-->
+            </div>
+
+            <div class="col-12 text-left">
+                <div class="pm-2" v-if="isPendingTx">
+                    <p class="py-2"><span v-html="$t('WaitingConfirm')"></span>:</p>
+                    <b-tag class="py-2">{{isPendingTx.hash}}</b-tag>
+                </div>
+                <div class="pm-2" v-if="isErrorTx">
+                    <p class="py-2"><span v-html="$t('TransactionFailed')"></span>:</p>
+                    <b-tag class="py-2">{{isErrorTx.hash}}</b-tag>
+                    <div class="pt-2 text-left">
+                        <button class="btn btn-primary btn-sm" @click="TransactionsRetry(isErrorTx)" v-html="$t('ToRetry')"></button>
+                    </div>
+                </div>
+							<b-tag v-if="project_refund_date" class="ProjectDashboard__placedWTokenAddress"
+								type="is-info">{{project_refund_date}}
+							</b-tag>
+            </div>
+
+            <div class="ProjectDashboard__placeForm col-12 text-right" v-if="!isPendingTx && !isErrorTx">
+                <div class="text-left">
+                    <div class="form-group">
+                        <label v-html="$t('ProjectDashboardStageRefundDateLabel')"></label>
 
 						<date-picker
 								v-model="refund_date"
@@ -23,20 +45,27 @@
 								confirm
 								:time-picker-options="{ start: '00:00', step: '00:10', end: '23:50'}"
 						></date-picker>
-					</div>
 
-					<div class="text-right">
-						<button
-								class="btn btn-primary btn-sm"
-								@click="setRefundDate"
-								:disabled="disable5" v-html="$t('ProjectDashboardStageSetButton')">
-						</button>
-					</div>
-				</div>
-		</div>
+                    </div>
+                    <b-notification class="ProjectStages__errorStage" v-if="error" @close="error = false" type="is-danger" has-icon>
+                        {{ error }}
+                    </b-notification>
+                   <div class="text-right">
+                        <button
+                                class="btn btn-primary btn-sm"
+                                @click="setRefundDate"
+                                :disabled="disable5" v-html="$t('ProjectDashboardStageSetButton')">
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-		<b-loading :is-full-page="false" :active.sync="placeTokensLoading"></b-loading>
-	</div>
+        <b-loading :is-full-page="false" :active.sync="placeTokensLoading"></b-loading>
+    </div>
+
+
+
 </template>
 
 <script>
@@ -87,8 +116,9 @@
 				placeTokensLoading: false,
 				error: false,
 				value: '',
-				refund_date: {},
-				project_refund_date: ''
+				refund_date: null,
+				project_refund_date: '',
+				show: false
 
 			};
 		},
@@ -149,13 +179,16 @@
 			},
 			disable5()
 			{
-				console.log(this.currentProject.crowdsaleAddress);
-				// console.log(this.value.length);
+				if(moment(this.refund_date).format('X') == 'Invalid date')
+				{
+					return true;
+				}
 
 				if(this.currentProject.crowdsaleAddress)
 				{
 						return false
 				}
+
 				return true;
 			},
 		},
@@ -232,6 +265,14 @@
 		},
 		mounted: function() {
 			setInterval(async () => {
+				if(this.currentProject.PROJ_TYPE == 2)
+				{
+					this.show = true;
+				}
+				else
+				{
+					this.show = false;
+				}
 				this.getRefundDate();
 			}, 5000);
 		}

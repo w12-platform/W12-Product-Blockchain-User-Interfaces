@@ -65,7 +65,7 @@
 
 	import Eth from 'ethjs'
 	import EthContract from 'ethjs-contract'
-	import {ORACLE, ORACLE_ADDR} from 'abi/OracleBallot.js'
+	import {ORACLE} from 'abi/OracleBallot.js'
 
 	PAGE_SIZE = 10
 

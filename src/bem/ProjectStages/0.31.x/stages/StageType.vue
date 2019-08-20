@@ -1,6 +1,7 @@
 <template>
     <div class="ProjectStages__stage">
         <div class="row align-items-center justify-content-left">
+
             <div class="col-auto">
                 <span class="ProjectDashboard__step-badge step-badge badge badge-pill badge-light">8</span>
             </div>
@@ -30,6 +31,7 @@
                        type="is-info">{{ current_type }}
                 </b-tag>
             </div>
+
             <div class="ProjectDashboard__placeForm col-12 text-right" v-if="!isPendingTx && !isErrorTx">
                 <div class="text-left">
                     <div class="form-group">
@@ -83,7 +85,7 @@
     const web3 = new Web3();
     const BigNumber = web3.BigNumber;
 
-    const PROJ_TYPES = {0: 'ProjectTypeUsual', 1: 'ProjectTypeTender'};
+    const PROJ_TYPES = {0: 'ProjectTypeBasic', 1: 'ProjectTypeOracle', 2: 'ProjectTypeTender'};
 
 
     BigNumber.config({
@@ -120,11 +122,9 @@
                 },
                 error: false,
                 value: '',
-                project_types: [this.$t('ProjectTypeUsual'), this.$t('ProjectTypeTender')],
+                project_types: [this.$t('ProjectTypeBasic'), this.$t('ProjectTypeOracle'), this.$t('ProjectTypeTender')],
                 current_type: null,
-                crowdsale_project: window.PROJECT
-
-
+                crowdsale_project: window.PROJECT,
             };
         },
         computed: {
@@ -223,6 +223,10 @@
                         {
                             tmp = 1;
                         }
+                        if(this.value == this.project_types[2])
+                        {
+                            tmp = 2;
+                        }
 
                         const tx = await W12Crowdsale.methods.setProjectType(tmp, {from: this.currentAccount});
                             this.$store.commit(`Transactions/${UPDATE_TX}`, {
@@ -250,6 +254,8 @@
                          const tmp = await W12Crowdsale.methods.getProjectType({from: this.currentAccount});
 
                          this.current_type = this.project_types[parseInt(tmp.toString())];
+
+                         this.currentProject.PROJ_TYPE = parseInt(tmp.toString());
                      }
                      catch(e)
                      {
@@ -264,6 +270,8 @@
         {
             setInterval(async () =>
             {
+                console.log('----------------------------');
+                console.log(this.currentProject.crowdsaleAddress);
                 this.getType();
             }, 3000);        }
 

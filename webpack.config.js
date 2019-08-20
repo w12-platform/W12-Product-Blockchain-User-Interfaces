@@ -113,6 +113,8 @@ module.exports = [
             publicPath,
             compress: true,
             port: 8090,
+            // port: 443,
+            // https: true
         }
     },
 ];

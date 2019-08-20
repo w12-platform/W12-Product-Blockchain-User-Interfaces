@@ -66,11 +66,11 @@ new Vue({
     components: {
         LangSwitch,
         CrossPagesNotification,
-        HeaderBuyW12Tokens,
+        // HeaderBuyW12Tokens,
         MetaMask,
         AdminDashboard,
         SidebarMenu,
-        AppFooter,
+
         Factory,
         ConfigDashboard: (
             process.env.NODE_ENV === 'development'

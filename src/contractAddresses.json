@@ -62,7 +62,7 @@
         "version": "0.29.0"
       },
       {
-        "address": "0xaed45adb14ef31bc6f333cc74361558ec4e8961f",
+        "address": "0x4a0783db6769a3d513bdd82688a22456c512ca24",
         "version": "0.31.1"
       }
     ],
@@ -83,7 +83,8 @@
         "address": "0xeb768604cfc21feaf9deb23dc4aab466bdb5d807",
         "version": "0.31.1"
       }
-    ]
+    ],
+    "Oracles": "0x45fa97ac8eb37cc2057812759657d87f3b36b85c"
   },
   "5777": {
     "FactoryTokens": {

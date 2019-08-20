@@ -42,9 +42,6 @@
                                 name="SetName"
                         ></cleave>
                     </div>
-                    <b-notification class="ProjectStages__errorStage" v-if="error" @close="error = false" type="is-danger" has-icon>
-                        {{ error }}
-                    </b-notification>
                     <div class="text-right">
                         <button
                                 class="btn btn-primary btn-sm"

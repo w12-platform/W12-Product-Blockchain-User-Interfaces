@@ -22,7 +22,7 @@
 			<WhiteListTable v-on:selected="select_project" :selectable="true" :is="WhiteListTableVersion"></WhiteListTable>
 		</div>
 
-<!--		<OracleRoadMap></OracleRoadMap>-->
+		<OracleRoadMap></OracleRoadMap>
 
 		</section>
 	</div>
@@ -44,7 +44,8 @@
 
 	import Eth from 'ethjs'
 	import EthContract from 'ethjs-contract'
-	import {ORACLE, ORACLE_ADDR} from 'abi/OracleBallot.js'
+	import {ORACLE} from 'abi/OracleBallot.js'
+	import config from '@/config.js';
 
 	PAGE_SIZE = 10
 
@@ -163,15 +164,30 @@
 #				@test_voters()
 #				@voters_proj_view = @voters_proj[@selected_proj.wTokenAddress].voters
 
-				await @fetch_full val
-
-				log @currentToken
+				await @fetch_full(val)
 
 				return
 
+			@send_vote = (index, val)=>
+				if login.oracle and @selected_proj
+					res = await login.oracle.vote @selected_proj.crowdsales[0].crowdsaleAddress, index, val,
+						from: login.account
+
+					log res
+
+
+
+				return
+
+
+
+
+
+
 			@scan = (scan_flag)->
+				log 'scan'
 				if window.login is undefined or window.login.eth is undefined
-					window.login = {}
+					window.login = {'send_vote': @send_vote}
 					if typeof(web3) is 'undefined'
 						window.addEventListener 'message', ({data}) =>
 							if data and data.type and data.type is 'ETHEREUM_PROVIDER_SUCCESS'
@@ -191,15 +207,22 @@
 					catch err
 						login.account = null
 					contract = new EthContract login.eth
-					login.oracle = (contract(ORACLE)).at ORACLE_ADDR
+					login.oracle = (contract(ORACLE)).at config.currentNetworkContractAddresses.Oracles
 
 				if login.oracle and @selected_proj
+
+					log @milestone
+
 					if @currentToken.crowdSaleInformation and @currentToken.crowdSaleInformation.milestones
 						if @currentToken.crowdSaleInformation.milestones.length > 0
-							res = await login.oracle.get_vote_result @selected_proj.crowdsaleAddress, @milestone
+							res = await login.oracle.get_vote_result @selected_proj.crowdsales[0].crowdsaleAddress, @milestone
 							@currentToken.crowdSaleInformation.milestones[@milestone].vote_y = parseInt(res.vote_y.toString())
 							@currentToken.crowdSaleInformation.milestones[@milestone].vote_n = parseInt(res.vote_n.toString())
 							@currentToken.crowdSaleInformation.milestones[@milestone].vote_all = parseInt(res.vote_all.toString())
+
+							log 'asdasd'
+							log parseInt(res.vote_y.toString())
+
 
 							unless @currentToken.asd
 								@$set(@currentToken, 'asd', 1)
