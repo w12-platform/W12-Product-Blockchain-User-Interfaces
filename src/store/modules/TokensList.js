@@ -2,6 +2,7 @@ import { getEndDate } from '@/lib/selectors/crowdsaleStages';
 import { fetchTokenFull as fetchTokenFull_v0_20_x } from '@/store/modules/TokensList/0.20.x/actions';
 import { fetchTokenFull as fetchTokenFull_v0_27_x } from '@/store/modules/TokensList/0.27.x/actions';
 import { fetchTokenFull as fetchTokenFull_v0_28_x } from '@/store/modules/TokensList/0.28.x/actions';
+import { fetchTokenFull as fetchTokenFull_v0_31_x } from '@/store/modules/TokensList/0.31.x/actions';
 import { fetchTokenMinimal as fetchTokenMinimal_v0_20_x } from '@/store/modules/TokensList/0.20.x/actions';
 import { fetchTokenMinimal as fetchTokenMinimal_v0_28_x } from '@/store/modules/TokensList/0.28.x/actions';
 import { fetch as fetch_v0_20_x } from '@/store/modules/TokensList/0.20.x/actions';
@@ -88,8 +89,10 @@ export default {
                 return await fetchTokenFull_v0_20_x.call(this, context, payload);
             } else if (semver.satisfies(payload.version, '0.27.x')) {
                 return await fetchTokenFull_v0_27_x.call(this, context, payload);
-            } else if (semver.satisfies(payload.version, '>=0.28.x')) {
+            } else if (semver.satisfies(payload.version, '0.28.x')) {
                 return await fetchTokenFull_v0_28_x.call(this, context, payload);
+            } else if (semver.satisfies(payload.version, '0.31.x')) {
+                return await fetchTokenFull_v0_31_x.call(this, context, payload);
             }
 
             throw new Error(`token version ${payload.version} does not supported`);

@@ -1,4 +1,4 @@
-<template>
+1<template>
     <div class="RoadMap buefy" v-if="currentToken && roadMapTableData && roadMapTableData.length">
         <h2 v-html="$t('RoadMapTableTitle')"></h2>
         <b-table :data="roadMapTableData" class="table table-striped table-bordered table-responsive-sm"
@@ -114,20 +114,34 @@
                                     to: this.fullDateFormat(milestones[index + 1].endDate)
                                 }),
                             'financing': milestone.tranchePercent,
-                            'vote': milestone.vote_y === undefined
-                                ? '-/-/-'
-                                : milestone.vote_y + '/' + milestone.vote_n + '/' + milestone.vote_all,
+
+                            'vote': milestone.vote_y + '/' + milestone.vote_n + '/' + milestone.vote_all,
 
                             'vote_result': function()
                                 {
-                                    if(milestone.vote_y == '0')
-                                    {
-                                        return 1;
-                                    }
-                                    if(milestone.vote_y == '1')
+
+                                    console.log('vote_result');
+                                    console.log(milestone.vote_y);
+                                    console.log(milestone.vote_n);
+                                    console.log(milestone.vote_all);
+
+                                    if(milestone.vote_y === undefined ||
+                                    milestone.vote_n === undefined ||
+                                    milestone.vote_all === undefined)
                                     {
                                         return 0;
                                     }
+
+                                    var v_y = parseInt(milestone.vote_y);
+                                    var v_n = parseInt(milestone.vote_n);
+                                    var v_all = parseInt(milestone.vote_all);
+
+                                    if(v_y > v_all / 2 | 0)
+                                    {
+                                        return 2;
+                                    }
+
+                                   return 1;
 
                                 },
                         }

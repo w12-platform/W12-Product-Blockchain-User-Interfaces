@@ -22,7 +22,7 @@
 			<WhiteListTable v-on:selected="select_project" :selectable="true" :is="WhiteListTableVersion"></WhiteListTable>
 		</div>
 
-		<OracleRoadMap></OracleRoadMap>
+		<OracleRoadMap :key="oracle_road_map_rerender"></OracleRoadMap>
 
 		</section>
 	</div>
@@ -84,7 +84,8 @@
 			selected_proj: null
 			proj_oracles: false
 			current_token: null
-			milestone: 0
+			milestone: 0,
+			oracle_road_map_rerender: 0
 
 
 		filters:
@@ -168,20 +169,15 @@
 
 				return
 
+
 			@send_vote = (index, val)=>
-				if login.oracle and @selected_proj
+				if login.oracle and @selected_proj and @selected_proj.crowdsales[0]
+
 					res = await login.oracle.vote @selected_proj.crowdsales[0].crowdsaleAddress, index, val,
 						from: login.account
 
 					log res
-
-
-
 				return
-
-
-
-
 
 
 			@scan = (scan_flag)->
@@ -211,23 +207,18 @@
 
 				if login.oracle and @selected_proj
 
-					log @milestone
-
 					if @currentToken.crowdSaleInformation and @currentToken.crowdSaleInformation.milestones
-						if @currentToken.crowdSaleInformation.milestones.length > 0
+						if @currentToken.crowdSaleInformation.milestones.length > 0 and @selected_proj.crowdsales
 							res = await login.oracle.get_vote_result @selected_proj.crowdsales[0].crowdsaleAddress, @milestone
+							log res
+							log res.vote_y.toString()
+							log res.vote_n.toString()
+							log res.vote_all.toString()
 							@currentToken.crowdSaleInformation.milestones[@milestone].vote_y = parseInt(res.vote_y.toString())
 							@currentToken.crowdSaleInformation.milestones[@milestone].vote_n = parseInt(res.vote_n.toString())
 							@currentToken.crowdSaleInformation.milestones[@milestone].vote_all = parseInt(res.vote_all.toString())
 
-							log 'asdasd'
-							log parseInt(res.vote_y.toString())
-
-
-							unless @currentToken.asd
-								@$set(@currentToken, 'asd', 1)
-							else
-								@$set(@currentToken, 'asd', @currentToken.asd + 1)
+							@oracle_road_map_rerender = @oracle_road_map_rerender + 1
 
 							@milestone++
 							if @milestone >= @currentToken.crowdSaleInformation.milestones.length

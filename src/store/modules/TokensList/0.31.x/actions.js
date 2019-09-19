@@ -23,7 +23,9 @@ export async function fetchTokenFull({dispatch}, token) {
     // TODO: refactoring
     // instanceOf(token, StoredToken);
 
-    console.log('fetchTokenFull');
+    console.log('fetchTokenFull 31');
+
+    console.log(token);
 
     const {
         ERC20DetailedFactory,
@@ -33,15 +35,37 @@ export async function fetchTokenFull({dispatch}, token) {
     } = await dispatch('Ledger/fetch', token.version, {root: true});
 
     const ERC20Detailed = ERC20DetailedFactory.at(token.tokenAddress);
-    const W12Crowdsale = W12CrowdsaleFactory.at(token.crowdsaleAddress);
+
+    var W12Crowdsale;
+    if(token.crowdsales)
+        W12Crowdsale = W12CrowdsaleFactory.at(token.crowdsales[0].crowdsaleAddress);
+    else
+        W12Crowdsale = W12CrowdsaleFactory.at(token.crowdsaleAddress);
+
     const WTokenAddress = token.wTokenAddress;
     const W12FundAddress = (await W12Crowdsale.methods.fund());
     const W12Token = W12TokenFactory.at(WTokenAddress);
     const W12Fund = W12FundFactory.at(W12FundAddress);
     const WTokenDecimals = await W12Token.methods.decimals();
-    const WTokenTotal = fromWeiDecimalsString(token.wTokensIssuedAmount, token.decimals);
-    const tokensOnSale = fromWeiDecimalsString((await W12Token.methods.balanceOf(token.crowdsaleAddress)).toString(), token.decimals);
-    const tokensForSaleAmount = fromWeiDecimalsString(token.tokensForSaleAmount, token.decimals);
+
+    var WTokenTotal;
+    if(token.crowdsales)
+        WTokenTotal = fromWeiDecimalsString(token.crowdsales[0].wTokensIssuedAmount, token.decimals);
+    else
+        WTokenTotal = fromWeiDecimalsString(token.wTokensIssuedAmount, token.decimals);
+
+    var tokensOnSale;
+    if(token.crowdsales)
+        tokensOnSale = fromWeiDecimalsString((await W12Token.methods.balanceOf(token.crowdsales[0].crowdsaleAddress)).toString(), token.decimals);
+    else
+        tokensOnSale = fromWeiDecimalsString((await W12Token.methods.balanceOf(token.crowdsaleAddress)).toString(), token.decimals);
+
+    var tokensForSaleAmount;
+    if(token.crowdsales)
+        tokensForSaleAmount = fromWeiDecimalsString(token.crowdsales[0].tokensForSaleAmount, token.decimals);
+    else
+        tokensForSaleAmount = fromWeiDecimalsString(token.tokensForSaleAmount, token.decimals);
+
     const tokenPrice = decodeUSD(await W12Crowdsale.methods.price()).toString();
     const stages = (await W12Crowdsale.getStagesList());
     const milestones = (await W12Crowdsale.getMilestones());
@@ -95,11 +119,25 @@ export async function fetchTokenFull({dispatch}, token) {
         .toString();
 
     token.tokenInformation = (await ERC20Detailed.getDescription());
+
+    var addr;
+    var prc;
+    if(token.crowdsales)
+    {
+        addr = token.crowdsales[0].crowdsaleAddress;
+        prc = token.crowdsales[0].WTokenSaleFeePercent;
+    }
+    else
+    {
+        addr = token.crowdsaleAddress;
+        prc = token.WTokenSaleFeePercent;
+    }
+
     token.crowdSaleInformation = {
         tokenPrice,
         paymentMethods,
         startDate,
-        crowdsaleAddress: token.crowdsaleAddress,
+        crowdsaleAddress: addr,
         stages,
         status,
         bonusVolumes: currentStage ? currentStage.bonusVolumes : [],
@@ -114,7 +152,7 @@ export async function fetchTokenFull({dispatch}, token) {
         currentMilestoneIndex,
         milestones,
         tokensForSaleAmount,
-        tokensOnSale: getSaleTokenAmountWithoutCommission(tokensOnSale, token.WTokenSaleFeePercent).toString(),
+        tokensOnSale: getSaleTokenAmountWithoutCommission(tokensOnSale, prc).toString(),
         fund: {
             W12FundAddress,
             totalFundedPerAsset,

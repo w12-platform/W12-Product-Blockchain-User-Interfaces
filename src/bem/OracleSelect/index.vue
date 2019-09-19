@@ -283,6 +283,7 @@
 			@select_project = (val)=>
 				@selected_proj = val
 				@test_voters()
+				log @selected_proj.wTokenAddress
 				@voters_proj_view = @voters_proj[@selected_proj.wTokenAddress].voters
 				return
 
